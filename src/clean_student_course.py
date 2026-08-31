@@ -77,6 +77,7 @@ def clean_student_course(df):
         "student_name_sl",
         "course_name_sl",
         "degree_name_sl",
+        "study_mode",
     ]
     df = df.drop(columns=columns_to_drop)
 
