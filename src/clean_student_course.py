@@ -6,10 +6,15 @@ from cleaning_utils import (
     to_float,
     to_integer,
 )
-from paths import CLEAN_STUDENT_COURSE_PATH, STUDENT_COURSE_PATH
+from paths import (
+    CLEAN_STUDENT_COURSE_PATH,
+    CLEAN_STUDENT_STATUS_PATH,
+    STUDENT_COURSE_PATH,
+)
 
 
 REGISTER_STATUSES = ["R", "E"]
+STATUS_COURSE_KEYS = ["student_id", "degree_id", "part_id"]
 FINISH_STATUS_MAP = {
     "F": "fail",
     "FE": "fail",
@@ -18,7 +23,7 @@ FINISH_STATUS_MAP = {
 }
 
 
-def clean_student_course(df):
+def clean_student_course(df, status_keys=None):
     df = clean_column_names(df)
 
     df["register_status"] = (df["register_status"].astype("string").str.strip().str.upper())
@@ -44,6 +49,11 @@ def clean_student_course(df):
         "faculty_id",
     ]
     df = clean_id_columns(df, id_columns)
+
+    if status_keys is not None:
+        course_key_index = pd.MultiIndex.from_frame(df[STATUS_COURSE_KEYS])
+        status_key_index = pd.MultiIndex.from_frame(status_keys)
+        df = df.loc[course_key_index.isin(status_key_index)].copy()
 
     df["final_mark"] = to_integer(df["final_mark"])
     df["points"] = to_float(df["points"])
@@ -86,7 +96,11 @@ def clean_student_course(df):
 
 def main():
     df = pd.read_parquet(STUDENT_COURSE_PATH)
-    df = clean_student_course(df)
+    status_keys = pd.read_parquet(
+        CLEAN_STUDENT_STATUS_PATH,
+        columns=STATUS_COURSE_KEYS,
+    ).drop_duplicates()
+    df = clean_student_course(df, status_keys)
 
     null_report = df.isna().sum().to_frame("null_count")
     null_report["null_percent"] = (

@@ -14,6 +14,7 @@ from paths import (
 
 
 EXCLUDED_PERMANENT_STATUS_IDS = [1, 4, 11, 12, 15, 16, 41]
+STATUS_COURSE_KEYS = ["student_id", "degree_id", "part_id"]
 
 FINAL_COLUMNS = [
     "student_status_id",
@@ -111,7 +112,7 @@ def add_enrollment_features(df):
     return df
 
 
-def clean_student_status(df, course_student_ids=None):
+def clean_student_status(df, course_keys=None):
     df = clean_column_names(df)
 
     df["permanent_status_id"] = to_integer(df["permanent_status_id"])
@@ -141,8 +142,10 @@ def clean_student_status(df, course_student_ids=None):
     df = clean_id_columns(df, id_columns)
     df = df[df["degree_id"].notna()].copy()
 
-    if course_student_ids is not None:
-        df = df[df["student_id"].isin(course_student_ids)].copy()
+    if course_keys is not None:
+        status_key_index = pd.MultiIndex.from_frame(df[STATUS_COURSE_KEYS])
+        course_key_index = pd.MultiIndex.from_frame(course_keys)
+        df = df.loc[status_key_index.isin(course_key_index)].copy()
 
     df["start_part_id"] = to_integer(df["start_part_id"])
     df["finish_part_id"] = to_integer(df["finish_part_id"])
@@ -196,11 +199,11 @@ def clean_student_status(df, course_student_ids=None):
 
 def main():
     df = pd.read_parquet(STUDENT_STATUS_PATH)
-    course_student_ids = pd.read_parquet(
+    course_keys = pd.read_parquet(
         CLEAN_STUDENT_COURSE_PATH,
-        columns=["student_id"],
-    )["student_id"].dropna().unique()
-    df = clean_student_status(df, course_student_ids)
+        columns=STATUS_COURSE_KEYS,
+    ).drop_duplicates()
+    df = clean_student_status(df, course_keys)
 
     null_report = df.isna().sum().to_frame("null_count")
     null_report["null_percent"] = (
