@@ -19,5 +19,5 @@ COURSE_PREREQUISITE_PATH = RAW_DIR / "v_cor_course_prerequisite.parquet"
 
 
 CLEAN_STUDENT_COURSE_PATH = CLEAN_DIR / "student_course.parquet"
+CLEAN_STUDENT_STATUS_PATH = CLEAN_DIR / "student_status.parquet"
 
-print(STUDENT_COURSE_PATH)
