@@ -59,6 +59,9 @@ def clean_student_course(df, status_keys=None):
     df["points"] = to_float(df["points"])
     df["course_credits"] = to_float(df["course_credits"])
 
+    for column in ["course_name_sl", "degree_name_sl"]:
+        df[column] = df[column].astype("string").str.strip()
+
     in_columns = ["in_agpa", "in_gpa", "in_credits"]
     for column in in_columns:
         df[column] = df[column].astype("string").str.strip().str.upper()
@@ -85,8 +88,6 @@ def clean_student_course(df, status_keys=None):
         "in_gpa",
         "in_credits",
         "student_name_sl",
-        "course_name_sl",
-        "degree_name_sl",
         "study_mode",
     ]
     df = df.drop(columns=columns_to_drop)

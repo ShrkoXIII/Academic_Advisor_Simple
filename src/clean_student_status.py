@@ -21,6 +21,7 @@ FINAL_COLUMNS = [
     "student_id",
     "part_id",
     "degree_id",
+    "degree_name_sl",
     "start_part_id",
     "finish_part_id",
     "grade_version_id",
@@ -142,11 +143,6 @@ def clean_student_status(df, course_keys=None):
     df = clean_id_columns(df, id_columns)
     df = df[df["degree_id"].notna()].copy()
 
-    if course_keys is not None:
-        status_key_index = pd.MultiIndex.from_frame(df[STATUS_COURSE_KEYS])
-        course_key_index = pd.MultiIndex.from_frame(course_keys)
-        df = df.loc[status_key_index.isin(course_key_index)].copy()
-
     df["start_part_id"] = to_integer(df["start_part_id"])
     df["finish_part_id"] = to_integer(df["finish_part_id"])
 
@@ -184,10 +180,20 @@ def clean_student_status(df, course_keys=None):
     for column in float_columns:
         df[column] = to_float(df[column])
 
-    for column in ["start_level_name_short", "end_level_name_short"]:
+    for column in [
+        "degree_name_sl",
+        "start_level_name_short",
+        "end_level_name_short",
+    ]:
         df[column] = df[column].astype("string").str.strip()
 
     df = add_enrollment_features(df)
+
+    if course_keys is not None:
+        status_key_index = pd.MultiIndex.from_frame(df[STATUS_COURSE_KEYS])
+        course_key_index = pd.MultiIndex.from_frame(course_keys)
+        df = df.loc[status_key_index.isin(course_key_index)].copy()
+
     df = df[FINAL_COLUMNS].copy()
     df = df.sort_values(
         ["student_id", "degree_id", "part_id", "student_status_id"],
