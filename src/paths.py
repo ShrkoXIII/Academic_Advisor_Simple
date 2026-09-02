@@ -27,3 +27,7 @@ CLEAN_STUDENT_DIPLOMA_PATH = CLEAN_DIR / "student_diploma.parquet"
 STUDENT_COURSE_DIPLOMA_PATH = (
     MERGED_DIR / "student_course_enriched_with_diploma.parquet"
 )
+STUDENT_COURSE_WITHOUT_OUTLIERS_PATH = (
+    MERGED_DIR / "student_course_enriched_without_outliers.parquet"
+)
+OUTLIER_STUDENTS_AUDIT_PATH = MERGED_DIR / "outlier_students.parquet"
