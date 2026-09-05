@@ -1,0 +1,40 @@
+{
+  "plan_course_type_id": [
+    "__MISSING__",
+    "__UNKNOWN__",
+    "1",
+    "2",
+    "3"
+  ],
+  "plan_requirement_type_id": [
+    "__MISSING__",
+    "__UNKNOWN__",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6"
+  ],
+  "diploma_type_id": [
+    "__MISSING__",
+    "__UNKNOWN__",
+    "13.111",
+    "15.111",
+    "16.111",
+    "55.111"
+  ],
+  "grade_version_id": [
+    "__MISSING__",
+    "__UNKNOWN__",
+    "2.111",
+    "3.111"
+  ],
+  "part_semester": [
+    "__MISSING__",
+    "__UNKNOWN__",
+    "1",
+    "2",
+    "3"
+  ]
+}
