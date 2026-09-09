@@ -2,10 +2,10 @@ import unittest
 
 import pandas as pd
 
-from src.experiment_degree_points import (
+from src.experiments.modeling import fit_weights
+from src.experiments.specialty_history import (
     SPECIALTY_HISTORY_FEATURES,
     add_specialty_history_features,
-    fit_weights,
 )
 
 
@@ -47,7 +47,10 @@ class SpecialtyHistoryTests(unittest.TestCase):
     def test_test_history_is_frozen_and_ignores_test_outcomes(self):
         _, enriched_test = add_specialty_history_features(self.train, self.test)
         for feature in SPECIALTY_HISTORY_FEATURES:
-            self.assertEqual(enriched_test.iloc[0][feature], enriched_test.iloc[1][feature])
+            self.assertEqual(
+                enriched_test.iloc[0][feature],
+                enriched_test.iloc[1][feature],
+            )
 
     def test_credit_weight_multiplies_temporal_weight(self):
         weights = fit_weights(self.train, credit_weighted=True)

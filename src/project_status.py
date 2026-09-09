@@ -213,6 +213,8 @@ def print_model_metrics():
 
 def main():
     print("Academic Advisor - project build status\n")
+    print("Start here: START_HERE.md")
+    print("Full pipeline: PIPELINE_README.md\n")
     for stage in STAGES:
         status = "DONE" if stage.complete else "PENDING"
         print(f"[{status:7}] {stage.number}. {stage.name}")

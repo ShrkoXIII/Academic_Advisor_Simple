@@ -55,7 +55,7 @@ HISTORY_SUM_COLUMNS = [
 ]
 
 
-def temporal_weight(part_id):
+def temporal_weight(part_id):   ## weight
     year = pd.to_numeric(part_id).floordiv(10)
     return pd.Series(np.where(year < 2022, 0.25, 1.0), index=part_id.index)
 
@@ -98,7 +98,7 @@ def build_history_keys(frame):
 
 @dataclass
 class CourseHistoryState:
-    smoothing_k: float = 20.0
+    smoothing_k: float = 20.0  ## for smoothing the low priority smoothed = (local_sum + smoothing_k * prior) / (support + smoothing_k) كلما زاد الدعم قل التاثير
     min_support: float = 20.0
     tables: dict = field(
         default_factory=lambda: {
@@ -110,7 +110,7 @@ class CourseHistoryState:
         default_factory=lambda: {column: 0.0 for column in HISTORY_SUM_COLUMNS}
     )
 
-    def update(self, outcomes):
+    def update(self, outcomes): ## we store sums to make the average re calculatable  add to the history
         weight = temporal_weight(outcomes["part_id"]).astype("float64")
         mark = pd.to_numeric(outcomes["final_mark"], errors="coerce")
         attempt = pd.to_numeric(outcomes["attempt_number"], errors="coerce")
@@ -139,7 +139,7 @@ class CourseHistoryState:
         for column in HISTORY_SUM_COLUMNS:
             self.global_sums[column] += float(base[column].sum())
 
-    def apply(self, frame):
+    def apply(self, frame): # return the history for each columns 
         row_count = len(frame)
         global_support = float(self.global_sums["effective_support"])
         if global_support:
@@ -201,14 +201,14 @@ class CourseHistoryState:
         return result[COURSE_HISTORY_COLUMNS]
 
 
-def build_temporal_course_history(
+def build_temporal_course_history( ## make sure their is no leackage then calculate the state for each row using its previous data 
     temporal_train,
     temporal_train_roster,
     temporal_test,
     temporal_test_roster,
 ):
     state = CourseHistoryState()
-    train_features = pd.DataFrame(index=temporal_train.index)
+    train_features = pd .DataFrame(index=temporal_train.index)
     train_roster_features = pd.DataFrame(index=temporal_train_roster.index)
 
     for part_id in sorted(temporal_train["part_id"].unique().tolist()):
@@ -297,7 +297,7 @@ def add_student_history_features(temporal_train, temporal_test):
     return train, test
 
 
-def compute_plan_context_features(roster, group_columns=None):
+def compute_plan_context_features(roster, group_columns=None):## بدي احسب حمل الفصل 
     group_columns = group_columns or ["student_id", "degree_id", "part_id"]
     groupers = [roster[column] for column in group_columns]
     credits = pd.to_numeric(roster["course_credits"], errors="coerce").fillna(0.0)
