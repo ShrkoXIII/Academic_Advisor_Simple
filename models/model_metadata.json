@@ -1,5 +1,6 @@
 {
-  "created_at_utc": "2026-09-03T07:51:31.330782+00:00",
+  "feature_engineering_version": 2,
+  "created_at_utc": "2026-09-10T06:30:05.323734+00:00",
   "model_family": "LightGBM",
   "feature_contract": {
     "model_features": [
@@ -135,42 +136,42 @@
   "grade_regressor": {
     "selected_candidate": {
       "candidate": {
-        "name": "capacity_63",
-        "num_leaves": 63,
-        "min_data_in_leaf": 100,
-        "feature_fraction": 0.85,
+        "name": "balanced_31",
+        "num_leaves": 31,
+        "min_data_in_leaf": 80,
+        "feature_fraction": 0.9,
         "bagging_fraction": 0.9,
-        "lambda_l1": 0.2,
-        "lambda_l2": 2.0
+        "lambda_l1": 0.1,
+        "lambda_l2": 1.0
       },
       "folds": [
         {
           "fold": "train_through_2022_validate_2023",
           "fit_rows": 210901,
           "valid_rows": 78759,
-          "best_iteration": 153,
+          "best_iteration": 159,
           "metrics": {
-            "mae": 8.941624469763902,
-            "rmse": 11.89679517578655,
-            "within_5": 0.3618634060869234,
-            "within_10": 0.6502114044109245
+            "mae": 9.364823092627077,
+            "rmse": 12.564710332939011,
+            "within_5": 0.3533183509186252,
+            "within_10": 0.6356860803209792
           }
         },
         {
           "fold": "train_through_2023_validate_2024",
           "fit_rows": 289660,
           "valid_rows": 75925,
-          "best_iteration": 270,
+          "best_iteration": 132,
           "metrics": {
-            "mae": 9.309066089243013,
-            "rmse": 12.305550952005184,
-            "within_5": 0.3460256832400395,
-            "within_10": 0.6293447481066843
+            "mae": 9.831415228079655,
+            "rmse": 13.18744562141344,
+            "within_5": 0.3343167599604873,
+            "within_10": 0.612920645373724
           }
         }
       ],
-      "mean_primary_metric": 9.125345279503456,
-      "mean_best_iteration": 212
+      "mean_primary_metric": 9.598119160353367,
+      "mean_best_iteration": 146
     },
     "all_candidates": [
       {
@@ -188,29 +189,29 @@
             "fold": "train_through_2022_validate_2023",
             "fit_rows": 210901,
             "valid_rows": 78759,
-            "best_iteration": 194,
+            "best_iteration": 159,
             "metrics": {
-              "mae": 8.994906527820522,
-              "rmse": 11.965050395726164,
-              "within_5": 0.3584733173351617,
-              "within_10": 0.6484338297845326
+              "mae": 9.364823092627077,
+              "rmse": 12.564710332939011,
+              "within_5": 0.3533183509186252,
+              "within_10": 0.6356860803209792
             }
           },
           {
             "fold": "train_through_2023_validate_2024",
             "fit_rows": 289660,
             "valid_rows": 75925,
-            "best_iteration": 599,
+            "best_iteration": 132,
             "metrics": {
-              "mae": 9.322992857920973,
-              "rmse": 12.299563598765683,
-              "within_5": 0.3461442212709911,
-              "within_10": 0.6283437602897596
+              "mae": 9.831415228079655,
+              "rmse": 13.18744562141344,
+              "within_5": 0.3343167599604873,
+              "within_10": 0.612920645373724
             }
           }
         ],
-        "mean_primary_metric": 9.158949692870747,
-        "mean_best_iteration": 396
+        "mean_primary_metric": 9.598119160353367,
+        "mean_best_iteration": 146
       },
       {
         "candidate": {
@@ -229,27 +230,27 @@
             "valid_rows": 78759,
             "best_iteration": 153,
             "metrics": {
-              "mae": 8.941624469763902,
-              "rmse": 11.89679517578655,
-              "within_5": 0.3618634060869234,
-              "within_10": 0.6502114044109245
+              "mae": 9.360699696268497,
+              "rmse": 12.54640172349527,
+              "within_5": 0.35239147272057797,
+              "within_10": 0.6335022029228405
             }
           },
           {
             "fold": "train_through_2023_validate_2024",
             "fit_rows": 289660,
             "valid_rows": 75925,
-            "best_iteration": 270,
+            "best_iteration": 135,
             "metrics": {
-              "mae": 9.309066089243013,
-              "rmse": 12.305550952005184,
-              "within_5": 0.3460256832400395,
-              "within_10": 0.6293447481066843
+              "mae": 9.840050263537787,
+              "rmse": 13.182812469091857,
+              "within_5": 0.33406651300625617,
+              "within_10": 0.6121040500493908
             }
           }
         ],
-        "mean_primary_metric": 9.125345279503456,
-        "mean_best_iteration": 212
+        "mean_primary_metric": 9.600374979903142,
+        "mean_best_iteration": 144
       },
       {
         "candidate": {
@@ -266,40 +267,40 @@
             "fold": "train_through_2022_validate_2023",
             "fit_rows": 210901,
             "valid_rows": 78759,
-            "best_iteration": 345,
+            "best_iteration": 140,
             "metrics": {
-              "mae": 8.971263169052822,
-              "rmse": 11.936142303160494,
-              "within_5": 0.36191419393339175,
-              "within_10": 0.6488528295178964
+              "mae": 9.387643298463562,
+              "rmse": 12.568439180428406,
+              "within_5": 0.3503472619002273,
+              "within_10": 0.6333879302682868
             }
           },
           {
             "fold": "train_through_2023_validate_2024",
             "fit_rows": 289660,
             "valid_rows": 75925,
-            "best_iteration": 281,
+            "best_iteration": 156,
             "metrics": {
-              "mae": 9.318645728861501,
-              "rmse": 12.32636992131182,
-              "within_5": 0.3463417846559104,
-              "within_10": 0.6290418175831413
+              "mae": 9.833177576983022,
+              "rmse": 13.186638351178342,
+              "within_5": 0.3350806717155087,
+              "within_10": 0.6113137965097135
             }
           }
         ],
-        "mean_primary_metric": 9.144954448957161,
-        "mean_best_iteration": 313
+        "mean_primary_metric": 9.610410437723292,
+        "mean_best_iteration": 148
       }
     ],
     "parameters": {
       "learning_rate": 0.04,
-      "num_leaves": 63,
-      "min_data_in_leaf": 100,
-      "feature_fraction": 0.85,
+      "num_leaves": 31,
+      "min_data_in_leaf": 80,
+      "feature_fraction": 0.9,
       "bagging_fraction": 0.9,
       "bagging_freq": 1,
-      "lambda_l1": 0.2,
-      "lambda_l2": 2.0,
+      "lambda_l1": 0.1,
+      "lambda_l2": 1.0,
       "max_bin": 255,
       "verbosity": -1,
       "seed": 42,
@@ -312,182 +313,182 @@
       "objective": "regression",
       "metric": "l1"
     },
-    "final_boost_rounds": 212,
+    "final_boost_rounds": 146,
     "test_2025_metrics": {
-      "mae": 9.150164978311652,
-      "rmse": 12.11987720070972,
-      "within_5": 0.3608883315348946,
-      "within_10": 0.6428446440549447
+      "mae": 9.859498895734037,
+      "rmse": 13.242565708636096,
+      "within_5": 0.34649596080375633,
+      "within_10": 0.619061506605617
     },
     "top_feature_importance": [
       {
         "feature": "gpa_prev_1",
-        "gain": 116918384.18200684,
-        "gain_share": 0.2947404341945173
+        "gain": 107212036.08691406,
+        "gain_share": 0.34053589940652973
       },
       {
         "feature": "course_history_avg_mark",
-        "gain": 69553397.76611328,
-        "gain_share": 0.1753376836390036
-      },
-      {
-        "feature": "start_agpa_points",
-        "gain": 45110553.93078613,
-        "gain_share": 0.11371953474500092
+        "gain": 67500498.18457031,
+        "gain_share": 0.21440076784883588
       },
       {
         "feature": "prior_fail_credit_ratio",
-        "gain": 31066306.155395508,
-        "gain_share": 0.07831528488117967
+        "gain": 41729946.03076172,
+        "gain_share": 0.13254616946413797
       },
       {
-        "feature": "prior_total_fail_credits",
-        "gain": 26768130.87097168,
-        "gain_share": 0.06747998247396267
+        "feature": "start_agpa_points",
+        "gain": 31757244.515625,
+        "gain_share": 0.10087003491878858
       },
       {
         "feature": "gpa_prev_2",
-        "gain": 19631838.35180664,
-        "gain_share": 0.04949004898015472
-      },
-      {
-        "feature": "prior_total_fail_courses",
-        "gain": 15640196.869140625,
-        "gain_share": 0.039427489939667354
+        "gain": 14911374.94140625,
+        "gain_share": 0.04736276506252783
       },
       {
         "feature": "course_history_fail_rate",
-        "gain": 9715029.278686523,
-        "gain_share": 0.02449069038924658
+        "gain": 6450172.6748046875,
+        "gain_share": 0.020487581742794036
       },
       {
         "feature": "course_history_effective_support",
-        "gain": 9479036.697143555,
-        "gain_share": 0.023895774915197766
-      },
-      {
-        "feature": "course_history_retake_rate",
-        "gain": 4982537.205932617,
-        "gain_share": 0.012560515523211618
+        "gain": 5883504.925292969,
+        "gain_share": 0.018687683906806564
       },
       {
         "feature": "plan_credits_count",
-        "gain": 4945727.463500977,
-        "gain_share": 0.012467721566617067
-      },
-      {
-        "feature": "course_history_avg_attempt",
-        "gain": 4841018.158447266,
-        "gain_share": 0.012203759091838988
-      },
-      {
-        "feature": "part_semester",
-        "gain": 3702626.3056640625,
-        "gain_share": 0.00933397850668736
-      },
-      {
-        "feature": "course_credits",
-        "gain": 2619713.389526367,
-        "gain_share": 0.006604055190261686
-      },
-      {
-        "feature": "start_total_in_credits",
-        "gain": 2544964.780395508,
-        "gain_share": 0.006415620859212692
-      },
-      {
-        "feature": "degree_credits_count",
-        "gain": 2539210.1611328125,
-        "gain_share": 0.006401113996224656
-      },
-      {
-        "feature": "prior_registered_semesters",
-        "gain": 2350741.4017333984,
-        "gain_share": 0.005926001682912049
+        "gain": 4229867.447753906,
+        "gain_share": 0.013435261266035146
       },
       {
         "feature": "diploma_gpa",
-        "gain": 2219892.5915527344,
-        "gain_share": 0.005596143933026894
+        "gain": 4098466.8686523438,
+        "gain_share": 0.013017895678923131
       },
       {
-        "feature": "prior_total_reg_courses",
-        "gain": 2141934.7036132812,
-        "gain_share": 0.005399619306887748
+        "feature": "prior_total_fail_courses",
+        "gain": 3742437.5356445312,
+        "gain_share": 0.011887045323347051
+      },
+      {
+        "feature": "part_semester",
+        "gain": 3144967.6928710938,
+        "gain_share": 0.009989311284305104
+      },
+      {
+        "feature": "course_history_retake_rate",
+        "gain": 2966089.0654296875,
+        "gain_share": 0.009421141921016611
+      },
+      {
+        "feature": "degree_credits_count",
+        "gain": 2885343.59765625,
+        "gain_share": 0.009164671365146022
+      },
+      {
+        "feature": "course_history_avg_attempt",
+        "gain": 2572885.4267578125,
+        "gain_share": 0.008172215404627184
+      },
+      {
+        "feature": "course_credits",
+        "gain": 1661833.9213867188,
+        "gain_share": 0.0052784568761005
       },
       {
         "feature": "plan_year_order",
-        "gain": 2001878.5849609375,
-        "gain_share": 0.005046550783815023
-      },
-      {
-        "feature": "start_total_in_courses",
-        "gain": 1823605.598022461,
-        "gain_share": 0.0045971410699961555
+        "gain": 1320269.9877929688,
+        "gain_share": 0.004193552740552823
       },
       {
         "feature": "plan_course_type_id",
-        "gain": 1761634.9708251953,
-        "gain_share": 0.004440918849725003
+        "gain": 1293262.193359375,
+        "gain_share": 0.004107768309027106
+      },
+      {
+        "feature": "start_total_in_courses",
+        "gain": 1191143.9213867188,
+        "gain_share": 0.003783411652244113
       },
       {
         "feature": "plan_requirement_type_id",
-        "gain": 1701571.848022461,
-        "gain_share": 0.00428950527163109
+        "gain": 1162118.4682617188,
+        "gain_share": 0.0036912185632369137
       },
       {
-        "feature": "gpa_trend_delta",
-        "gain": 1640757.5346679688,
-        "gain_share": 0.004136198011624473
+        "feature": "start_total_in_credits",
+        "gain": 1044537.638671875,
+        "gain_share": 0.0033177484285508833
       },
       {
-        "feature": "prior_total_reg_credits",
-        "gain": 1557078.4271240234,
-        "gain_share": 0.003925250719946901
+        "feature": "attempt_number",
+        "gain": 861559.8100585938,
+        "gain_share": 0.002736558837227722
+      },
+      {
+        "feature": "prior_total_reg_courses",
+        "gain": 639727.9799804688,
+        "gain_share": 0.0020319578938092888
+      },
+      {
+        "feature": "plan_total_credits",
+        "gain": 493418.58154296875,
+        "gain_share": 0.0015672376589640925
+      },
+      {
+        "feature": "peer_credit_weighted_avg_mark",
+        "gain": 488488.560546875,
+        "gain_share": 0.0015515785110244258
+      },
+      {
+        "feature": "plan_credit_weighted_avg_attempt",
+        "gain": 486106.69921875,
+        "gain_share": 0.001544013042451689
       }
     ]
   },
   "fail_risk_classifier": {
     "selected_candidate": {
       "candidate": {
-        "name": "capacity_63",
-        "num_leaves": 63,
-        "min_data_in_leaf": 100,
-        "feature_fraction": 0.85,
+        "name": "balanced_31",
+        "num_leaves": 31,
+        "min_data_in_leaf": 80,
+        "feature_fraction": 0.9,
         "bagging_fraction": 0.9,
-        "lambda_l1": 0.2,
-        "lambda_l2": 2.0
+        "lambda_l1": 0.1,
+        "lambda_l2": 1.0
       },
       "folds": [
         {
           "fold": "train_through_2022_validate_2023",
           "fit_rows": 210901,
           "valid_rows": 78759,
-          "best_iteration": 235,
+          "best_iteration": 190,
           "metrics": {
-            "pr_auc": 0.4814935576030853,
-            "roc_auc": 0.8855766583609302,
-            "brier": 0.06472725218339549,
-            "log_loss": 0.21412208794528342,
-            "calibration_error_10_bins": 0.00685394747623793
+            "pr_auc": 0.30492704340153837,
+            "roc_auc": 0.8180003002915508,
+            "brier": 0.07510625785955996,
+            "log_loss": 0.2546310703689113,
+            "calibration_error_10_bins": 0.008967794266063306
           }
         },
         {
           "fold": "train_through_2023_validate_2024",
           "fit_rows": 289660,
           "valid_rows": 75925,
-          "best_iteration": 403,
+          "best_iteration": 111,
           "metrics": {
-            "pr_auc": 0.43807348405845453,
-            "roc_auc": 0.8961242828474442,
-            "brier": 0.05044361602340896,
-            "log_loss": 0.1715051302946963,
-            "calibration_error_10_bins": 0.004417400501996358
+            "pr_auc": 0.23126958362759553,
+            "roc_auc": 0.8039043050221322,
+            "brier": 0.060105932756418,
+            "log_loss": 0.21531023758079715,
+            "calibration_error_10_bins": 0.011800195489483517
           }
         }
       ],
-      "mean_primary_metric": 0.19281360911998985,
-      "mean_best_iteration": 319
+      "mean_primary_metric": 0.23497065397485423,
+      "mean_best_iteration": 150
     },
     "all_candidates": [
       {
@@ -505,31 +506,31 @@
             "fold": "train_through_2022_validate_2023",
             "fit_rows": 210901,
             "valid_rows": 78759,
-            "best_iteration": 348,
+            "best_iteration": 190,
             "metrics": {
-              "pr_auc": 0.47769547990356154,
-              "roc_auc": 0.8839687436265369,
-              "brier": 0.06499680187073255,
-              "log_loss": 0.21512662255721696,
-              "calibration_error_10_bins": 0.006528301310552144
+              "pr_auc": 0.30492704340153837,
+              "roc_auc": 0.8180003002915508,
+              "brier": 0.07510625785955996,
+              "log_loss": 0.2546310703689113,
+              "calibration_error_10_bins": 0.008967794266063306
             }
           },
           {
             "fold": "train_through_2023_validate_2024",
             "fit_rows": 289660,
             "valid_rows": 75925,
-            "best_iteration": 790,
+            "best_iteration": 111,
             "metrics": {
-              "pr_auc": 0.43801751475550277,
-              "roc_auc": 0.8954901313380659,
-              "brier": 0.050509228994551264,
-              "log_loss": 0.17177978716098222,
-              "calibration_error_10_bins": 0.00564485187064667
+              "pr_auc": 0.23126958362759553,
+              "roc_auc": 0.8039043050221322,
+              "brier": 0.060105932756418,
+              "log_loss": 0.21531023758079715,
+              "calibration_error_10_bins": 0.011800195489483517
             }
           }
         ],
-        "mean_primary_metric": 0.1934532048590996,
-        "mean_best_iteration": 569
+        "mean_primary_metric": 0.23497065397485423,
+        "mean_best_iteration": 150
       },
       {
         "candidate": {
@@ -546,31 +547,31 @@
             "fold": "train_through_2022_validate_2023",
             "fit_rows": 210901,
             "valid_rows": 78759,
-            "best_iteration": 235,
+            "best_iteration": 138,
             "metrics": {
-              "pr_auc": 0.4814935576030853,
-              "roc_auc": 0.8855766583609302,
-              "brier": 0.06472725218339549,
-              "log_loss": 0.21412208794528342,
-              "calibration_error_10_bins": 0.00685394747623793
+              "pr_auc": 0.3017537216996341,
+              "roc_auc": 0.8170882375922898,
+              "brier": 0.07522281782426773,
+              "log_loss": 0.2552662707335628,
+              "calibration_error_10_bins": 0.00854692647448794
             }
           },
           {
             "fold": "train_through_2023_validate_2024",
             "fit_rows": 289660,
             "valid_rows": 75925,
-            "best_iteration": 403,
+            "best_iteration": 109,
             "metrics": {
-              "pr_auc": 0.43807348405845453,
-              "roc_auc": 0.8961242828474442,
-              "brier": 0.05044361602340896,
-              "log_loss": 0.1715051302946963,
-              "calibration_error_10_bins": 0.004417400501996358
+              "pr_auc": 0.23380583190606238,
+              "roc_auc": 0.8045803388357677,
+              "brier": 0.060003231054031846,
+              "log_loss": 0.21494977958534653,
+              "calibration_error_10_bins": 0.011919198249614986
             }
           }
         ],
-        "mean_primary_metric": 0.19281360911998985,
-        "mean_best_iteration": 319
+        "mean_primary_metric": 0.23510802515945467,
+        "mean_best_iteration": 124
       },
       {
         "candidate": {
@@ -587,42 +588,42 @@
             "fold": "train_through_2022_validate_2023",
             "fit_rows": 210901,
             "valid_rows": 78759,
-            "best_iteration": 209,
+            "best_iteration": 136,
             "metrics": {
-              "pr_auc": 0.4778139538476264,
-              "roc_auc": 0.8845923214209523,
-              "brier": 0.06487913346672719,
-              "log_loss": 0.21476419018440476,
-              "calibration_error_10_bins": 0.004843602601117005
+              "pr_auc": 0.30102404906444286,
+              "roc_auc": 0.8168767878985718,
+              "brier": 0.07525135711806398,
+              "log_loss": 0.25528029935731583,
+              "calibration_error_10_bins": 0.008626032586299832
             }
           },
           {
             "fold": "train_through_2023_validate_2024",
             "fit_rows": 289660,
             "valid_rows": 75925,
-            "best_iteration": 500,
+            "best_iteration": 115,
             "metrics": {
-              "pr_auc": 0.4346999784657323,
-              "roc_auc": 0.8957845994465934,
-              "brier": 0.05059767205530374,
-              "log_loss": 0.17189449272999913,
-              "calibration_error_10_bins": 0.0046705957408479095
+              "pr_auc": 0.2319250179776719,
+              "roc_auc": 0.80413984542608,
+              "brier": 0.06009698050738186,
+              "log_loss": 0.2152439208447151,
+              "calibration_error_10_bins": 0.01207198143831188
             }
           }
         ],
-        "mean_primary_metric": 0.19332934145720193,
-        "mean_best_iteration": 354
+        "mean_primary_metric": 0.23526211010101547,
+        "mean_best_iteration": 126
       }
     ],
     "parameters": {
       "learning_rate": 0.04,
-      "num_leaves": 63,
-      "min_data_in_leaf": 100,
-      "feature_fraction": 0.85,
+      "num_leaves": 31,
+      "min_data_in_leaf": 80,
+      "feature_fraction": 0.9,
       "bagging_fraction": 0.9,
       "bagging_freq": 1,
-      "lambda_l1": 0.2,
-      "lambda_l2": 2.0,
+      "lambda_l1": 0.1,
+      "lambda_l2": 1.0,
       "max_bin": 255,
       "verbosity": -1,
       "seed": 42,
@@ -635,222 +636,198 @@
       "objective": "binary",
       "metric": "binary_logloss"
     },
-    "final_boost_rounds": 319,
+    "final_boost_rounds": 150,
     "uses_class_weights": false,
     "test_2025_metrics": {
-      "pr_auc": 0.5236890138248333,
-      "roc_auc": 0.9032910916167896,
-      "brier": 0.06875243314223363,
-      "log_loss": 0.22019723625327228,
-      "calibration_error_10_bins": 0.02022557122459148
+      "pr_auc": 0.3144603823084235,
+      "roc_auc": 0.8099952405429716,
+      "brier": 0.08367342436618716,
+      "log_loss": 0.28171550308329885,
+      "calibration_error_10_bins": 0.023816231437691866
     },
     "test_2025_calibration": [
       {
         "bin": 0,
         "from_probability": 0.0,
         "to_probability": 0.1,
-        "rows": 51324,
-        "mean_predicted_probability": 0.016182908903554654,
-        "observed_fail_rate": 0.02530979658639233
+        "rows": 48189,
+        "mean_predicted_probability": 0.02652108543082597,
+        "observed_fail_rate": 0.04442922658698043
       },
       {
         "bin": 1,
         "from_probability": 0.1,
         "to_probability": 0.2,
-        "rows": 6853,
-        "mean_predicted_probability": 0.1452464813168581,
-        "observed_fail_rate": 0.2091055012403327
+        "rows": 10925,
+        "mean_predicted_probability": 0.1439577012158584,
+        "observed_fail_rate": 0.19441647597254005
       },
       {
         "bin": 2,
         "from_probability": 0.2,
         "to_probability": 0.3,
-        "rows": 3826,
-        "mean_predicted_probability": 0.24528812741518136,
-        "observed_fail_rate": 0.31468897020386827
+        "rows": 5714,
+        "mean_predicted_probability": 0.24706648448590793,
+        "observed_fail_rate": 0.27318865943297166
       },
       {
         "bin": 3,
         "from_probability": 0.3,
         "to_probability": 0.4,
-        "rows": 2294,
-        "mean_predicted_probability": 0.34639990608812243,
-        "observed_fail_rate": 0.3940714908456844
+        "rows": 2614,
+        "mean_predicted_probability": 0.3416754508615615,
+        "observed_fail_rate": 0.35577658760520275
       },
       {
         "bin": 4,
         "from_probability": 0.4,
         "to_probability": 0.5,
-        "rows": 1555,
-        "mean_predicted_probability": 0.4454088132025823,
-        "observed_fail_rate": 0.4514469453376206
+        "rows": 912,
+        "mean_predicted_probability": 0.43917091436042316,
+        "observed_fail_rate": 0.47039473684210525
       },
       {
         "bin": 5,
         "from_probability": 0.5,
         "to_probability": 0.6,
-        "rows": 881,
-        "mean_predicted_probability": 0.5453363682713175,
-        "observed_fail_rate": 0.5448354143019296
+        "rows": 204,
+        "mean_predicted_probability": 0.5344777278039835,
+        "observed_fail_rate": 0.5490196078431373
       },
       {
         "bin": 6,
         "from_probability": 0.6,
         "to_probability": 0.7,
-        "rows": 823,
-        "mean_predicted_probability": 0.6441206433263746,
-        "observed_fail_rate": 0.5893074119076549
-      },
-      {
-        "bin": 7,
-        "from_probability": 0.7,
-        "to_probability": 0.8,
-        "rows": 405,
-        "mean_predicted_probability": 0.7463272145929912,
-        "observed_fail_rate": 0.6987654320987654
-      },
-      {
-        "bin": 8,
-        "from_probability": 0.8,
-        "to_probability": 0.9,
-        "rows": 402,
-        "mean_predicted_probability": 0.8462238964703482,
-        "observed_fail_rate": 0.7761194029850746
-      },
-      {
-        "bin": 9,
-        "from_probability": 0.9,
-        "to_probability": 1.0,
-        "rows": 215,
-        "mean_predicted_probability": 0.9409196145987168,
-        "observed_fail_rate": 0.958139534883721
+        "rows": 20,
+        "mean_predicted_probability": 0.623342120833829,
+        "observed_fail_rate": 0.55
       }
     ],
     "top_feature_importance": [
       {
-        "feature": "gpa_prev_1",
-        "gain": 162060.09215927124,
-        "gain_share": 0.20345970300525265
+        "feature": "prior_fail_credit_ratio",
+        "gain": 137406.46089553833,
+        "gain_share": 0.32325230481648193
       },
       {
-        "feature": "prior_total_fail_credits",
-        "gain": 130839.11628293991,
-        "gain_share": 0.164263066777935
+        "feature": "gpa_prev_1",
+        "gain": 69524.65179157257,
+        "gain_share": 0.16355856767371937
       },
       {
         "feature": "course_history_fail_rate",
-        "gain": 67918.90422964096,
-        "gain_share": 0.08526935841443303
+        "gain": 67734.81065368652,
+        "gain_share": 0.15934791943122611
       },
       {
         "feature": "start_agpa_points",
-        "gain": 67456.63935947418,
-        "gain_share": 0.08468900410301218
-      },
-      {
-        "feature": "prior_total_fail_courses",
-        "gain": 57268.7425839901,
-        "gain_share": 0.07189852358081793
+        "gain": 29336.943028450012,
+        "gain_share": 0.06901592827884423
       },
       {
         "feature": "gpa_prev_2",
-        "gain": 47880.91456890106,
-        "gain_share": 0.060112496099498036
-      },
-      {
-        "feature": "prior_fail_credit_ratio",
-        "gain": 41276.855421066284,
-        "gain_share": 0.05182137460903851
+        "gain": 16841.42601108551,
+        "gain_share": 0.039619896611836916
       },
       {
         "feature": "course_history_avg_mark",
-        "gain": 24651.69345498085,
-        "gain_share": 0.030949175470032567
+        "gain": 14932.040939331055,
+        "gain_share": 0.035128018128073035
       },
       {
         "feature": "course_history_effective_support",
-        "gain": 22074.545427322388,
-        "gain_share": 0.027713673346581712
-      },
-      {
-        "feature": "prior_registered_semesters",
-        "gain": 14075.80511212349,
-        "gain_share": 0.0176715876778466
-      },
-      {
-        "feature": "prior_total_reg_credits",
-        "gain": 13360.625571012497,
-        "gain_share": 0.016773709519867588
-      },
-      {
-        "feature": "course_history_avg_attempt",
-        "gain": 11563.511446475983,
-        "gain_share": 0.014517507507558503
-      },
-      {
-        "feature": "start_total_in_credits",
-        "gain": 11460.231342792511,
-        "gain_share": 0.014387843634474071
-      },
-      {
-        "feature": "prior_total_reg_courses",
-        "gain": 10849.77017068863,
-        "gain_share": 0.013621435031852598
-      },
-      {
-        "feature": "course_history_retake_rate",
-        "gain": 10826.96894288063,
-        "gain_share": 0.013592809039011554
-      },
-      {
-        "feature": "start_total_in_courses",
-        "gain": 10112.658913850784,
-        "gain_share": 0.012696022517273347
-      },
-      {
-        "feature": "course_credits",
-        "gain": 8424.91541814804,
-        "gain_share": 0.01057713077897143
-      },
-      {
-        "feature": "plan_credits_count",
-        "gain": 7148.02201628685,
-        "gain_share": 0.00897404423958628
-      },
-      {
-        "feature": "gpa_trend_delta",
-        "gain": 5836.255668878555,
-        "gain_share": 0.007327176167996651
-      },
-      {
-        "feature": "peer_difficulty_credit_load",
-        "gain": 5712.149464607239,
-        "gain_share": 0.007171365992118587
-      },
-      {
-        "feature": "plan_year_order",
-        "gain": 5531.817596912384,
-        "gain_share": 0.006944966835147117
-      },
-      {
-        "feature": "diploma_gpa",
-        "gain": 5484.206530332565,
-        "gain_share": 0.006885193121970569
+        "gain": 13807.379007339478,
+        "gain_share": 0.03248222142181757
       },
       {
         "feature": "degree_credits_count",
-        "gain": 5458.928378105164,
-        "gain_share": 0.006853457453576316
+        "gain": 8394.987476348877,
+        "gain_share": 0.019749428323449315
       },
       {
-        "feature": "peer_credit_weighted_avg_mark",
-        "gain": 5078.8708646297455,
-        "gain_share": 0.006376311058147713
+        "feature": "course_history_avg_attempt",
+        "gain": 5431.466458320618,
+        "gain_share": 0.01277766736544019
+      },
+      {
+        "feature": "diploma_gpa",
+        "gain": 5387.2416133880615,
+        "gain_share": 0.012673627257271853
+      },
+      {
+        "feature": "plan_credits_count",
+        "gain": 4813.876890182495,
+        "gain_share": 0.01132477170078119
+      },
+      {
+        "feature": "start_total_in_courses",
+        "gain": 4633.215040206909,
+        "gain_share": 0.01089975995812802
+      },
+      {
+        "feature": "course_history_retake_rate",
+        "gain": 4063.628812789917,
+        "gain_share": 0.0095597934121281
+      },
+      {
+        "feature": "prior_total_fail_courses",
+        "gain": 3901.592197418213,
+        "gain_share": 0.00917859802260864
+      },
+      {
+        "feature": "plan_year_order",
+        "gain": 3721.727861404419,
+        "gain_share": 0.008755462452477433
+      },
+      {
+        "feature": "course_credits",
+        "gain": 3525.797933578491,
+        "gain_share": 0.008294532156045392
+      },
+      {
+        "feature": "part_semester",
+        "gain": 3061.1804342269897,
+        "gain_share": 0.007201507297209807
+      },
+      {
+        "feature": "start_total_in_credits",
+        "gain": 2856.8837966918945,
+        "gain_share": 0.0067208940966436235
+      },
+      {
+        "feature": "attempt_number",
+        "gain": 2530.8242988586426,
+        "gain_share": 0.005953830572155993
+      },
+      {
+        "feature": "prior_total_fail_credits",
+        "gain": 2308.662727355957,
+        "gain_share": 0.005431189645653339
+      },
+      {
+        "feature": "plan_requirement_type_id",
+        "gain": 1843.9159097671509,
+        "gain_share": 0.004337860562271171
+      },
+      {
+        "feature": "plan_credit_weighted_avg_mark",
+        "gain": 1565.63902759552,
+        "gain_share": 0.0036832068949482753
+      },
+      {
+        "feature": "plan_credit_weighted_fail_rate",
+        "gain": 1452.558409690857,
+        "gain_share": 0.0034171817740804604
       },
       {
         "feature": "peer_max_fail_rate",
-        "gain": 4561.480365276337,
-        "gain_share": 0.005726748812849671
+        "gain": 1421.4032125473022,
+        "gain_share": 0.003343888355284657
+      },
+      {
+        "feature": "plan_course_type_id",
+        "gain": 1381.3194942474365,
+        "gain_share": 0.003249590356183314
       }
     ]
   },

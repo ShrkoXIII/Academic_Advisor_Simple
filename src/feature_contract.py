@@ -5,6 +5,16 @@ import pandas as pd
 
 TARGET_GRADE = "final_mark"
 TARGET_FAIL = "is_fail"
+FEATURE_ENGINEERING_VERSION = 2
+
+
+def require_current_features(metadata):
+    if metadata.get("feature_engineering_version") != FEATURE_ENGINEERING_VERSION:
+        raise ValueError(
+            "Stale feature engineering: rebuild temporal features, retrain models, "
+            "then rerun evaluation. Artifacts from before the leakage fix cannot be used."
+        )
+
 
 CATEGORY_MISSING = "__MISSING__"
 CATEGORY_UNKNOWN = "__UNKNOWN__"
@@ -84,6 +94,7 @@ LEAKAGE_COLUMNS = [
     "semester_pass_credits",
     "semester_fail_courses",
     "semester_fail_credits",
+    "reg_total_semesters",
     "total_pass_courses",
     "total_pass_credits",
     "finish_part_id",

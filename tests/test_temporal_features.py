@@ -1,5 +1,6 @@
 from pathlib import Path
 import sys
+import tempfile
 import unittest
 
 import numpy as np
@@ -20,9 +21,12 @@ from feature_contract import (  # noqa: E402
 )
 from temporal_features import (  # noqa: E402
     COURSE_HISTORY_COLUMNS,
+    STUDENT_HISTORY_COLUMNS,
     CourseHistoryState,
     add_student_history_features,
     compute_plan_context_features,
+    load_course_history_state,
+    save_course_history_state,
 )
 
 
@@ -50,12 +54,13 @@ def semester_rows(student_id, parts, gpas):
                 f"{student_id}-{part_id}" for part_id in parts
             ],
             "student_id": [student_id] * len(parts),
+            "degree_id": ["D1"] * len(parts),
             "part_id": parts,
             "gpa_points": gpas,
             "last_enrolled_gpa": [np.nan] * len(parts),
-            "total_reg_courses": sequence * 5,
+            "total_reg_courses": (sequence - 1) * 5,
             "semester_reg_courses": [5] * len(parts),
-            "total_reg_credits": sequence * 15.0,
+            "total_reg_credits": (sequence - 1) * 15.0,
             "semester_reg_credits": [15.0] * len(parts),
             "total_fail_courses": [0] * len(parts),
             "semester_fail_courses": [0] * len(parts),
@@ -67,6 +72,18 @@ def semester_rows(student_id, parts, gpas):
 
 
 class CourseHistoryTests(unittest.TestCase):
+    def test_saved_state_cannot_score_its_own_or_earlier_semester(self):
+        state = CourseHistoryState()
+        state.update(course_rows([20241], [40]))
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "history.pkl"
+            save_course_history_state(state, path)
+            restored = load_course_history_state(path)
+        self.assertEqual(restored.as_of_part, 20241)
+        for part in [20233, 20241]:
+            with self.assertRaisesRegex(ValueError, "before the target"):
+                restored.apply(course_rows([part], [80]))
+
     def test_current_semester_result_does_not_change_its_history_features(self):
         state = CourseHistoryState()
         state.update(course_rows([20221], [40]))
@@ -134,6 +151,48 @@ class PlanContextTests(unittest.TestCase):
 
 
 class StudentHistoryTests(unittest.TestCase):
+    def test_current_and_future_results_cannot_change_current_history(self):
+        history = semester_rows("S1", [20241, 20242, 20243], [2.0, 0.0, 4.0])
+        empty = history.iloc[:0]
+        original, _ = add_student_history_features(history, empty)
+        changed = history.copy()
+        current_or_future = changed.part_id.ge(20242)
+        changed.loc[current_or_future, "gpa_points"] = 4.0
+        changed.loc[current_or_future, "semester_fail_courses"] = 5
+        changed.loc[current_or_future, "semester_fail_credits"] = 15.0
+        changed.loc[current_or_future, "reg_total_semesters"] = 0
+        updated, _ = add_student_history_features(changed, empty)
+        assert_frame_equal(
+            original.loc[original.part_id.le(20242), STUDENT_HISTORY_COLUMNS],
+            updated.loc[updated.part_id.le(20242), STUDENT_HISTORY_COLUMNS],
+        )
+
+    def test_source_totals_are_already_before_current_semester(self):
+        history = semester_rows("S1", [20251, 20252], [0.0, 0.0])
+        history["semester_fail_courses"] = 5
+        history["semester_fail_credits"] = 15.0
+        history["total_fail_courses"] = [0, 5]
+        history["total_fail_credits"] = [0.0, 15.0]
+        enriched, _ = add_student_history_features(history, history.iloc[:0])
+        for suffix in ["reg_courses", "reg_credits", "fail_courses", "fail_credits"]:
+            self.assertEqual(
+                enriched[f"prior_total_{suffix}"].tolist(),
+                history[f"total_{suffix}"].tolist(),
+            )
+        self.assertTrue(pd.isna(enriched.iloc[0].prior_fail_credit_ratio))
+        self.assertEqual(enriched.iloc[1].prior_fail_credit_ratio, 1.0)
+        self.assertEqual(enriched.prior_registered_semesters.tolist(), [0, 1])
+
+    def test_full_status_history_keeps_excluded_and_non_enrolled_semesters(self):
+        history = semester_rows("S1", [20241, 20242, 20243, 20251], [3.0, 1.0, 0.0, 4.0])
+        history.loc[2, "semester_reg_courses"] = 0
+        train = history.iloc[[0]].copy()
+        test = history.iloc[[3]].copy()
+        _, enriched = add_student_history_features(train, test, history)
+        self.assertEqual(enriched.iloc[0].gpa_prev_1, 1.0)
+        self.assertEqual(enriched.iloc[0].gpa_prev_2, 3.0)
+        self.assertEqual(enriched.iloc[0].gpa_trend_delta, -2.0)
+
     def test_gpa_trend_distinguishes_decline_and_improvement(self):
         declining = semester_rows("DOWN", [20221, 20222, 20223], [4.0, 3.0, 2.5])
         improving = semester_rows("UP", [20221, 20222, 20223], [2.0, 3.0, 3.5])

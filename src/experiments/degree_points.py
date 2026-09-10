@@ -1,10 +1,11 @@
 from datetime import datetime, timezone
+import hashlib
 import json
 
 import numpy as np
 import pandas as pd
 
-from ..feature_contract import MODEL_FEATURES
+from ..feature_contract import FEATURE_ENGINEERING_VERSION, MODEL_FEATURES, require_current_features
 from ..grade_scale import GradeScale
 from ..paths import (
     DEGREE_POINTS_CATEGORY_LEVELS_PATH,
@@ -145,10 +146,29 @@ INPUT_COLUMNS = list(
 def load_feature_frames():
     train = pd.read_parquet(TEMPORAL_TRAIN_FEATURES_PATH, columns=INPUT_COLUMNS)
     test = pd.read_parquet(TEMPORAL_TEST_FEATURES_PATH, columns=INPUT_COLUMNS)
+    require_current_features(train.attrs)
+    require_current_features(test.attrs)
     return add_specialty_history_features(train, test)
 
 
-def load_cached_validation():
+def experiment_signature():
+    """Invalidate cached runs when data, feature code, or baseline changes."""
+    digest = hashlib.sha256()
+    inputs = [
+        TEMPORAL_TRAIN_FEATURES_PATH, TEMPORAL_TEST_FEATURES_PATH,
+        MODEL_METADATA_PATH, GRADE_SCALE_PATH,
+        *sorted((PROJECT_ROOT / "src" / "experiments").glob("*.py")),
+        PROJECT_ROOT / "src" / "feature_contract.py",
+        PROJECT_ROOT / "src" / "train_models.py",
+    ]
+    for path in inputs:
+        with path.open("rb") as stream:
+            for block in iter(lambda: stream.read(1024 * 1024), b""):
+                digest.update(block)
+    return digest.hexdigest()
+
+
+def load_cached_validation(signature):
     if not DEGREE_POINTS_VALIDATION_PATH.exists():
         return [], set()
     previous = pd.read_parquet(DEGREE_POINTS_VALIDATION_PATH).drop(
@@ -158,12 +178,15 @@ def load_cached_validation():
         ],
         errors="ignore",
     )
+    if "experiment_signature" not in previous:
+        return [], set()
+    previous = previous[previous["experiment_signature"].eq(signature)]
     completed = set(zip(previous["variant"], previous["validation_year"]))
     return previous.to_dict(orient="records"), completed
 
 
-def run_validation(train, candidate, grade_scale):
-    rows, completed = load_cached_validation()
+def run_validation(train, candidate, grade_scale, signature):
+    rows, completed = load_cached_validation(signature)
     for variant in VARIANTS:
         for fold in FOLDS:
             if (variant["name"], fold["year"]) in completed:
@@ -178,6 +201,7 @@ def run_validation(train, candidate, grade_scale):
             result = evaluate_variant(
                 fit, valid, fold, variant, candidate, grade_scale
             )
+            result["experiment_signature"] = signature
             rows.append(result)
             print(
                 f"  plan_MAE={result['plan_gpa_mae']:.6f} "
@@ -205,6 +229,7 @@ def load_or_train_holdout(
     rounds,
     candidate,
     grade_scale,
+    signature,
 ):
     previous_metadata = None
     if DEGREE_POINTS_EXPERIMENT_METADATA_PATH.exists():
@@ -213,6 +238,8 @@ def load_or_train_holdout(
         )
     can_reuse = (
         previous_metadata is not None
+        and previous_metadata.get("experiment_signature") == signature
+        and previous_metadata.get("feature_engineering_version") == FEATURE_ENGINEERING_VERSION
         and previous_metadata["selected_variant"]["name"] == selected["name"]
         and DEGREE_POINTS_HOLDOUT_COURSES_PATH.exists()
         and DEGREE_POINTS_HOLDOUT_PLANS_PATH.exists()
@@ -252,11 +279,13 @@ def compare_holdout_by_degree(selected_plans):
     return result
 
 
-def build_metadata(selected, rounds, summary, holdout_metrics, baseline_holdout):
+def build_metadata(selected, rounds, summary, holdout_metrics, baseline_holdout, signature):
     numeric_features, categorical_features = feature_columns(
         selected["feature_profile"]
     )
     return {
+        "feature_engineering_version": FEATURE_ENGINEERING_VERSION,
+        "experiment_signature": signature,
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "selection_protocol": (
             "Select only variants improving Plan GPA MAE in both 2023 and 2024; "
@@ -350,24 +379,26 @@ def print_summary(summary, selected, holdout_metrics, baseline_holdout, metadata
 
 def main():
     base_metadata = json.loads(MODEL_METADATA_PATH.read_text(encoding="utf-8"))
+    require_current_features(base_metadata)
+    baseline_report = json.loads(PLAN_GPA_METRICS_PATH.read_text(encoding="utf-8"))
+    require_current_features(baseline_report)
     candidate = base_metadata["grade_regressor"]["selected_candidate"]["candidate"]
     train, test = load_feature_frames()
     grade_scale = GradeScale.from_parquet(GRADE_SCALE_PATH)
+    signature = experiment_signature()
 
-    validation_results, summary = run_validation(train, candidate, grade_scale)
+    validation_results, summary = run_validation(train, candidate, grade_scale, signature)
     selected = select_variant(summary, VARIANTS, BASELINE_VARIANT)
     rounds = selected_round_count(summary, selected)
     print(f"Selected on 2023-2024: {selected['name']} ({rounds} rounds)")
 
     holdout_predictions, holdout_plans, holdout_metrics = load_or_train_holdout(
-        train, test, selected, rounds, candidate, grade_scale
+        train, test, selected, rounds, candidate, grade_scale, signature
     )
-    baseline_holdout = json.loads(
-        PLAN_GPA_METRICS_PATH.read_text(encoding="utf-8")
-    )["overall"]
+    baseline_holdout = baseline_report["overall"]
     by_degree = compare_holdout_by_degree(holdout_plans)
     metadata = build_metadata(
-        selected, rounds, summary, holdout_metrics, baseline_holdout
+        selected, rounds, summary, holdout_metrics, baseline_holdout, signature
     )
     save_results(
         validation_results,

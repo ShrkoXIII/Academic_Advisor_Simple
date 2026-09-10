@@ -237,6 +237,8 @@ def _finish_specialty_history(frame):
 
 
 def add_specialty_history_features(train, test):
+    if not train.empty and not test.empty and test["part_id"].min() <= train["part_id"].max():
+        raise ValueError("Frozen specialty history must precede every test semester.")
     source = _weighted_history_source(train)
     enriched_train = _finish_specialty_history(
         _merge_training_history(train, source)

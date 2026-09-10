@@ -109,8 +109,13 @@ class CourseHistoryState:
     global_sums: dict = field(
         default_factory=lambda: {column: 0.0 for column in HISTORY_SUM_COLUMNS}
     )
+    as_of_part: int | None = None
 
     def update(self, outcomes): ## we store sums to make the average re calculatable  add to the history
+        if outcomes.empty:
+            return
+        if self.as_of_part is not None and outcomes["part_id"].le(self.as_of_part).any():
+            raise ValueError("Course history updates must follow the saved cutoff.")
         weight = temporal_weight(outcomes["part_id"]).astype("float64")
         mark = pd.to_numeric(outcomes["final_mark"], errors="coerce")
         attempt = pd.to_numeric(outcomes["attempt_number"], errors="coerce")
@@ -138,8 +143,11 @@ class CourseHistoryState:
 
         for column in HISTORY_SUM_COLUMNS:
             self.global_sums[column] += float(base[column].sum())
+        self.as_of_part = int(outcomes["part_id"].max())
 
-    def apply(self, frame): # return the history for each columns 
+    def apply(self, frame): # return the history for each columns
+        if self.as_of_part is not None and frame["part_id"].le(self.as_of_part).any():
+            raise ValueError("Course history must end before the target semester.")
         row_count = len(frame)
         global_support = float(self.global_sums["effective_support"])
         if global_support:
@@ -246,24 +254,28 @@ def build_temporal_course_history( ## make sure their is no leackage then calcul
     )
 
 
-def add_student_history_features(temporal_train, temporal_test):
-    combined = pd.concat(
-        [
-            temporal_train.assign(_temporal_split="train"),
-            temporal_test.assign(_temporal_split="test"),
-        ],
-        ignore_index=True,
-    )
-    semester = combined.drop_duplicates("student_status_id").sort_values(
+def add_student_history_features(temporal_train, temporal_test, student_status=None):
+    # Production passes status history BEFORE the course/outcome filters.
+    if student_status is None:
+        student_status = pd.concat([temporal_train, temporal_test], ignore_index=True)
+    semester = student_status.drop_duplicates("student_status_id").sort_values(
         ["student_id", "part_id", "student_status_id"],
         kind="stable",
     )
-    grouped = semester.groupby("student_id", sort=False)
-    computed_previous = grouped["gpa_points"].shift(1)
-    semester["gpa_prev_1"] = computed_previous.combine_first(
-        semester["last_enrolled_gpa"]
+    registered = semester["semester_reg_courses"].gt(0)
+    computed_previous = (
+        semester["gpa_points"].where(registered)
+        .groupby(semester["student_id"], sort=False).ffill()
+        .groupby(semester["student_id"], sort=False).shift(1)
     )
-    semester["gpa_prev_2"] = grouped["gpa_prev_1"].shift(1)
+    semester["gpa_prev_1"] = semester["last_enrolled_gpa"].combine_first(
+        computed_previous
+    )
+    semester["gpa_prev_2"] = (
+        semester["gpa_prev_1"].where(registered)
+        .groupby(semester["student_id"], sort=False).ffill()
+        .groupby(semester["student_id"], sort=False).shift(1)
+    )
     semester["gpa_trend_delta"] = (
         semester["gpa_prev_1"] - semester["gpa_prev_2"]
     )
@@ -271,24 +283,23 @@ def add_student_history_features(temporal_train, temporal_test):
         "int64"
     )
 
-    semester["prior_total_reg_courses"] = (
-        semester["total_reg_courses"] - semester["semester_reg_courses"]
-    )
-    semester["prior_total_reg_credits"] = (
-        semester["total_reg_credits"] - semester["semester_reg_credits"]
-    )
-    semester["prior_total_fail_courses"] = (
-        semester["total_fail_courses"] - semester["semester_fail_courses"]
-    )
-    semester["prior_total_fail_credits"] = (
-        semester["total_fail_credits"] - semester["semester_fail_credits"]
-    )
+    # Source total_* values already describe the START of the semester.
+    # Subtracting semester_fail_* here would expose the target's outcomes.
+    semester["prior_total_reg_courses"] = semester["total_reg_courses"]
+    semester["prior_total_reg_credits"] = semester["total_reg_credits"]
+    semester["prior_total_fail_courses"] = semester["total_fail_courses"]
+    semester["prior_total_fail_credits"] = semester["total_fail_credits"]
     semester["prior_fail_credit_ratio"] = (
         semester["prior_total_fail_credits"]
         / semester["prior_total_reg_credits"].replace(0, pd.NA)
     )
-    semester["prior_registered_semesters"] = (
-        semester["reg_total_semesters"] - 1
+    # Unlike total_* above, this counter can depend on the current outcome.
+    # Read the previous status; leave left-censored history unknown.
+    previous_count = semester.groupby(
+        ["student_id", "degree_id"], sort=False
+    )["reg_total_semesters"].shift(1)
+    semester["prior_registered_semesters"] = previous_count.mask(
+        previous_count.isna() & semester["total_reg_courses"].eq(0), 0
     )
 
     lookup = semester[["student_status_id", *STUDENT_HISTORY_COLUMNS]]
@@ -375,7 +386,8 @@ def compute_plan_context_features(roster, group_columns=None):## بدي احسب
 def save_course_history_state(state, path):
     path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
-        "format_version": 1,
+        "format_version": 2,
+        "as_of_part": state.as_of_part,
         "smoothing_k": state.smoothing_k,
         "min_support": state.min_support,
         "tables": state.tables,
@@ -388,9 +400,12 @@ def save_course_history_state(state, path):
 def load_course_history_state(path):
     with path.open("rb") as stream:
         payload = pickle.load(stream)
+    if payload.get("format_version") != 2:
+        raise ValueError("Rebuild temporal features: saved history has no cutoff.")
     return CourseHistoryState(
         smoothing_k=payload["smoothing_k"],
         min_support=payload["min_support"],
         tables=payload["tables"],
         global_sums=payload["global_sums"],
+        as_of_part=payload["as_of_part"],
     )

@@ -1,10 +1,11 @@
 from itertools import combinations
+import json
 
 import numpy as np
 import pandas as pd
 
 try:
-    from .feature_contract import load_category_levels, prepare_model_matrix
+    from .feature_contract import load_category_levels, prepare_model_matrix, require_current_features
     from .grade_scale import GradeScale
     from .paths import (
         CATEGORY_LEVELS_PATH,
@@ -12,6 +13,7 @@ try:
         FAIL_MODEL_PATH,
         GRADE_MODEL_PATH,
         GRADE_SCALE_PATH,
+        MODEL_METADATA_PATH,
     )
     from .temporal_features import (
         COURSE_HISTORY_COLUMNS,
@@ -20,7 +22,7 @@ try:
         load_course_history_state,
     )
 except ImportError:
-    from feature_contract import load_category_levels, prepare_model_matrix
+    from feature_contract import load_category_levels, prepare_model_matrix, require_current_features
     from grade_scale import GradeScale
     from paths import (
         CATEGORY_LEVELS_PATH,
@@ -28,6 +30,7 @@ except ImportError:
         FAIL_MODEL_PATH,
         GRADE_MODEL_PATH,
         GRADE_SCALE_PATH,
+        MODEL_METADATA_PATH,
     )
     from temporal_features import (
         COURSE_HISTORY_COLUMNS,
@@ -292,9 +295,11 @@ class AcademicPlanRecommender:
         category_levels_path=CATEGORY_LEVELS_PATH,
         course_history_state_path=COURSE_HISTORY_STATE_PATH,
         grade_scale_path=GRADE_SCALE_PATH,
+        model_metadata_path=MODEL_METADATA_PATH,
     ):
         import lightgbm as lgb
 
+        require_current_features(json.loads(model_metadata_path.read_text(encoding="utf-8")))
         return cls(
             grade_model=lgb.Booster(model_file=str(grade_model_path)),
             fail_model=lgb.Booster(model_file=str(fail_model_path)),

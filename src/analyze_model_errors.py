@@ -11,6 +11,7 @@ try:
         learn_category_levels,
         load_category_levels,
         prepare_model_matrix,
+        require_current_features,
         training_weights,
     )
     from .grade_scale import GradeScale
@@ -39,6 +40,7 @@ except ImportError:
         learn_category_levels,
         load_category_levels,
         prepare_model_matrix,
+        require_current_features,
         training_weights,
     )
     from grade_scale import GradeScale
@@ -429,6 +431,7 @@ def main():
     import lightgbm as lgb
 
     metadata = json.loads(MODEL_METADATA_PATH.read_text(encoding="utf-8"))
+    require_current_features(metadata)
     read_columns = list(
         dict.fromkeys(
             [
@@ -450,6 +453,8 @@ def main():
     )
     train = pd.read_parquet(TEMPORAL_TRAIN_FEATURES_PATH, columns=read_columns)
     test = pd.read_parquet(TEMPORAL_TEST_FEATURES_PATH, columns=read_columns)
+    require_current_features(train.attrs)
+    require_current_features(test.attrs)
     final_model = lgb.Booster(model_file=str(GRADE_MODEL_PATH))
     grade_scale = GradeScale.from_parquet(GRADE_SCALE_PATH)
 

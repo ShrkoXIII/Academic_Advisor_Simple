@@ -75,7 +75,8 @@ def add_enrollment_features(df):
 
     first_row = ~df["student_id"].duplicated()
     strong_prior_history = (
-        df["reg_total_semesters"].gt(1)
+        df["total_reg_courses"].gt(0)
+        | df["total_reg_credits"].gt(0)
         | df["start_total_in_credits"].gt(0)
         | df["start_total_in_courses"].gt(0)
     )

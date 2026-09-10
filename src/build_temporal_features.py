@@ -1,7 +1,10 @@
 import pandas as pd
 
+from clean_student_status import clean_student_status
+from feature_contract import FEATURE_ENGINEERING_VERSION
 from paths import (
     COURSE_HISTORY_STATE_PATH,
+    STUDENT_STATUS_PATH,
     TEMPORAL_TEST_FEATURES_PATH,
     TEMPORAL_TEST_PATH,
     TEMPORAL_TEST_ROSTER_PATH,
@@ -31,7 +34,7 @@ def attach_plan_context(target, enriched_roster):
     return target.merge(lookup, on="student_course_id", how="left")
 
 
-def build_feature_tables(train, test, train_roster, test_roster):
+def build_feature_tables(train, test, train_roster, test_roster, student_status=None):
     (
         train_history,
         train_roster_history,
@@ -65,11 +68,12 @@ def build_feature_tables(train, test, train_roster, test_roster):
 
     train = attach_plan_context(train, train_roster)
     test = attach_plan_context(test, test_roster)
-    train, test = add_student_history_features(train, test)
+    train, test = add_student_history_features(train, test, student_status)
 
     for frame in [train, test]:
         frame["part_semester"] = (frame["part_id"] % 10).astype("Int64")
         frame["is_fail"] = frame["final_mark"].lt(50).astype("int64")
+        frame.attrs["feature_engineering_version"] = FEATURE_ENGINEERING_VERSION
 
     return train, test, state
 
@@ -92,6 +96,7 @@ def main():
         pd.read_parquet(TEMPORAL_TEST_PATH),
         pd.read_parquet(TEMPORAL_TRAIN_ROSTER_PATH),
         pd.read_parquet(TEMPORAL_TEST_ROSTER_PATH),
+        clean_student_status(pd.read_parquet(STUDENT_STATUS_PATH)),
     )
 
     TEMPORAL_TRAIN_FEATURES_PATH.parent.mkdir(parents=True, exist_ok=True)

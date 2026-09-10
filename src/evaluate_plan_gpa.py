@@ -5,15 +5,18 @@ import pandas as pd
 
 try:
     from .feature_contract import (
+        FEATURE_ENGINEERING_VERSION,
         MODEL_FEATURES,
         load_category_levels,
         prepare_model_matrix,
+        require_current_features,
     )
     from .grade_scale import GradeScale
     from .paths import (
         CATEGORY_LEVELS_PATH,
         GRADE_MODEL_PATH,
         GRADE_SCALE_PATH,
+        MODEL_METADATA_PATH,
         PLAN_GPA_COURSE_PREDICTIONS_PATH,
         PLAN_GPA_EVALUATION_PATH,
         PLAN_GPA_METRICS_PATH,
@@ -21,15 +24,18 @@ try:
     )
 except ImportError:
     from feature_contract import (
+        FEATURE_ENGINEERING_VERSION,
         MODEL_FEATURES,
         load_category_levels,
         prepare_model_matrix,
+        require_current_features,
     )
     from grade_scale import GradeScale
     from paths import (
         CATEGORY_LEVELS_PATH,
         GRADE_MODEL_PATH,
         GRADE_SCALE_PATH,
+        MODEL_METADATA_PATH,
         PLAN_GPA_COURSE_PREDICTIONS_PATH,
         PLAN_GPA_EVALUATION_PATH,
         PLAN_GPA_METRICS_PATH,
@@ -139,6 +145,7 @@ def build_metrics_report(course_predictions, plans):
         by_part[str(int(part_id))] = summarize_plan_errors(part_plans)
     return {
         "evaluation_unit": "student_id + degree_id + part_id",
+        "feature_engineering_version": FEATURE_ENGINEERING_VERSION,
         "actual_plan_gpa_formula": (
             "sum(course_credits * actual_points) / sum(course_credits)"
         ),
@@ -189,8 +196,10 @@ def print_report(report, plans):
 def main():
     import lightgbm as lgb
 
+    require_current_features(json.loads(MODEL_METADATA_PATH.read_text(encoding="utf-8")))
     columns = list(dict.fromkeys([*AUDIT_COLUMNS, *MODEL_FEATURES]))
     test = pd.read_parquet(TEMPORAL_TEST_FEATURES_PATH, columns=columns)
+    require_current_features(test.attrs)
     course_predictions = predict_course_points(
         test,
         lgb.Booster(model_file=str(GRADE_MODEL_PATH)),

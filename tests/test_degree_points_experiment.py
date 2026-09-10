@@ -1,6 +1,7 @@
 import unittest
 
 import pandas as pd
+from pandas.testing import assert_frame_equal
 
 from src.experiments.modeling import fit_weights
 from src.experiments.specialty_history import (
@@ -10,6 +11,21 @@ from src.experiments.specialty_history import (
 
 
 class SpecialtyHistoryTests(unittest.TestCase):
+    def test_changing_current_or_future_labels_changes_no_earlier_features(self):
+        original, original_test = add_specialty_history_features(self.train, self.test)
+        changed = self.train.copy()
+        changed.loc[changed.part_id.ge(20221), ["final_mark", "points", "is_fail"]] = [0, 0, 1]
+        updated, _ = add_specialty_history_features(changed, self.test)
+        assert_frame_equal(original[SPECIALTY_HISTORY_FEATURES], updated[SPECIALTY_HISTORY_FEATURES])
+        _, updated_test = add_specialty_history_features(
+            self.train, self.test.assign(final_mark=50, points=2, is_fail=0)
+        )
+        assert_frame_equal(original_test[SPECIALTY_HISTORY_FEATURES], updated_test[SPECIALTY_HISTORY_FEATURES])
+
+    def test_frozen_history_rejects_overlap_with_test_semester(self):
+        with self.assertRaisesRegex(ValueError, "precede every test"):
+            add_specialty_history_features(self.train, self.test.assign(part_id=20221))
+
     def setUp(self):
         self.train = pd.DataFrame(
             {
