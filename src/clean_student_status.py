@@ -1,16 +1,11 @@
 import pandas as pd
 
-from cleaning_utils import (
-    clean_column_names,
-    clean_id_columns,
-    to_float,
-    to_integer,
-)
-from paths import (
-    CLEAN_STUDENT_COURSE_PATH,
-    CLEAN_STUDENT_STATUS_PATH,
-    STUDENT_STATUS_PATH,
-)
+try:
+    from .cleaning_utils import clean_column_names, clean_id_columns, to_float, to_integer
+    from .paths import CLEAN_STUDENT_COURSE_PATH, CLEAN_STUDENT_STATUS_PATH, STUDENT_STATUS_PATH
+except ImportError:
+    from cleaning_utils import clean_column_names, clean_id_columns, to_float, to_integer
+    from paths import CLEAN_STUDENT_COURSE_PATH, CLEAN_STUDENT_STATUS_PATH, STUDENT_STATUS_PATH
 
 
 EXCLUDED_PERMANENT_STATUS_IDS = [1, 4, 11, 12, 15, 16, 41]

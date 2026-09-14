@@ -236,38 +236,38 @@ sample_weight = 1.00  # من 2022 حتى 2024
 - snapshot آمن يمثل حالة الطالب قبل الفصل المستهدف.
 - قائمة مقررات قانونية وجاهزة؛ توليد الأهلية والمتطلبات السابقة خارج نطاق هذه
   الطبقة.
-- `min_credits`, `max_credits`, `max_courses`.
-- `max_expected_failed_credits`: حد المخاطرة بوحدة الساعات المتوقع رسوبها.
+- `credits` لقيمة محددة بالضبط، أو `min_credits` و`max_credits` لقبول جميع الخطط ضمن المجال شاملاً طرفيه.
+- `current_gpa`: معدل الطالب الحالي لمقارنة معدل كل خطة به.
 
-مع نحو 15 مادة يعدّد النظام جميع المجموعات الممكنة، يحذف المخالف للحدود، ثم
-يعيد حساب خصائص الحمل ويتوقع كل مقرر داخل سياق كل خطة. مثال الاستدعاء:
+يعدّد النظام كل المجموعات المطابقة للساعات بعدد مواد متغير، ثم يعيد حساب
+خصائص الحمل ويتوقع كل مقرر داخل سياق كل خطة على دفعات. مثال الاستدعاء:
 
 ```python
 from src.recommendation import AcademicPlanRecommender
 
 advisor = AcademicPlanRecommender.load()
-plans = advisor.recommend(
+plans, result = advisor.recommend(
     student_snapshot=snapshot,
     candidate_courses=legal_candidates,
     part_id=20261,
     min_credits=12,
     max_credits=18,
-    max_courses=6,
-    max_expected_failed_credits=3.0,
+    current_gpa=2.5,
+    batch_size=2000,
     top_n=5,
 )
 ```
 
-يحوّل `src/grade_scale.py` العلامة المتوقعة إلى نقاط باستخدام جدول الدرجات
-الرسمي ونسخة الطالب `grade_version_id`. ترتيب الخطط ثابت:
+يتوقع المودل المختار من `degree_points` النقاط مباشرة. ترتيب الخطط ثابت:
 
-1. حذف الخطط التي تتجاوز حد المخاطرة.
-2. أعلى `expected_quality_points = Σ credits × grade_points(predicted_mark)`.
+1. الاحتفاظ بالخطط التي معدلها المتوقع أعلى تماماً من `current_gpa`.
+2. أعلى `expected_plan_gpa = Σ credits × expected_points / Σ credits`.
 3. عند التعادل: أقل `expected_failed_credits = Σ credits × p_fail`.
-4. ثم أعلى `expected_passed_credits = Σ credits × (1-p_fail)`.
+4. ثم `plan_id` ثابت لكسر التعادل.
 
-يعيد كل اقتراح توقع العلامة واحتمال الرسوب لكل مادة، إضافة إلى شرح عدد المواد
-والساعات ومتوسط الصعوبة التاريخية الموزون بالساعات.
+يعيد كل اقتراح النقاط المتوقعة واحتمال الرسوب لكل مادة وعدد المواد والساعات.
+لحفظ تفاصيل جميع الخطط استخدم `python -m src.recommend_local`؛ دليل الملفات
+وsnapshot والتشغيل والاختبارات في [LOCAL_RECOMMENDATION.md](LOCAL_RECOMMENDATION.md).
 
 ## 9. تقييم خطأ GPA للخطة الفعلية
 
@@ -299,12 +299,12 @@ plan_gpa_error     = predicted_plan_gpa - actual_plan_gpa
 
 يقارن `src/experiment_degree_points.py` بين إدخال `degree_id` كفئة، وإحصائيات
 الاختصاص التاريخية، وتوقع العلامة أو النقاط، ووزن التدريب بساعات المقرر. اختيرت
-النسخة الفائزة على 2023–2024 فقط، ثم حققت على 2025 Plan GPA MAE يساوي
-`0.3450` مقابل `0.3764` للـbaseline، أي تحسن `8.34%`.
+النسخة الفائزة على 2023–2024 فقط، ثم قيّمت على 2025. المرجع الحالي للنسخة
+والأرقام هو `data/evaluation/experiments/degree_points/experiment_metadata.json`.
 
 التحسن الأساسي جاء من توقع النقاط مباشرة؛ تاريخ الاختصاص أضاف تحسنًا أصغر،
-بينما أثر وزن الساعات المعزول كان ضعيفًا. لم يستبدل هذا المودل المودل الأساسي
-بعد، لأن اعتماد scoring يحتاج backtesting للخطط البديلة.
+بينما أثر وزن الساعات المعزول كان ضعيفًا. يستخدم مسار التوصية المحلي الآن
+مودل النقاط المختار، وتبقى جودة اختيار الخطط البديلة بحاجة لتقييم مستقل.
 
 التقرير الكامل:
 [`reports/degree_points_experiment.md`](reports/degree_points_experiment.md).

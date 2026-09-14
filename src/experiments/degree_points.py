@@ -200,7 +200,7 @@ def run_validation(train, candidate, grade_scale, signature):
             print(f"Running {variant['name']} on {fold['year']}...", flush=True)
             result = evaluate_variant(
                 fit, valid, fold, variant, candidate, grade_scale
-            )
+            )#fit_experiment_model()-> model.predict()-> course_predictions()-> aggregate_plans()-> prediction_metrics()
             result["experiment_signature"] = signature
             rows.append(result)
             print(
@@ -222,7 +222,7 @@ def selected_round_count(summary, selected):
     )
 
 
-def load_or_train_holdout(
+def load_or_train_holdout(      
     train,
     test,
     selected,

@@ -1,0 +1,627 @@
+{
+  "generated_at_utc": "2026-09-14T11:19:37.287777+00:00",
+  "rules": {
+    "scope": "part_id >= 20251; inclusive recorded load 12 through 18 credits",
+    "registered_courses": "register_status in [R, E]; raw outcomes retained",
+    "pass_fail_codes": [
+      "P",
+      "F",
+      "FA",
+      "FE"
+    ],
+    "pass_fail_definition_source": "src/clean_student_course.py:FINISH_STATUS_MAP",
+    "candidate": "registered_credits_before_filter between 12 and 18; pass_fail_credits < 12, including zero",
+    "before": "recorded semester_reg_credits, reconciled to the raw registered course sum",
+    "after": "sum(course_credits) for finish_status in [P, F, FA, FE]",
+    "known_status_reduction": "registered_credits_before_filter - known_non_pass_fail_credits < 12",
+    "unknown_outcomes": "missing finish_status alone cannot establish a withdrawal or other status change",
+    "graduation_exceptions": "start_level_name_short >= max active plan year_order OR recorded credits equal positive degree_credits_count - start_total_in_credits",
+    "retained": "known status codes suffice to cross below 12, exact status matches, and neither graduation exception applies",
+    "excluded": "known status codes suffice to cross below 12 and a graduation exception applies",
+    "unresolved": "missing or inconsistent exact status, insufficient exception data, or missing outcomes needed to cross below 12",
+    "temporal_limit": "Sources have no change timestamps; these are before/after outcome-filter credit totals, not proof of a dated registration reduction.",
+    "output_grain": "one row per registered course with exact student-degree-semester status; all pass/fail and other courses preserved"
+  },
+  "sources": {
+    "status": {
+      "path": "data/raw/v_add_student_degree_status.parquet",
+      "rows": 189158,
+      "sha256": "8395641d4dfcfd4e731ead84a53d38b6593e7f5349abf75156f4a10a7a962371"
+    },
+    "courses": {
+      "path": "data/raw/v_crg_student_course_raw.parquet",
+      "rows": 1017491,
+      "sha256": "bb25f5413d67cfb3fe41e24f4efee1b90330e4cbdd41a06dcddf91ea33081bba"
+    },
+    "plan": {
+      "path": "data/raw/v_acd_degree_course.parquet",
+      "rows": 4006,
+      "sha256": "13eafd910db4caead2132b17ce4a90d470dbaf691e488f14647e16a20efee848"
+    },
+    "grade": {
+      "path": "data/raw/v_acs_grade.parquet",
+      "rows": 72,
+      "sha256": "557e1cb7b03b09d690d639c8d61c50e5e537360d0dec0684e6a283047111aad2"
+    }
+  },
+  "all_candidates": {
+    "student_semesters": 1836,
+    "unique_students": 1467
+  },
+  "cohorts": {
+    "retained": {
+      "student_semesters": 1153,
+      "unique_students": 957,
+      "course_rows": 5748,
+      "file": "student_under_12_after_status_change.parquet"
+    },
+    "excluded": {
+      "student_semesters": 638,
+      "unique_students": 472,
+      "course_rows": 3369,
+      "file": "student_under_12_after_status_change_excluded.parquet"
+    },
+    "unresolved": {
+      "student_semesters": 45,
+      "unique_students": 45,
+      "course_rows": 208,
+      "file": "student_under_12_after_status_change_unresolved.parquet"
+    }
+  },
+  "by_semester": [
+    {
+      "part_id": 20251,
+      "all_candidates": {
+        "student_semesters": 893,
+        "unique_students": 893
+      },
+      "known_status_reduction_with_exact_status": {
+        "student_semesters": 893,
+        "unique_students": 893
+      },
+      "retained": {
+        "student_semesters": 593,
+        "unique_students": 593
+      },
+      "excluded": {
+        "student_semesters": 300,
+        "unique_students": 300
+      },
+      "unresolved": {
+        "student_semesters": 0,
+        "unique_students": 0
+      },
+      "retained_with_zero_pass_fail_credits": 219,
+      "retained_with_positive_pass_fail_credits": 374
+    },
+    {
+      "part_id": 20252,
+      "all_candidates": {
+        "student_semesters": 899,
+        "unique_students": 899
+      },
+      "known_status_reduction_with_exact_status": {
+        "student_semesters": 897,
+        "unique_students": 897
+      },
+      "retained": {
+        "student_semesters": 560,
+        "unique_students": 560
+      },
+      "excluded": {
+        "student_semesters": 337,
+        "unique_students": 337
+      },
+      "unresolved": {
+        "student_semesters": 2,
+        "unique_students": 2
+      },
+      "retained_with_zero_pass_fail_credits": 185,
+      "retained_with_positive_pass_fail_credits": 375
+    },
+    {
+      "part_id": 20253,
+      "all_candidates": {
+        "student_semesters": 44,
+        "unique_students": 44
+      },
+      "known_status_reduction_with_exact_status": {
+        "student_semesters": 1,
+        "unique_students": 1
+      },
+      "retained": {
+        "student_semesters": 0,
+        "unique_students": 0
+      },
+      "excluded": {
+        "student_semesters": 1,
+        "unique_students": 1
+      },
+      "unresolved": {
+        "student_semesters": 43,
+        "unique_students": 43
+      },
+      "retained_with_zero_pass_fail_credits": 0,
+      "retained_with_positive_pass_fail_credits": 0
+    }
+  ],
+  "retained_status_pass_fail_sum_disagrees_with_course_codes": 355,
+  "known_non_pass_fail_codes_in_retained": [
+    {
+      "finish_status_code_for_audit": "D",
+      "course_rows": 293,
+      "credits": 868.0,
+      "unique_students": 58
+    },
+    {
+      "finish_status_code_for_audit": "W",
+      "course_rows": 2399,
+      "credits": 6820.0,
+      "unique_students": 718
+    },
+    {
+      "finish_status_code_for_audit": "Z",
+      "course_rows": 833,
+      "credits": 2370.5,
+      "unique_students": 313
+    }
+  ],
+  "unresolved_cases": [
+    {
+      "student_id": "31092.111",
+      "degree_id": "44.111",
+      "part_id": 20252,
+      "registered_credits_before_filter": 13.0,
+      "pass_fail_credits": 10.0,
+      "known_non_pass_fail_credits": 3.0,
+      "missing_finish_status_credits": 0.0,
+      "reason": "missing_exact_student_degree_semester_status"
+    },
+    {
+      "student_id": "31330.111",
+      "degree_id": "46.111",
+      "part_id": 20252,
+      "registered_credits_before_filter": 14.0,
+      "pass_fail_credits": 8.0,
+      "known_non_pass_fail_credits": 6.0,
+      "missing_finish_status_credits": 0.0,
+      "reason": "missing_exact_student_degree_semester_status"
+    },
+    {
+      "student_id": "10944.111",
+      "degree_id": "13.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "12010.111",
+      "degree_id": "13.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "12611.111",
+      "degree_id": "6.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "13261.111",
+      "degree_id": "1.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "14528.111",
+      "degree_id": "13.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "14618.111",
+      "degree_id": "3.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "14721.111",
+      "degree_id": "8.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "14946.111",
+      "degree_id": "3.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "15117.111",
+      "degree_id": "6.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "15266.111",
+      "degree_id": "1.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "16082.111",
+      "degree_id": "1.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "17472.111",
+      "degree_id": "27.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "18078.111",
+      "degree_id": "29.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "18187.111",
+      "degree_id": "13.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "18246.111",
+      "degree_id": "26.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "18248.111",
+      "degree_id": "3.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "18874.111",
+      "degree_id": "1.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "19058.111",
+      "degree_id": "24.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "19089.111",
+      "degree_id": "1.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "19413.111",
+      "degree_id": "26.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "20448.111",
+      "degree_id": "13.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "22043.111",
+      "degree_id": "26.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "22198.111",
+      "degree_id": "26.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "22303.111",
+      "degree_id": "26.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "22440.111",
+      "degree_id": "7.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "22736.111",
+      "degree_id": "8.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "23260.111",
+      "degree_id": "1.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "23757.111",
+      "degree_id": "1.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "24060.111",
+      "degree_id": "26.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "24477.111",
+      "degree_id": "24.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "25213.111",
+      "degree_id": "26.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "26462.111",
+      "degree_id": "34.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "26657.111",
+      "degree_id": "33.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "26901.111",
+      "degree_id": "36.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "27679.111",
+      "degree_id": "13.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "28527.111",
+      "degree_id": "29.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "28726.111",
+      "degree_id": "13.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "29222.111",
+      "degree_id": "41.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "29748.111",
+      "degree_id": "53.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "30381.111",
+      "degree_id": "54.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "33617.111",
+      "degree_id": "40.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "33671.111",
+      "degree_id": "60.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    },
+    {
+      "student_id": "5745.111",
+      "degree_id": "3.111",
+      "part_id": 20253,
+      "registered_credits_before_filter": 12.0,
+      "pass_fail_credits": 0.0,
+      "known_non_pass_fail_credits": 0.0,
+      "missing_finish_status_credits": 12.0,
+      "reason": "missing_outcomes_needed_or_insufficient_status_data"
+    }
+  ],
+  "previous_outputs_unchanged": {
+    "student_over_polict.parquet": "74ad28c685f4c0378073af8fa640a855e667fdd18b4ed629fce110a4ef7adf0e",
+    "student_over_polict_excluded.parquet": "f9d69d53b73bfece9995fbcd690606fb3cf00f0167cdaa37d938353f1bf484b0",
+    "student_over_polict_unresolved.parquet": "5863948b1e7861f3a3fa31f986e114a1539939faf333196cac73dcd0be9ba6cf"
+  },
+  "validation": "Unique composite status joins, reconciled registered credits/counts, conserved course credits, cohort partition, exception checks, and three Parquet read-back checks passed."
+}

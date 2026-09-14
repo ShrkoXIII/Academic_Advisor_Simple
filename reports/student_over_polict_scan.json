@@ -1,0 +1,179 @@
+{
+  "generated_at_utc": "2026-09-14T10:48:34.245003+00:00",
+  "rules": {
+    "semester_filter": "part_id >= 20251 (inclusive, including 20253)",
+    "load_filter": "0 < semester_reg_credits < 12; zero means no registration",
+    "registered_courses": "register_status in [R, E]; no outcome or GPA filters",
+    "join_key": [
+      "student_id",
+      "degree_id",
+      "part_id"
+    ],
+    "final_year_order": "max(year_order) per degree_id in the active raw curriculum",
+    "final_year": "start_level_name_short >= final_year_order",
+    "remaining_credits_start": "degree_credits_count - start_total_in_credits",
+    "all_remaining": "remaining_credits_start > 0 and semester_reg_credits equals remaining_credits_start",
+    "excluded": "final_year OR all_remaining; evaluated separately for each semester",
+    "unresolved": "missing status, inconsistent registration totals, or insufficient exception data",
+    "output_grain": "one raw registered course joined to its student-degree-semester status",
+    "suffixes": "shared non-key raw columns use _course and _status",
+    "policy_scope": "requested numerical screen; does not establish a summer policy violation"
+  },
+  "sources": {
+    "status": {
+      "path": "data\\raw\\v_add_student_degree_status.parquet",
+      "rows": 189158,
+      "sha256": "8395641d4dfcfd4e731ead84a53d38b6593e7f5349abf75156f4a10a7a962371"
+    },
+    "courses": {
+      "path": "data\\raw\\v_crg_student_course_raw.parquet",
+      "rows": 1017491,
+      "sha256": "bb25f5413d67cfb3fe41e24f4efee1b90330e4cbdd41a06dcddf91ea33081bba"
+    },
+    "plan": {
+      "path": "data\\raw\\v_acd_degree_course.parquet",
+      "rows": 4006,
+      "sha256": "13eafd910db4caead2132b17ce4a90d470dbaf691e488f14647e16a20efee848"
+    }
+  },
+  "scan": {
+    "status_rows_in_window": 20365,
+    "course_rows_in_window_all_statuses": 101418,
+    "registered_course_rows_in_window": 89967,
+    "zero_credit_status_rows_not_enrolled": 1669,
+    "course_student_semesters_missing_status": 16,
+    "matched_registration_totals_disagree": 0
+  },
+  "all_low_load": {
+    "student_semesters": 5046,
+    "unique_students": 4924
+  },
+  "status_confirmed_low_load": {
+    "student_semesters": 5041,
+    "unique_students": 4919
+  },
+  "exception_counts_status_confirmed": {
+    "final_year_at_start": 2003,
+    "all_remaining_credits": 685,
+    "both": 684
+  },
+  "cohorts": {
+    "retained": {
+      "student_semesters": 3037,
+      "unique_students": 3037,
+      "course_rows": 7026,
+      "file": "student_over_polict.parquet"
+    },
+    "excluded": {
+      "student_semesters": 2004,
+      "unique_students": 1882,
+      "course_rows": 4694,
+      "file": "student_over_polict_excluded.parquet"
+    },
+    "unresolved": {
+      "student_semesters": 5,
+      "unique_students": 5,
+      "course_rows": 10,
+      "file": "student_over_polict_unresolved.parquet"
+    }
+  },
+  "by_semester": [
+    {
+      "part_id": 20251,
+      "status_confirmed_low_load": {
+        "student_semesters": 205,
+        "unique_students": 205
+      },
+      "retained": {
+        "student_semesters": 0,
+        "unique_students": 0
+      },
+      "excluded": {
+        "student_semesters": 205,
+        "unique_students": 205
+      },
+      "unresolved": {
+        "student_semesters": 0,
+        "unique_students": 0
+      }
+    },
+    {
+      "part_id": 20252,
+      "status_confirmed_low_load": {
+        "student_semesters": 235,
+        "unique_students": 235
+      },
+      "retained": {
+        "student_semesters": 0,
+        "unique_students": 0
+      },
+      "excluded": {
+        "student_semesters": 235,
+        "unique_students": 235
+      },
+      "unresolved": {
+        "student_semesters": 0,
+        "unique_students": 0
+      }
+    },
+    {
+      "part_id": 20253,
+      "status_confirmed_low_load": {
+        "student_semesters": 4601,
+        "unique_students": 4601
+      },
+      "retained": {
+        "student_semesters": 3037,
+        "unique_students": 3037
+      },
+      "excluded": {
+        "student_semesters": 1564,
+        "unique_students": 1564
+      },
+      "unresolved": {
+        "student_semesters": 5,
+        "unique_students": 5
+      }
+    },
+    {
+      "part_id": 20254,
+      "status_confirmed_low_load": {
+        "student_semesters": 0,
+        "unique_students": 0
+      },
+      "retained": {
+        "student_semesters": 0,
+        "unique_students": 0
+      },
+      "excluded": {
+        "student_semesters": 0,
+        "unique_students": 0
+      },
+      "unresolved": {
+        "student_semesters": 0,
+        "unique_students": 0
+      }
+    },
+    {
+      "part_id": 20261,
+      "status_confirmed_low_load": {
+        "student_semesters": 0,
+        "unique_students": 0
+      },
+      "retained": {
+        "student_semesters": 0,
+        "unique_students": 0
+      },
+      "excluded": {
+        "student_semesters": 0,
+        "unique_students": 0
+      },
+      "unresolved": {
+        "student_semesters": 0,
+        "unique_students": 0
+      }
+    }
+  ],
+  "retained_students_reaching_final_year_at_end": 62,
+  "validation": "Exact composite joins, no duplicate source records, registration total reconciliation, complete cohort partition, and all three Parquet read-back comparisons passed."
+}

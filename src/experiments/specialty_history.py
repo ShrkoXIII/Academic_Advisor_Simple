@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from dataclasses import dataclass
 
 from ..feature_contract import training_weights
 
@@ -247,3 +248,36 @@ def add_specialty_history_features(train, test):
         _merge_frozen_test_history(test, source)
     )
     return enriched_train, enriched_test
+
+
+@dataclass
+class FrozenSpecialtyHistory:
+    """Inference lookup using exactly the experiment's frozen training totals."""
+
+    as_of_part: int
+    global_totals: pd.Series
+    degree_totals: pd.DataFrame
+    requirement_totals: pd.DataFrame
+
+    @classmethod
+    def from_training(cls, train):
+        source = _weighted_history_source(train)
+        return cls(
+            int(train["part_id"].max()),
+            _total_aggregates(source, [], "global").iloc[0],
+            _total_aggregates(source, ["degree_id"], "degree"),
+            _total_aggregates(source, ["degree_id", "plan_requirement_type_id"], "degree_requirement"),
+        )
+
+    def apply(self, candidates):
+        if not candidates.empty and candidates["part_id"].min() <= self.as_of_part:
+            raise ValueError("Frozen specialty history must precede the target semester.")
+        result = candidates.copy()
+        for column, value in self.global_totals.items():
+            result[column] = value
+        result = result.merge(self.degree_totals, on="degree_id", how="left", validate="many_to_one")
+        result = result.merge(
+            self.requirement_totals, on=["degree_id", "plan_requirement_type_id"],
+            how="left", validate="many_to_one",
+        )
+        return _finish_specialty_history(result)

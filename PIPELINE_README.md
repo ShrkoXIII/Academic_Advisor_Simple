@@ -478,7 +478,7 @@ MODEL_FEATURES الرسمية: 47
 = 57 خاصية
 
 target = points
-sample_weight = temporal_weight × course_credits
+sample_weight = temporal_weight  # النسخة المختارة حالياً: degree_history_points_temporal
 ```
 
 المخرجات التفصيلية:
@@ -528,21 +528,24 @@ src/feature_contract.py
 - student snapshot قبل الفصل.
 - قائمة مواد قانونية جاهزة.
 - `part_id`.
-- حدود الساعات وعدد المواد.
-- حد الساعات المتوقع رسوبها.
+- ساعات محددة نطابقها بالضبط، أو مجال نقبل جميع الخطط ضمنه شاملاً طرفيه، مع عدد مواد متغير.
+- معدل الطالب الحالي: يقبل كل خطة معدلها المتوقع أعلى منه، دون حد استبعاد للرسوب.
 
 الملفات التي يحملها:
 
 ```text
-models/grade_regressor.txt
+models/experiments/degree_points/selected_model.txt
+models/experiments/degree_points/selected_category_levels.json
 models/fail_risk_classifier.txt
 data/artifacts/category_levels.json
 data/artifacts/course_history_state.pkl
-data/raw/v_acs_grade.parquet
+data/features/temporal_train_features.parquet
+data/evaluation/experiments/degree_points/experiment_metadata.json
 ```
 
-المحرك الحالي ما زال يرتب حسب points المحولة من علامة GradeRegressor. مودل
-Expected Points التجريبي لم يُدمج داخله بعد.
+المحرك يستخدم Expected Points مباشرة، ويحسب خصائص حمل كل خطة على دفعات.
+التشغيل: `python -m src.recommend_local`. تفاصيل الإدخال والحفظ والاختبارات
+في [LOCAL_RECOMMENDATION.md](LOCAL_RECOMMENDATION.md).
 
 ## 17. المسار القادم: بناء المواد القانونية وBacktesting
 
@@ -565,7 +568,9 @@ src/recommendation.py
 مقارنة الخطة المقترحة بالخطة الفعلية تاريخيًا
 ```
 
-هذه هي المرحلة الحالية غير المكتملة في المشروع.
+التوليد والتقييم المحليان جاهزان من قائمة مواد معتمدة بصيغة JSON أو Parquet.
+ربط جهة الشركة وتحديد معنى صفوف الفصل الفارغ وتقييم سياسة الترشيح على بيانات
+فعلية ما زالت خطوات لاحقة؛ لن نبني قواعد أهلية بديلة عن القائمة المعتمدة.
 
 ## 18. ملفات المتابعة والاختبارات
 
