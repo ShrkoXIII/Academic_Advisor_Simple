@@ -9,16 +9,15 @@ import numpy as np
 import pandas as pd
 
 from .experiments.modeling import prepare_matrix
-from .experiments.specialty_history import FrozenSpecialtyHistory
 from .feature_contract import MODEL_FEATURES, load_category_levels, prepare_model_matrix, require_current_features
+from .frozen_history import load_frozen_history, validate_history_pair, validate_history_selection
 from .paths import (
-    CATEGORY_LEVELS_PATH, COURSE_HISTORY_STATE_PATH, FAIL_MODEL_PATH, MODEL_METADATA_PATH,
+    CATEGORY_LEVELS_PATH, FAIL_MODEL_PATH, MODEL_METADATA_PATH,
     DEGREE_POINTS_SELECTED_MODEL_PATH, DEGREE_POINTS_CATEGORY_LEVELS_PATH,
-    DEGREE_POINTS_EXPERIMENT_METADATA_PATH, TEMPORAL_TRAIN_FEATURES_PATH,
+    DEGREE_POINTS_EXPERIMENT_METADATA_PATH,
 )
 from .temporal_features import (
     COURSE_HISTORY_COLUMNS, PLAN_CONTEXT_COLUMNS, compute_plan_context_features,
-    load_course_history_state,
 )
 
 STUDENT_SNAPSHOT_COLUMNS = [
@@ -35,7 +34,9 @@ CANDIDATE_COURSE_COLUMNS = [
 ]
 SUMMARY_COLUMNS = [
     "plan_id", "course_count", "total_credits", "expected_quality_points",
-    "expected_plan_gpa", "gpa_gain", "expected_failed_credits",
+    "expected_plan_gpa", "projected_cumulative_gpa", "expected_cumulative_gpa_gain",
+    "is_expected_cumulative_improvement", "expected_failed_credits",
+    "projected_gpa_requires_repeat_policy", "gpa_gain",
 ]
 COURSE_OUTPUT_COLUMNS = [
     "plan_id", "course_id", "course_name", "course_credits", "expected_points", "fail_probability",
@@ -96,12 +97,28 @@ def build_plan_rows(candidates, plans, first_plan_id=0):
 
 def rank_plans(summaries):
     return summaries.sort_values(
-        ["expected_plan_gpa", "expected_failed_credits", "plan_id"],
-        ascending=[False, True, True], kind="stable",
+        ["projected_cumulative_gpa", "expected_failed_credits", "expected_plan_gpa", "plan_id"],
+        ascending=[False, True, False, True], kind="stable",
     ).reset_index(drop=True)
 
 
-def summarize_scored_plans(scored_courses, current_gpa):
+def project_cumulative_gpa(current_gpa, current_gpa_credits, expected_quality_points, plan_total_credits):
+    """Standard additive projection, scalar or vector; no repeat replacement.
+
+    For repeated courses this is only an additive scenario. The official policy
+    for replacing prior quality points/credits must be supplied separately.
+    """
+    gpa, credits = float(current_gpa), float(current_gpa_credits)
+    quality, plan_credits = np.asarray(expected_quality_points, dtype=float), np.asarray(plan_total_credits, dtype=float)
+    if not np.isfinite([gpa, credits]).all() or not 0 <= gpa <= 4 or credits < 0:
+        raise ValueError("GPA must be finite in [0, 4] and current_gpa_credits finite and nonnegative.")
+    if (not np.isfinite(quality).all() or not np.isfinite(plan_credits).all()
+            or np.any(plan_credits <= 0) or np.any(quality < 0) or np.any(quality > 4 * plan_credits)):
+        raise ValueError("Plan credits must be positive and quality points finite in [0, 4 * credits].")
+    return (gpa * credits + quality) / (credits + plan_credits)
+
+
+def summarize_scored_plans(scored_courses, current_gpa, current_gpa_credits):
     work = scored_courses.assign(
         quality=scored_courses["course_credits"] * scored_courses["expected_points"],
         failed=scored_courses["course_credits"] * scored_courses["fail_probability"],
@@ -111,13 +128,51 @@ def summarize_scored_plans(scored_courses, current_gpa):
         expected_quality_points=("quality", "sum"), expected_failed_credits=("failed", "sum"),
     ).reset_index()
     summary["expected_plan_gpa"] = summary["expected_quality_points"] / summary["total_credits"]
+    summary["projected_cumulative_gpa"] = project_cumulative_gpa(
+        current_gpa, current_gpa_credits, summary["expected_quality_points"], summary["total_credits"],
+    )
+    summary["expected_cumulative_gpa_gain"] = summary["projected_cumulative_gpa"] - current_gpa
+    summary["is_expected_cumulative_improvement"] = summary["projected_cumulative_gpa"].gt(current_gpa)
+    # Observed prior attempts are a conservative warning, not a replacement rule.
+    repeat = work["attempt_number"].gt(1).groupby(work["plan_id"]).any()
+    summary["projected_gpa_requires_repeat_policy"] = summary["plan_id"].map(repeat).astype("bool")
+    # Legacy field retained ONLY as the semester-GPA gap; it is not the objective.
     summary["gpa_gain"] = summary["expected_plan_gpa"] - current_gpa
-    return rank_plans(summary.loc[summary["expected_plan_gpa"].gt(current_gpa), SUMMARY_COLUMNS])
+    return rank_plans(summary[SUMMARY_COLUMNS])
 
 
 def empty_summaries():
-    return pd.DataFrame({c: pd.Series(dtype="int64" if c in ["plan_id", "course_count"] else "float64")
+    return pd.DataFrame({c: pd.Series(dtype="bool" if c in ["is_expected_cumulative_improvement", "projected_gpa_requires_repeat_policy"]
+                                     else "int64" if c in ["plan_id", "course_count"] else "float64")
                          for c in SUMMARY_COLUMNS})
+
+
+def model_training_provenance(metadata):
+    """Keep legacy cutoff evidence distinct from the selected serving history."""
+    if "training_as_of_part" in metadata:
+        return {"training_as_of_part": int(metadata["training_as_of_part"]), "basis": "explicit_model_metadata"}
+    cutoff = metadata.get("course_history", {}).get("test_state_frozen_after_part")
+    if cutoff is not None:
+        return {"training_as_of_part": int(cutoff), "basis": "legacy_model_metadata.course_history.test_state_frozen_after_part"}
+    if metadata.get("history_protocol", {}).get("holdout_2025") == "frozen after 2024":
+        return {"training_as_of_part": 20243, "basis": "inferred_from_legacy_model_metadata.history_protocol.holdout_2025"}
+    return {"training_as_of_part": None, "basis": "not_recorded_in_model_metadata"}
+
+
+def resolve_current_gpa_credits(snapshot, override=None):
+    """Use prior registered credits: snapshot prior_total_reg_credits = source total_reg_credits."""
+    if override is not None:
+        value, source = override, "explicit_override"
+    elif "current_gpa_credits" in snapshot:
+        value, source = snapshot["current_gpa_credits"], "snapshot.current_gpa_credits"
+    else:
+        value, source = snapshot.get("prior_total_reg_credits"), "snapshot.prior_total_reg_credits"
+    if value is None or pd.isna(value):
+        raise ValueError("Supply known current_gpa_credits; snapshot prior_total_reg_credits (source total_reg_credits) is missing.")
+    value = float(value)
+    if not np.isfinite(value) or value < 0:
+        raise ValueError("current_gpa_credits must be finite and nonnegative.")
+    return value, source
 
 
 class AcademicPlanRecommender:
@@ -127,10 +182,11 @@ class AcademicPlanRecommender:
         self.points_levels, self.fail_levels = points_levels, fail_levels
         self.course_history, self.specialty_history = course_history, specialty_history
         self.metadata, self.provenance = metadata, provenance or {}
+        validate_history_pair(course_history, specialty_history, course_history.as_of_part)
         self.num_threads = num_threads
 
     @classmethod
-    def load(cls, num_threads=4):
+    def load(cls, *, history_as_of_part, num_threads=4, history_root=None):
         import lightgbm as lgb
 
         metadata = json.loads(DEGREE_POINTS_EXPERIMENT_METADATA_PATH.read_text(encoding="utf-8"))
@@ -139,14 +195,9 @@ class AcademicPlanRecommender:
         require_current_features(fail_metadata)
         if metadata["selected_variant"]["target"] != "points":
             raise ValueError("The selected artifact must predict points directly.")
-        train = pd.read_parquet(TEMPORAL_TRAIN_FEATURES_PATH, columns=[
-            "part_id", "degree_id", "plan_requirement_type_id", "final_mark", "is_fail", "points",
-        ])
-        require_current_features(train.attrs)
-        course_history = load_course_history_state(COURSE_HISTORY_STATE_PATH)
-        specialty_history = FrozenSpecialtyHistory.from_training(train)
-        if course_history.as_of_part != specialty_history.as_of_part:
-            raise ValueError("Course and specialty history cutoffs do not match; rebuild artifacts.")
+        course_history, specialty_history, history_provenance = load_frozen_history(
+            history_as_of_part, root=history_root,
+        )
         points = lgb.Booster(model_file=str(DEGREE_POINTS_SELECTED_MODEL_PATH))
         fail = lgb.Booster(model_file=str(FAIL_MODEL_PATH))
         if points.feature_name() != metadata["feature_contract"]["model_features"]:
@@ -161,18 +212,28 @@ class AcademicPlanRecommender:
             "experiment_signature": metadata["experiment_signature"],
             "feature_engineering_version": metadata["feature_engineering_version"],
             "history_as_of_part": specialty_history.as_of_part,
+            "history": history_provenance,
+            "training": {
+                "expected_points": model_training_provenance(metadata),
+                "fail_risk": model_training_provenance(fail_metadata),
+            },
             "artifact_sha256": {p.name: sha256(p.read_bytes()).hexdigest() for p in [
                 DEGREE_POINTS_SELECTED_MODEL_PATH, DEGREE_POINTS_CATEGORY_LEVELS_PATH,
                 FAIL_MODEL_PATH, CATEGORY_LEVELS_PATH,
+                DEGREE_POINTS_EXPERIMENT_METADATA_PATH, MODEL_METADATA_PATH,
             ]},
         }
         return cls(points, fail, load_category_levels(DEGREE_POINTS_CATEGORY_LEVELS_PATH),
                    load_category_levels(CATEGORY_LEVELS_PATH), course_history,
                    specialty_history, metadata, provenance, num_threads)
 
-    def prepare_candidates(self, student_snapshot, candidate_courses, part_id):
-        if int(part_id) <= self.specialty_history.as_of_part:
-            raise ValueError("Target semester must follow frozen training history.")
+    def prepare_candidates(self, student_snapshot, candidate_courses, part_id, *, allow_older_history=False):
+        validate_history_pair(self.course_history, self.specialty_history, self.course_history.as_of_part)
+        validate_history_selection(part_id, self.course_history.as_of_part, allow_older_history=allow_older_history)
+        for training in self.provenance.get("training", {}).values():
+            cutoff = training["training_as_of_part"]
+            if cutoff is not None and cutoff >= int(part_id):
+                raise ValueError("Model training cutoff must precede the target semester.")
         if int(student_snapshot["part_id"]) != int(part_id):
             raise ValueError("Snapshot must describe the target semester's start.")
         missing = set(STUDENT_SNAPSHOT_COLUMNS) - student_snapshot.keys()
@@ -210,8 +271,9 @@ class AcademicPlanRecommender:
 
     def recommend(self, student_snapshot, candidate_courses, part_id, current_gpa,
                   credits=None, min_credits=None, max_credits=None, batch_size=2000,
-                  top_n=5, course_sink=None, progress=None):
-        """Return all accepted summaries and top-N details; stream course rows to sink."""
+                  top_n=3, course_sink=None, progress=None, current_gpa_credits=None,
+                  allow_older_history=False):
+        """Rank every matching plan; return all summaries and top-N course details."""
         started = perf_counter()
         if current_gpa is None or pd.isna(current_gpa):
             raise ValueError("Supply a known current_gpa; snapshot start_agpa_points is missing.")
@@ -220,25 +282,26 @@ class AcademicPlanRecommender:
             raise ValueError("current_gpa must be between 0 and 4.")
         if batch_size < 1 or top_n < 1:
             raise ValueError("batch_size and top_n must be positive.")
+        current_gpa_credits, credits_source = resolve_current_gpa_credits(student_snapshot, current_gpa_credits)
         lower, upper = resolve_credit_bounds(credits, min_credits, max_credits)
-        candidates = self.prepare_candidates(student_snapshot, candidate_courses, part_id)
+        candidates = self.prepare_candidates(student_snapshot, candidate_courses, part_id,
+                                              allow_older_history=allow_older_history)
         iterator = enumerate_plan_indices(candidates, min_credits=lower, max_credits=upper)
         summaries, top = [], empty_summaries()
         top_courses = pd.DataFrame(columns=COURSE_OUTPUT_COLUMNS)
         evaluated = 0
         while batch := list(islice(iterator, batch_size)):
             scored = self.score_rows(build_plan_rows(candidates, batch, evaluated))
-            accepted = summarize_scored_plans(scored, current_gpa)
+            scored_plans = summarize_scored_plans(scored, current_gpa, current_gpa_credits)
             evaluated += len(batch)
-            if not accepted.empty:
-                summaries.append(accepted)
-                course_rows = scored.loc[scored.plan_id.isin(accepted.plan_id), COURSE_OUTPUT_COLUMNS]
-                if course_sink is not None:
-                    course_sink(course_rows)
-                top = rank_plans(pd.concat([top, accepted], ignore_index=True)).head(top_n)
-                selected_rows = course_rows[course_rows.plan_id.isin(top.plan_id)]
-                top_courses = selected_rows.copy() if top_courses.empty else pd.concat([top_courses, selected_rows], ignore_index=True)
-                top_courses = top_courses[top_courses.plan_id.isin(top.plan_id)]
+            summaries.append(scored_plans)
+            course_rows = scored[COURSE_OUTPUT_COLUMNS]
+            if course_sink is not None:
+                course_sink(course_rows)
+            top = rank_plans(pd.concat([top, scored_plans], ignore_index=True)).head(top_n)
+            selected_rows = course_rows[course_rows.plan_id.isin(top.plan_id)]
+            top_courses = selected_rows.copy() if top_courses.empty else pd.concat([top_courses, selected_rows], ignore_index=True)
+            top_courses = top_courses[top_courses.plan_id.isin(top.plan_id)]
             if progress is not None:
                 progress(evaluated)
         all_plans = rank_plans(pd.concat(summaries, ignore_index=True)) if summaries else empty_summaries()
@@ -248,13 +311,27 @@ class AcademicPlanRecommender:
             item["plan_id"], item["course_count"], item["rank"] = int(row.plan_id), int(row.course_count), rank
             item["courses"] = json.loads(top_courses[top_courses.plan_id.eq(row.plan_id)].to_json(orient="records", double_precision=15))
             recommendations.append(item)
-        status = "ok" if len(all_plans) else ("no_matching_credit_plan" if evaluated == 0 else "no_plan_above_current_gpa")
+        status = "ok" if len(all_plans) else "no_matching_credit_plan"
+        improvement_count = int(all_plans.is_expected_cumulative_improvement.sum())
         return all_plans, {
             "status": status, "student_id": str(student_snapshot["student_id"]),
             "degree_id": str(student_snapshot["degree_id"]), "part_id": int(part_id),
             "target_credits": float(lower) if lower == upper else None,
             "min_credits": float(lower), "max_credits": float(upper), "current_gpa": current_gpa,
+            "current_gpa_credits": current_gpa_credits, "current_gpa_credits_source": credits_source,
+            "projected_gpa_method": "standard_additive_without_repeat_replacement",
+            "repeat_detection": "observed_prior_cleaned_attempts_only; earlier/excluded attempts may be missing",
+            **validate_history_selection(part_id, self.course_history.as_of_part, allow_older_history=allow_older_history),
             "candidate_count": len(candidates), "matching_plan_count": evaluated,
+            "scored_plan_count": len(all_plans), "returned_plan_count": len(recommendations),
+            "plans_with_expected_improvement": improvement_count,
+            "has_expected_improvement": improvement_count > 0,
+            "best_projected_cumulative_gpa": recommendations[0]["projected_cumulative_gpa"] if recommendations else None,
+            "best_expected_cumulative_gpa_gain": recommendations[0]["expected_cumulative_gpa_gain"] if recommendations else None,
+            "history": self.provenance.get("history"),
+            "model_training": self.provenance.get("training"),
+            "top_n": top_n,
+            # Compatibility alias: all scored feasible plans, irrespective of GPA.
             "accepted_plan_count": len(all_plans), "batch_size": batch_size,
             "elapsed_seconds": perf_counter() - started, "model": self.provenance,
             "recommendations": recommendations,

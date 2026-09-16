@@ -1,0 +1,140 @@
+{
+  "before": {
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\data\\artifacts\\history\\as_of_20243\\course_history_state.pkl": "4b085ae5c25c33a7aa3594d1430dcf72d604ca9c166929beceb137fc987bf1bd",
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\data\\artifacts\\history\\as_of_20243\\metadata.json": "95027a4207ff19c759f36daf2f311c1a5867df69ae168b69ec3edafe980fb5d2",
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\data\\artifacts\\history\\as_of_20243\\specialty_history_state.pkl": "35f9eab5ae66685c3aa4179cc1925f0714557646dbdd28ccadf93edad95575de",
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\data\\artifacts\\course_history_state.pkl": "4b085ae5c25c33a7aa3594d1430dcf72d604ca9c166929beceb137fc987bf1bd",
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\models\\experiments\\degree_points\\selected_model.txt": "80b4deee2c6b0334de24477287d181eb8a2723dba109a3e025775de4a0162977",
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\models\\fail_risk_classifier.txt": "3800574525919857b0177793d2605a9ae9488c2255e0e879229c661d09f61995",
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\models\\model_metadata.json": "4115bdb25a588022388affd812af18217c0a0bc8bf5915c81efb0eebb5fe416b",
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\data\\evaluation\\experiments\\degree_points\\experiment_metadata.json": "c873abdafee47d4fb82ac4240e63bdedd8e260467f091c1eb9a897f2d9afd2d1",
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\data\\features\\temporal_train_features.parquet": "61bb3a7abb580b50600f1d1ddcea9db6c8e092bbf7c9975d416f78d48a2f1ecd",
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\data\\features\\temporal_test_features.parquet": "b0f50db3ff1f41c3e3f59fcc21b60d89942cb126b4b4ff9969bdf2694cd1dda2"
+  },
+  "after": {
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\data\\artifacts\\history\\as_of_20243\\course_history_state.pkl": "4b085ae5c25c33a7aa3594d1430dcf72d604ca9c166929beceb137fc987bf1bd",
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\data\\artifacts\\history\\as_of_20243\\metadata.json": "95027a4207ff19c759f36daf2f311c1a5867df69ae168b69ec3edafe980fb5d2",
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\data\\artifacts\\history\\as_of_20243\\specialty_history_state.pkl": "35f9eab5ae66685c3aa4179cc1925f0714557646dbdd28ccadf93edad95575de",
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\data\\artifacts\\course_history_state.pkl": "4b085ae5c25c33a7aa3594d1430dcf72d604ca9c166929beceb137fc987bf1bd",
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\models\\experiments\\degree_points\\selected_model.txt": "80b4deee2c6b0334de24477287d181eb8a2723dba109a3e025775de4a0162977",
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\models\\fail_risk_classifier.txt": "3800574525919857b0177793d2605a9ae9488c2255e0e879229c661d09f61995",
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\models\\model_metadata.json": "4115bdb25a588022388affd812af18217c0a0bc8bf5915c81efb0eebb5fe416b",
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\data\\evaluation\\experiments\\degree_points\\experiment_metadata.json": "c873abdafee47d4fb82ac4240e63bdedd8e260467f091c1eb9a897f2d9afd2d1",
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\data\\features\\temporal_train_features.parquet": "61bb3a7abb580b50600f1d1ddcea9db6c8e092bbf7c9975d416f78d48a2f1ecd",
+    "D:\\AI\\Real projects\\Academic_Advisor_Simple\\data\\features\\temporal_test_features.parquet": "b0f50db3ff1f41c3e3f59fcc21b60d89942cb126b4b4ff9969bdf2694cd1dda2"
+  },
+  "all_original_hashes_unchanged": true,
+  "old_history_rows": 365585,
+  "new_history_rows": 400507,
+  "old_course_global_sums": {
+    "effective_support": 264538.25,
+    "raw_count": 365585,
+    "mark_sum": 18766357.5,
+    "fail_sum": 23076.75,
+    "attempt_sum": 294683,
+    "retake_sum": 23772.25
+  },
+  "new_course_global_sums": {
+    "effective_support": 299460.25,
+    "raw_count": 400507,
+    "mark_sum": 21213709.5,
+    "fail_sum": 26844.75,
+    "attempt_sum": 332470,
+    "retake_sum": 25927.25
+  },
+  "recommendations": [
+    {
+      "target_part": 20251,
+      "history_as_of_part": 20243,
+      "current_gpa": 3.12,
+      "current_gpa_credits": 68,
+      "matching_plan_count": 18425,
+      "scored_plan_count": 18425,
+      "returned_plan_count": 3,
+      "has_expected_improvement": false,
+      "best_projected_cumulative_gpa": 3.100568980157209,
+      "best_expected_cumulative_gpa_gain": -0.019431019842791,
+      "result_path": "D:\\AI\\Real projects\\Academic_Advisor_Simple\\data\\evaluation\\recommendations\\projected_frozen_verified_20251\\result.json",
+      "top_three": [
+        {
+          "rank": 1,
+          "plan_id": 8031,
+          "total_credits": 12,
+          "expected_plan_gpa": 2.990459867714728,
+          "projected_cumulative_gpa": 3.100568980157209,
+          "projected_gpa_requires_repeat_policy": false
+        },
+        {
+          "rank": 2,
+          "plan_id": 2049,
+          "total_credits": 12,
+          "expected_plan_gpa": 2.987302466260738,
+          "projected_cumulative_gpa": 3.10009536993911,
+          "projected_gpa_requires_repeat_policy": false
+        },
+        {
+          "rank": 3,
+          "plan_id": 6793,
+          "total_credits": 12,
+          "expected_plan_gpa": 2.9865371733529,
+          "projected_cumulative_gpa": 3.099980576002935,
+          "projected_gpa_requires_repeat_policy": false
+        }
+      ]
+    },
+    {
+      "target_part": 20252,
+      "history_as_of_part": 20251,
+      "current_gpa": 3.11,
+      "current_gpa_credits": 86,
+      "matching_plan_count": 203814,
+      "scored_plan_count": 203814,
+      "returned_plan_count": 3,
+      "has_expected_improvement": false,
+      "best_projected_cumulative_gpa": 3.094896100742877,
+      "best_expected_cumulative_gpa_gain": -0.015103899257123,
+      "result_path": "D:\\AI\\Real projects\\Academic_Advisor_Simple\\data\\evaluation\\recommendations\\projected_frozen_verified_20252\\result.json",
+      "top_three": [
+        {
+          "rank": 1,
+          "plan_id": 26701,
+          "total_credits": 12,
+          "expected_plan_gpa": 2.98665148940016,
+          "projected_cumulative_gpa": 3.094896100742877,
+          "projected_gpa_requires_repeat_policy": false
+        },
+        {
+          "rank": 2,
+          "plan_id": 20769,
+          "total_credits": 12,
+          "expected_plan_gpa": 2.982910993320312,
+          "projected_cumulative_gpa": 3.094438080814732,
+          "projected_gpa_requires_repeat_policy": false
+        },
+        {
+          "rank": 3,
+          "plan_id": 7710,
+          "total_credits": 12,
+          "expected_plan_gpa": 2.9817958447324,
+          "projected_cumulative_gpa": 3.094301532008048,
+          "projected_gpa_requires_repeat_policy": false
+        }
+      ]
+    }
+  ],
+  "tests": {
+    "command": ".\\.venv\\Scripts\\python.exe -m unittest discover -s tests -v",
+    "before": 43,
+    "after": 61,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 13.854
+  },
+  "notes": [
+    "start_total_in_credits confirmed by the project owner as the previous cumulative GPA denominator; additive formula uses multiplication G*C.",
+    "Repeat replacement is not implemented. Observed cleaned prior attempts trigger a conservative warning.",
+    "Current exports were used to build reproducible states now; this does not establish historical publication times or candidate eligibility.",
+    "The Expected Points training cutoff is inferred from legacy model metadata, independently of the selected history."
+  ]
+}

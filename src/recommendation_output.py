@@ -1,4 +1,4 @@
-"""Stream accepted course details; keep one ranked summary row per accepted plan."""
+"""Stream every feasible plan's course details and persist all ranked summaries."""
 from datetime import datetime, timezone
 import json
 from pathlib import Path

@@ -44,6 +44,33 @@ TEMPORAL_TEST_ROSTER_PATH = TEMPORAL_DIR / "temporal_test_roster.parquet"
 TEMPORAL_TRAIN_FEATURES_PATH = FEATURE_DIR / "temporal_train_features.parquet"
 TEMPORAL_TEST_FEATURES_PATH = FEATURE_DIR / "temporal_test_features.parquet"
 COURSE_HISTORY_STATE_PATH = ARTIFACT_DIR / "course_history_state.pkl"
+FROZEN_HISTORY_DIR = ARTIFACT_DIR / "history"
+
+
+def academic_part(value):
+    """Validate the project's YYYY{1,2,3} academic-part identifiers."""
+    text = str(value)
+    if len(text) != 5 or not text.isdigit() or int(text[-1]) not in (1, 2, 3):
+        raise ValueError(f"Invalid academic part: {value!r}; expected YYYY1, YYYY2 or YYYY3.")
+    return int(text)
+
+
+def frozen_history_dir(as_of_part, root=None):
+    return Path(root if root is not None else FROZEN_HISTORY_DIR) / f"as_of_{academic_part(as_of_part)}"
+
+
+def course_history_state_path(as_of_part, root=None):
+    return frozen_history_dir(as_of_part, root) / "course_history_state.pkl"
+
+
+def specialty_history_state_path(as_of_part, root=None):
+    return frozen_history_dir(as_of_part, root) / "specialty_history_state.pkl"
+
+
+def history_metadata_path(as_of_part, root=None):
+    return frozen_history_dir(as_of_part, root) / "metadata.json"
+
+
 CATEGORY_LEVELS_PATH = ARTIFACT_DIR / "category_levels.json"
 GRADE_MODEL_PATH = MODEL_DIR / "grade_regressor.txt"
 FAIL_MODEL_PATH = MODEL_DIR / "fail_risk_classifier.txt"

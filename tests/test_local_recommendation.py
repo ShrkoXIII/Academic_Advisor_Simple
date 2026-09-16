@@ -72,15 +72,16 @@ class EnumerationTests(unittest.TestCase):
     def test_mixed_credit_totals_rank_by_gpa_not_quality_point_sum(self):
         rows = pd.DataFrame({"plan_id": [0, 1], "course_id": ["A", "B"],
                              "course_credits": [12., 18.], "expected_points": [3.5, 3.0],
-                             "fail_probability": [0.1, 0.1]})
-        self.assertEqual(summarize_scored_plans(rows, 2.5).plan_id.tolist(), [0, 1])
+                             "fail_probability": [0.1, 0.1], "attempt_number": [1, 1]})
+        self.assertEqual(summarize_scored_plans(rows, 2.5, 60).plan_id.tolist(), [0, 1])
 
-    def test_gpa_strict_threshold_and_risk_only_tiebreak(self):
+    def test_gpa_improvement_flag_and_risk_only_tiebreak(self):
         rows = pd.DataFrame({"plan_id": [0, 1, 2, 3], "course_id": list("ABCD"),
                              "course_credits": [3.] * 4, "expected_points": [2.5, 2.50000001, 3, 3],
-                             "fail_probability": [0, 1, 0.5, 0.1]})
-        result = summarize_scored_plans(rows, 2.5)
-        self.assertEqual(result.plan_id.tolist(), [3, 2, 1])
+                             "fail_probability": [0, 1, 0.5, 0.1], "attempt_number": [1] * 4})
+        result = summarize_scored_plans(rows, 2.5, 60)
+        self.assertEqual(result.plan_id.tolist(), [3, 2, 1, 0])
+        self.assertEqual(result.is_expected_cumulative_improvement.tolist(), [True, True, True, False])
 
 
 class ImportTests(unittest.TestCase):
@@ -132,9 +133,8 @@ class ImportTests(unittest.TestCase):
 @unittest.skipUnless(DEGREE_POINTS_SELECTED_MODEL_PATH.exists(), "Local model artifacts unavailable")
 class ArtifactLoadTests(unittest.TestCase):
     def test_load_succeeds_from_real_artifacts(self):
-        engine = AcademicPlanRecommender.load(num_threads=2)
-        train_parts = pd.read_parquet(TEMPORAL_TRAIN_FEATURES_PATH, columns=["part_id"])
-        expected_cutoff = int(train_parts.part_id.max())
+        engine = AcademicPlanRecommender.load(history_as_of_part=20243, num_threads=2)
+        expected_cutoff = 20243
         self.assertEqual(engine.course_history.as_of_part, expected_cutoff)
         self.assertEqual(engine.specialty_history.as_of_part, expected_cutoff)
         self.assertGreater(engine.points_model.num_trees(), 0)
@@ -145,7 +145,7 @@ class ArtifactLoadTests(unittest.TestCase):
 class ArtifactIntegrationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.engine = AcademicPlanRecommender.load(num_threads=2)
+        cls.engine = AcademicPlanRecommender.load(history_as_of_part=20243, num_threads=2)
         cls.test = pd.read_parquet(TEMPORAL_TEST_FEATURES_PATH)
         cls.roster = pd.read_parquet(TEMPORAL_TEST_ROSTER_PATH)
         keys = ["student_id", "degree_id", "part_id"]
@@ -172,6 +172,7 @@ class ArtifactIntegrationTests(unittest.TestCase):
                  "--student-id", str(self.snapshot["student_id"]),
                  "--degree-id", str(self.snapshot["degree_id"]),
                  "--part-id", str(self.part), "--credits", str(credits),
+                 "--history-as-of-part", "20243", "--allow-older-history",
                  "--threads", "2", "--output-dir", str(output)],
                 cwd=Path(__file__).resolve().parents[1],
                 capture_output=True, text=True, encoding="utf-8", timeout=60,
@@ -186,10 +187,12 @@ class ArtifactIntegrationTests(unittest.TestCase):
             assert_frame_equal(pd.DataFrame([snapshot])[columns],
                                pd.DataFrame([expected_snapshot])[columns], check_dtype=False)
             self.assertEqual(result["current_gpa"], self.snapshot["start_agpa_points"])
+            self.assertEqual(result["current_gpa_credits"], self.snapshot["prior_total_reg_credits"])
+            self.assertEqual(result["current_gpa_credits_source"], "snapshot.prior_total_reg_credits")
             self.assertEqual(result["matching_plan_count"], 1)
             expected, summary = self.engine.recommend(
                 expected_snapshot, candidates, self.part, self.snapshot["start_agpa_points"],
-                credits=credits,
+                credits=credits, allow_older_history=True,
             )
             self.assertEqual(result["status"], summary["status"])
             assert_frame_equal(pd.read_parquet(output / "plans.parquet"), expected)
@@ -197,7 +200,7 @@ class ArtifactIntegrationTests(unittest.TestCase):
             self.assertEqual(len(courses), len(expected) * len(candidates))
 
     def test_saved_prediction_and_feature_parity(self):
-        prepared = self.engine.prepare_candidates(self.snapshot, self.candidates, self.part)
+        prepared = self.engine.prepare_candidates(self.snapshot, self.candidates, self.part, allow_older_history=True)
         scored = self.engine.score_rows(build_plan_rows(prepared, [tuple(range(len(prepared)))]))
         saved = pd.read_parquet(DEGREE_POINTS_HOLDOUT_COURSES_PATH)
         expected = self.actual[["student_course_id", "course_id"]].merge(saved[["student_course_id", "predicted_points"]], on="student_course_id").sort_values("course_id")
@@ -208,7 +211,8 @@ class ArtifactIntegrationTests(unittest.TestCase):
 
     def test_batch_order_empty_and_export(self):
         kwargs = dict(student_snapshot=self.snapshot, candidate_courses=self.candidates,
-                      part_id=self.part, current_gpa=0, credits=float(self.candidates.course_credits.iloc[:2].sum()))
+                      part_id=self.part, current_gpa=0, current_gpa_credits=60, allow_older_history=True,
+                      credits=float(self.candidates.course_credits.iloc[:2].sum()))
         sink = []
         plans, result = self.engine.recommend(**kwargs, batch_size=1, course_sink=lambda x: sink.append(x.copy()))
         other, _ = self.engine.recommend(**{**kwargs, "candidate_courses": self.candidates.iloc[::-1]}, batch_size=2000)
@@ -220,18 +224,22 @@ class ArtifactIntegrationTests(unittest.TestCase):
             self.assertEqual(len(pd.read_parquet(Path(d) / "courses.parquet")), sum(len(x) for x in sink))
             self.assertEqual(saved["recommendations"], result["recommendations"])
         for change, expected_status in [({"credits": 9999}, "no_matching_credit_plan"),
-                                       ({"candidate_courses": self.candidates.iloc[:0]}, "no_matching_credit_plan"),
-                                       ({"current_gpa": 4}, "no_plan_above_current_gpa")]:
+                                       ({"candidate_courses": self.candidates.iloc[:0]}, "no_matching_credit_plan")]:
             with tempfile.TemporaryDirectory() as d:
                 empty = save_recommendations(self.engine, d, **{**kwargs, **change})
                 self.assertEqual(empty["status"], expected_status)
                 self.assertTrue(pd.read_parquet(Path(d) / "courses.parquet").empty)
+        preserved, high_gpa = self.engine.recommend(**{**kwargs, "current_gpa": 4})
+        self.assertEqual(high_gpa["status"], "ok")
+        self.assertEqual(len(preserved), result["matching_plan_count"])
+        self.assertFalse(high_gpa["has_expected_improvement"])
 
     def test_range_export_and_batch_order_preserve_all_feasible_subsets(self):
         candidates = self.candidates.iloc[:3].copy()
         candidates["course_credits"] = [2., 3., 4.5]
         kwargs = dict(student_snapshot=self.snapshot, candidate_courses=candidates,
-                      part_id=self.part, current_gpa=0, min_credits=3, max_credits=6.5)
+                      part_id=self.part, current_gpa=0, current_gpa_credits=60, allow_older_history=True,
+                      min_credits=3, max_credits=6.5)
         expected_count = len(list(enumerate_plan_indices(candidates, min_credits=3, max_credits=6.5)))
         plans, result = self.engine.recommend(**kwargs, batch_size=1)
         self.assertEqual(result["matching_plan_count"], expected_count)
@@ -245,9 +253,9 @@ class ArtifactIntegrationTests(unittest.TestCase):
             self.assertEqual(saved["recommendations"], result["recommendations"])
 
     def test_supplied_outcomes_cannot_override_context(self):
-        baseline = self.engine.prepare_candidates(self.snapshot, self.candidates, self.part)
+        baseline = self.engine.prepare_candidates(self.snapshot, self.candidates, self.part, allow_older_history=True)
         changed = self.candidates.assign(final_mark=0, points=0, course_history_avg_mark=0, plan_total_credits=999)
-        modified = self.engine.prepare_candidates(self.snapshot, changed, self.part)
+        modified = self.engine.prepare_candidates(self.snapshot, changed, self.part, allow_older_history=True)
         assert_frame_equal(baseline, modified)
         with self.assertRaisesRegex(ValueError, "follow frozen"):
             self.engine.prepare_candidates(self.snapshot, self.candidates, 20241)

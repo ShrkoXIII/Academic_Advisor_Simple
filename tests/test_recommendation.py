@@ -59,6 +59,7 @@ class PlanEnumerationTests(unittest.TestCase):
                 "expected_points": [4.0, 3.0, 3.5],
                 "predicted_mark": [95.0, 85.0, 90.0],
                 "fail_probability": [0.2, 0.2, 0.1],
+                "attempt_number": [1, 1, 1],
                 "plan_credit_weighted_fail_rate": [0.3, 0.3, 0.2],
                 "plan_credit_weighted_avg_mark": [70.0, 70.0, 80.0],
                 "plan_difficulty_credit_load": [1.8, 1.8, 1.2],
@@ -67,6 +68,7 @@ class PlanEnumerationTests(unittest.TestCase):
         summaries = summarize_scored_plans(
             scored,
             current_gpa=2.5,
+            current_gpa_credits=60,
         )
 
         self.assertEqual(summaries["plan_id"].tolist(), [1, 0])
@@ -74,11 +76,13 @@ class PlanEnumerationTests(unittest.TestCase):
         self.assertAlmostEqual(summaries.loc[0, "expected_failed_credits"], 0.6)
         self.assertAlmostEqual(summaries.loc[0, "expected_plan_gpa"], 3.5)
 
-        risk_filtered = summarize_scored_plans(
+        equal_gpa = summarize_scored_plans(
             scored,
             current_gpa=3.5,
+            current_gpa_credits=60,
         )
-        self.assertTrue(risk_filtered.empty)
+        self.assertEqual(len(equal_gpa), 2)
+        self.assertFalse(equal_gpa.is_expected_cumulative_improvement.any())
 
 
 if __name__ == "__main__":

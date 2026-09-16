@@ -148,7 +148,9 @@ def validate_snapshot(snapshot, student_id, degree_id, part_id):
     if [snapshot["student_id"], snapshot["degree_id"]] != ids or float(snapshot["part_id"]) != int(part_id):
         raise ValueError("Snapshot student, degree or semester does not match the request.")
     # Explicit null histories remain unknown, not fabricated zero histories.
-    return {c: snapshot[c] for c in required}
+    # This serving-only field is never added to the model feature contract.
+    optional = ["current_gpa_credits"] if "current_gpa_credits" in snapshot else []
+    return {c: snapshot[c] for c in [*required, *optional]}
 
 
 def load_local_inputs(candidate_path, student_id, degree_id, part_id, snapshot_path=None):

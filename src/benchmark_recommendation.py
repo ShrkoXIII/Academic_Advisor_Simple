@@ -45,7 +45,7 @@ def peak_memory_mib():
     return peak / (1024**2 if sys.platform == "darwin" else 1024)
 
 
-def benchmark(size, output, threads):
+def benchmark(size, output, threads, history_as_of_part):
     start = perf_counter()
     catalog = pd.read_parquet(CLEAN_DEGREE_COURSE_PATH)
     eligible_sizes = catalog[catalog.course_credits.isin([2, 3])].groupby("degree_id").course_id.nunique()
@@ -66,7 +66,7 @@ def benchmark(size, output, threads):
     # pandas serializes explicit missing histories to JSON null.
     write_json(output / "snapshot.json", json.loads(pd.Series(snapshot).to_json()))
     write_json(output / "import_report.json", report)
-    engine = AcademicPlanRecommender.load(num_threads=threads)
+    engine = AcademicPlanRecommender.load(history_as_of_part=history_as_of_part, num_threads=threads)
     prepared_seconds = perf_counter() - start
     last = perf_counter()
 
@@ -78,7 +78,8 @@ def benchmark(size, output, threads):
 
     result = save_recommendations(
         engine, output, student_snapshot=snapshot, candidate_courses=candidates,
-        part_id=int(row.part_id), current_gpa=2.5, credits=18, progress=progress,
+        part_id=int(row.part_id), current_gpa=2.5, current_gpa_credits=60,
+        credits=18, progress=progress, allow_older_history=True,
     )
     metrics = {
         "candidate_count": size, "credit_distribution": {str(k): int(v) for k, v in raw.course_credits.value_counts().items()},
@@ -87,7 +88,7 @@ def benchmark(size, output, threads):
         "prepare_seconds": prepared_seconds, "total_seconds": perf_counter() - start,
         "peak_process_memory_mib": peak_memory_mib(), "threads": threads, "batch_size": 2000,
         "platform": platform.platform(), "python": platform.python_version(), "model": result["model"],
-        "fixture": "Catalog-based throughput fixture; course eligibility is not established.",
+        "fixture": "Catalog throughput fixture with synthetic GPA=2.5 and GPA credits=60; eligibility is not established.",
     }
     write_json(output / "benchmark.json", metrics)
     print(json.dumps({k: v for k, v in metrics.items() if k not in ["model", "platform"]}), flush=True)
@@ -98,17 +99,19 @@ def main():
     parser.add_argument("--size", type=int, choices=[15, 20, 25])
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--threads", type=int, default=4)
+    parser.add_argument("--history-as-of-part", type=int, required=True)
     args = parser.parse_args()
     output = args.output_dir or RECOMMENDATION_BENCHMARK_DIR / datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
     if args.size:
-        benchmark(args.size, output, args.threads)
+        benchmark(args.size, output, args.threads, args.history_as_of_part)
     else:
         # Each case has a separate process so peak memory is independent.
         results = []
         for size in [15, 20, 25]:
             child = output / str(size)
             subprocess.run([sys.executable, "-m", "src.benchmark_recommendation", "--size", str(size),
-                            "--threads", str(args.threads), "--output-dir", str(child)], check=True)
+                            "--threads", str(args.threads), "--history-as-of-part", str(args.history_as_of_part),
+                            "--output-dir", str(child)], check=True)
             results.append(json.loads((child / "benchmark.json").read_text()))
         write_json(output / "benchmark_summary.json", results)
         print(f"Benchmark summary: {output.resolve()}")
