@@ -1,8 +1,10 @@
 """Immutable serving-history bundles, independent of model training artifacts.
 
-The caller attests which outcomes are finalized. Each bundle contains both
-lookups and a metadata completion marker. A failed build leaves an incomplete,
+The caller attests which outcomes are finalized. Each base bundle contains
+course history and a metadata completion marker. A failed build leaves an incomplete,
 unloadable directory; neither complete nor incomplete versions are overwritten.
+Experimental specialty history is optional: its implementation must be supplied
+explicitly by the caller, never imported by the Features layer.
 Only load locally trusted pickle artifacts.
 """
 from datetime import datetime, timezone
@@ -15,7 +17,6 @@ import numpy as np
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
-from src.experiments.specialty_history import FrozenSpecialtyHistory
 from src.features.feature_contract import FEATURE_ENGINEERING_VERSION, require_current_features
 from src.paths import (
     academic_part, course_history_state_path, frozen_history_dir,
@@ -26,7 +27,7 @@ from src.features.temporal_features import CourseHistoryState, load_course_histo
 HISTORY_SOURCE_COLUMNS = [
     "student_course_id", "part_id", "degree_id", "course_id", "faculty_id",
     "plan_requirement_type_id", "course_credits", "attempt_number",
-    "final_mark", "is_fail", "points",
+    "final_mark",
 ]
 
 
@@ -59,18 +60,27 @@ def validate_history_selection(target_part, history_as_of_part, *, allow_older_h
 
 
 def validate_history_pair(course, specialty, as_of_part):
+    """Check the base cutoff and any explicitly supplied specialty history."""
     cutoff = academic_part(as_of_part)
-    if course.as_of_part != cutoff or specialty.as_of_part != cutoff:
+    if course.as_of_part != cutoff or (specialty is not None and specialty.as_of_part != cutoff):
         raise ValueError("Course and specialty history cutoffs must match the requested as_of_part.")
 
 
-def build_frozen_history(outcomes, as_of_part, *, finalized_through_part):
-    """Build both lookups from the same finalized prefix; never train a model."""
+def build_frozen_history(outcomes, as_of_part, *, finalized_through_part, specialty_history_type=None):
+    """Return (course, optional specialty, metadata) from one finalized prefix.
+
+    Base history needs no experimental features or points/failure labels.
+    Legacy experimental callers may supply their history type explicitly; it
+    must implement from_training(source) and use the same finalized cutoff.
+    """
     cutoff, finalized = academic_part(as_of_part), academic_part(finalized_through_part)
     if cutoff > finalized:
         raise ValueError("History cutoff exceeds finalized_through_part.")
     require_current_features(outcomes.attrs)
-    missing = set(HISTORY_SOURCE_COLUMNS) - set(outcomes.columns)
+    source_columns = list(HISTORY_SOURCE_COLUMNS)
+    if specialty_history_type is not None:
+        source_columns.extend(["is_fail", "points"])
+    missing = set(source_columns) - set(outcomes.columns)
     if missing:
         raise ValueError(f"History source missing columns: {sorted(missing)}")
     parts = pd.to_numeric(outcomes.part_id, errors="raise")
@@ -78,24 +88,32 @@ def build_frozen_history(outcomes, as_of_part, *, finalized_through_part):
         raise ValueError("History source parts must be known integers.")
     for part in parts.unique():
         academic_part(int(part))
-    source = outcomes.loc[parts.le(cutoff), HISTORY_SOURCE_COLUMNS].copy()
+    source = outcomes.loc[parts.le(cutoff), source_columns].copy()
     if source.empty or int(source.part_id.max()) != cutoff:
         raise ValueError("Source must contain outcomes through the exact requested as_of_part.")
     if source.student_course_id.isna().any() or source.student_course_id.duplicated().any():
         raise ValueError("History source must have unique, non-null student_course_id values.")
-    numbers = source[["course_credits", "attempt_number", "final_mark", "is_fail", "points"]].apply(pd.to_numeric)
+    numeric_columns = [
+        column for column in ("course_credits", "attempt_number", "final_mark", "is_fail", "points")
+        if column in source.columns
+    ]
+    numbers = source[numeric_columns].apply(pd.to_numeric)
     if not np.isfinite(numbers.to_numpy(dtype=float)).all():
         raise ValueError("History outcomes must be finalized, finite values.")
     if (numbers.course_credits.lt(0).any() or numbers.attempt_number.lt(1).any()
-            or not numbers.final_mark.between(0, 100).all()
-            or not numbers.points.between(0, 4).all()
-            or not numbers.is_fail.eq(numbers.final_mark.lt(50)).all()):
+            or not numbers.final_mark.between(0, 100).all()):
+        raise ValueError("History outcomes violate the existing mark/points/failure contract.")
+    if (("points" in numbers and not numbers.points.between(0, 4).all())
+            or ("is_fail" in numbers and not numbers.is_fail.eq(numbers.final_mark.lt(50)).all())):
         raise ValueError("History outcomes violate the existing mark/points/failure contract.")
     source = source.sort_values(["part_id", "student_course_id"], kind="stable").reset_index(drop=True)
     course = CourseHistoryState()
     for _, semester in source.groupby("part_id", sort=True):
         course.update(semester)
-    specialty = FrozenSpecialtyHistory.from_training(source)
+    specialty = None
+    if specialty_history_type is not None:
+        specialty = specialty_history_type.from_training(source.copy())
+    validate_history_pair(course, specialty, cutoff)
     # Future rows can promote a whole pandas column from integer to float.
     # Canonicalize the fingerprint so those rows cannot change prefix identity.
     fingerprint_source = source.copy()
@@ -142,46 +160,65 @@ def save_frozen_history(course, specialty, metadata, *, root=None):
     course_path = course_history_state_path(cutoff, root)
     specialty_path = specialty_history_state_path(cutoff, root)
     save_course_history_state(course, course_path)
-    with specialty_path.open("xb") as stream:
-        pickle.dump({
-            "format_version": 1, "as_of_part": cutoff,
-            "global_totals": specialty.global_totals, "degree_totals": specialty.degree_totals,
-            "requirement_totals": specialty.requirement_totals,
-        }, stream)
+    artifact_paths = [course_path]
+    if specialty is not None:
+        with specialty_path.open("xb") as stream:
+            pickle.dump({
+                "format_version": 1, "as_of_part": cutoff,
+                "global_totals": specialty.global_totals, "degree_totals": specialty.degree_totals,
+                "requirement_totals": specialty.requirement_totals,
+            }, stream)
+        artifact_paths.append(specialty_path)
     payload = {
-        **metadata, "format_version": 1, "as_of_part": cutoff,
+        **metadata, "format_version": 2, "as_of_part": cutoff,
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "feature_engineering_version": FEATURE_ENGINEERING_VERSION,
         "history_type": "frozen_serving_history",
-        "artifact_sha256": {p.name: file_sha256(p) for p in (course_path, specialty_path)},
+        "artifact_sha256": {p.name: file_sha256(p) for p in artifact_paths},
     }
     with history_metadata_path(cutoff, root).open("x", encoding="utf-8") as stream:
         json.dump(payload, stream, indent=2, ensure_ascii=False, allow_nan=False)
     return payload
 
 
-def load_frozen_history(as_of_part, *, root=None):
+def load_frozen_history(as_of_part, *, root=None, specialty_history_type=None):
+    """Load base history without Experiments, including from legacy bundles.
+
+    The optional specialty result is None unless its type is supplied. Legacy
+    specialty files still undergo hash and cutoff checks when present; callers
+    requesting specialty history must provide a type accepting its saved fields.
+    """
     cutoff = academic_part(as_of_part)
     meta_path = history_metadata_path(cutoff, root)
     metadata = json.loads(meta_path.read_text(encoding="utf-8"))
     require_current_features(metadata)
-    if (metadata.get("format_version") != 1 or metadata.get("history_type") != "frozen_serving_history"
+    if (metadata.get("format_version") not in (1, 2) or metadata.get("history_type") != "frozen_serving_history"
             or metadata.get("as_of_part") != cutoff or metadata.get("source_max_part") != cutoff
             or academic_part(metadata["finalized_through_part"]) < cutoff):
         raise ValueError("Frozen history metadata/cutoff mismatch.")
     course_path = course_history_state_path(cutoff, root)
     specialty_path = specialty_history_state_path(cutoff, root)
-    for path in (course_path, specialty_path):
+    artifact_paths = [course_path]
+    if metadata["format_version"] == 1 or specialty_path.name in metadata["artifact_sha256"]:
+        artifact_paths.append(specialty_path)
+    if specialty_history_type is not None and specialty_path not in artifact_paths:
+        raise ValueError("This base history bundle contains no specialty history.")
+    for path in artifact_paths:
         if file_sha256(path) != metadata["artifact_sha256"].get(path.name):
             raise ValueError(f"Frozen history hash mismatch: {path.name}")
     course = load_course_history_state(course_path)
-    with specialty_path.open("rb") as stream:
-        payload = pickle.load(stream)
-    if payload.get("format_version") != 1:
-        raise ValueError("Unsupported specialty history format.")
-    specialty = FrozenSpecialtyHistory(**{k: payload[k] for k in (
-        "as_of_part", "global_totals", "degree_totals", "requirement_totals",
-    )})
+    specialty = None
+    if specialty_path in artifact_paths:
+        with specialty_path.open("rb") as stream:
+            payload = pickle.load(stream)
+        if payload.get("format_version") != 1:
+            raise ValueError("Unsupported specialty history format.")
+        if payload.get("as_of_part") != cutoff:
+            raise ValueError("Course and specialty history cutoffs must match the requested as_of_part.")
+        if specialty_history_type is not None:
+            specialty = specialty_history_type(**{k: payload[k] for k in (
+                "as_of_part", "global_totals", "degree_totals", "requirement_totals",
+            )})
     validate_history_pair(course, specialty, cutoff)
     provenance = {**metadata, "directory": str(meta_path.parent.resolve()), "metadata_sha256": file_sha256(meta_path)}
     return course, specialty, provenance

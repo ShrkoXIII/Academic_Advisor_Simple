@@ -43,6 +43,7 @@ NUMERIC_FEATURES = [
     "observed_gap_semesters",
     # Pre-university and course/plan properties.
     "diploma_gpa",
+    ## course_features
     "course_credits",
     "attempt_number",
     "plan_year_order",
@@ -58,20 +59,26 @@ NUMERIC_FEATURES = [
     "course_history_fallback_level",
     "course_history_missing",
     # Full-plan context and target-course leave-one-out peer context.
-    "plan_course_count",
-    "plan_total_credits",
-    "plan_credit_weighted_fail_rate",
-    "plan_credit_weighted_avg_mark",
-    "plan_credit_weighted_avg_attempt",
-    "plan_difficulty_credit_load",
-    "peer_course_count",
-    "peer_total_credits",
-    "peer_credit_weighted_fail_rate",
-    "peer_credit_weighted_avg_mark",
-    "peer_credit_weighted_avg_attempt",
-    "peer_difficulty_credit_load",
-    "peer_max_fail_rate",
-    "peer_difficulty_missing",
+
+    "plan_course_count",                  # عدد كل المواد المسجلة للطالب في هذا الفصل
+    "plan_total_credits",                 # مجموع ساعات كل مواد الفصل للطالب
+
+    "plan_credit_weighted_fail_rate",     # متوسط نسبة الرسوب التاريخية لكل مواد الفصل، موزون بعدد الساعات
+    "plan_credit_weighted_avg_mark",       # متوسط العلامة التاريخية لكل مواد الفصل، موزون بعدد الساعات
+    "plan_credit_weighted_avg_attempt",    # متوسط عدد المحاولات التاريخي لكل مواد الفصل، موزون بعدد الساعات
+    "plan_difficulty_credit_load",         # حمل صعوبة الفصل الكلي = مجموع (نسبة الرسوب التاريخية × ساعات المادة)
+
+    "peer_course_count",                  # عدد المواد الأخرى في الفصل باستثناء المادة الحالية
+    "peer_total_credits",                 # مجموع ساعات المواد الأخرى باستثناء المادة الحالية
+
+    "peer_credit_weighted_fail_rate",      # متوسط نسبة الرسوب التاريخية للمواد الأخرى فقط، موزون بالساعات
+    "peer_credit_weighted_avg_mark",       # متوسط العلامة التاريخية للمواد الأخرى فقط، موزون بالساعات
+    "peer_credit_weighted_avg_attempt",    # متوسط عدد المحاولات التاريخي للمواد الأخرى فقط، موزون بالساعات
+    "peer_difficulty_credit_load",         # حمل صعوبة المواد الأخرى = مجموع (نسبة الرسوب × الساعات) بدون المادة الحالية
+
+    "peer_max_fail_rate",                 # أعلى نسبة رسوب تاريخية بين المواد الأخرى في نفس الفصل
+    "peer_difficulty_missing",             # 1 إذا لم نستطع حساب صعوبة المواد الأخرى، وإلا 0
+
 ]
 
 BASE_FEATURES = [*NUMERIC_FEATURES, *CATEGORICAL_FEATURES]

@@ -1,3 +1,4 @@
+from copy import deepcopy
 from dataclasses import dataclass, field
 import pickle
 
@@ -215,8 +216,13 @@ def build_temporal_course_history( ## make sure their is no leackage then calcul
     temporal_test,
     temporal_test_roster,
 ):
+    """Apply each semester before updating from its finalized outcomes.
+
+    Holdout semesters roll forward on a separate state. The returned state
+    always ends at the training cutoff and remains reusable as a baseline.
+    """
     state = CourseHistoryState()
-    train_features = pd .DataFrame(index=temporal_train.index)
+    train_features = pd.DataFrame(index=temporal_train.index)
     train_roster_features = pd.DataFrame(index=temporal_train_roster.index)
 
     for part_id in sorted(temporal_train["part_id"].unique().tolist()):
@@ -243,8 +249,29 @@ def build_temporal_course_history( ## make sure their is no leackage then calcul
         "course_history_missing"
     ].astype("int64")
 
-    test_features = state.apply(temporal_test)
-    test_roster_features = state.apply(temporal_test_roster)
+    test_state = deepcopy(state)
+    test_features = pd.DataFrame(
+        index=temporal_test.index, columns=COURSE_HISTORY_COLUMNS, dtype="float64",
+    )
+    test_roster_features = pd.DataFrame(
+        index=temporal_test_roster.index, columns=COURSE_HISTORY_COLUMNS, dtype="float64",
+    )
+    test_parts = sorted(set(temporal_test["part_id"]) | set(temporal_test_roster["part_id"]))
+    for part_id in test_parts:
+        target_mask = temporal_test["part_id"].eq(part_id)
+        roster_mask = temporal_test_roster["part_id"].eq(part_id)
+        test_features.loc[target_mask, COURSE_HISTORY_COLUMNS] = test_state.apply(
+            temporal_test.loc[target_mask]
+        ).to_numpy()
+        test_roster_features.loc[roster_mask, COURSE_HISTORY_COLUMNS] = test_state.apply(
+            temporal_test_roster.loc[roster_mask]
+        ).to_numpy()
+        # Roster rows supply plan context, never additional finalized outcomes.
+        test_state.update(temporal_test.loc[target_mask])
+
+    for features in (test_features, test_roster_features):
+        for column in ("course_history_fallback_level", "course_history_missing"):
+            features[column] = features[column].astype("int64")
     return (
         train_features,
         train_roster_features,
@@ -321,7 +348,7 @@ def compute_plan_context_features(roster, group_columns=None):## بدي احسب
     result = pd.DataFrame(index=roster.index)
     result["plan_course_count"] = plan_count.astype("int64")
     result["plan_total_credits"] = plan_credits
-    result["peer_course_count"] = (plan_count - 1).astype("int64")
+    result["peer_course_count"] = (plan_count - 1).astype("int64")  ## peer is for each course individual
     result["peer_total_credits"] = plan_credits - credits
 
     weighted_specs = {
@@ -336,7 +363,7 @@ def compute_plan_context_features(roster, group_columns=None):## بدي احسب
         weighted = (source * credits).fillna(0.0)
         group_weighted = weighted.groupby(groupers, sort=False, dropna=False).transform(
             "sum"
-        )
+        ) ## مجموع الأوزان 
         group_valid_credits = valid_credits.groupby(
             groupers,
             sort=False,
