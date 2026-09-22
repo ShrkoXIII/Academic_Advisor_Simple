@@ -19,14 +19,14 @@ import numpy as np
 import pandas as pd
 import pyarrow.parquet as pq
 from src import paths
-from src.cleaning_utils import clean_id_columns
-from src.clean_student_status import clean_student_status
-from src.clean_outliers import build_outlier_audit
-from src.feature_contract import MODEL_FEATURES, NUMERIC_FEATURES, prepare_model_matrix
+from src.data.cleaning_utils import clean_id_columns
+from src.data.clean_student_status import clean_student_status
+from src.data.clean_outliers import build_outlier_audit
+from src.features.feature_contract import BASE_FEATURES, NUMERIC_FEATURES, prepare_model_matrix
 from src.recommendation import AcademicPlanRecommender, enumerate_plan_indices, build_plan_rows, rank_plans
 from src.recommendation_inputs import load_local_inputs
 from src.experiments.modeling import prepare_matrix, aggregate_plans, course_predictions
-from src.temporal_features import COURSE_HISTORY_COLUMNS, PLAN_CONTEXT_COLUMNS, CourseHistoryState
+from src.features.temporal_features import COURSE_HISTORY_COLUMNS, PLAN_CONTEXT_COLUMNS, CourseHistoryState
 
 OUT = paths.EVALUATION_DIR / 'pipeline_audits' / datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
 OUT.mkdir(parents=True, exist_ok=False)

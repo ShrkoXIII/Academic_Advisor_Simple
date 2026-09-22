@@ -14,12 +14,12 @@ import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from src.cleaning_utils import clean_id_columns
+from src.data.cleaning_utils import clean_id_columns
 
 
 ROOT = Path(__file__).resolve().parents[1]
 KEYS = ["student_id", "degree_id", "part_id"]
-PASS_FAIL = ["P", "F", "FA", "FE"]  # src/clean_student_course.py FINISH_STATUS_MAP
+PASS_FAIL = ["P", "F", "FA", "FE"]  # src/data/clean_student_course.py FINISH_STATUS_MAP
 SOURCES = {
     "status": "data/raw/v_add_student_degree_status.parquet",
     "courses": "data/raw/v_crg_student_course_raw.parquet",
@@ -30,7 +30,7 @@ RULES = {
     "scope": "part_id >= 20251; inclusive recorded load 12 through 18 credits",
     "registered_courses": "register_status in [R, E]; raw outcomes retained",
     "pass_fail_codes": PASS_FAIL,
-    "pass_fail_definition_source": "src/clean_student_course.py:FINISH_STATUS_MAP",
+    "pass_fail_definition_source": "src/data/clean_student_course.py:FINISH_STATUS_MAP",
     "candidate": "registered_credits_before_filter between 12 and 18; pass_fail_credits < 12, including zero",
     "before": "recorded semester_reg_credits, reconciled to the raw registered course sum",
     "after": "sum(course_credits) for finish_status in [P, F, FA, FE]",

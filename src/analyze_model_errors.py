@@ -1,18 +1,23 @@
+from pathlib import Path
+import sys
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 import json
 
 import numpy as np
 import pandas as pd
+from src.experiments.experiment_config import TARGET_GRADE, training_weights
 
 try:
     from .evaluate_plan_gpa import aggregate_plan_gpa, predict_course_points
-    from .feature_contract import (
-        MODEL_FEATURES,
-        TARGET_GRADE,
+    from src.features.feature_contract import (
+        BASE_FEATURES,
         learn_category_levels,
         load_category_levels,
         prepare_model_matrix,
         require_current_features,
-        training_weights,
     )
     from .grade_scale import GradeScale
     from .paths import (
@@ -34,14 +39,12 @@ try:
     from .train_models import shared_parameters, train_one
 except ImportError:
     from evaluate_plan_gpa import aggregate_plan_gpa, predict_course_points
-    from feature_contract import (
-        MODEL_FEATURES,
-        TARGET_GRADE,
+    from src.features.feature_contract import (
+        BASE_FEATURES,
         learn_category_levels,
         load_category_levels,
         prepare_model_matrix,
         require_current_features,
-        training_weights,
     )
     from grade_scale import GradeScale
     from paths import (
@@ -446,7 +449,7 @@ def main():
                 "grade_version_id",
                 "points",
                 "gpa_points",
-                *MODEL_FEATURES,
+                *BASE_FEATURES,
                 *EXTRA_ANALYSIS_COLUMNS,
             ]
         )

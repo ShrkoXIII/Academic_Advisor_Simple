@@ -1,0 +1,18 @@
+[
+  "data\\artifacts\\course_history_state_v2.pkl",
+  "data\\clean\\degree_course_v2.parquet",
+  "data\\clean\\registration_roster_v2.parquet",
+  "data\\clean\\student_course_enriched_v2.parquet",
+  "data\\clean\\student_course_v2.parquet",
+  "data\\clean\\student_diploma_v2.parquet",
+  "data\\clean\\student_status_v2.parquet",
+  "data\\features\\temporal_test_features_v2.parquet",
+  "data\\features\\temporal_train_features_v2.parquet",
+  "data\\merged\\outlier_students_v2.parquet",
+  "data\\merged\\student_course_enriched_with_diploma_v2.parquet",
+  "data\\merged\\student_course_enriched_without_outliers_v2.parquet",
+  "data\\temporal\\temporal_test_roster_v2.parquet",
+  "data\\temporal\\temporal_test_v2.parquet",
+  "data\\temporal\\temporal_train_roster_v2.parquet",
+  "data\\temporal\\temporal_train_v2.parquet"
+]

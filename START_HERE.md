@@ -1,5 +1,7 @@
 # ابدأ من هنا — Academic Advisor
 
+> تحديث النقل إلى V2: مراحل `src.data` و`src.features` تكتب ملفات `_v2` وتقرأ الوسائط من الإصدار نفسه. المسارات غير الملحقة والأرقام القديمة أدناه تصف مخرجات V1 المحفوظة. التدريب والتقييم والتوصية ما زالت تستخدم مخرجاتها الحالية ولم تُحوّل إلى V2. التشغيل الفعلي الكامل لـV2 متوقف حاليًا على مفاتيح ناقصة في raw courses وفصول خام غير صالحة وفق الحراس الحالية؛ راجع [تقرير النقل](reports/data_features_v2_20260921/report.md).
+
 هذا هو **مدخل المشروع الوحيد** عند العودة إليه أو فتح محادثة جديدة. لا تبدأ
 بقراءة السكربتات عشوائيًا؛ استخدم الخريطة التالية للوصول إلى المرحلة التي
 تهمك.
@@ -37,8 +39,8 @@
 | ما مسار كل ملف من raw حتى النتائج؟ | `PIPELINE_README.md` |
 | أين وصلنا وما الخطوة التالية؟ | `PROJECT_TRACKER.md` |
 | شرح المشروع من البيانات حتى الترشيح | `Readme.md` |
-| ما الخصائص الرسمية التي تدخل المودل؟ | `src/feature_contract.py` |
-| كيف حُسبت الخصائص الزمنية؟ | `src/temporal_features.py` |
+| ما الخصائص الرسمية التي تدخل المودل؟ | `src/features/feature_contract.py` |
+| كيف حُسبت الخصائص الزمنية؟ | `src/features/temporal_features.py` |
 | كيف تم تدريب المودلين الرسميين؟ | `src/train_models.py` |
 | كيف تُبنى وتُرتب الخطط؟ | `src/recommendation.py` |
 | ما التجارب التي جُربت ونتيجة كل إضافة؟ | `reports/model_improvement_table.md` |
@@ -58,7 +60,7 @@ data/temporal/temporal_train.parquet
 data/temporal/temporal_test.parquet
                 │
                 ▼
-src/build_temporal_features.py
+src/features/build_temporal_features.py
                 │
                 ├─ data/features/temporal_train_features.parquet
                 ├─ data/features/temporal_test_features.parquet
@@ -72,7 +74,7 @@ src/train_models.py
                 └─ models/model_metadata.json
 ```
 
-عقد خصائص التدريب الرسمي موجود كاملًا في `src/feature_contract.py`:
+عقد خصائص التدريب الرسمي موجود كاملًا في `src/features/feature_contract.py`:
 
 - `NUMERIC_FEATURES`: الخصائص الرقمية.
 - `CATEGORICAL_FEATURES`: الخصائص التصنيفية.
@@ -137,7 +139,7 @@ credit_weighted = false
 
 | التجربة | ملف التشغيل | تعريف الخصائص/النسخ | النتائج المحلية التفصيلية | التقرير المقروء | المودل |
 |---|---|---|---|---|---|
-| Baseline Grade + Fail | `src/train_models.py` | `src/feature_contract.py` | `models/model_metadata.json` | قسم التدريب في `Readme.md` | `models/grade_regressor.txt`, `models/fail_risk_classifier.txt` |
+| Baseline Grade + Fail | `src/train_models.py` | `src/features/feature_contract.py` | `models/model_metadata.json` | قسم التدريب في `Readme.md` | `models/grade_regressor.txt`, `models/fail_risk_classifier.txt` |
 | Plan GPA baseline | `src/evaluate_plan_gpa.py` | خصائص baseline | `data/evaluation/plan_gpa_*` | `reports/model_error_analysis.md` | يستخدم GradeRegressor |
 | تحليل السنة والاختصاص وSHAP | `src/analyze_model_errors.py` | خصائص baseline | `data/evaluation/error_analysis/` | `reports/model_error_analysis.md` | يستخدم GradeRegressor |
 | Degree + Direct Points | `src/experiment_degree_points.py` | `src/experiments/degree_points.py` و`specialty_history.py` | `data/evaluation/experiments/degree_points/` | `reports/degree_points_experiment.md` و`model_improvement_table.md` | `models/experiments/degree_points/selected_model.txt` |

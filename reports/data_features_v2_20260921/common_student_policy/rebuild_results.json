@@ -1,0 +1,78 @@
+{
+  "before": {
+    "student_level": {
+      "status": 13415,
+      "course": 13082,
+      "both": 12792,
+      "status_only": 623,
+      "course_only": 290
+    },
+    "key_level": {
+      "status": 108974,
+      "course": 96337,
+      "both": 95622,
+      "status_only": 13352,
+      "course_only": 715
+    },
+    "rows": {
+      "status": 108974,
+      "course": 459620
+    },
+    "inner_merge": {
+      "course_rows_before": 459620,
+      "course_rows_after": 456453,
+      "dropped_rows": 3167,
+      "dropped_percentage": 0.689,
+      "students_before": 13082,
+      "students_after": 12792,
+      "students_completely_lost": 290
+    }
+  },
+  "after": {
+    "student_level": {
+      "status": 12792,
+      "course": 12792,
+      "both": 12792,
+      "status_only": 0,
+      "course_only": 0
+    },
+    "key_level": {
+      "status": 107939,
+      "course": 95656,
+      "both": 95622,
+      "status_only": 12317,
+      "course_only": 34
+    },
+    "rows": {
+      "status": 107939,
+      "course": 456595
+    },
+    "inner_merge": {
+      "course_rows_before": 456595,
+      "course_rows_after": 456453,
+      "dropped_rows": 142,
+      "dropped_percentage": 0.0311,
+      "students_before": 12792,
+      "students_after": 12792,
+      "students_completely_lost": 0
+    }
+  },
+  "pre_common_metrics_match_previous_v2": true,
+  "deleted_v2_files": 16,
+  "rebuilt_v2_files": 18,
+  "protected_files_checked": 461,
+  "protected_files_changed": [],
+  "raw_files_checked": 6,
+  "stages": [
+    "src.data.clean_degree_course",
+    "src.data.clean_student_course",
+    "src.data.clean_student_status",
+    "src.data.filter_common_students",
+    "src.data.build_student_course_enriched",
+    "src.data.clean_student_diploma",
+    "src.data.clean_outliers",
+    "src.data.build_temporal_split",
+    "src.data.build_registration_roster",
+    "src.features.build_temporal_features"
+  ]
+}

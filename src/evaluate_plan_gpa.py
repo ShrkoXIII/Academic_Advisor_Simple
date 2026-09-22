@@ -1,12 +1,18 @@
+from pathlib import Path
+import sys
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 import json
 
 import numpy as np
 import pandas as pd
 
 try:
-    from .feature_contract import (
+    from src.features.feature_contract import (
         FEATURE_ENGINEERING_VERSION,
-        MODEL_FEATURES,
+        BASE_FEATURES,
         load_category_levels,
         prepare_model_matrix,
         require_current_features,
@@ -23,9 +29,9 @@ try:
         TEMPORAL_TEST_FEATURES_PATH,
     )
 except ImportError:
-    from feature_contract import (
+    from src.features.feature_contract import (
         FEATURE_ENGINEERING_VERSION,
-        MODEL_FEATURES,
+        BASE_FEATURES,
         load_category_levels,
         prepare_model_matrix,
         require_current_features,
@@ -197,7 +203,7 @@ def main():
     import lightgbm as lgb
 
     require_current_features(json.loads(MODEL_METADATA_PATH.read_text(encoding="utf-8")))
-    columns = list(dict.fromkeys([*AUDIT_COLUMNS, *MODEL_FEATURES]))
+    columns = list(dict.fromkeys([*AUDIT_COLUMNS, *BASE_FEATURES]))
     test = pd.read_parquet(TEMPORAL_TEST_FEATURES_PATH, columns=columns)
     require_current_features(test.attrs)
     course_predictions = predict_course_points(

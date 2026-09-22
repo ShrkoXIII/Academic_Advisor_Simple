@@ -1,0 +1,32 @@
+
+Temporal train:
+ part_id  rows  students  fail_rate
+   20201 27009      4853      11.47
+   20202 25830      4649       8.69
+   20203  8124      3270       6.87
+   20211 30739      5560       9.58
+   20212 30306      5368       8.35
+   20213  9037      3778       8.03
+   20221 32653      5911       8.68
+   20222 31589      5678       9.10
+   20223 10082      4096       7.26
+   20231 34576      6288       9.40
+   20232 32709      6046       8.94
+   20233  9729      4166       8.38
+   20241 35245      6418       6.26
+   20242 31606      5776       6.82
+   20243  7582      3219       9.34
+Total rows: 356816
+Unique students: 10261
+
+Temporal test:
+ part_id  rows  students  fail_rate
+   20251 34408      6469      10.47
+   20252 33128      6244      10.16
+Total rows: 67536
+Unique students: 7019
+
+Excluded incomplete rows: 5
+Excluded parts: [20253]
+Saved temporal train: D:\AI\Real projects\Academic_Advisor_Simple\data\temporal\temporal_train_v2.parquet
+Saved temporal test: D:\AI\Real projects\Academic_Advisor_Simple\data\temporal\temporal_test_v2.parquet

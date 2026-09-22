@@ -6,12 +6,12 @@ sys.path.insert(0,str(ROOT));sys.path.insert(1,str(ROOT/'src'))
 import pandas as pd
 import numpy as np
 from src import paths
-from src.cleaning_utils import clean_id_columns
-from src.clean_outliers import build_outlier_audit
+from src.data.cleaning_utils import clean_id_columns
+from src.data.clean_outliers import build_outlier_audit
 from src.recommendation import AcademicPlanRecommender
 from src.recommendation_inputs import load_local_inputs
 from src.experiments.modeling import prepare_matrix
-from src.feature_contract import NUMERIC_FEATURES
+from src.features.feature_contract import NUMERIC_FEATURES
 
 OUT=Path(sys.argv[1]).resolve()
 assert OUT.is_relative_to((paths.EVALUATION_DIR/'pipeline_audits').resolve())

@@ -9,8 +9,8 @@ from unittest.mock import patch
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
-from src.feature_contract import FEATURE_ENGINEERING_VERSION
-from src.frozen_history import (
+from src.features.feature_contract import FEATURE_ENGINEERING_VERSION
+from src.features.frozen_history import (
     build_frozen_history, file_sha256, load_frozen_history, save_frozen_history,
     validate_history_selection, verify_legacy_course_history,
 )
@@ -19,7 +19,7 @@ from src.paths import (
     history_metadata_path, specialty_history_state_path,
 )
 from src.recommendation import AcademicPlanRecommender
-from src.temporal_features import save_course_history_state
+from src.features.temporal_features import save_course_history_state
 
 
 def history_source():

@@ -27,7 +27,7 @@ from src.paths import (
     TEMPORAL_TEST_ROSTER_PATH, CLEAN_STUDENT_COURSE_PATH, CLEAN_STUDENT_DIPLOMA_PATH,
     STUDENT_STATUS_PATH,
 )
-from src.clean_student_status import clean_student_status
+from src.data.clean_student_status import clean_student_status
 
 
 class EnumerationTests(unittest.TestCase):
@@ -205,7 +205,7 @@ class ArtifactIntegrationTests(unittest.TestCase):
         saved = pd.read_parquet(DEGREE_POINTS_HOLDOUT_COURSES_PATH)
         expected = self.actual[["student_course_id", "course_id"]].merge(saved[["student_course_id", "predicted_points"]], on="student_course_id").sort_values("course_id")
         np.testing.assert_allclose(scored.expected_points, expected.predicted_points, atol=1e-10, rtol=0)
-        from src.temporal_features import COURSE_HISTORY_COLUMNS, PLAN_CONTEXT_COLUMNS
+        from src.features.temporal_features import COURSE_HISTORY_COLUMNS, PLAN_CONTEXT_COLUMNS
         for c in [*COURSE_HISTORY_COLUMNS, *PLAN_CONTEXT_COLUMNS]:
             np.testing.assert_allclose(scored[c].astype(float), self.actual[c].astype(float), atol=1e-10, equal_nan=True)
 

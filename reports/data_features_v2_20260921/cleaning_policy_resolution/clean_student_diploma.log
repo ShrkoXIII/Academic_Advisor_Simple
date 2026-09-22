@@ -1,0 +1,14 @@
+Clean diploma rows: 32524
+Diploma type counts:
+diploma_type_id
+15.111    29078
+16.111     1557
+51.111      952
+13.111      529
+55.111      408
+Missing diploma GPA after ffill: 0
+Saved clean diploma: D:\AI\Real projects\Academic_Advisor_Simple\data\clean\student_diploma_v2.parquet
+Merged rows: 456453
+Matched rows: 456428
+Unmatched rows: 25
+Saved merged data: D:\AI\Real projects\Academic_Advisor_Simple\data\merged\student_course_enriched_with_diploma_v2.parquet

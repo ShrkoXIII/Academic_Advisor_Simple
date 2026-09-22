@@ -1,6 +1,11 @@
 from pathlib import Path
 
 
+def versioned_path(path, version="v2"):
+    """Return a sibling artifact path with the version before its extension."""
+    return path.with_name(f"{path.stem}_{version}{path.suffix}")
+
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJECT_ROOT / "data"
 RAW_DIR = DATA_DIR / "raw"
@@ -26,6 +31,8 @@ COURSE_PREREQUISITE_PATH = RAW_DIR / "v_cor_course_prerequisite.parquet"
 
 CLEAN_STUDENT_COURSE_PATH = CLEAN_DIR / "student_course.parquet"
 CLEAN_STUDENT_STATUS_PATH = CLEAN_DIR / "student_status.parquet"
+PRE_COMMON_STUDENT_COURSE_PATH = CLEAN_DIR / "student_course_pre_common.parquet"
+PRE_COMMON_STUDENT_STATUS_PATH = CLEAN_DIR / "student_status_pre_common.parquet"
 CLEAN_DEGREE_COURSE_PATH = CLEAN_DIR / "degree_course.parquet"
 STUDENT_COURSE_ENRICHED_PATH = CLEAN_DIR / "student_course_enriched.parquet"
 CLEAN_STUDENT_DIPLOMA_PATH = CLEAN_DIR / "student_diploma.parquet"
@@ -123,3 +130,25 @@ MODEL_IMPROVEMENT_TABLE_REPORT_PATH = REPORT_DIR / "model_improvement_table.md"
 
 RECOMMENDATION_RUN_DIR = EVALUATION_DIR / "recommendations"
 RECOMMENDATION_BENCHMARK_DIR = EVALUATION_DIR / "recommendation_benchmarks"
+
+
+# Isolated outputs for the relocated data/features pipeline; V1 paths stay intact.
+CLEAN_STUDENT_COURSE_PATH_V2 = versioned_path(CLEAN_STUDENT_COURSE_PATH)
+CLEAN_STUDENT_STATUS_PATH_V2 = versioned_path(CLEAN_STUDENT_STATUS_PATH)
+PRE_COMMON_STUDENT_COURSE_PATH_V2 = versioned_path(PRE_COMMON_STUDENT_COURSE_PATH)
+PRE_COMMON_STUDENT_STATUS_PATH_V2 = versioned_path(PRE_COMMON_STUDENT_STATUS_PATH)
+CLEAN_DEGREE_COURSE_PATH_V2 = versioned_path(CLEAN_DEGREE_COURSE_PATH)
+STUDENT_COURSE_ENRICHED_PATH_V2 = versioned_path(STUDENT_COURSE_ENRICHED_PATH)
+CLEAN_STUDENT_DIPLOMA_PATH_V2 = versioned_path(CLEAN_STUDENT_DIPLOMA_PATH)
+STUDENT_COURSE_DIPLOMA_PATH_V2 = versioned_path(STUDENT_COURSE_DIPLOMA_PATH)
+STUDENT_COURSE_WITHOUT_OUTLIERS_PATH_V2 = versioned_path(STUDENT_COURSE_WITHOUT_OUTLIERS_PATH)
+OUTLIER_STUDENTS_AUDIT_PATH_V2 = versioned_path(OUTLIER_STUDENTS_AUDIT_PATH)
+TEMPORAL_TRAIN_PATH_V2 = versioned_path(TEMPORAL_TRAIN_PATH)
+TEMPORAL_TEST_PATH_V2 = versioned_path(TEMPORAL_TEST_PATH)
+CLEAN_REGISTRATION_ROSTER_PATH_V2 = versioned_path(CLEAN_REGISTRATION_ROSTER_PATH)
+TEMPORAL_TRAIN_ROSTER_PATH_V2 = versioned_path(TEMPORAL_TRAIN_ROSTER_PATH)
+TEMPORAL_TEST_ROSTER_PATH_V2 = versioned_path(TEMPORAL_TEST_ROSTER_PATH)
+TEMPORAL_TRAIN_FEATURES_PATH_V2 = versioned_path(TEMPORAL_TRAIN_FEATURES_PATH)
+TEMPORAL_TEST_FEATURES_PATH_V2 = versioned_path(TEMPORAL_TEST_FEATURES_PATH)
+COURSE_HISTORY_STATE_PATH_V2 = versioned_path(COURSE_HISTORY_STATE_PATH)
+CATEGORY_LEVELS_PATH_V2 = versioned_path(CATEGORY_LEVELS_PATH)

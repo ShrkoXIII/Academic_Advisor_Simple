@@ -1,0 +1,12 @@
+src.data.clean_student_course failed ValueError: Missing required key: course_id, part_id
+src.data.clean_student_status failed ValueError: Invalid part_id 20214: semester must be 1, 2, or 3
+src.data.clean_degree_course generated 
+src.data.build_student_course_enriched BLOCKED ['CLEAN_STUDENT_COURSE_PATH_V2', 'CLEAN_STUDENT_STATUS_PATH_V2']
+src.data.clean_student_diploma BLOCKED ['STUDENT_COURSE_ENRICHED_PATH_V2']
+src.data.clean_outliers BLOCKED ['STUDENT_COURSE_DIPLOMA_PATH_V2']
+src.data.build_temporal_split BLOCKED ['STUDENT_COURSE_WITHOUT_OUTLIERS_PATH_V2']
+src.data.build_registration_roster BLOCKED ['CLEAN_STUDENT_STATUS_PATH_V2', 'OUTLIER_STUDENTS_AUDIT_PATH_V2']
+src.features.build_temporal_features BLOCKED ['TEMPORAL_TRAIN_PATH_V2', 'TEMPORAL_TEST_PATH_V2', 'TEMPORAL_TRAIN_ROSTER_PATH_V2', 'TEMPORAL_TEST_ROSTER_PATH_V2']
+Original files changed: []
+Same-code baseline comparisons: {'clean_degree_course': {'equal': False, 'sort_keys': ['degree_course_id', 'degree_id', 'course_id'], 'difference': 'DataFrame.columns are different\n\nAttribute "dtype" are different\n[left]:  <StringDtype(na_value=<NA>)>\n[right]: <StringDtype(na_value=nan)>'}, 'clean_student_diploma': {'equal': False, 'sort_keys': ['student_id'], 'difference': 'DataFrame.columns are different\n\nAttribute "dtype" are different\n[left]:  <StringDtype(na_value=<NA>)>\n[right]: <StringDtype(na_value=nan)>'}}
+Invalid raw status parts: {'20214.0': 3, '20254.0': 3, '20224.0': 2}

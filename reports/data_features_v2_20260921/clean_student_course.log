@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "D:\AI\Real projects\Academic_Advisor_Simple\scripts\verify_data_features_v2.py", line 92, in main
+    importlib.import_module(stage).main()
+  File "D:\AI\Real projects\Academic_Advisor_Simple\src\data\clean_student_course.py", line 102, in main
+    df = clean_student_course(df)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Real projects\Academic_Advisor_Simple\src\data\clean_student_course.py", line 49, in clean_student_course
+    raise ValueError(f"Missing required key: {', '.join(missing_keys[missing_keys].index)}")
+ValueError: Missing required key: course_id, part_id

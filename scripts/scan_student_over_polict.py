@@ -14,7 +14,7 @@ import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from src.cleaning_utils import clean_id_columns
+from src.data.cleaning_utils import clean_id_columns
 
 
 ROOT = Path(__file__).resolve().parents[1]

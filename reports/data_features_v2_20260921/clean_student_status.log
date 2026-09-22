@@ -1,0 +1,28 @@
+Traceback (most recent call last):
+  File "D:\AI\Real projects\Academic_Advisor_Simple\scripts\verify_data_features_v2.py", line 92, in main
+    importlib.import_module(stage).main()
+  File "D:\AI\Real projects\Academic_Advisor_Simple\src\data\clean_student_status.py", line 197, in main
+    df = clean_student_status(df)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Real projects\Academic_Advisor_Simple\src\data\clean_student_status.py", line 179, in clean_student_status
+    df = add_enrollment_features(df)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Real projects\Academic_Advisor_Simple\src\data\clean_student_status.py", line 85, in add_enrollment_features
+    current_is_regular = df["part_id"].map(is_regular_semester)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Real projects\Academic_Advisor_Simple\.venv\Lib\site-packages\pandas\core\series.py", line 4675, in map
+    new_values = self._map_values(func, na_action=na_action)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Real projects\Academic_Advisor_Simple\.venv\Lib\site-packages\pandas\core\base.py", line 1020, in _map_values
+    return arr.map(mapper, na_action=na_action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Real projects\Academic_Advisor_Simple\.venv\Lib\site-packages\pandas\core\arrays\masked.py", line 1693, in map
+    return map_array(self.to_numpy(), mapper, na_action=na_action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI\Real projects\Academic_Advisor_Simple\.venv\Lib\site-packages\pandas\core\algorithms.py", line 1715, in map_array
+    return lib.map_infer(values, mapper)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas/_libs/lib.pyx", line 3071, in pandas._libs.lib.map_infer
+  File "D:\AI\Real projects\Academic_Advisor_Simple\src\data\academic_calendar.py", line 14, in is_regular_semester
+    raise ValueError(f"Invalid part_id {part_id!r}: semester must be 1, 2, or 3")
+ValueError: Invalid part_id 20214: semester must be 1, 2, or 3

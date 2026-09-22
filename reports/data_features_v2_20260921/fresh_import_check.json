@@ -1,0 +1,18 @@
+{
+  "fresh_package_import": {
+    "returncode": 0,
+    "stderr": ""
+  },
+  "train_models": {
+    "returncode": 0,
+    "stderr": ""
+  },
+  "evaluate_plan_gpa": {
+    "returncode": 0,
+    "stderr": ""
+  },
+  "analyze_model_errors": {
+    "returncode": 0,
+    "stderr": ""
+  }
+}

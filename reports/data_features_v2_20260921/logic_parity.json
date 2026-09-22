@@ -1,0 +1,17 @@
+{
+  "cleaning_utils": true,
+  "academic_calendar": true,
+  "clean_degree_course": true,
+  "clean_student_course": true,
+  "clean_student_status": true,
+  "clean_student_diploma": true,
+  "clean_outliers": true,
+  "build_student_course_enriched": true,
+  "build_registration_roster": true,
+  "build_temporal_split": true,
+  "temporal_features": true,
+  "build_temporal_features": true,
+  "feature_contract": true,
+  "frozen_history": true,
+  "build_frozen_history": true
+}

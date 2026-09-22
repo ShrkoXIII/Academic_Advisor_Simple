@@ -1,5 +1,7 @@
 # مسار مشروع Academic Advisor كاملًا
 
+> تحديث النقل إلى V2: مراحل `src.data` و`src.features` تكتب ملفات `_v2` وتقرأ الوسائط من الإصدار نفسه. المسارات غير الملحقة والأرقام القديمة أدناه تصف مخرجات V1 المحفوظة. التدريب والتقييم والتوصية ما زالت تستخدم مخرجاتها الحالية ولم تُحوّل إلى V2. التشغيل الفعلي الكامل لـV2 متوقف حاليًا على مفاتيح ناقصة في raw courses وفصول خام غير صالحة وفق الحراس الحالية؛ راجع [تقرير النقل](reports/data_features_v2_20260921/report.md).
+
 هذا الملف يشرح خط انتقال البيانات كاملًا: ما الذي يدخل كل مرحلة، ما السكربت
 المسؤول عنها، ما الملفات التي تنتج، ومن يستهلك هذه الملفات بعد ذلك.
 
@@ -20,10 +22,10 @@ data/raw/
         ▼
 تنظيف الجداول الأساسية
 │
-├─ src/clean_student_course.py
-├─ src/clean_student_status.py
-├─ src/clean_degree_course.py
-└─ src/clean_student_diploma.py
+├─ src/data/clean_student_course.py
+├─ src/data/clean_student_status.py
+├─ src/data/clean_degree_course.py
+└─ src/data/clean_student_diploma.py
         │
         ▼
 data/clean/
@@ -36,8 +38,8 @@ data/clean/
         ▼
 الإثراء والدمج
 │
-├─ src/build_student_course_enriched.py
-└─ src/clean_student_diploma.py
+├─ src/data/build_student_course_enriched.py
+└─ src/data/clean_student_diploma.py
         │
         ├─ data/clean/student_course_enriched.parquet
         └─ data/merged/student_course_enriched_with_diploma.parquet
@@ -45,7 +47,7 @@ data/clean/
         ▼
 حذف الطلاب ذوي القيم الشاذة
 │
-└─ src/clean_outliers.py
+└─ src/data/clean_outliers.py
         │
         ▼
 data/merged/
@@ -56,7 +58,7 @@ data/merged/
         ├──────────────────────────────────────┐
         ▼                                      ▼
 تقسيم صفوف أهداف المودل                  بناء roster الحمل الكامل
-src/build_temporal_split.py              src/build_registration_roster.py
+src/data/build_temporal_split.py              src/data/build_registration_roster.py
         │                                      │
         ▼                                      ▼
 data/temporal/                          data/temporal/
@@ -66,8 +68,8 @@ data/temporal/                          data/temporal/
         └──────────────────┬───────────────────┘
                            ▼
 هندسة الخصائص الزمنية
-src/build_temporal_features.py
-src/temporal_features.py
+src/features/build_temporal_features.py
+src/features/temporal_features.py
                            │
                            ▼
 data/features/
@@ -80,7 +82,7 @@ data/artifacts/
                            │
                            ▼
 عقد الخصائص
-src/feature_contract.py
+src/features/feature_contract.py
                            │
              ┌─────────────┼─────────────────┐
              ▼             ▼                 ▼
@@ -148,14 +150,14 @@ data/raw/
 المدخل الأساسي:
 data/raw/v_crg_student_course_raw.parquet
 
-مرجع مفاتيح الحالة:
-data/clean/student_status.parquet
-
 السكربت:
-src/clean_student_course.py
+src/data/clean_student_course.py
 
-المخرج:
-data/clean/student_course.parquet
+المخرج الأولي المستقل:
+data/clean/student_course_pre_common_v2.parquet
+
+المخرج النهائي بعد تقاطع الطلاب:
+data/clean/student_course_v2.parquet
 ```
 
 أهم العمليات: الاحتفاظ بتسجيلات `R/E` والنتائج `P/F/FE/FA` بعد 2019، تنظيف
@@ -167,14 +169,14 @@ data/clean/student_course.parquet
 المدخل الأساسي:
 data/raw/v_add_student_degree_status.parquet
 
-مرجع مفاتيح المقررات:
-data/clean/student_course.parquet
-
 السكربت:
-src/clean_student_status.py
+src/data/clean_student_status.py
 
-المخرج:
-data/clean/student_status.parquet
+المخرج الأولي المستقل:
+data/clean/student_status_pre_common_v2.parquet
+
+المخرج النهائي بعد تقاطع الطلاب:
+data/clean/student_status_v2.parquet
 ```
 
 أهم العمليات: فلترة الحالة ونمط الدراسة، تنظيف تراكمات الطالب، حساب
@@ -183,12 +185,11 @@ data/clean/student_status.parquet
 
 ### ملاحظة إعادة البناء من الصفر
 
-`clean_student_course.py` و`clean_student_status.py` يطبقان cross-filter ويقرأ
-كل منهما مفاتيح ناتج الآخر. هذا يعمل حاليًا لأن الملفين موجودان، لكنه يعني أن
-إعادة البناء من clone جديد مع `data/clean/` فارغ ليست bootstrap آلية كاملة.
-
-التحسين المطلوب لاحقًا هو مشغّل تنظيف أساسي ينفذ تمريرة أولية ثم التصفية
-المتبادلة. حتى تنفيذه، لا تحذف الملفين معًا قبل إعادة بنائهما.
+ينظف `clean_student_course.py` و`clean_student_status.py` المصدرين باستقلال،
+ويكتبان `student_course_pre_common_v2.parquet` و`student_status_pre_common_v2.parquet`.
+بعدهما تشغّل `src/data/filter_common_students.py` تقاطع `student_id` فقط وتكتب
+`student_course_v2.parquet` و`student_status_v2.parquet` للاستهلاك اللاحق.
+تُحفظ جميع صفوف الطالب المشترك حتى لو اختلف `degree_id` أو `part_id`.
 
 ## 4. تنظيف مقررات الخطة
 
@@ -197,7 +198,7 @@ data/clean/student_status.parquet
 data/raw/v_acd_degree_course.parquet
 
 السكربت:
-src/clean_degree_course.py
+src/data/clean_degree_course.py
 
 المخرج:
 data/clean/degree_course.parquet
@@ -215,7 +216,7 @@ data/clean/student_status.parquet
 data/clean/degree_course.parquet
 
 السكربت:
-src/build_student_course_enriched.py
+src/data/build_student_course_enriched.py
 
 المخرج:
 data/clean/student_course_enriched.parquet
@@ -234,7 +235,7 @@ data/raw/v_add_academic_info.parquet
 data/clean/student_course_enriched.parquet
 
 السكربت:
-src/clean_student_diploma.py
+src/data/clean_student_diploma.py
 
 المخرجات:
 data/clean/student_diploma.parquet
@@ -251,7 +252,7 @@ data/merged/student_course_enriched_with_diploma.parquet
 data/merged/student_course_enriched_with_diploma.parquet
 
 السكربت:
-src/clean_outliers.py
+src/data/clean_outliers.py
 
 المخرجات:
 data/merged/student_course_enriched_without_outliers.parquet
@@ -274,7 +275,7 @@ data/merged/student_course_enriched_without_outliers.parquet
 data/merged/student_course_enriched_without_outliers.parquet
 
 السكربت:
-src/build_temporal_split.py
+src/data/build_temporal_split.py
 
 المخرجات:
 data/temporal/temporal_train.parquet   # 20201–20243
@@ -296,7 +297,7 @@ data/clean/degree_course.parquet
 data/merged/outlier_students.parquet
 
 السكربت:
-src/build_registration_roster.py
+src/data/build_registration_roster.py
 
 المخرجات:
 data/clean/registration_roster.parquet
@@ -317,10 +318,10 @@ data/temporal/temporal_train_roster.parquet
 data/temporal/temporal_test_roster.parquet
 
 مشغّل المرحلة:
-src/build_temporal_features.py
+src/features/build_temporal_features.py
 
 منطق الخصائص:
-src/temporal_features.py
+src/features/temporal_features.py
 
 المخرجات:
 data/features/temporal_train_features.parquet
@@ -340,7 +341,7 @@ data/artifacts/course_history_state.pkl
 ## 11. عقد الخصائص الرسمي
 
 ```text
-src/feature_contract.py
+src/features/feature_contract.py
 ```
 
 هذا الملف لا ينتج parquet. وظيفته تحديد ما يدخل المودل:
@@ -363,7 +364,7 @@ data/features/temporal_train_features.parquet
 data/features/temporal_test_features.parquet
 
 عقد الخصائص:
-src/feature_contract.py
+src/features/feature_contract.py
 
 السكربت:
 src/train_models.py
@@ -519,8 +520,8 @@ src/recommendation.py
 
 الأدوات المساندة:
 src/grade_scale.py
-src/temporal_features.py
-src/feature_contract.py
+src/features/temporal_features.py
+src/features/feature_contract.py
 ```
 
 المدخلات وقت الاستخدام:
@@ -595,17 +596,24 @@ python -m unittest discover -s tests -v
 
 ## 19. ترتيب التشغيل الحالي
 
-بعد توفر ملفات `student_course.parquet` و`student_status.parquet` المتقاطعة،
-يمكن إعادة بناء بقية المشروع بهذا الترتيب:
+من جذر المشروع، وبعد معالجة عوائق المصدر بقرار منفصل، ترتيب بناء قسمَي البيانات والخصائص V2 هو:
 
 ```powershell
-python src\clean_degree_course.py
-python src\build_student_course_enriched.py
-python src\clean_student_diploma.py
-python src\clean_outliers.py
-python src\build_temporal_split.py
-python src\build_registration_roster.py
-python src\build_temporal_features.py
+python -m src.data.clean_student_course
+python -m src.data.clean_student_status
+python -m src.data.filter_common_students
+python -m src.data.clean_degree_course
+python -m src.data.build_student_course_enriched
+python -m src.data.clean_student_diploma
+python -m src.data.clean_outliers
+python -m src.data.build_temporal_split
+python -m src.data.build_registration_roster
+python -m src.features.build_temporal_features
+```
+
+تنتهي سلسلة V2 هنا. الأوامر التالية مستقلة وتقرأ ملفات V1 الحالية؛ لا تدرّب على مخرجات V2 الجديدة:
+
+```powershell
 python src\train_models.py
 python src\evaluate_plan_gpa.py
 python src\analyze_model_errors.py

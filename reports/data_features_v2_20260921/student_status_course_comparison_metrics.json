@@ -1,0 +1,83 @@
+{
+  "snapshot": "before common student policy; legacy script flags describe the historical audit",
+  "student_level": {
+    "status_students": 13415,
+    "course_students": 13082,
+    "both_students": 12792,
+    "status_only_students": 623,
+    "course_only_students": 290
+  },
+  "key_level": {
+    "status_keys": 108974,
+    "course_keys": 96337,
+    "both": 95622,
+    "status_only": 13352,
+    "course_only": 715,
+    "status_only_pct": 12.2525,
+    "course_only_pct": 0.7422
+  },
+  "classification": {
+    "status": [
+      {
+        "classification": "same student and degree, different part_id",
+        "key_count": 12279,
+        "unique_students": 7486
+      },
+      {
+        "classification": "student completely absent from other table",
+        "key_count": 1035,
+        "unique_students": 623
+      },
+      {
+        "classification": "same student, different degree + part combination",
+        "key_count": 38,
+        "unique_students": 16
+      }
+    ],
+    "course": [
+      {
+        "classification": "student completely absent from other table",
+        "key_count": 681,
+        "unique_students": 290
+      },
+      {
+        "classification": "same student, different degree + part combination",
+        "key_count": 23,
+        "unique_students": 10
+      },
+      {
+        "classification": "same student and degree, different part_id",
+        "key_count": 11,
+        "unique_students": 11
+      }
+    ]
+  },
+  "merge": {
+    "course_rows_before": 459620,
+    "course_rows_after": 456453,
+    "rows_dropped": 3167,
+    "dropped_pct": 0.689,
+    "course_students_before": 13082,
+    "course_students_after": 12792,
+    "students_completely_lost": 290,
+    "status_rows_before": 108974,
+    "status_rows_matched": 95622,
+    "status_rows_unmatched": 13352,
+    "status_coverage_pct": 87.7475,
+    "course_rows_matched": 456453,
+    "course_rows_unmatched": 3167,
+    "course_coverage_pct": 99.311
+  },
+  "dependencies": {
+    "student_course_depends_on_status_keys": false,
+    "student_status_depends_on_course_keys": false,
+    "legacy_script_uses_v1_paths": true,
+    "legacy_script_has_v2_imports": false
+  },
+  "after_common_student_policy": {
+    "student_level": {"status": 12792, "course": 12792, "both": 12792, "status_only": 0, "course_only": 0},
+    "key_level": {"status": 107939, "course": 95656, "both": 95622, "status_only": 12317, "course_only": 34},
+    "rows": {"status": 107939, "course": 456595},
+    "inner_merge": {"course_rows_before": 456595, "course_rows_after": 456453, "dropped_rows": 142, "dropped_percentage": 0.0311, "students_before": 12792, "students_after": 12792, "students_completely_lost": 0}
+  }
+}

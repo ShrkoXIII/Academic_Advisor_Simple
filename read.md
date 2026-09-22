@@ -36,9 +36,9 @@ recommendation
 | [START_HERE.md](<D:/AI/Real projects/Academic_Advisor_Simple/START_HERE.md>) | 20 دقيقة | أين نحن وما المسار الرسمي |
 | [PIPELINE_README.md](<D:/AI/Real projects/Academic_Advisor_Simple/PIPELINE_README.md>) | 40 دقيقة | اقرأ الخريطة، ولا تحفظ التفاصيل |
 | [paths.py](<D:/AI/Real projects/Academic_Advisor_Simple/src/paths.py>) | 10 دقائق | أماكن المدخلات والمخرجات |
-| [feature_contract.py](<D:/AI/Real projects/Academic_Advisor_Simple/src/feature_contract.py>) | 40 دقيقة | ما يدخل المودل، categorical، target، الأوزان وأعمدة التسرب |
-| [temporal_features.py](<D:/AI/Real projects/Academic_Advisor_Simple/src/temporal_features.py>) | ساعتان | أهم ملف: تاريخ المقرر، تاريخ الطالب، GPA trend وخصائص حمل الخطة |
-| [build_temporal_features.py](<D:/AI/Real projects/Academic_Advisor_Simple/src/build_temporal_features.py>) | 30 دقيقة | كيف تُجمع الخصائص السابقة في ملف واحد |
+| [feature_contract.py](<D:/AI/Real projects/Academic_Advisor_Simple/src/features/feature_contract.py>) | 40 دقيقة | ما يدخل المودل، categorical، target، الأوزان وأعمدة التسرب |
+| [temporal_features.py](<D:/AI/Real projects/Academic_Advisor_Simple/src/features/temporal_features.py>) | ساعتان | أهم ملف: تاريخ المقرر، تاريخ الطالب، GPA trend وخصائص حمل الخطة |
+| [build_temporal_features.py](<D:/AI/Real projects/Academic_Advisor_Simple/src/features/build_temporal_features.py>) | 30 دقيقة | كيف تُجمع الخصائص السابقة في ملف واحد |
 | [test_temporal_features.py](<D:/AI/Real projects/Academic_Advisor_Simple/tests/test_temporal_features.py>) | 40 دقيقة | افهم منه كيف نمنع التسرب الزمني |
 
 داخل `temporal_features.py` ركّز فقط على:
@@ -95,7 +95,7 @@ recommendation
 كذلك أجّل القراءة التفصيلية لـ:
 
 - `analyze_model_errors.py`
-- `compare_student_status_course.py`
+- `src/diagnostics/compare_student_status_course.py`
 - `analyze_course_plan_changes.py`
 
 الخطة العملية بعد الأيام الثلاثة:

@@ -1,0 +1,29 @@
+              scope                                  rule  students  trigger_records
+             course          attempt_number_outside_range       375              787
+logical_consistency total_credit_totals_exceed_registered        18               70
+logical_consistency       end_credits_below_start_credits        16               37
+logical_consistency       end_courses_below_start_courses        15               31
+logical_consistency total_course_totals_exceed_registered        11               50
+    semester_status      semester_reg_credits_above_limit        88               91
+    semester_status     semester_pass_credits_above_limit        69               69
+    semester_status      semester_reg_courses_above_limit        65               65
+    semester_status        total_pass_courses_above_limit        54               95
+    semester_status    observed_gap_semesters_above_limit        53               53
+    semester_status     semester_fail_courses_above_limit        49               53
+    semester_status        total_pass_credits_above_limit        49               96
+    semester_status     semester_fail_credits_above_limit        30               34
+    semester_status     semester_pass_courses_above_limit        29               29
+    semester_status       reg_total_semesters_above_limit        24               75
+    semester_status           total_semesters_above_limit        22               79
+    semester_status         total_reg_courses_above_limit        20               95
+    semester_status         total_reg_credits_above_limit        20               96
+    semester_status        total_fail_courses_above_limit        14               93
+    semester_status        total_fail_credits_above_limit        13               95
+
+Input rows: 456453
+Removed students: 762
+Removed rows: 32096
+Remaining students: 12030
+Remaining rows: 424357
+Saved clean data: D:\AI\Real projects\Academic_Advisor_Simple\data\merged\student_course_enriched_without_outliers_v2.parquet
+Saved outlier audit: D:\AI\Real projects\Academic_Advisor_Simple\data\merged\outlier_students_v2.parquet

@@ -1,0 +1,25 @@
+Running src.data.clean_degree_course
+Running src.data.clean_student_status
+Running src.data.clean_student_course
+Running src.data.build_student_course_enriched
+Running src.data.clean_student_diploma
+Running src.data.clean_outliers
+Running src.data.build_temporal_split
+Running src.data.build_registration_roster
+Running src.features.build_temporal_features
+Completed stages: 9 Protected changes: []
+CLEAN_STUDENT_COURSE_PATH 456453 -> 459620 added 3167 removed 0 changed {'attempt_number': 21624}
+CLEAN_STUDENT_STATUS_PATH 95622 -> 108974 added 13352 removed 0 changed {'last_enrolled_gpa': 2, 'observed_gap_semesters': 260}
+CLEAN_DEGREE_COURSE_PATH 4006 -> 4006 added 0 removed 0 changed {'requirement_type_id': 4006}
+STUDENT_COURSE_ENRICHED_PATH 456453 -> 456453 added 0 removed 0 changed {'attempt_number': 21624, 'last_enrolled_gpa': 8, 'observed_gap_semesters': 888, 'plan_requirement_type_id': 456386}
+CLEAN_STUDENT_DIPLOMA_PATH 32524 -> 32524 added 0 removed 0 changed {}
+STUDENT_COURSE_DIPLOMA_PATH 456453 -> 456453 added 0 removed 0 changed {'attempt_number': 21624, 'last_enrolled_gpa': 8, 'observed_gap_semesters': 888, 'plan_requirement_type_id': 456386}
+STUDENT_COURSE_WITHOUT_OUTLIERS_PATH 434168 -> 424357 added 166 removed 9977 changed {'attempt_number': 17246, 'last_enrolled_gpa': 4, 'observed_gap_semesters': 603, 'plan_requirement_type_id': 424124}
+OUTLIER_STUDENTS_AUDIT_PATH 785 -> 1034 added 254 removed 5 changed {'max_observed': 82, 'min_observed': 13, 'trigger_count': 81}
+TEMPORAL_TRAIN_PATH 365585 -> 356816 added 153 removed 8922 changed {'attempt_number': 14112, 'last_enrolled_gpa': 4, 'observed_gap_semesters': 434, 'plan_requirement_type_id': 356596}
+TEMPORAL_TEST_PATH 68578 -> 67536 added 13 removed 1055 changed {'attempt_number': 3134, 'observed_gap_semesters': 169, 'plan_requirement_type_id': 67523}
+CLEAN_REGISTRATION_ROSTER_PATH 463721 -> 475407 added 24000 removed 12314 changed {'plan_requirement_type_id': 451323}
+TEMPORAL_TRAIN_ROSTER_PATH 390134 -> 389698 added 10530 removed 10966 changed {'plan_requirement_type_id': 379084}
+TEMPORAL_TEST_ROSTER_PATH 73581 -> 75319 added 3086 removed 1348 changed {'plan_requirement_type_id': 72233}
+TEMPORAL_TRAIN_FEATURES_PATH 365585 -> 356816 added 153 removed 8922 changed {'attempt_number': 14112, 'course_history_avg_attempt': 303859, 'course_history_avg_mark': 329669, 'course_history_effective_support': 257860, 'course_history_fail_rate': 329669, 'course_history_fallback_level': 14, 'course_history_missing': 1204, 'course_history_retake_rate': 303859, 'last_enrolled_gpa': 4, 'observed_gap_semesters': 434, 'peer_credit_weighted_avg_attempt': 301207, 'peer_credit_weighted_avg_mark': 326942, 'peer_credit_weighted_fail_rate': 326942, 'peer_difficulty_credit_load': 326942, 'peer_max_fail_rate': 326952, 'plan_credit_weighted_avg_attempt': 303859, 'plan_credit_weighted_avg_mark': 329669, 'plan_credit_weighted_fail_rate': 329669, 'plan_difficulty_credit_load': 329669, 'plan_requirement_type_id': 356596}
+TEMPORAL_TEST_FEATURES_PATH 68578 -> 67536 added 13 removed 1055 changed {'attempt_number': 3134, 'course_history_avg_attempt': 67523, 'course_history_avg_mark': 67523, 'course_history_effective_support': 35823, 'course_history_fail_rate': 67523, 'course_history_missing': 98, 'course_history_retake_rate': 67523, 'observed_gap_semesters': 169, 'peer_credit_weighted_avg_attempt': 67231, 'peer_credit_weighted_avg_mark': 67231, 'peer_credit_weighted_fail_rate': 67231, 'peer_difficulty_credit_load': 67231, 'peer_max_fail_rate': 67231, 'plan_credit_weighted_avg_attempt': 67523, 'plan_credit_weighted_avg_mark': 67523, 'plan_credit_weighted_fail_rate': 67523, 'plan_difficulty_credit_load': 67523, 'plan_requirement_type_id': 67523}

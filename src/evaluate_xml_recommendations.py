@@ -17,8 +17,8 @@ import xml.etree.ElementTree as ET
 import numpy as np
 import pandas as pd
 
-from .clean_student_status import clean_student_status
-from .cleaning_utils import clean_column_names, clean_id
+from src.data.clean_student_status import clean_student_status
+from src.data.cleaning_utils import clean_column_names, clean_id
 from .paths import (
     CLEAN_DEGREE_COURSE_PATH,
     CLEAN_STUDENT_COURSE_PATH,

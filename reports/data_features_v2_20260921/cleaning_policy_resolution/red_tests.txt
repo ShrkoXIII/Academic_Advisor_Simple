@@ -1,0 +1,215 @@
+.....................................FFFFFFFFF.......................... [ 73%]
+.FFFF.....................                                               [100%]
+================================== FAILURES ===================================
+______ test_missing_critical_key_excludes_only_that_row[Course ID-None] _______
+tests\test_clean_student_course.py:259: in test_missing_critical_key_excludes_only_that_row
+    result = course_module.clean_student_course(raw)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\clean_student_course.py:49: in clean_student_course
+    raise ValueError(f"Missing required key: {', '.join(missing_keys[missing_keys].index)}")
+E   ValueError: Missing required key: course_id
+_____ test_missing_critical_key_excludes_only_that_row[Course ID- none ] ______
+tests\test_clean_student_course.py:259: in test_missing_critical_key_excludes_only_that_row
+    result = course_module.clean_student_course(raw)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\clean_student_course.py:49: in clean_student_course
+    raise ValueError(f"Missing required key: {', '.join(missing_keys[missing_keys].index)}")
+E   ValueError: Missing required key: course_id
+_______ test_missing_critical_key_excludes_only_that_row[Course ID-  ] ________
+tests\test_clean_student_course.py:259: in test_missing_critical_key_excludes_only_that_row
+    result = course_module.clean_student_course(raw)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\clean_student_course.py:49: in clean_student_course
+    raise ValueError(f"Missing required key: {', '.join(missing_keys[missing_keys].index)}")
+E   ValueError: Missing required key: course_id
+______ test_missing_critical_key_excludes_only_that_row[Course ID-<NA>] _______
+tests\test_clean_student_course.py:259: in test_missing_critical_key_excludes_only_that_row
+    result = course_module.clean_student_course(raw)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\clean_student_course.py:49: in clean_student_course
+    raise ValueError(f"Missing required key: {', '.join(missing_keys[missing_keys].index)}")
+E   ValueError: Missing required key: course_id
+_______ test_missing_critical_key_excludes_only_that_row[Part ID-None] ________
+tests\test_clean_student_course.py:259: in test_missing_critical_key_excludes_only_that_row
+    result = course_module.clean_student_course(raw)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\clean_student_course.py:49: in clean_student_course
+    raise ValueError(f"Missing required key: {', '.join(missing_keys[missing_keys].index)}")
+E   ValueError: Missing required key: part_id
+_________ test_missing_critical_key_excludes_only_that_row[Part ID-] __________
+tests\test_clean_student_course.py:259: in test_missing_critical_key_excludes_only_that_row
+    result = course_module.clean_student_course(raw)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\clean_student_course.py:49: in clean_student_course
+    raise ValueError(f"Missing required key: {', '.join(missing_keys[missing_keys].index)}")
+E   ValueError: Missing required key: part_id
+_______ test_missing_critical_key_excludes_only_that_row[Part ID-null] ________
+pandas/_libs/lib.pyx:2478: in pandas._libs.lib.maybe_convert_numeric
+    ???
+E   ValueError: Unable to parse string "null"
+
+During handling of the above exception, another exception occurred:
+tests\test_clean_student_course.py:259: in test_missing_critical_key_excludes_only_that_row
+    result = course_module.clean_student_course(raw)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\clean_student_course.py:34: in clean_student_course
+    df["part_id"] = to_integer(df["part_id"])
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\cleaning_utils.py:38: in to_integer
+    return pd.to_numeric(series).astype("Int64")
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\tools\numeric.py:235: in to_numeric
+    values, new_mask = lib.maybe_convert_numeric(  # type: ignore[call-overload]
+pandas/_libs/lib.pyx:2521: in pandas._libs.lib.maybe_convert_numeric
+    ???
+E   ValueError: Unable to parse string "null" at position 0
+____ test_missing_critical_key_excludes_only_that_row[Part ID-not-a-part] _____
+pandas/_libs/lib.pyx:2478: in pandas._libs.lib.maybe_convert_numeric
+    ???
+E   ValueError: Unable to parse string "not-a-part"
+
+During handling of the above exception, another exception occurred:
+tests\test_clean_student_course.py:259: in test_missing_critical_key_excludes_only_that_row
+    result = course_module.clean_student_course(raw)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\clean_student_course.py:34: in clean_student_course
+    df["part_id"] = to_integer(df["part_id"])
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\cleaning_utils.py:38: in to_integer
+    return pd.to_numeric(series).astype("Int64")
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\tools\numeric.py:235: in to_numeric
+    values, new_mask = lib.maybe_convert_numeric(  # type: ignore[call-overload]
+pandas/_libs/lib.pyx:2521: in pandas._libs.lib.maybe_convert_numeric
+    ???
+E   ValueError: Unable to parse string "not-a-part" at position 0
+____ test_both_critical_keys_missing_on_same_row_yields_empty_clean_frame _____
+tests\test_clean_student_course.py:270: in test_both_critical_keys_missing_on_same_row_yields_empty_clean_frame
+    result = course_module.clean_student_course(raw)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\clean_student_course.py:49: in clean_student_course
+    raise ValueError(f"Missing required key: {', '.join(missing_keys[missing_keys].index)}")
+E   ValueError: Missing required key: course_id, part_id
+_______ test_semester_four_is_excluded_before_enrollment_history[20214] _______
+tests\test_clean_student_status.py:212: in test_semester_four_is_excluded_before_enrollment_history
+    result = status_module.clean_student_status(raw)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\clean_student_status.py:179: in clean_student_status
+    df = add_enrollment_features(df)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\clean_student_status.py:85: in add_enrollment_features
+    current_is_regular = df["part_id"].map(is_regular_semester)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\series.py:4675: in map
+    new_values = self._map_values(func, na_action=na_action)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\base.py:1020: in _map_values
+    return arr.map(mapper, na_action=na_action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\arrays\masked.py:1693: in map
+    return map_array(self.to_numpy(), mapper, na_action=na_action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\algorithms.py:1715: in map_array
+    return lib.map_infer(values, mapper)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pandas/_libs/lib.pyx:3071: in pandas._libs.lib.map_infer
+    ???
+src\data\academic_calendar.py:14: in is_regular_semester
+    raise ValueError(f"Invalid part_id {part_id!r}: semester must be 1, 2, or 3")
+E   ValueError: Invalid part_id 20214: semester must be 1, 2, or 3
+_______ test_semester_four_is_excluded_before_enrollment_history[20224] _______
+tests\test_clean_student_status.py:212: in test_semester_four_is_excluded_before_enrollment_history
+    result = status_module.clean_student_status(raw)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\clean_student_status.py:179: in clean_student_status
+    df = add_enrollment_features(df)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\clean_student_status.py:85: in add_enrollment_features
+    current_is_regular = df["part_id"].map(is_regular_semester)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\series.py:4675: in map
+    new_values = self._map_values(func, na_action=na_action)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\base.py:1020: in _map_values
+    return arr.map(mapper, na_action=na_action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\arrays\masked.py:1693: in map
+    return map_array(self.to_numpy(), mapper, na_action=na_action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\algorithms.py:1715: in map_array
+    return lib.map_infer(values, mapper)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pandas/_libs/lib.pyx:3071: in pandas._libs.lib.map_infer
+    ???
+src\data\academic_calendar.py:14: in is_regular_semester
+    raise ValueError(f"Invalid part_id {part_id!r}: semester must be 1, 2, or 3")
+E   ValueError: Invalid part_id 20224: semester must be 1, 2, or 3
+_______ test_semester_four_is_excluded_before_enrollment_history[20254] _______
+tests\test_clean_student_status.py:212: in test_semester_four_is_excluded_before_enrollment_history
+    result = status_module.clean_student_status(raw)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\clean_student_status.py:179: in clean_student_status
+    df = add_enrollment_features(df)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\clean_student_status.py:85: in add_enrollment_features
+    current_is_regular = df["part_id"].map(is_regular_semester)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\series.py:4675: in map
+    new_values = self._map_values(func, na_action=na_action)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\base.py:1020: in _map_values
+    return arr.map(mapper, na_action=na_action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\arrays\masked.py:1693: in map
+    return map_array(self.to_numpy(), mapper, na_action=na_action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\algorithms.py:1715: in map_array
+    return lib.map_infer(values, mapper)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pandas/_libs/lib.pyx:3071: in pandas._libs.lib.map_infer
+    ???
+src\data\academic_calendar.py:14: in is_regular_semester
+    raise ValueError(f"Invalid part_id {part_id!r}: semester must be 1, 2, or 3")
+E   ValueError: Invalid part_id 20254: semester must be 1, 2, or 3
+___________ test_only_semester_four_rows_produce_empty_clean_status ___________
+tests\test_clean_student_status.py:223: in test_only_semester_four_rows_produce_empty_clean_status
+    result = status_module.clean_student_status(raw)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\clean_student_status.py:179: in clean_student_status
+    df = add_enrollment_features(df)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\clean_student_status.py:85: in add_enrollment_features
+    current_is_regular = df["part_id"].map(is_regular_semester)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\series.py:4675: in map
+    new_values = self._map_values(func, na_action=na_action)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\base.py:1020: in _map_values
+    return arr.map(mapper, na_action=na_action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\arrays\masked.py:1693: in map
+    return map_array(self.to_numpy(), mapper, na_action=na_action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\algorithms.py:1715: in map_array
+    return lib.map_infer(values, mapper)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pandas/_libs/lib.pyx:3071: in pandas._libs.lib.map_infer
+    ???
+src\data\academic_calendar.py:14: in is_regular_semester
+    raise ValueError(f"Invalid part_id {part_id!r}: semester must be 1, 2, or 3")
+E   ValueError: Invalid part_id 20214: semester must be 1, 2, or 3
+=========================== short test summary info ===========================
+FAILED tests/test_clean_student_course.py::test_missing_critical_key_excludes_only_that_row[Course ID-None]
+FAILED tests/test_clean_student_course.py::test_missing_critical_key_excludes_only_that_row[Course ID- none ]
+FAILED tests/test_clean_student_course.py::test_missing_critical_key_excludes_only_that_row[Course ID-  ]
+FAILED tests/test_clean_student_course.py::test_missing_critical_key_excludes_only_that_row[Course ID-<NA>]
+FAILED tests/test_clean_student_course.py::test_missing_critical_key_excludes_only_that_row[Part ID-None]
+FAILED tests/test_clean_student_course.py::test_missing_critical_key_excludes_only_that_row[Part ID-]
+FAILED tests/test_clean_student_course.py::test_missing_critical_key_excludes_only_that_row[Part ID-null]
+FAILED tests/test_clean_student_course.py::test_missing_critical_key_excludes_only_that_row[Part ID-not-a-part]
+FAILED tests/test_clean_student_course.py::test_both_critical_keys_missing_on_same_row_yields_empty_clean_frame
+FAILED tests/test_clean_student_status.py::test_semester_four_is_excluded_before_enrollment_history[20214]
+FAILED tests/test_clean_student_status.py::test_semester_four_is_excluded_before_enrollment_history[20224]
+FAILED tests/test_clean_student_status.py::test_semester_four_is_excluded_before_enrollment_history[20254]
+FAILED tests/test_clean_student_status.py::test_only_semester_four_rows_produce_empty_clean_status
+13 failed, 85 passed in 4.83s

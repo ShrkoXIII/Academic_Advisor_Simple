@@ -5,7 +5,7 @@ import json
 import numpy as np
 import pandas as pd
 
-from ..feature_contract import FEATURE_ENGINEERING_VERSION, MODEL_FEATURES, require_current_features
+from src.features.feature_contract import FEATURE_ENGINEERING_VERSION, BASE_FEATURES, require_current_features
 from ..grade_scale import GradeScale
 from ..paths import (
     DEGREE_POINTS_CATEGORY_LEVELS_PATH,
@@ -137,7 +137,7 @@ INPUT_COLUMNS = list(
             "final_mark",
             "points",
             "is_fail",
-            *MODEL_FEATURES,
+            *BASE_FEATURES,
         ]
     )
 )

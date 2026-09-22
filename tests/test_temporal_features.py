@@ -10,16 +10,16 @@ from pandas.testing import assert_frame_equal
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from feature_contract import (  # noqa: E402
+from src.features.feature_contract import (  # noqa: E402
     CATEGORICAL_FEATURES,
     LEAKAGE_COLUMNS,
-    MODEL_FEATURES,
+    BASE_FEATURES,
     NUMERIC_FEATURES,
     RAW_ID_COLUMNS,
     learn_category_levels,
     prepare_model_matrix,
 )
-from temporal_features import (  # noqa: E402
+from src.features.temporal_features import (  # noqa: E402
     COURSE_HISTORY_COLUMNS,
     STUDENT_HISTORY_COLUMNS,
     CourseHistoryState,
@@ -222,8 +222,8 @@ class StudentHistoryTests(unittest.TestCase):
 
 class FeatureContractTests(unittest.TestCase):
     def test_model_contract_excludes_raw_ids_and_leakage(self):
-        self.assertTrue(set(MODEL_FEATURES).isdisjoint(LEAKAGE_COLUMNS))
-        self.assertTrue(set(MODEL_FEATURES).isdisjoint(RAW_ID_COLUMNS))
+        self.assertTrue(set(BASE_FEATURES).isdisjoint(LEAKAGE_COLUMNS))
+        self.assertTrue(set(BASE_FEATURES).isdisjoint(RAW_ID_COLUMNS))
 
     def test_changing_current_mark_changes_no_model_feature(self):
         values = {column: [1.0] for column in NUMERIC_FEATURES}

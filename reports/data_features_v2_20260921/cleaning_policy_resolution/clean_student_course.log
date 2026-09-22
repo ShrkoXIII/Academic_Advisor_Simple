@@ -1,0 +1,20 @@
+Rows after the agreed filters: 459620
+
+Null report:
+                       null_count  null_percent
+student_course_id               0           0.0
+student_id                      0           0.0
+course_id                       0           0.0
+part_id                         0           0.0
+grade_id                        0           0.0
+final_mark                      0           0.0
+points                          0           0.0
+course_name_sl                  0           0.0
+degree_id                       0           0.0
+degree_name_sl                  0           0.0
+faculty_id                      0           0.0
+course_credits                  0           0.0
+attempt_number                  0           0.0
+course_outcome_status           0           0.0
+
+Saved: D:\AI\Real projects\Academic_Advisor_Simple\data\clean\student_course_v2.parquet

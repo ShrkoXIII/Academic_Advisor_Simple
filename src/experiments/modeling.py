@@ -5,13 +5,13 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 
-from ..feature_contract import (
+from src.features.feature_contract import (
     CATEGORY_MISSING,
     CATEGORY_UNKNOWN,
     CATEGORICAL_FEATURES,
     NUMERIC_FEATURES,
-    training_weights,
 )
+from .experiment_config import training_weights
 from ..train_models import EARLY_STOPPING_ROUNDS, MAX_BOOST_ROUNDS, shared_parameters
 from .specialty_history import SPECIALTY_HISTORY_FEATURES
 

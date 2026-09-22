@@ -1,0 +1,41 @@
+........................................................................ [ 23%]
+........................................................................ [ 47%]
+........................................................................ [ 70%]
+..................................F...F................................. [ 94%]
+..................                                                       [100%]
+================================== FAILURES ===================================
+__________ ArtifactIntegrationTests.test_local_cli_without_snapshot ___________
+tests\test_local_recommendation.py:180: in test_local_cli_without_snapshot
+    self.assertEqual(completed.returncode, 0, completed.stdout + completed.stderr)
+E   AssertionError: 2 != 0 : Invalid part_id 20214: semester must be 1, 2, or 3
+___ ArtifactIntegrationTests.test_snapshot_ignores_current_future_outcomes ____
+tests\test_local_recommendation.py:281: in test_snapshot_ignores_current_future_outcomes
+    status = clean_student_status(pd.read_parquet(STUDENT_STATUS_PATH))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\clean_student_status.py:179: in clean_student_status
+    df = add_enrollment_features(df)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\data\clean_student_status.py:85: in add_enrollment_features
+    current_is_regular = df["part_id"].map(is_regular_semester)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\series.py:4675: in map
+    new_values = self._map_values(func, na_action=na_action)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\base.py:1020: in _map_values
+    return arr.map(mapper, na_action=na_action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\arrays\masked.py:1693: in map
+    return map_array(self.to_numpy(), mapper, na_action=na_action)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\pandas\core\algorithms.py:1715: in map_array
+    return lib.map_infer(values, mapper)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pandas/_libs/lib.pyx:3071: in pandas._libs.lib.map_infer
+    ???
+src\data\academic_calendar.py:14: in is_regular_semester
+    raise ValueError(f"Invalid part_id {part_id!r}: semester must be 1, 2, or 3")
+E   ValueError: Invalid part_id 20214: semester must be 1, 2, or 3
+=========================== short test summary info ===========================
+FAILED tests/test_local_recommendation.py::ArtifactIntegrationTests::test_local_cli_without_snapshot
+FAILED tests/test_local_recommendation.py::ArtifactIntegrationTests::test_snapshot_ignores_current_future_outcomes
+2 failed, 304 passed in 29.72s

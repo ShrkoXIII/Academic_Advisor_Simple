@@ -221,13 +221,13 @@ data/artifacts/history/
 للترحيل الأول فقط، بعد التحقق من مطابقة النسخة القديمة للمصدر:
 
 ```powershell
-.\.venv\Scripts\python.exe -m src.build_frozen_history --as-of-part 20243 --finalized-through-part 20243 --sources data/features/temporal_train_features.parquet --verify-legacy-course-state data/artifacts/course_history_state.pkl
+.\.venv\Scripts\python.exe -m src.features.build_frozen_history --as-of-part 20243 --finalized-through-part 20243 --sources data/features/temporal_train_features.parquet --verify-legacy-course-state data/artifacts/course_history_state.pkl
 ```
 
 لبناء التاريخ حتى نهاية `20251` من الجداول المحلية الحالية:
 
 ```powershell
-.\.venv\Scripts\python.exe -m src.build_frozen_history --as-of-part 20251 --finalized-through-part 20251 --sources data/features/temporal_train_features.parquet data/features/temporal_test_features.parquet
+.\.venv\Scripts\python.exe -m src.features.build_frozen_history --as-of-part 20251 --finalized-through-part 20251 --sources data/features/temporal_train_features.parquet data/features/temporal_test_features.parquet
 ```
 
 **النسختان أُنشئتا في هذا التعديل؛ إعادة الأمر لن تكتب فوقهما، بل سترفض وجود

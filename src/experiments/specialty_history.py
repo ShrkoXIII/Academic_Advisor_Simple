@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from dataclasses import dataclass
 
-from ..feature_contract import training_weights
+from .experiment_config import training_weights
 
 
 HISTORY_SMOOTHING_K = 20.0

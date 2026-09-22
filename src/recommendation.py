@@ -9,14 +9,14 @@ import numpy as np
 import pandas as pd
 
 from .experiments.modeling import prepare_matrix
-from .feature_contract import MODEL_FEATURES, load_category_levels, prepare_model_matrix, require_current_features
-from .frozen_history import load_frozen_history, validate_history_pair, validate_history_selection
+from src.features.feature_contract import BASE_FEATURES, load_category_levels, prepare_model_matrix, require_current_features
+from src.features.frozen_history import load_frozen_history, validate_history_pair, validate_history_selection
 from .paths import (
     CATEGORY_LEVELS_PATH, FAIL_MODEL_PATH, MODEL_METADATA_PATH,
     DEGREE_POINTS_SELECTED_MODEL_PATH, DEGREE_POINTS_CATEGORY_LEVELS_PATH,
     DEGREE_POINTS_EXPERIMENT_METADATA_PATH,
 )
-from .temporal_features import (
+from src.features.temporal_features import (
     COURSE_HISTORY_COLUMNS, PLAN_CONTEXT_COLUMNS, compute_plan_context_features,
 )
 
@@ -204,7 +204,7 @@ class AcademicPlanRecommender:
             raise ValueError("Expected Points model and metadata feature order disagree.")
         if fail.feature_name() != fail_metadata["feature_contract"]["model_features"]:
             raise ValueError("Fail model and metadata feature order disagree.")
-        if fail.feature_name() != MODEL_FEATURES:
+        if fail.feature_name() != BASE_FEATURES:
             raise ValueError("Current failure feature contract differs from the saved model.")
         provenance = {
             "selected_variant": metadata["selected_variant"]["name"],

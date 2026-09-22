@@ -1,0 +1,175 @@
+FFFFFFFFFFFFFFFFFFFFFFF.......FF                                         [100%]
+================================== FAILURES ===================================
+_ test_versioned_path_preserves_parent_and_extension[None-outlier_students_v2.parquet] _
+tests\test_v2_paths.py:26: in test_versioned_path_preserves_parent_and_extension
+    assert hasattr(paths, "versioned_path"), "Missing versioned_path helper"
+E   AssertionError: Missing versioned_path helper
+E   assert False
+E    +  where False = hasattr(paths, 'versioned_path')
+_ test_versioned_path_preserves_parent_and_extension[v3-outlier_students_v3.parquet] _
+tests\test_v2_paths.py:26: in test_versioned_path_preserves_parent_and_extension
+    assert hasattr(paths, "versioned_path"), "Missing versioned_path helper"
+E   AssertionError: Missing versioned_path helper
+E   assert False
+E    +  where False = hasattr(paths, 'versioned_path')
+___________ test_versioned_path_supports_artifact_extensions[.json] ___________
+tests\test_v2_paths.py:36: in test_versioned_path_supports_artifact_extensions
+    assert hasattr(paths, "versioned_path"), "Missing versioned_path helper"
+E   AssertionError: Missing versioned_path helper
+E   assert False
+E    +  where False = hasattr(paths, 'versioned_path')
+___________ test_versioned_path_supports_artifact_extensions[.pkl] ____________
+tests\test_v2_paths.py:36: in test_versioned_path_supports_artifact_extensions
+    assert hasattr(paths, "versioned_path"), "Missing versioned_path helper"
+E   AssertionError: Missing versioned_path helper
+E   assert False
+E    +  where False = hasattr(paths, 'versioned_path')
+___________ test_versioned_path_supports_artifact_extensions[.txt] ____________
+tests\test_v2_paths.py:36: in test_versioned_path_supports_artifact_extensions
+    assert hasattr(paths, "versioned_path"), "Missing versioned_path helper"
+E   AssertionError: Missing versioned_path helper
+E   assert False
+E    +  where False = hasattr(paths, 'versioned_path')
+_________ test_versioned_path_supports_artifact_extensions[.parquet] __________
+tests\test_v2_paths.py:36: in test_versioned_path_supports_artifact_extensions
+    assert hasattr(paths, "versioned_path"), "Missing versioned_path helper"
+E   AssertionError: Missing versioned_path helper
+E   assert False
+E    +  where False = hasattr(paths, 'versioned_path')
+__ test_v2_artifacts_are_separate_from_originals[CLEAN_STUDENT_COURSE_PATH] ___
+tests\test_v2_paths.py:43: in test_v2_artifacts_are_separate_from_originals
+    assert hasattr(paths, name + "_V2"), "Missing isolated artifact constant"
+E   AssertionError: Missing isolated artifact constant
+E   assert False
+E    +  where False = hasattr(paths, ('CLEAN_STUDENT_COURSE_PATH' + '_V2'))
+__ test_v2_artifacts_are_separate_from_originals[CLEAN_STUDENT_STATUS_PATH] ___
+tests\test_v2_paths.py:43: in test_v2_artifacts_are_separate_from_originals
+    assert hasattr(paths, name + "_V2"), "Missing isolated artifact constant"
+E   AssertionError: Missing isolated artifact constant
+E   assert False
+E    +  where False = hasattr(paths, ('CLEAN_STUDENT_STATUS_PATH' + '_V2'))
+___ test_v2_artifacts_are_separate_from_originals[CLEAN_DEGREE_COURSE_PATH] ___
+tests\test_v2_paths.py:43: in test_v2_artifacts_are_separate_from_originals
+    assert hasattr(paths, name + "_V2"), "Missing isolated artifact constant"
+E   AssertionError: Missing isolated artifact constant
+E   assert False
+E    +  where False = hasattr(paths, ('CLEAN_DEGREE_COURSE_PATH' + '_V2'))
+_ test_v2_artifacts_are_separate_from_originals[STUDENT_COURSE_ENRICHED_PATH] _
+tests\test_v2_paths.py:43: in test_v2_artifacts_are_separate_from_originals
+    assert hasattr(paths, name + "_V2"), "Missing isolated artifact constant"
+E   AssertionError: Missing isolated artifact constant
+E   assert False
+E    +  where False = hasattr(paths, ('STUDENT_COURSE_ENRICHED_PATH' + '_V2'))
+__ test_v2_artifacts_are_separate_from_originals[CLEAN_STUDENT_DIPLOMA_PATH] __
+tests\test_v2_paths.py:43: in test_v2_artifacts_are_separate_from_originals
+    assert hasattr(paths, name + "_V2"), "Missing isolated artifact constant"
+E   AssertionError: Missing isolated artifact constant
+E   assert False
+E    +  where False = hasattr(paths, ('CLEAN_STUDENT_DIPLOMA_PATH' + '_V2'))
+_ test_v2_artifacts_are_separate_from_originals[STUDENT_COURSE_DIPLOMA_PATH] __
+tests\test_v2_paths.py:43: in test_v2_artifacts_are_separate_from_originals
+    assert hasattr(paths, name + "_V2"), "Missing isolated artifact constant"
+E   AssertionError: Missing isolated artifact constant
+E   assert False
+E    +  where False = hasattr(paths, ('STUDENT_COURSE_DIPLOMA_PATH' + '_V2'))
+_ test_v2_artifacts_are_separate_from_originals[STUDENT_COURSE_WITHOUT_OUTLIERS_PATH] _
+tests\test_v2_paths.py:43: in test_v2_artifacts_are_separate_from_originals
+    assert hasattr(paths, name + "_V2"), "Missing isolated artifact constant"
+E   AssertionError: Missing isolated artifact constant
+E   assert False
+E    +  where False = hasattr(paths, ('STUDENT_COURSE_WITHOUT_OUTLIERS_PATH' + '_V2'))
+_ test_v2_artifacts_are_separate_from_originals[OUTLIER_STUDENTS_AUDIT_PATH] __
+tests\test_v2_paths.py:43: in test_v2_artifacts_are_separate_from_originals
+    assert hasattr(paths, name + "_V2"), "Missing isolated artifact constant"
+E   AssertionError: Missing isolated artifact constant
+E   assert False
+E    +  where False = hasattr(paths, ('OUTLIER_STUDENTS_AUDIT_PATH' + '_V2'))
+_____ test_v2_artifacts_are_separate_from_originals[TEMPORAL_TRAIN_PATH] ______
+tests\test_v2_paths.py:43: in test_v2_artifacts_are_separate_from_originals
+    assert hasattr(paths, name + "_V2"), "Missing isolated artifact constant"
+E   AssertionError: Missing isolated artifact constant
+E   assert False
+E    +  where False = hasattr(paths, ('TEMPORAL_TRAIN_PATH' + '_V2'))
+______ test_v2_artifacts_are_separate_from_originals[TEMPORAL_TEST_PATH] ______
+tests\test_v2_paths.py:43: in test_v2_artifacts_are_separate_from_originals
+    assert hasattr(paths, name + "_V2"), "Missing isolated artifact constant"
+E   AssertionError: Missing isolated artifact constant
+E   assert False
+E    +  where False = hasattr(paths, ('TEMPORAL_TEST_PATH' + '_V2'))
+_ test_v2_artifacts_are_separate_from_originals[CLEAN_REGISTRATION_ROSTER_PATH] _
+tests\test_v2_paths.py:43: in test_v2_artifacts_are_separate_from_originals
+    assert hasattr(paths, name + "_V2"), "Missing isolated artifact constant"
+E   AssertionError: Missing isolated artifact constant
+E   assert False
+E    +  where False = hasattr(paths, ('CLEAN_REGISTRATION_ROSTER_PATH' + '_V2'))
+__ test_v2_artifacts_are_separate_from_originals[TEMPORAL_TRAIN_ROSTER_PATH] __
+tests\test_v2_paths.py:43: in test_v2_artifacts_are_separate_from_originals
+    assert hasattr(paths, name + "_V2"), "Missing isolated artifact constant"
+E   AssertionError: Missing isolated artifact constant
+E   assert False
+E    +  where False = hasattr(paths, ('TEMPORAL_TRAIN_ROSTER_PATH' + '_V2'))
+__ test_v2_artifacts_are_separate_from_originals[TEMPORAL_TEST_ROSTER_PATH] ___
+tests\test_v2_paths.py:43: in test_v2_artifacts_are_separate_from_originals
+    assert hasattr(paths, name + "_V2"), "Missing isolated artifact constant"
+E   AssertionError: Missing isolated artifact constant
+E   assert False
+E    +  where False = hasattr(paths, ('TEMPORAL_TEST_ROSTER_PATH' + '_V2'))
+_ test_v2_artifacts_are_separate_from_originals[TEMPORAL_TRAIN_FEATURES_PATH] _
+tests\test_v2_paths.py:43: in test_v2_artifacts_are_separate_from_originals
+    assert hasattr(paths, name + "_V2"), "Missing isolated artifact constant"
+E   AssertionError: Missing isolated artifact constant
+E   assert False
+E    +  where False = hasattr(paths, ('TEMPORAL_TRAIN_FEATURES_PATH' + '_V2'))
+_ test_v2_artifacts_are_separate_from_originals[TEMPORAL_TEST_FEATURES_PATH] __
+tests\test_v2_paths.py:43: in test_v2_artifacts_are_separate_from_originals
+    assert hasattr(paths, name + "_V2"), "Missing isolated artifact constant"
+E   AssertionError: Missing isolated artifact constant
+E   assert False
+E    +  where False = hasattr(paths, ('TEMPORAL_TEST_FEATURES_PATH' + '_V2'))
+__ test_v2_artifacts_are_separate_from_originals[COURSE_HISTORY_STATE_PATH] ___
+tests\test_v2_paths.py:43: in test_v2_artifacts_are_separate_from_originals
+    assert hasattr(paths, name + "_V2"), "Missing isolated artifact constant"
+E   AssertionError: Missing isolated artifact constant
+E   assert False
+E    +  where False = hasattr(paths, ('COURSE_HISTORY_STATE_PATH' + '_V2'))
+_____ test_v2_artifacts_are_separate_from_originals[CATEGORY_LEVELS_PATH] _____
+tests\test_v2_paths.py:43: in test_v2_artifacts_are_separate_from_originals
+    assert hasattr(paths, name + "_V2"), "Missing isolated artifact constant"
+E   AssertionError: Missing isolated artifact constant
+E   assert False
+E    +  where False = hasattr(paths, ('CATEGORY_LEVELS_PATH' + '_V2'))
+_____ test_duplicate_merge_keys_raise_instead_of_multiplying_rows[status] _____
+tests\test_build_registration_roster.py:179: in test_duplicate_merge_keys_raise_instead_of_multiplying_rows
+    with pytest.raises(pd.errors.MergeError, match="not a many-to-one merge"):
+E   Failed: DID NOT RAISE MergeError
+__ test_duplicate_merge_keys_raise_instead_of_multiplying_rows[degree_plan] ___
+tests\test_build_registration_roster.py:179: in test_duplicate_merge_keys_raise_instead_of_multiplying_rows
+    with pytest.raises(pd.errors.MergeError, match="not a many-to-one merge"):
+E   Failed: DID NOT RAISE MergeError
+=========================== short test summary info ===========================
+FAILED tests/test_v2_paths.py::test_versioned_path_preserves_parent_and_extension[None-outlier_students_v2.parquet]
+FAILED tests/test_v2_paths.py::test_versioned_path_preserves_parent_and_extension[v3-outlier_students_v3.parquet]
+FAILED tests/test_v2_paths.py::test_versioned_path_supports_artifact_extensions[.json]
+FAILED tests/test_v2_paths.py::test_versioned_path_supports_artifact_extensions[.pkl]
+FAILED tests/test_v2_paths.py::test_versioned_path_supports_artifact_extensions[.txt]
+FAILED tests/test_v2_paths.py::test_versioned_path_supports_artifact_extensions[.parquet]
+FAILED tests/test_v2_paths.py::test_v2_artifacts_are_separate_from_originals[CLEAN_STUDENT_COURSE_PATH]
+FAILED tests/test_v2_paths.py::test_v2_artifacts_are_separate_from_originals[CLEAN_STUDENT_STATUS_PATH]
+FAILED tests/test_v2_paths.py::test_v2_artifacts_are_separate_from_originals[CLEAN_DEGREE_COURSE_PATH]
+FAILED tests/test_v2_paths.py::test_v2_artifacts_are_separate_from_originals[STUDENT_COURSE_ENRICHED_PATH]
+FAILED tests/test_v2_paths.py::test_v2_artifacts_are_separate_from_originals[CLEAN_STUDENT_DIPLOMA_PATH]
+FAILED tests/test_v2_paths.py::test_v2_artifacts_are_separate_from_originals[STUDENT_COURSE_DIPLOMA_PATH]
+FAILED tests/test_v2_paths.py::test_v2_artifacts_are_separate_from_originals[STUDENT_COURSE_WITHOUT_OUTLIERS_PATH]
+FAILED tests/test_v2_paths.py::test_v2_artifacts_are_separate_from_originals[OUTLIER_STUDENTS_AUDIT_PATH]
+FAILED tests/test_v2_paths.py::test_v2_artifacts_are_separate_from_originals[TEMPORAL_TRAIN_PATH]
+FAILED tests/test_v2_paths.py::test_v2_artifacts_are_separate_from_originals[TEMPORAL_TEST_PATH]
+FAILED tests/test_v2_paths.py::test_v2_artifacts_are_separate_from_originals[CLEAN_REGISTRATION_ROSTER_PATH]
+FAILED tests/test_v2_paths.py::test_v2_artifacts_are_separate_from_originals[TEMPORAL_TRAIN_ROSTER_PATH]
+FAILED tests/test_v2_paths.py::test_v2_artifacts_are_separate_from_originals[TEMPORAL_TEST_ROSTER_PATH]
+FAILED tests/test_v2_paths.py::test_v2_artifacts_are_separate_from_originals[TEMPORAL_TRAIN_FEATURES_PATH]
+FAILED tests/test_v2_paths.py::test_v2_artifacts_are_separate_from_originals[TEMPORAL_TEST_FEATURES_PATH]
+FAILED tests/test_v2_paths.py::test_v2_artifacts_are_separate_from_originals[COURSE_HISTORY_STATE_PATH]
+FAILED tests/test_v2_paths.py::test_v2_artifacts_are_separate_from_originals[CATEGORY_LEVELS_PATH]
+FAILED tests/test_build_registration_roster.py::test_duplicate_merge_keys_raise_instead_of_multiplying_rows[status]
+FAILED tests/test_build_registration_roster.py::test_duplicate_merge_keys_raise_instead_of_multiplying_rows[degree_plan]
+25 failed, 7 passed in 1.29s

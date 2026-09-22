@@ -1,8 +1,15 @@
+from pathlib import Path
+import sys
+
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from datetime import datetime, timezone
 import json
 
 import numpy as np
 import pandas as pd
+from src.experiments.experiment_config import TARGET_FAIL, TARGET_GRADE, training_weights
 from sklearn.metrics import (
     average_precision_score,
     brier_score_loss,
@@ -13,18 +20,15 @@ from sklearn.metrics import (
 )
 
 try:
-    from .feature_contract import (
+    from src.features.feature_contract import (
         CATEGORICAL_FEATURES,
         FEATURE_ENGINEERING_VERSION,
-        MODEL_FEATURES,
+        BASE_FEATURES,
         NUMERIC_FEATURES,
-        TARGET_FAIL,
-        TARGET_GRADE,
         learn_category_levels,
         prepare_model_matrix,
         require_current_features,
         save_category_levels,
-        training_weights,
     )
     from .paths import (
         CATEGORY_LEVELS_PATH,
@@ -36,18 +40,15 @@ try:
         TEMPORAL_TRAIN_FEATURES_PATH,
     )
 except ImportError:
-    from feature_contract import (
+    from src.features.feature_contract import (
         CATEGORICAL_FEATURES,
         FEATURE_ENGINEERING_VERSION,
-        MODEL_FEATURES,
+        BASE_FEATURES,
         NUMERIC_FEATURES,
-        TARGET_FAIL,
-        TARGET_GRADE,
         learn_category_levels,
         prepare_model_matrix,
         require_current_features,
         save_category_levels,
-        training_weights,
     )
     from paths import (
         CATEGORY_LEVELS_PATH,
@@ -365,7 +366,7 @@ def _json_default(value):
 
 def main():
     data_columns = list(
-        dict.fromkeys(["part_id", TARGET_GRADE, TARGET_FAIL, *MODEL_FEATURES])
+        dict.fromkeys(["part_id", TARGET_GRADE, TARGET_FAIL, *BASE_FEATURES])
     )
     train = pd.read_parquet(TEMPORAL_TRAIN_FEATURES_PATH, columns=data_columns)
     test = pd.read_parquet(TEMPORAL_TEST_FEATURES_PATH, columns=data_columns)
@@ -422,10 +423,10 @@ def main():
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "model_family": "LightGBM",
         "feature_contract": {
-            "model_features": MODEL_FEATURES,
+            "model_features": BASE_FEATURES,
             "numeric_features": NUMERIC_FEATURES,
             "categorical_features": CATEGORICAL_FEATURES,
-            "feature_count": len(MODEL_FEATURES),
+            "feature_count": len(BASE_FEATURES),
         },
         "targets": {
             "grade_regressor": "final_mark",

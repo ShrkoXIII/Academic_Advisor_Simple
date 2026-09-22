@@ -1,0 +1,1854 @@
+{
+  "data\\artifacts\\category_levels.json": {
+    "sha256": "4fb4f3dff5f1d1bf70972ad9d02384a01f73e4689fb514937f2d70eb966982f6",
+    "size": 568
+  },
+  "data\\artifacts\\course_history_state.pkl": {
+    "sha256": "4b085ae5c25c33a7aa3594d1430dcf72d604ca9c166929beceb137fc987bf1bd",
+    "size": 271884
+  },
+  "data\\artifacts\\history\\as_of_20243\\course_history_state.pkl": {
+    "sha256": "4b085ae5c25c33a7aa3594d1430dcf72d604ca9c166929beceb137fc987bf1bd",
+    "size": 271884
+  },
+  "data\\artifacts\\history\\as_of_20243\\metadata.json": {
+    "sha256": "95027a4207ff19c759f36daf2f311c1a5867df69ae168b69ec3edafe980fb5d2",
+    "size": 1480
+  },
+  "data\\artifacts\\history\\as_of_20243\\specialty_history_state.pkl": {
+    "sha256": "35f9eab5ae66685c3aa4179cc1925f0714557646dbdd28ccadf93edad95575de",
+    "size": 17168
+  },
+  "data\\artifacts\\history\\as_of_20251\\course_history_state.pkl": {
+    "sha256": "d31a2367600d1ddbf415070717a3ce7922f964df99d722a0f0d58688c2cc6006",
+    "size": 288908
+  },
+  "data\\artifacts\\history\\as_of_20251\\metadata.json": {
+    "sha256": "b0b9fbbb11416591790f7d755273b4514abd40b2620749bf240064e782a8c376",
+    "size": 1456
+  },
+  "data\\artifacts\\history\\as_of_20251\\specialty_history_state.pkl": {
+    "sha256": "5ac05d60212699ac35df73f55f371704559e564ea2bd1dfd9ef81d84134b1d0d",
+    "size": 18761
+  },
+  "data\\clean\\degree_course.parquet": {
+    "sha256": "4c9510a95d695a3178484404cd7e5fe9aa3dac1814099b5dd129d7516bb7e25c",
+    "size": 101883
+  },
+  "data\\clean\\degree_course_v2.parquet": {
+    "sha256": "7f23a7e0e4678a5ae73f872c0db0dff866698f1567a0fe1520d1dc5327f197c0",
+    "size": 102257
+  },
+  "data\\clean\\registration_roster.parquet": {
+    "sha256": "21a958f535431c86b87d840f4465db2a670e62a390c3c9fa7c3c8a2a6fe08dbc",
+    "size": 6326429
+  },
+  "data\\clean\\student_course.parquet": {
+    "sha256": "cafb27d9a6d21d0e8f2c86adb9c254409169687278f41bbfc818ae4cc99e7eee",
+    "size": 4794095
+  },
+  "data\\clean\\student_course_enriched.parquet": {
+    "sha256": "6cbe4d39257507afac391a2dac2bbfc9f414ef550e0d9541192e9c7c02601ef3",
+    "size": 17541609
+  },
+  "data\\clean\\student_diploma.parquet": {
+    "sha256": "900fa5982fa21ff526380ca100f11eb821e74b33a7998279456f51ef6f1fa119",
+    "size": 285130
+  },
+  "data\\clean\\student_diploma_v2.parquet": {
+    "sha256": "3d1e8d8a508f07be2b781046a05db5a0fc4a413519f6d448824d657213bfcaf9",
+    "size": 286165
+  },
+  "data\\clean\\student_status.parquet": {
+    "sha256": "ee733fab2a0f4f3339f91efd3f152d0d666631f5e805f673da22c4adc79fb43b",
+    "size": 2877693
+  },
+  "data\\evaluation\\plan_gpa_course_predictions_2025.parquet": {
+    "sha256": "b1bf14740cb84080e1dc8e23be16df661cf1af4a005ff6d627997e5988e274e5",
+    "size": 2499971
+  },
+  "data\\evaluation\\plan_gpa_evaluation_2025.parquet": {
+    "sha256": "d43123d02284e8ee938c03d40edb3aa73129184afd888fb8617e7293afcc8510",
+    "size": 285288
+  },
+  "data\\evaluation\\plan_gpa_metrics_2025.json": {
+    "sha256": "a0da51c941842aabdd25b59723454d40607e3dc513573fa2970ee8bc27378752",
+    "size": 1535
+  },
+  "data\\evaluation\\error_analysis\\analysis_summary.json": {
+    "sha256": "c20d18e074ebb9623bbc25e87473ef504c72ce41e9fbf7e192b944450a4efc72",
+    "size": 1803
+  },
+  "data\\evaluation\\error_analysis\\course_error_segments.parquet": {
+    "sha256": "52f0c153da50efb63a415981e6c8d00d7c4fd6f2e17fd39351c8c7921df4a07c",
+    "size": 5789
+  },
+  "data\\evaluation\\error_analysis\\grade_model_shap_families.parquet": {
+    "sha256": "56b77314942136b45035b20ef6156fea41a0ec2484f2151842326161c6808a2f",
+    "size": 3273
+  },
+  "data\\evaluation\\error_analysis\\grade_model_shap_importance.parquet": {
+    "sha256": "5055a09868532a57fd146af2326042fba71732d795774c76b49ce3c280c1ec8d",
+    "size": 6457
+  },
+  "data\\evaluation\\error_analysis\\model_error_by_degree.parquet": {
+    "sha256": "9d65f8f2aab504e4a2794d5b4c9ac81603adbd66ab086b59399c524fbaf7fcd7",
+    "size": 20823
+  },
+  "data\\evaluation\\error_analysis\\model_error_by_year.parquet": {
+    "sha256": "773516a5329305378eb698cab17dc60034ed2935d8ed6bc0d2d5293c200803ed",
+    "size": 12197
+  },
+  "data\\evaluation\\error_analysis\\model_error_by_year_and_degree.parquet": {
+    "sha256": "e56a322483f37874f81af04ef99569bf08a6429870f4de06fd49f2c14a7631e4",
+    "size": 33016
+  },
+  "data\\evaluation\\error_analysis\\plan_error_segments.parquet": {
+    "sha256": "02c0412c69025ee5bd19ed8b122d22c52f3ccf5cdd808d7752c18c41d2d50747",
+    "size": 9720
+  },
+  "data\\evaluation\\experiments\\degree_points\\experiment_metadata.json": {
+    "sha256": "c873abdafee47d4fb82ac4240e63bdedd8e260467f091c1eb9a897f2d9afd2d1",
+    "size": 12912
+  },
+  "data\\evaluation\\experiments\\degree_points\\selected_holdout_by_degree.parquet": {
+    "sha256": "b4776bfa33c9f1810cfbac170743dcea87d435334f78a5443ce746fed47cbc4d",
+    "size": 12424
+  },
+  "data\\evaluation\\experiments\\degree_points\\selected_holdout_course_predictions.parquet": {
+    "sha256": "bd671afc8a731ddd89ca62c700f22f621682cdae3847ddc9761b86167c8180af",
+    "size": 2781995
+  },
+  "data\\evaluation\\experiments\\degree_points\\selected_holdout_plan_predictions.parquet": {
+    "sha256": "c5899c2f27ef2d6b25d18fa85c904a8284dca5afcb64db666675265a4696f9ee",
+    "size": 636424
+  },
+  "data\\evaluation\\experiments\\degree_points\\validation_results.parquet": {
+    "sha256": "6867730f8b5a7c4e2a303b881c043699dcb8bc1a275ae699fb9084b43094aad2",
+    "size": 17764
+  },
+  "data\\evaluation\\experiments\\degree_points\\validation_summary.parquet": {
+    "sha256": "52df2f7d5e1561a7f7ff02119a285c0da9c134f1b4095f93525ad8caf290c560",
+    "size": 8568
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\cohorts_by_part.json": {
+    "sha256": "c7875be32054615d2727a6aa06cf96e8d23f4934c330894b553ee3fccd5c36f3",
+    "size": 6869
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\completion.json": {
+    "sha256": "f468a6425accbf1d9c45cf93e619826f66f1b84f8450e09ad132610f9ac7600a",
+    "size": 309
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\coverage_and_imputation.json": {
+    "sha256": "4223610f493d714751d0689039cc8c1688ad6ca236b4d6ab8fb736c8f625608d",
+    "size": 1868
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\diploma_missingness.json": {
+    "sha256": "2ccda88abb0d7fc54de56fd05bf83342a15645578e3e797baa94be5e1dfb3130",
+    "size": 110
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\failure_risk.json": {
+    "sha256": "d947789a34aaa108bee750071a3b3a5737ee12f1939038aee5af882cbe88ff39",
+    "size": 1902
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\feature_distributions.json": {
+    "sha256": "e8b82b6c25b7acc56ad577b0ecabaf82877aeff52b1ab7cae9708d22f5d92fa5",
+    "size": 17466
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\feature_integrity.json": {
+    "sha256": "f27613ca3c3d631f5a6809d0769586923f36c36f48889082d87313436c983c80",
+    "size": 921
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\future_only_outlier_cases.parquet": {
+    "sha256": "ba5174091a02d1a9b9f6e5fae388c1451418f9164c1a92bef754325ff93e71be",
+    "size": 8983
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\holdout_recomputed.json": {
+    "sha256": "622990db0e74413d0eea64a33c791517827869432b00dd6fc8df2ddf35d4dd4d",
+    "size": 24872
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\inventory.json": {
+    "sha256": "2e54c6634615d405854be8271afbe118ae9209225d94b712f46a7d1b5b877a61",
+    "size": 2770
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\naive_same_plan_comparison.json": {
+    "sha256": "2d420cffeda3f504fb133d40a57ab77d58d0c9dd60b6d7e3ebea5d9dc93b5339",
+    "size": 459
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\observed_plan_diagnostics.parquet": {
+    "sha256": "d87ffe541e4ee79d47d7e4cbcb6188000e3b2eaeaeabe07080ba7d2ee50810a0",
+    "size": 737359
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\outliers.json": {
+    "sha256": "04fea10f85f06b0402e544d812a1a29a312d8a338be7b1c1d41a17112a8fc9c0",
+    "size": 2002
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\outlier_fold_selection.json": {
+    "sha256": "672d02a4e43e5d45e53f64576ae20cf781bf01f722f26d34e69861d2f5f6716b",
+    "size": 323
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\pilot_details.json": {
+    "sha256": "c95a6219eba43a56a9096269c074ef77499dea30e4469417bb45630c211f34a4",
+    "size": 27821
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\pilot_summary.json": {
+    "sha256": "6d8ad2092dc32fc50688513b3a0fe1b79200ffe9ec93f8e95707ca89fb514f46",
+    "size": 8967
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\protected_after.json": {
+    "sha256": "7ec3b8d9ede171ce5c89ec1d4711bfd89e21df9545d66e3a948c49ac3fe7cf82",
+    "size": 4206
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\protected_before.json": {
+    "sha256": "7ec3b8d9ede171ce5c89ec1d4711bfd89e21df9545d66e3a948c49ac3fe7cf82",
+    "size": 4206
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\raw_outcome_flag_counts.json": {
+    "sha256": "67b0660af0abbcef52a8951989fa6b3fbdbdc7782562d6523b2a557025569951",
+    "size": 663
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\validation_history_protocol.json": {
+    "sha256": "f966c9865fe8815e06066f9ad4a045cfe0081186663ffe731815b608dff9f7a0",
+    "size": 975
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10011.111\\all_plans_before_filter.parquet": {
+    "sha256": "c53ba9b1d4250c631f4b12418588570c317a0884ddefacd3fb0af7a75ebc40fd",
+    "size": 10508498
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10011.111\\best_plan_courses.json": {
+    "sha256": "38bbdc858e861bc36d2d87e9b0ef922211cd86d2bc37f791b01c6c33f8807e3f",
+    "size": 1092
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10011.111\\best_plan_features_and_predictions.parquet": {
+    "sha256": "4f39b2e86d19aacf08f9c84b8dc71a439624aa825f709a75fc2c4275de69e75e",
+    "size": 45099
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10011.111\\best_plan_model_contributions.parquet": {
+    "sha256": "3ba5be8cc462af4d01fc47bfe28561a3870c6a639029f80e79a0ad095a8c2ac6",
+    "size": 42641
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10011.111\\import_report.json": {
+    "sha256": "674895904abde00386b78a3c3b589dadc0646746bfb8d7f9445fbfffcd86958f",
+    "size": 288
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10011.111\\observed_courses_20251.parquet": {
+    "sha256": "e66644f0e91c61eea430d968bff63dc4e0f3c72207ced1bd6a0304357718311d",
+    "size": 9135
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10011.111\\observed_roster_candidates.json": {
+    "sha256": "fc5e46e2a21c0e0b8ff5af3d04d2884cf7e3b0be62cab6eaad5c09d6ba98537f",
+    "size": 308
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10011.111\\prepared_candidates.parquet": {
+    "sha256": "9b80d8f7833a09b5a271806e2f5eaf49dbf31a7db01a04fc526ce2b23d1cf537",
+    "size": 34625
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10011.111\\snapshot.json": {
+    "sha256": "695f8fcb0170328dea1aef5764c03084b6ee880ea35c33931ddf1c1b55a42680",
+    "size": 688
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10011.111\\status_history.parquet": {
+    "sha256": "021d3f157c009c830094b44fb5a97f34519d079991926cd0dd76b7763b795b02",
+    "size": 24658
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10021.111\\all_plans_before_filter.parquet": {
+    "sha256": "b8a37bfcb5261691799deb784b043a4fc2c000b78f7077b66e12c16a31a8526b",
+    "size": 14167
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10021.111\\best_plan_courses.json": {
+    "sha256": "60a4fc2a85ebc84b12ef4dae70be925c31c8cfe624ee34affa986e6734964a73",
+    "size": 946
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10021.111\\best_plan_features_and_predictions.parquet": {
+    "sha256": "dfcdb00b6af97b29826e3dc41148a92942e380121ef41b442f4ae8f93d7c3d66",
+    "size": 44929
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10021.111\\best_plan_model_contributions.parquet": {
+    "sha256": "754dd4237c0d7d52942d00fb0b70870f80ebcae2f59ca576ac754c75f0629f35",
+    "size": 42380
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10021.111\\import_report.json": {
+    "sha256": "dfee3f79b8a91afe905fa9f04eb7b6f115aecbcb3b5c6dce6feb06af167dd1dc",
+    "size": 285
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10021.111\\observed_courses_20251.parquet": {
+    "sha256": "b41710a956396b1713a963f7a6dcf8c8018d6cc76f3cb9488926db21994ff425",
+    "size": 9286
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10021.111\\observed_roster_candidates.json": {
+    "sha256": "4a73c6983cb37f92150c5213e0f8a6ec12fae1988ab504afade6beaea436302c",
+    "size": 371
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10021.111\\prepared_candidates.parquet": {
+    "sha256": "8a24f4524289a57bffc4ab5e5fb8e878006c6fb2032276bcb5271a4af459a991",
+    "size": 33599
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10021.111\\snapshot.json": {
+    "sha256": "5526cbb0bb58a2c76aa056d81951668fe3d1446ffcf3c563f3ab382ac19d56f3",
+    "size": 692
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10021.111\\status_history.parquet": {
+    "sha256": "f7bf1b08945ead83f5ad7f013e923bd64205845d56d34845c82ec41b870afb36",
+    "size": 24989
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10079.111\\all_plans_before_filter.parquet": {
+    "sha256": "7c3d72b307c0549339e526dd12f98463be328736546b1c44a940e19aaae32247",
+    "size": 449746
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10079.111\\best_plan_courses.json": {
+    "sha256": "ee5dcc1e56a8734455c93ad5a044aa581656bf035186138d6d1c57daf3b2702b",
+    "size": 1137
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10079.111\\best_plan_features_and_predictions.parquet": {
+    "sha256": "ab5aaf5f5e4ec8c3606bd56dbfeff0cbecfc4912abb0957916f84deed5b617e5",
+    "size": 45076
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10079.111\\best_plan_model_contributions.parquet": {
+    "sha256": "ddc620bc124e6f29f74871da9457e24c9d701db933f020616139dc06351b1fc5",
+    "size": 42631
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10079.111\\import_report.json": {
+    "sha256": "ba78ab5d99bf3c76697541d6deb2d3f02600d336286ee18f79e559f31cfa97f3",
+    "size": 288
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10079.111\\observed_courses_20251.parquet": {
+    "sha256": "3f09c0f3698565455c8478730ed8d59b1146f4297e0067edd38bdb7f3c435b3f",
+    "size": 9240
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10079.111\\observed_roster_candidates.json": {
+    "sha256": "24bef51c90c029dd8eb7a4dba9916295e318b978ac6cd9d126ea2c450f40ae70",
+    "size": 430
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10079.111\\prepared_candidates.parquet": {
+    "sha256": "399d82d2d9feb101bf0337209d1226546709796fe4bda2232f6effa3305ddced",
+    "size": 33822
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10079.111\\snapshot.json": {
+    "sha256": "58d531135b8e49879e662f08784bb0e8b6850e378385b61dc665bf3543b4b3c0",
+    "size": 691
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10079.111\\status_history.parquet": {
+    "sha256": "33f387e9e21ba14b35a9b3b7b9f998746c9546c85258dceca67edd1a0deb3189",
+    "size": 24426
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10095.111\\all_plans_before_filter.parquet": {
+    "sha256": "763de8c8a820afe6c1cc285ae4185af1358391c1f6ad947e4d4923abcd1a9704",
+    "size": 197319
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10095.111\\best_plan_courses.json": {
+    "sha256": "dd34c9825720e0dc569e59d957b800241c26a056af2e96c2cee6307605979484",
+    "size": 1112
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10095.111\\best_plan_features_and_predictions.parquet": {
+    "sha256": "2d444f9c9cc481bd3d385f9849f5044a411e0f0357c12e8ba9d613e7c2b41dbd",
+    "size": 45057
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10095.111\\best_plan_model_contributions.parquet": {
+    "sha256": "a6fb2e7111beb7d049eefaa854b3b051f923f11f9a7dd3278cf2530a84681bad",
+    "size": 42533
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10095.111\\import_report.json": {
+    "sha256": "45cd99d7a8bc85ff2f3d97f05d95acebb9698a06f5cd708bd7e02fc3a042d6bf",
+    "size": 288
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10095.111\\observed_courses_20251.parquet": {
+    "sha256": "59e67b3fcf31abf45cda52ef7dadaa19137a073fba83ea99218d3c6648de43a0",
+    "size": 8970
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10095.111\\observed_roster_candidates.json": {
+    "sha256": "4cb9fe4b3240186fe0b7c61a8a43e94b0d749f502cbc838a7cf9fb97bbed3ebf",
+    "size": 551
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10095.111\\prepared_candidates.parquet": {
+    "sha256": "00ceb4fd74ebcbbbb51fc81556369beb6ec6b96df22d346ad32b0c58c698caf6",
+    "size": 33797
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10095.111\\snapshot.json": {
+    "sha256": "2c34c14c26a6dda6a39006c858464c97008f3b917aeeb0f947d394ed3a97d3ad",
+    "size": 691
+  },
+  "data\\evaluation\\pipeline_audits\\20260914T094703004298Z\\10095.111\\status_history.parquet": {
+    "sha256": "22a5ad200060b6a24dcfdd758e7096059315795c6b4eb0392f4ec836ed2f0683",
+    "size": 24769
+  },
+  "data\\evaluation\\recommendations\\20260914T092927870684Z\\candidates.parquet": {
+    "sha256": "3c840301368e6daeda497904e052226759ac3f61348ba9b8b5ec58e5bf59cb39",
+    "size": 6626
+  },
+  "data\\evaluation\\recommendations\\20260914T092927870684Z\\courses.parquet": {
+    "sha256": "0f7e15a13b5cd08d39591b284402b6ff612ffa7d7c9ab40d1cb98af85171facc",
+    "size": 790
+  },
+  "data\\evaluation\\recommendations\\20260914T092927870684Z\\import_report.json": {
+    "sha256": "10ef63fb126df12fa50f92fdf463905deb8ac62d9851dd46aa0c5ab2cf18e2a6",
+    "size": 541
+  },
+  "data\\evaluation\\recommendations\\20260914T092927870684Z\\plans.parquet": {
+    "sha256": "f7af8844c86f17d65629f4cb6ef03112b00f36c33645fe0422a18a91d759f8f4",
+    "size": 3950
+  },
+  "data\\evaluation\\recommendations\\20260914T092927870684Z\\result.json": {
+    "sha256": "c2fa1f718a66bb034fc168aa095ec4f9757dff131d82d7dcb463a4e9c169f9d6",
+    "size": 2135
+  },
+  "data\\evaluation\\recommendations\\20260914T092927870684Z\\snapshot.json": {
+    "sha256": "5526cbb0bb58a2c76aa056d81951668fe3d1446ffcf3c563f3ab382ac19d56f3",
+    "size": 692
+  },
+  "data\\evaluation\\recommendations\\cli_local_check\\candidates.parquet": {
+    "sha256": "a3e1a0650ce318096e5a393e401e8c560a584f0d47f1762f2df91bf7ec59eb4e",
+    "size": 6718
+  },
+  "data\\evaluation\\recommendations\\cli_local_check\\courses.parquet": {
+    "sha256": "0ae48f9a262ca1a7e7a3e28e916268d65e593cef4732a646c9cd5bd0242d07e0",
+    "size": 51241
+  },
+  "data\\evaluation\\recommendations\\cli_local_check\\import_report.json": {
+    "sha256": "5d14bc12fc4dc9e053e07912500f5202254c289303bdd9e481e3ef0eccfdc6f4",
+    "size": 610
+  },
+  "data\\evaluation\\recommendations\\cli_local_check\\plans.parquet": {
+    "sha256": "ed3804b6f286d89218a3be3f09067b80711312c2f57e674abd09373a5f593f84",
+    "size": 100006
+  },
+  "data\\evaluation\\recommendations\\cli_local_check\\result.json": {
+    "sha256": "2dd811af807ec420ab3adeec94596fdc7cfa4b41ffd275a489ddd94a1e3f1719",
+    "size": 14932
+  },
+  "data\\evaluation\\recommendations\\cli_supplied_check\\candidates.parquet": {
+    "sha256": "a3e1a0650ce318096e5a393e401e8c560a584f0d47f1762f2df91bf7ec59eb4e",
+    "size": 6718
+  },
+  "data\\evaluation\\recommendations\\cli_supplied_check\\courses.parquet": {
+    "sha256": "0ae48f9a262ca1a7e7a3e28e916268d65e593cef4732a646c9cd5bd0242d07e0",
+    "size": 51241
+  },
+  "data\\evaluation\\recommendations\\cli_supplied_check\\import_report.json": {
+    "sha256": "86a2039ca342c1e77990d7532cb56ec56101575ef67d1d879f29ae940fdf0560",
+    "size": 696
+  },
+  "data\\evaluation\\recommendations\\cli_supplied_check\\plans.parquet": {
+    "sha256": "ed3804b6f286d89218a3be3f09067b80711312c2f57e674abd09373a5f593f84",
+    "size": 100006
+  },
+  "data\\evaluation\\recommendations\\cli_supplied_check\\result.json": {
+    "sha256": "479672db448eec65ba8a7155435079252ef082701d925ee650dff7f7c1902991",
+    "size": 15025
+  },
+  "data\\evaluation\\recommendations\\final_cli_check\\candidates.parquet": {
+    "sha256": "a3e1a0650ce318096e5a393e401e8c560a584f0d47f1762f2df91bf7ec59eb4e",
+    "size": 6718
+  },
+  "data\\evaluation\\recommendations\\final_cli_check\\courses.parquet": {
+    "sha256": "0ae48f9a262ca1a7e7a3e28e916268d65e593cef4732a646c9cd5bd0242d07e0",
+    "size": 51241
+  },
+  "data\\evaluation\\recommendations\\final_cli_check\\import_report.json": {
+    "sha256": "86a2039ca342c1e77990d7532cb56ec56101575ef67d1d879f29ae940fdf0560",
+    "size": 696
+  },
+  "data\\evaluation\\recommendations\\final_cli_check\\plans.parquet": {
+    "sha256": "ed3804b6f286d89218a3be3f09067b80711312c2f57e674abd09373a5f593f84",
+    "size": 100006
+  },
+  "data\\evaluation\\recommendations\\final_cli_check\\result.json": {
+    "sha256": "f8679f00026a7d2f8145b7bb9a2d5a3ac514cdab9b7b41b46493725265e55a66",
+    "size": 15019
+  },
+  "data\\evaluation\\recommendations\\final_cli_check\\snapshot.json": {
+    "sha256": "629a765a459d77ffc63bf6795aa68901ea0d223a7a23af23c1a0025d60556484",
+    "size": 672
+  },
+  "data\\evaluation\\recommendations\\projected_frozen_20251\\error.json": {
+    "sha256": "49ffbb3461682cd5f8323957b00e526df1dcffb898e593c70f06f280a1bf708f",
+    "size": 186
+  },
+  "data\\evaluation\\recommendations\\projected_frozen_verified_20251\\candidates.parquet": {
+    "sha256": "289f054eedc5db335217175549289ec5747c12bf161ddabfc322e574b13add14",
+    "size": 6732
+  },
+  "data\\evaluation\\recommendations\\projected_frozen_verified_20251\\courses.parquet": {
+    "sha256": "c4d186317eb6ebb6e83e9d19f2667326d6e4fb91674be3ef313801adc1a201e8",
+    "size": 466937
+  },
+  "data\\evaluation\\recommendations\\projected_frozen_verified_20251\\import_report.json": {
+    "sha256": "5411ae9e2035e3a95c171c5db4a6254c214c79ac94bfba4a8dc3843a719325be",
+    "size": 700
+  },
+  "data\\evaluation\\recommendations\\projected_frozen_verified_20251\\plans.parquet": {
+    "sha256": "42487d3860782bc382f0dbf26d69129bdda670c858c4a07f6f0da38ad89dc8ea",
+    "size": 1030833
+  },
+  "data\\evaluation\\recommendations\\projected_frozen_verified_20251\\result.json": {
+    "sha256": "9c041f2e337655d6ce5671f99627222ae1bae6f36debb3b77901519f69e74444",
+    "size": 15638
+  },
+  "data\\evaluation\\recommendations\\projected_frozen_verified_20251\\snapshot.json": {
+    "sha256": "3c6c1fda8a24d3467e8cf9fb52357704a23057d695b0d6d909654b5ebd7e2f52",
+    "size": 671
+  },
+  "data\\evaluation\\recommendations\\projected_frozen_verified_20252\\candidates.parquet": {
+    "sha256": "18c94259c5c22d0c94e53b3d0680bd321b14de43bfd241fc96782396aa0b9411",
+    "size": 6868
+  },
+  "data\\evaluation\\recommendations\\projected_frozen_verified_20252\\courses.parquet": {
+    "sha256": "dd053ec024e0a5d8c99b7fec4197c89241e66051c3942bbe1f92029f32ac827b",
+    "size": 5241112
+  },
+  "data\\evaluation\\recommendations\\projected_frozen_verified_20252\\import_report.json": {
+    "sha256": "f2ee423a954f1323420c158c0f493f3cbda5f0ad847dd7b9923085a99abf6419",
+    "size": 700
+  },
+  "data\\evaluation\\recommendations\\projected_frozen_verified_20252\\plans.parquet": {
+    "sha256": "2047f7a27dfe60832fd5ed994e51cb5e9ef42ec1fc1570263b9b392b419579d6",
+    "size": 10879486
+  },
+  "data\\evaluation\\recommendations\\projected_frozen_verified_20252\\result.json": {
+    "sha256": "7275ce6dd0018a446a5b98081e9b0faedf2c780bdaadc03705fcbcea9804e728",
+    "size": 16139
+  },
+  "data\\evaluation\\recommendations\\projected_frozen_verified_20252\\snapshot.json": {
+    "sha256": "457d9ebfec872e425c21610867038932f06c1a37b0962932f9d5f47354ef65ea",
+    "size": 671
+  },
+  "data\\evaluation\\recommendations\\range_correction_check\\candidates.parquet": {
+    "sha256": "a3e1a0650ce318096e5a393e401e8c560a584f0d47f1762f2df91bf7ec59eb4e",
+    "size": 6718
+  },
+  "data\\evaluation\\recommendations\\range_correction_check\\courses.parquet": {
+    "sha256": "5e65f54d204e6004690bdb3f78a268cc5caa4ad0990cf653fe4a5f4f8f54d835",
+    "size": 307849
+  },
+  "data\\evaluation\\recommendations\\range_correction_check\\import_report.json": {
+    "sha256": "86a2039ca342c1e77990d7532cb56ec56101575ef67d1d879f29ae940fdf0560",
+    "size": 696
+  },
+  "data\\evaluation\\recommendations\\range_correction_check\\plans.parquet": {
+    "sha256": "12c9b8a72d410a30c1f9a91fb1084e9efe1743e267fd1f6383ba1f122db69c77",
+    "size": 547947
+  },
+  "data\\evaluation\\recommendations\\range_correction_check\\result.json": {
+    "sha256": "e607fd05dfbafe2e3b27a16052349bc85ae7ec92caf9c762a51ea26212bebd47",
+    "size": 12319
+  },
+  "data\\evaluation\\recommendations\\range_correction_check\\snapshot.json": {
+    "sha256": "629a765a459d77ffc63bf6795aa68901ea0d223a7a23af23c1a0025d60556484",
+    "size": 672
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\benchmark_summary.json": {
+    "sha256": "1df5a2b7ca16fc16286c6f15e6aa153485f7d6f42121efe1b0c901a675bca04d",
+    "size": 4165
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\15\\benchmark.json": {
+    "sha256": "f8fa28e1dcb9bf3ca644acb102f079ba742660f45be5a2869552b2c3d0f2dec7",
+    "size": 1317
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\15\\courses.parquet": {
+    "sha256": "0ae48f9a262ca1a7e7a3e28e916268d65e593cef4732a646c9cd5bd0242d07e0",
+    "size": 51241
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\15\\import_report.json": {
+    "sha256": "4086754133036e1ad45f76c272843582839e900e7a276ca9c0e0ba1a2025a6a4",
+    "size": 288
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\15\\input_courses.parquet": {
+    "sha256": "7e2ad27784918f2d3d0f305c3132d04697401fa655e13c22ce1b9f17c36c878b",
+    "size": 1910
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\15\\plans.parquet": {
+    "sha256": "ed3804b6f286d89218a3be3f09067b80711312c2f57e674abd09373a5f593f84",
+    "size": 100006
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\15\\result.json": {
+    "sha256": "aa56c4defcad3d11aa343a39f898a9b42d09231d775c2a79170d502c2f7c14e6",
+    "size": 14269
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\15\\snapshot.json": {
+    "sha256": "b45ea7cb7a74dbbaa194d92c92ca7a6f2fbb0acdb7dcec53b6f3e570418e6306",
+    "size": 670
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\20\\benchmark.json": {
+    "sha256": "13027d00280c7ad5a5c52f7b0a924cd625032ffb3b2ad9d3225514be70a9dc7a",
+    "size": 1317
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\20\\courses.parquet": {
+    "sha256": "8d9e4ac2b6c92f0c234b3636caa4abaccc404ea83f9fc5f5b0ed36fbeb5fd7b1",
+    "size": 781879
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\20\\import_report.json": {
+    "sha256": "c0c72c6d356852425743344f413f9a450d88396007ee4b4b2ecbc47ec815062f",
+    "size": 288
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\20\\input_courses.parquet": {
+    "sha256": "c17c68dbf573f49079bc03d99eb500c50f2f0a2e10d1bd14cf3e206a6f972721",
+    "size": 1941
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\20\\plans.parquet": {
+    "sha256": "36fac76d444d0e09660e47844e2bf1925c5461d0a521d23d1245f37132cd4250",
+    "size": 1392023
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\20\\result.json": {
+    "sha256": "6fe4efd43485df3835bec3138559c337a591c9ff0fbce178b9acb864b16d0973",
+    "size": 14270
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\20\\snapshot.json": {
+    "sha256": "b45ea7cb7a74dbbaa194d92c92ca7a6f2fbb0acdb7dcec53b6f3e570418e6306",
+    "size": 670
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\25\\benchmark.json": {
+    "sha256": "9b19b2e8b5e51c43af2267cf6eb6f1fd793e159d99445e083da62b1a17ee88b4",
+    "size": 1321
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\25\\courses.parquet": {
+    "sha256": "31364e86f61cc8724c909ee9772fc73e78ba8c7d993fb15b5c2072a2035b5fce",
+    "size": 5994964
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\25\\import_report.json": {
+    "sha256": "7f9b35f69319518bc9a73786fdd4c2a4714a95c5ee1c18c2e2ea1d699f9b4312",
+    "size": 288
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\25\\input_courses.parquet": {
+    "sha256": "8119d9cd4f7eeed4d6624137663b0ca560b4b153a37bab5812912bbc62e9fc4f",
+    "size": 1972
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\25\\plans.parquet": {
+    "sha256": "34926000f83e78da6aecc60b35a39eb7fd1d80a0d4ab78291827bd5ede3a4713",
+    "size": 9489957
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\25\\result.json": {
+    "sha256": "1a9bccc3dbe453c6d8ebf6e9f71bbe9c353bf593933f04c2d0cb620928642bff",
+    "size": 14466
+  },
+  "data\\evaluation\\recommendation_benchmarks\\accepted_plans_check\\25\\snapshot.json": {
+    "sha256": "b45ea7cb7a74dbbaa194d92c92ca7a6f2fbb0acdb7dcec53b6f3e570418e6306",
+    "size": 670
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\benchmark_summary.json": {
+    "sha256": "c54d16f9f71f22e6633272de4bc8144cb80dd4bbce6f7d723a443fe7eab4a778",
+    "size": 4157
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\15\\benchmark.json": {
+    "sha256": "efe76cc5a2335ca47a5d3747ba767e75a8f5f7b93cb3aa2ab1589f53434cc0e8",
+    "size": 1316
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\15\\courses.parquet": {
+    "sha256": "0f7e15a13b5cd08d39591b284402b6ff612ffa7d7c9ab40d1cb98af85171facc",
+    "size": 790
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\15\\import_report.json": {
+    "sha256": "cad4b62a789689b9fe4b192e9f40f3fe30472b566d1ba41890c15f1262f792a7",
+    "size": 288
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\15\\input_courses.parquet": {
+    "sha256": "7e2ad27784918f2d3d0f305c3132d04697401fa655e13c22ce1b9f17c36c878b",
+    "size": 1910
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\15\\plans.parquet": {
+    "sha256": "f7af8844c86f17d65629f4cb6ef03112b00f36c33645fe0422a18a91d759f8f4",
+    "size": 3950
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\15\\result.json": {
+    "sha256": "9bc55d92c1a8e257a910296a599cdd1a745dc6ab41ffa9527a7e6a5c84005fcc",
+    "size": 1479
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\15\\snapshot.json": {
+    "sha256": "787c1dfa52a38dbfe2a830d6e3f7d16bf3f5e62580759ddda3687aa60f097be8",
+    "size": 684
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\20\\benchmark.json": {
+    "sha256": "c31dc573f7dbbda0aaef2e9ed5cef2e1b1c55c12a9ee89038edf1655371a79c6",
+    "size": 1316
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\20\\courses.parquet": {
+    "sha256": "0f7e15a13b5cd08d39591b284402b6ff612ffa7d7c9ab40d1cb98af85171facc",
+    "size": 790
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\20\\import_report.json": {
+    "sha256": "25a90c3b4ed0b5b16d0b5ba667b7b5c36a3eb32b4c4bc43738770bc7f0395477",
+    "size": 288
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\20\\input_courses.parquet": {
+    "sha256": "c17c68dbf573f49079bc03d99eb500c50f2f0a2e10d1bd14cf3e206a6f972721",
+    "size": 1941
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\20\\plans.parquet": {
+    "sha256": "f7af8844c86f17d65629f4cb6ef03112b00f36c33645fe0422a18a91d759f8f4",
+    "size": 3950
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\20\\result.json": {
+    "sha256": "c888d773d09a2d76c811d9b231d14dcc42ac88be0e3329451b9f6da07bb25132",
+    "size": 1480
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\20\\snapshot.json": {
+    "sha256": "787c1dfa52a38dbfe2a830d6e3f7d16bf3f5e62580759ddda3687aa60f097be8",
+    "size": 684
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\25\\benchmark.json": {
+    "sha256": "4341132f1bee1827220e6ef819838f3cc5f362a11855910c3e955c091d36c8ff",
+    "size": 1315
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\25\\courses.parquet": {
+    "sha256": "0f7e15a13b5cd08d39591b284402b6ff612ffa7d7c9ab40d1cb98af85171facc",
+    "size": 790
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\25\\import_report.json": {
+    "sha256": "b2732d65988fdfd126d10a3ff0ae6cdcfcbc6ad849fc672ae43d626f479264a5",
+    "size": 288
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\25\\input_courses.parquet": {
+    "sha256": "8119d9cd4f7eeed4d6624137663b0ca560b4b153a37bab5812912bbc62e9fc4f",
+    "size": 1972
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\25\\plans.parquet": {
+    "sha256": "f7af8844c86f17d65629f4cb6ef03112b00f36c33645fe0422a18a91d759f8f4",
+    "size": 3950
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\25\\result.json": {
+    "sha256": "5d2696c7b2c6baaeb82ab722c64f9899c13b1a01db0a5e3f8889a161f27c327c",
+    "size": 1480
+  },
+  "data\\evaluation\\recommendation_benchmarks\\implementation_check\\25\\snapshot.json": {
+    "sha256": "787c1dfa52a38dbfe2a830d6e3f7d16bf3f5e62580759ddda3687aa60f097be8",
+    "size": 684
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\selected_students_20251_20252.json": {
+    "sha256": "e7f4d3ebb1fb471eaca71bfa8ee938dc8e19d31db9c33e5e263bb6904b5e732e",
+    "size": 38594
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\checks.json": {
+    "sha256": "c8265959590707562af8ce5516a3ea2e0fdcc8bb1f5a5aee76d18a0c3efa6869",
+    "size": 2556
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\display_validation.json": {
+    "sha256": "9b58faeff484c30ff4e44e3309a07cb64390aa46f245fe00ee34fda025b8da4a",
+    "size": 192
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\explanation.html": {
+    "sha256": "6fa07bb3ce13566e3a1ba3f3f70613924f0a6f41d84ee00ac5443c1137fe1eac",
+    "size": 398256
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\provenance.json": {
+    "sha256": "01a5bcee24be9b0b64c1e03a8665df1ed4e33cbeea46dfe94268480c76d732ad",
+    "size": 6812
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\render_validation.json": {
+    "sha256": "b3e43ac23c6e91fc47f7934ec25605dbf5da0f16753e41a2e8396f21380bde93",
+    "size": 465
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20251\\accepted_plan_scores.parquet": {
+    "sha256": "f7af8844c86f17d65629f4cb6ef03112b00f36c33645fe0422a18a91d759f8f4",
+    "size": 3950
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20251\\actual_registration_predictions.parquet": {
+    "sha256": "8180918f98d5efa8b2a2cd8b4b6bed9f1f069fdf0a8d65abbce7b140eb33d1ca",
+    "size": 10770
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20251\\all_plan_scores.parquet": {
+    "sha256": "a7e2dad937d64fbf6c4964d2d69ef54361373b77a24ea1f137ff13f8c02582e4",
+    "size": 696833
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20251\\best_plan_points_matrix.parquet": {
+    "sha256": "3092f76d694cb193d1eab8201bb3f3e03a2a87ceabe65aea4b57faa793a5969c",
+    "size": 38791
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20251\\candidates.json": {
+    "sha256": "e56ae96ea04f8faf9c2b818ec33b6e4bd7a3a0f1c7c8da537f99a81184360357",
+    "size": 28133
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20251\\comparison.parquet": {
+    "sha256": "a870d37ddc82917a80f603dd5deb6fc03fb9b1426a0445ae7448428d42c7b3c8",
+    "size": 6952
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20251\\explanation_data.json": {
+    "sha256": "96545e6f5a2f1b90b2e854ef8af0833ae1eac9df4c1080f3302754a9e98ff0d0",
+    "size": 115763
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20251\\import_report.json": {
+    "sha256": "03fe536466e65bd400697c09c576a07d726f117b56ca196b06d621257abcbbd9",
+    "size": 362
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20251\\original.xml": {
+    "sha256": "341df4911b1cb3df147dc690c4eaec59d5fdd66b9db7a6a0f3bb4a05cdbbf8c7",
+    "size": 71587
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20251\\prepared_candidates.parquet": {
+    "sha256": "9cd37654402fb22a129d55e519b6abd24041cbe7f749ad9f26f855cbf6ec9994",
+    "size": 33854
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20251\\result_before_evaluation.json": {
+    "sha256": "011e0c1802311ce11353c0137956990fa90d8ae20637d4729b3c3e569628263b",
+    "size": 1152
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20251\\snapshot.json": {
+    "sha256": "3c6c1fda8a24d3467e8cf9fb52357704a23057d695b0d6d909654b5ebd7e2f52",
+    "size": 671
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20251\\top_five_full_features.parquet": {
+    "sha256": "0e2498bb1cdd33ec427ebcdf291cf55e91662827e2fe8593e0b73776a55f20f1",
+    "size": 47707
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20252\\accepted_plan_scores.parquet": {
+    "sha256": "f7af8844c86f17d65629f4cb6ef03112b00f36c33645fe0422a18a91d759f8f4",
+    "size": 3950
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20252\\actual_registration_predictions.parquet": {
+    "sha256": "034b22d67755ecacdd6f97f2a65a31d2700a4a6659bf41a6cd7b5ac041962a56",
+    "size": 10754
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20252\\all_plan_scores.parquet": {
+    "sha256": "82a8472e6aed9949a5ee96b8d52d330aaa5e65b56b0f7b5e91f3257799669eca",
+    "size": 7508371
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20252\\best_plan_points_matrix.parquet": {
+    "sha256": "36b4ff83f8d22193f8d7a944361fdbbd402c7f0106c433fc1b2ad87333b07468",
+    "size": 38803
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20252\\candidates.json": {
+    "sha256": "b3c21fc842bbdab6ace36b38e032b323ca35b5bd89c7e088997d48004a1225d6",
+    "size": 37642
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20252\\comparison.parquet": {
+    "sha256": "2c686804574af93be48d3f2aa77397d9973e59abe7bd320c8b8d0fe70640c943",
+    "size": 6952
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20252\\explanation_data.json": {
+    "sha256": "2e27e644ff6b2d962dab72a66c51cf90775941523566ff2c87b114fdbf1b487d",
+    "size": 143156
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20252\\import_report.json": {
+    "sha256": "e6f74388543298d7a129e71e7d295d4b07f5c920ea3b0d558cffdffc4d05a76e",
+    "size": 362
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20252\\original.xml": {
+    "sha256": "b0114c8201e2fa12aeed411ddf4a0af635b25c274b3642700693b2e01a94e599",
+    "size": 93384
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20252\\prepared_candidates.parquet": {
+    "sha256": "cdb86626f78731549e960ad3f8a8930111082ba7c9934eae6f86039eca01b99e",
+    "size": 34159
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20252\\result_before_evaluation.json": {
+    "sha256": "4d0104e2a768407c244f24ceb42c6340e5450d5307cea80172114c59d61ffe33",
+    "size": 1154
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20252\\snapshot.json": {
+    "sha256": "457d9ebfec872e425c21610867038932f06c1a37b0962932f9d5f47354ef65ea",
+    "size": 671
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20252\\top_five_full_features.parquet": {
+    "sha256": "222830d8b2afdf6da2de50c0d43d1239edea114c2547fb5059ddd9998ae6eae4",
+    "size": 47828
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20252\\cli\\candidates.parquet": {
+    "sha256": "18c94259c5c22d0c94e53b3d0680bd321b14de43bfd241fc96782396aa0b9411",
+    "size": 6868
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20252\\cli\\courses.parquet": {
+    "sha256": "0f7e15a13b5cd08d39591b284402b6ff612ffa7d7c9ab40d1cb98af85171facc",
+    "size": 790
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20252\\cli\\import_report.json": {
+    "sha256": "f2ee423a954f1323420c158c0f493f3cbda5f0ad847dd7b9923085a99abf6419",
+    "size": 700
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20252\\cli\\plans.parquet": {
+    "sha256": "f7af8844c86f17d65629f4cb6ef03112b00f36c33645fe0422a18a91d759f8f4",
+    "size": 3950
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20252\\cli\\result.json": {
+    "sha256": "92c3503fd366e8aca99843f26e0f530407b1ae40cdffc664af6e5155a662b2da",
+    "size": 2383
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\explained_29485_20260913T114511285272Z\\20252\\cli\\snapshot.json": {
+    "sha256": "457d9ebfec872e425c21610867038932f06c1a37b0962932f9d5f47354ef65ea",
+    "size": 671
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\01_candidates_from_xml.json": {
+    "sha256": "e56ae96ea04f8faf9c2b818ec33b6e4bd7a3a0f1c7c8da537f99a81184360357",
+    "size": 28133
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\01_export_audit.json": {
+    "sha256": "f420e0c27473a6031ae93548da3083b7ca2b401e55bdb16d7ee9c3d96930c116",
+    "size": 3284
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\01_request.json": {
+    "sha256": "54554fe9a58b633ed444ca6b151f730afdf5d57f36b2b2d087fa17c6467164ae",
+    "size": 437
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\02_import_report.json": {
+    "sha256": "03fe536466e65bd400697c09c576a07d726f117b56ca196b06d621257abcbbd9",
+    "size": 362
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\02_normalized_candidates.parquet": {
+    "sha256": "289f054eedc5db335217175549289ec5747c12bf161ddabfc322e574b13add14",
+    "size": 6732
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\02_snapshot.json": {
+    "sha256": "3c6c1fda8a24d3467e8cf9fb52357704a23057d695b0d6d909654b5ebd7e2f52",
+    "size": 671
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\03_course_history_math.json": {
+    "sha256": "bf693feeea7a3f84a653c99eababc50cd9ca871c6365c6ad1748baec7d040bc6",
+    "size": 20210
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\03_prepared_candidates.parquet": {
+    "sha256": "9cd37654402fb22a129d55e519b6abd24041cbe7f749ad9f26f855cbf6ec9994",
+    "size": 33854
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\04_all_plan_membership.parquet": {
+    "sha256": "ef2ba5c8ee6bc04ae759b63ccf4774c9c8e6987325eb17afa6ec440f9988a8c3",
+    "size": 186337
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\05_accepted_plans.parquet": {
+    "sha256": "f7af8844c86f17d65629f4cb6ef03112b00f36c33645fe0422a18a91d759f8f4",
+    "size": 3950
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\05_all_plan_scores_including_rejected.parquet": {
+    "sha256": "120f6c7793a142ac84ee21e3d1d00d132f5d218cd46423d19360e80ba3fadd73",
+    "size": 584589
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\05_all_scored_rows_and_features.parquet": {
+    "sha256": "c0d523b4bdb8a2fdbb0a5b358d6a6574af8a93d4ea63844b29d5c0227f195d81",
+    "size": 4169480
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\05_result_before_observed_outcomes.json": {
+    "sha256": "409331228864e9bf6c6cb5c8b3f6c5c51f67ea7ad6e5a7cbc7c2f6db801ec169",
+    "size": 1152
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\06_fail_matrix_plan_0.parquet": {
+    "sha256": "2c9a8830460e47d6817390a8750e84a015ebf3bd4d15afaa3cef58437aff298e",
+    "size": 31809
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\06_feature_trace_plan_0.json": {
+    "sha256": "8113b84281d78f2608a05cac8a4331931781c2b85997af3b44e30d9acce1f124",
+    "size": 16375
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\06_points_matrix_plan_0.parquet": {
+    "sha256": "c168269f12d18ea8e3f858686cf20faafed7f9f304d50c14b5b6aa37131870fb",
+    "size": 38966
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\06_same_course_different_plans.json": {
+    "sha256": "501fb2919feb118a2bd2ddaf4cd53264d59b1d5131f98d99a7e74da23bb1e437",
+    "size": 606
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\07_cli.log": {
+    "sha256": "e0f6aef6fde94d6b5e02c7edad23fb1f01c8cd5d2c644d5edbf50aa3b40075fa",
+    "size": 194
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\08_actual_metrics.json": {
+    "sha256": "7d0ff083bba8c065b0d4fe7b2c226cfbc42408608a17d5bb08cbb1e8a949f1e5",
+    "size": 541
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\08_actual_registration_evaluation.parquet": {
+    "sha256": "556b7bcd8eced5bd1ce3f312c64fa62fc5107978f77326bfb940cc96ed41523b",
+    "size": 11974
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\10_checks.json": {
+    "sha256": "87c60a5aea50492bb2cfde896ed6956dacb426b1708ce4c6d1fdbb73bde7aa88",
+    "size": 2144
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\10_provenance.json": {
+    "sha256": "a0e0ad162c907a9be65db1b689be876280adc9f99e12ef0b34d464d39807288a",
+    "size": 2776
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\10_source_functions.json": {
+    "sha256": "f5fe028972fb7d7e239d25abbda6eaf9fab8c7b9aef2f99199dc4ea529230774",
+    "size": 26614
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\original_export_7.xml": {
+    "sha256": "341df4911b1cb3df147dc690c4eaec59d5fdd66b9db7a6a0f3bb4a05cdbbf8c7",
+    "size": 71587
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\student_29485_20251.ipynb": {
+    "sha256": "e58c217ed8dd05b2ad24f28fb9e391756c7988166af7e8dfda0106e2aa291ad8",
+    "size": 96551
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\trace.html": {
+    "sha256": "f3cfb3fbc0c23b9f6d0202fb455132cc89037e30924d00644a2542bfc99ac51c",
+    "size": 102238
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\cli\\candidates.parquet": {
+    "sha256": "289f054eedc5db335217175549289ec5747c12bf161ddabfc322e574b13add14",
+    "size": 6732
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\cli\\courses.parquet": {
+    "sha256": "0f7e15a13b5cd08d39591b284402b6ff612ffa7d7c9ab40d1cb98af85171facc",
+    "size": 790
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\cli\\import_report.json": {
+    "sha256": "5e6b6b6d426b593ca7ff7324a04b2e544ca1d282123897be58b0ca4503f8a744",
+    "size": 707
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\cli\\plans.parquet": {
+    "sha256": "f7af8844c86f17d65629f4cb6ef03112b00f36c33645fe0422a18a91d759f8f4",
+    "size": 3950
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\cli\\result.json": {
+    "sha256": "d7502e448db4a12cbd795f6295464fbebf2f4eb9f8294c427739f4e573d715fa",
+    "size": 2379
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103249372815Z\\cli\\snapshot.json": {
+    "sha256": "3c6c1fda8a24d3467e8cf9fb52357704a23057d695b0d6d909654b5ebd7e2f52",
+    "size": 671
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\01_candidates_from_xml.json": {
+    "sha256": "e56ae96ea04f8faf9c2b818ec33b6e4bd7a3a0f1c7c8da537f99a81184360357",
+    "size": 28133
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\01_export_audit.json": {
+    "sha256": "f420e0c27473a6031ae93548da3083b7ca2b401e55bdb16d7ee9c3d96930c116",
+    "size": 3284
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\01_request.json": {
+    "sha256": "54554fe9a58b633ed444ca6b151f730afdf5d57f36b2b2d087fa17c6467164ae",
+    "size": 437
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\02_import_report.json": {
+    "sha256": "03fe536466e65bd400697c09c576a07d726f117b56ca196b06d621257abcbbd9",
+    "size": 362
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\02_normalized_candidates.parquet": {
+    "sha256": "289f054eedc5db335217175549289ec5747c12bf161ddabfc322e574b13add14",
+    "size": 6732
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\02_snapshot.json": {
+    "sha256": "3c6c1fda8a24d3467e8cf9fb52357704a23057d695b0d6d909654b5ebd7e2f52",
+    "size": 671
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\03_course_history_math.json": {
+    "sha256": "bf693feeea7a3f84a653c99eababc50cd9ca871c6365c6ad1748baec7d040bc6",
+    "size": 20210
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\03_prepared_candidates.parquet": {
+    "sha256": "9cd37654402fb22a129d55e519b6abd24041cbe7f749ad9f26f855cbf6ec9994",
+    "size": 33854
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\04_all_plan_membership.parquet": {
+    "sha256": "ef2ba5c8ee6bc04ae759b63ccf4774c9c8e6987325eb17afa6ec440f9988a8c3",
+    "size": 186337
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\05_accepted_plans.parquet": {
+    "sha256": "f7af8844c86f17d65629f4cb6ef03112b00f36c33645fe0422a18a91d759f8f4",
+    "size": 3950
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\05_all_plan_scores_including_rejected.parquet": {
+    "sha256": "120f6c7793a142ac84ee21e3d1d00d132f5d218cd46423d19360e80ba3fadd73",
+    "size": 584589
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\05_all_scored_rows_and_features.parquet": {
+    "sha256": "c0d523b4bdb8a2fdbb0a5b358d6a6574af8a93d4ea63844b29d5c0227f195d81",
+    "size": 4169480
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\05_result_before_observed_outcomes.json": {
+    "sha256": "60030c4d0a759515fe7188b462f141ba81c353beaa9c106436aa9718e753e6a8",
+    "size": 1152
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\06_fail_matrix_plan_0.parquet": {
+    "sha256": "2c9a8830460e47d6817390a8750e84a015ebf3bd4d15afaa3cef58437aff298e",
+    "size": 31809
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\06_feature_trace_plan_0.json": {
+    "sha256": "8113b84281d78f2608a05cac8a4331931781c2b85997af3b44e30d9acce1f124",
+    "size": 16375
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\06_points_matrix_plan_0.parquet": {
+    "sha256": "c168269f12d18ea8e3f858686cf20faafed7f9f304d50c14b5b6aa37131870fb",
+    "size": 38966
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\06_same_course_different_plans.json": {
+    "sha256": "501fb2919feb118a2bd2ddaf4cd53264d59b1d5131f98d99a7e74da23bb1e437",
+    "size": 606
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\07_cli.log": {
+    "sha256": "2266350251edc348a1cf5f363999dc3cc7b843d06440943e2d320d0bdb6b6e8b",
+    "size": 194
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\08_actual_metrics.json": {
+    "sha256": "7d0ff083bba8c065b0d4fe7b2c226cfbc42408608a17d5bb08cbb1e8a949f1e5",
+    "size": 541
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\08_actual_registration_evaluation.parquet": {
+    "sha256": "556b7bcd8eced5bd1ce3f312c64fa62fc5107978f77326bfb940cc96ed41523b",
+    "size": 11974
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\08_eligibility_semester_comparison.json": {
+    "sha256": "2d0e0ec08673057ab6f4075a2373011217653925b5a6dffa7909841215d256f8",
+    "size": 291
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\09_best_rejected_courses.json": {
+    "sha256": "0eb9cb427da877b0d518637152df5579c7afed2b7d2cf0314bdc4ad8dded40cb",
+    "size": 1635
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\09_best_rejected_plans.json": {
+    "sha256": "c2a4592df81dfe8a89d9993d852c1120202bbccb78b3a0e2de9a184fdfff5f6f",
+    "size": 1382
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\10_checks.json": {
+    "sha256": "87c60a5aea50492bb2cfde896ed6956dacb426b1708ce4c6d1fdbb73bde7aa88",
+    "size": 2144
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\10_production_scope_check.json": {
+    "sha256": "9d8e9540798cecc9a651d8f2e3bf5bd0b1c60a100c5fe530455e709eeab59366",
+    "size": 5962
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\10_provenance.json": {
+    "sha256": "ecff67dc85cd4f34ab34713eda4c3146d10a75ba8e12a06a81631614fb59118c",
+    "size": 2776
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\10_source_functions.json": {
+    "sha256": "f5fe028972fb7d7e239d25abbda6eaf9fab8c7b9aef2f99199dc4ea529230774",
+    "size": 26614
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\original_export_7.xml": {
+    "sha256": "341df4911b1cb3df147dc690c4eaec59d5fdd66b9db7a6a0f3bb4a05cdbbf8c7",
+    "size": 71587
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\student_29485_20251.ipynb": {
+    "sha256": "77b0d383775d62ba8ddc6e8cf97b9ecc168a0f7877e72dc2db4787f60c891bcd",
+    "size": 102518
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\trace.html": {
+    "sha256": "a3235d467899e7f1d45dd1201796b71d0265387b159ac60fcbecbcabc819f198",
+    "size": 138734
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\cli\\candidates.parquet": {
+    "sha256": "289f054eedc5db335217175549289ec5747c12bf161ddabfc322e574b13add14",
+    "size": 6732
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\cli\\courses.parquet": {
+    "sha256": "0f7e15a13b5cd08d39591b284402b6ff612ffa7d7c9ab40d1cb98af85171facc",
+    "size": 790
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\cli\\import_report.json": {
+    "sha256": "3df14d7b9e8048bd033046b30b5647bc5551a6c1559d599891ce4e767f1ee4a4",
+    "size": 707
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\cli\\plans.parquet": {
+    "sha256": "f7af8844c86f17d65629f4cb6ef03112b00f36c33645fe0422a18a91d759f8f4",
+    "size": 3950
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\cli\\result.json": {
+    "sha256": "4b37cdd924ce750c577a661489235a2ea2938e43549b61b5dad400dc887c6b2b",
+    "size": 2378
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103604575485Z\\cli\\snapshot.json": {
+    "sha256": "3c6c1fda8a24d3467e8cf9fb52357704a23057d695b0d6d909654b5ebd7e2f52",
+    "size": 671
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\01_candidates_from_xml.json": {
+    "sha256": "e56ae96ea04f8faf9c2b818ec33b6e4bd7a3a0f1c7c8da537f99a81184360357",
+    "size": 28133
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\01_export_audit.json": {
+    "sha256": "f420e0c27473a6031ae93548da3083b7ca2b401e55bdb16d7ee9c3d96930c116",
+    "size": 3284
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\01_request.json": {
+    "sha256": "4c04fbf806500ead9f95ce699df6a58736b6b3d8f688371ee6e01ed0259d0590",
+    "size": 492
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\02_import_report.json": {
+    "sha256": "03fe536466e65bd400697c09c576a07d726f117b56ca196b06d621257abcbbd9",
+    "size": 362
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\02_normalized_candidates.parquet": {
+    "sha256": "289f054eedc5db335217175549289ec5747c12bf161ddabfc322e574b13add14",
+    "size": 6732
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\02_snapshot.json": {
+    "sha256": "3c6c1fda8a24d3467e8cf9fb52357704a23057d695b0d6d909654b5ebd7e2f52",
+    "size": 671
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\03_course_history_math.json": {
+    "sha256": "bf693feeea7a3f84a653c99eababc50cd9ca871c6365c6ad1748baec7d040bc6",
+    "size": 20210
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\03_prepared_candidates.parquet": {
+    "sha256": "9cd37654402fb22a129d55e519b6abd24041cbe7f749ad9f26f855cbf6ec9994",
+    "size": 33854
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\04_all_plan_membership.parquet": {
+    "sha256": "ef2ba5c8ee6bc04ae759b63ccf4774c9c8e6987325eb17afa6ec440f9988a8c3",
+    "size": 186337
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\05_accepted_plans.parquet": {
+    "sha256": "f7af8844c86f17d65629f4cb6ef03112b00f36c33645fe0422a18a91d759f8f4",
+    "size": 3950
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\05_all_plan_scores_including_rejected.parquet": {
+    "sha256": "120f6c7793a142ac84ee21e3d1d00d132f5d218cd46423d19360e80ba3fadd73",
+    "size": 584589
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\05_all_scored_rows_and_features.parquet": {
+    "sha256": "c0d523b4bdb8a2fdbb0a5b358d6a6574af8a93d4ea63844b29d5c0227f195d81",
+    "size": 4169480
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\05_result_before_observed_outcomes.json": {
+    "sha256": "ac7d3664e36818bf99c016fff75da294eeb851e74c2f0eef103b6efea83b169d",
+    "size": 1153
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\06_fail_matrix_plan_0.parquet": {
+    "sha256": "2c9a8830460e47d6817390a8750e84a015ebf3bd4d15afaa3cef58437aff298e",
+    "size": 31809
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\06_feature_trace_plan_0.json": {
+    "sha256": "8113b84281d78f2608a05cac8a4331931781c2b85997af3b44e30d9acce1f124",
+    "size": 16375
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\06_points_matrix_plan_0.parquet": {
+    "sha256": "c168269f12d18ea8e3f858686cf20faafed7f9f304d50c14b5b6aa37131870fb",
+    "size": 38966
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\06_same_course_different_plans.json": {
+    "sha256": "501fb2919feb118a2bd2ddaf4cd53264d59b1d5131f98d99a7e74da23bb1e437",
+    "size": 606
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\07_cli.log": {
+    "sha256": "996acac94da21c34b19a9483d472c0495889be6aac99007d3c9516cfb206d881",
+    "size": 194
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\08_actual_metrics.json": {
+    "sha256": "7d0ff083bba8c065b0d4fe7b2c226cfbc42408608a17d5bb08cbb1e8a949f1e5",
+    "size": 541
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\08_actual_registration_evaluation.parquet": {
+    "sha256": "556b7bcd8eced5bd1ce3f312c64fa62fc5107978f77326bfb940cc96ed41523b",
+    "size": 11974
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\08_eligibility_diagnosis.json": {
+    "sha256": "d38a06141e7230769bea269d4acc83440d55c51244d2f3d07353241174848075",
+    "size": 819
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\08_eligibility_semester_comparison.json": {
+    "sha256": "2d0e0ec08673057ab6f4075a2373011217653925b5a6dffa7909841215d256f8",
+    "size": 291
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\09_best_rejected_courses.json": {
+    "sha256": "0eb9cb427da877b0d518637152df5579c7afed2b7d2cf0314bdc4ad8dded40cb",
+    "size": 1635
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\09_best_rejected_plans.json": {
+    "sha256": "c2a4592df81dfe8a89d9993d852c1120202bbccb78b3a0e2de9a184fdfff5f6f",
+    "size": 1382
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\10_checks.json": {
+    "sha256": "87c60a5aea50492bb2cfde896ed6956dacb426b1708ce4c6d1fdbb73bde7aa88",
+    "size": 2144
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\10_production_scope_check.json": {
+    "sha256": "9d8e9540798cecc9a651d8f2e3bf5bd0b1c60a100c5fe530455e709eeab59366",
+    "size": 5962
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\10_provenance.json": {
+    "sha256": "788e209f8fd9348d2b25672beb6615036705d287b24ec152fc3e896e51958a0e",
+    "size": 2776
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\10_source_functions.json": {
+    "sha256": "f5fe028972fb7d7e239d25abbda6eaf9fab8c7b9aef2f99199dc4ea529230774",
+    "size": 26614
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\original_export_7.xml": {
+    "sha256": "341df4911b1cb3df147dc690c4eaec59d5fdd66b9db7a6a0f3bb4a05cdbbf8c7",
+    "size": 71587
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\student_29485_20251.ipynb": {
+    "sha256": "9ec2e25b16a131ecb983c937ebf80bd1b1a0f6ccdc60a2f24912d1e41d799fcf",
+    "size": 105880
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\trace.html": {
+    "sha256": "8588455d5dc463d6f836bfdc060726cd4616a91172dd423739a6597f3f88f017",
+    "size": 142602
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\cli\\candidates.parquet": {
+    "sha256": "289f054eedc5db335217175549289ec5747c12bf161ddabfc322e574b13add14",
+    "size": 6732
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\cli\\courses.parquet": {
+    "sha256": "0f7e15a13b5cd08d39591b284402b6ff612ffa7d7c9ab40d1cb98af85171facc",
+    "size": 790
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\cli\\import_report.json": {
+    "sha256": "ddefa4f23b32cc9c9769a826d4225cca177b477c38a33e6557210a7c92a8a9b3",
+    "size": 707
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\cli\\plans.parquet": {
+    "sha256": "f7af8844c86f17d65629f4cb6ef03112b00f36c33645fe0422a18a91d759f8f4",
+    "size": 3950
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\cli\\result.json": {
+    "sha256": "5692baa738f873c41ad325e47d9d9af8d297dc5eaad64a0804ab7c86bbb173f5",
+    "size": 2379
+  },
+  "data\\evaluation\\recommendation_trace_pilot\\trace_29485_20251_20260913T103927556424Z\\cli\\snapshot.json": {
+    "sha256": "3c6c1fda8a24d3467e8cf9fb52357704a23057d695b0d6d909654b5ebd7e2f52",
+    "size": 671
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\report_ar.md": {
+    "sha256": "ab676a415c3c857cac1cf95056c4118056fd4776e32e635aaa4d72a1fd13f954",
+    "size": 32574
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\run_manifest.json": {
+    "sha256": "cd0e6fefc85535f8f0278a675a2e88c63b3aa5200a27be35b14dbde05af7fa81",
+    "size": 4191
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\summary.parquet": {
+    "sha256": "64a137f62220972be523204f65b7c2d9712e76c3861b8549f8d8533c473357ed",
+    "size": 7778
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_10_27547_111\\actual_cleaned_courses.parquet": {
+    "sha256": "81d0e1784221e63f7ccf366d4d35d296c006ad3b550d465facb97bbcfb23c047",
+    "size": 9157
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_10_27547_111\\candidates.parquet": {
+    "sha256": "7381a8f36087f8d93372f843b2f0e9e1daf3a3c61e03781f21fb42e561b38d0b",
+    "size": 6990
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_10_27547_111\\case.json": {
+    "sha256": "5c8dc708e5cc7a73ee89ba482b6b4734672074bb16467f5f57fa921022fdef99",
+    "size": 23757
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_10_27547_111\\top_plans.parquet": {
+    "sha256": "18822951cf5948f5c596c929ed7dc36ba1e690d3e71ed8d80468514e40ac699e",
+    "size": 8441
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_11_20335_111\\actual_cleaned_courses.parquet": {
+    "sha256": "1b9998aeb283925de9efe72db12f0f673b4b8f5804c1eb29e4faa9911cb0183c",
+    "size": 9111
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_11_20335_111\\candidates.parquet": {
+    "sha256": "ea720efdbe89b476241f680474c2283beb2f50a4ec3af2ae6db0a19005fe9ec4",
+    "size": 6646
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_11_20335_111\\case.json": {
+    "sha256": "8f00e7332286d17c49322ca9299020953c918897da0174f42cc8c750605a5588",
+    "size": 21396
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_11_20335_111\\top_plans.parquet": {
+    "sha256": "8a0df77bf176a94f9403d63b14fc81bb7c6d85c81bee596edd0285ada8ac1325",
+    "size": 8418
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_12_29485_111\\actual_cleaned_courses.parquet": {
+    "sha256": "836879a2969737056f003bc64def38eadf086a8b163a32e1c50a17deadf38c4b",
+    "size": 9390
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_12_29485_111\\candidates.parquet": {
+    "sha256": "18c94259c5c22d0c94e53b3d0680bd321b14de43bfd241fc96782396aa0b9411",
+    "size": 6868
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_12_29485_111\\case.json": {
+    "sha256": "471b87cf8bc2f83281dcf047ce4bbacb1c9f903a1e2bd83c83f18b7b49c0c59e",
+    "size": 25465
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_12_29485_111\\top_plans.parquet": {
+    "sha256": "0db08e205f4189777a265c764cbf7baf7bd184d622edf984a53731b48a9feb7b",
+    "size": 8428
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_13_10011_111\\actual_cleaned_courses.parquet": {
+    "sha256": "e66644f0e91c61eea430d968bff63dc4e0f3c72207ced1bd6a0304357718311d",
+    "size": 9135
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_13_10011_111\\candidates.parquet": {
+    "sha256": "3f2266f34cd88d124b9e8d62fabc6468731359229700436732d00991e91f24a1",
+    "size": 6970
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_13_10011_111\\case.json": {
+    "sha256": "d174d6a57506f7c82bab86e9b6d5d87d2b913318e8466541bc9276686b04b984",
+    "size": 27670
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_13_10011_111\\top_plans.parquet": {
+    "sha256": "2d17308f5452b7786ef0cbfd67d0d1c7e387a3c8ff4bc58b63c25c2900aafa7b",
+    "size": 8435
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_14_10021_111\\actual_cleaned_courses.parquet": {
+    "sha256": "b41710a956396b1713a963f7a6dcf8c8018d6cc76f3cb9488926db21994ff425",
+    "size": 9286
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_14_10021_111\\candidates.parquet": {
+    "sha256": "3c840301368e6daeda497904e052226759ac3f61348ba9b8b5ec58e5bf59cb39",
+    "size": 6626
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_14_10021_111\\case.json": {
+    "sha256": "2bd16b7ef29e0d3690006296989244b066dbcc1fb83bd65872bd280ec8a8dfff",
+    "size": 21501
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_14_10021_111\\top_plans.parquet": {
+    "sha256": "9f691cf27a535c285a974e05162958c2884a6ce9f33010d0eed343494695d8c8",
+    "size": 8426
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_15_10079_111\\actual_cleaned_courses.parquet": {
+    "sha256": "3f09c0f3698565455c8478730ed8d59b1146f4297e0067edd38bdb7f3c435b3f",
+    "size": 9240
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_15_10079_111\\candidates.parquet": {
+    "sha256": "980d3988112b5ccafb445208e3e91fbe674251dc536f0e043601f62a19a252af",
+    "size": 6706
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_15_10079_111\\case.json": {
+    "sha256": "2097a6718b68f9414ea08587d577732a64f4c716891f1f7a602ccc8aec0a4ec2",
+    "size": 23225
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_15_10079_111\\top_plans.parquet": {
+    "sha256": "e0f6487f3f46d7bdc26a133f98931fa914be9ab8235a9f5ebb68339cb63c9b10",
+    "size": 8419
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_16_10095_111\\actual_cleaned_courses.parquet": {
+    "sha256": "59e67b3fcf31abf45cda52ef7dadaa19137a073fba83ea99218d3c6648de43a0",
+    "size": 8970
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_16_10095_111\\candidates.parquet": {
+    "sha256": "69498278e8ccc0281e235908792481f5e3e69e99de15ac027de4d40bbb47c733",
+    "size": 6716
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_16_10095_111\\case.json": {
+    "sha256": "e15e1c477bee2fa4dc3d742cf285d875ea662672a1e065b938796f127cfff518",
+    "size": 23569
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_16_10095_111\\top_plans.parquet": {
+    "sha256": "1c5e09116ff2a5c58cbe72b845faa9b1f1ae49118b8c68a3aacf70557fa8df1c",
+    "size": 8427
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_2_29616_111\\actual_cleaned_courses.parquet": {
+    "sha256": "0ab82cf03d866b54032a60805fa5f8dde701ea56352758327a7cf6bd8cf15c5c",
+    "size": 9337
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_2_29616_111\\candidates.parquet": {
+    "sha256": "b58d4a85aa667418cf6e0f647cab02f8d0f1bf0e3e95a2cd6bb966971ab51b39",
+    "size": 6714
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_2_29616_111\\case.json": {
+    "sha256": "13f8a3b7af553f221f9dec1c450a43b9f19d2f290f78f418ccd3786d52035e8a",
+    "size": 20118
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_2_29616_111\\top_plans.parquet": {
+    "sha256": "33ada1773d7595e24b17b63e60fd119ac4b6d4d139698fa56fa5fcbfbc88515e",
+    "size": 8419
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_3_17098_111\\actual_cleaned_courses.parquet": {
+    "sha256": "99fb71eeb9c4ac6e4474e295287bac0bb7728487caa18df5328766b41bf7f1e0",
+    "size": 9061
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_3_17098_111\\candidates.parquet": {
+    "sha256": "60129a34cd6b69783d05cb9928c83a562e1ba01e041460d5e16157db6b1a02c5",
+    "size": 6420
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_3_17098_111\\case.json": {
+    "sha256": "6a5c15de05b1222d5f31b8a451476501011f2b4a7b85e776059bf4eb1314f13b",
+    "size": 16551
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_3_17098_111\\top_plans.parquet": {
+    "sha256": "34c84828aa0edbe82338f62705c66901c8ce3af61bec45b32debe3cc670f23d7",
+    "size": 8368
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_4_31082_111\\actual_cleaned_courses.parquet": {
+    "sha256": "31a71119e70eb4ff962b49cd225b8738604e4c021c5012789bff6bef264a2f19",
+    "size": 9516
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_4_31082_111\\candidates.parquet": {
+    "sha256": "25e43c12266aed1e80b9240fc42677c10efba0b05e19f64b0c37c0f5b0ffa00b",
+    "size": 6985
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_4_31082_111\\case.json": {
+    "sha256": "75ef7123dd31dd45e3c15170b06e40a4bc4c47a8b77c1ac948ee312b86e6f726",
+    "size": 23478
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_4_31082_111\\top_plans.parquet": {
+    "sha256": "fccaad7eb28819d0c9e4211f2294847d7729c2ad7790917b418ed9613c200f5c",
+    "size": 8375
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_5_17464_111\\actual_cleaned_courses.parquet": {
+    "sha256": "3fd053c42ee70f03849e1498837ee6e1981aeeb6e64232f5e4dc62377aa8b8ce",
+    "size": 9185
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_5_17464_111\\candidates.parquet": {
+    "sha256": "ef5aa0196df56eabebc4474b9f674ea3b4c12ad90e71ebf7a9134f7dccb0f193",
+    "size": 6398
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_5_17464_111\\case.json": {
+    "sha256": "077460f2d385c7f0f230047b5c8b1a271fb7db05289e75da1aa3d760bfe62268",
+    "size": 12757
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_5_17464_111\\top_plans.parquet": {
+    "sha256": "05bfc5e418f681c46cb69e8c14bd9ff3e2149adc72beadbacc77ca04da39c761",
+    "size": 8288
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_6_12849_111\\actual_cleaned_courses.parquet": {
+    "sha256": "b038942535fbf31fb5649f6ddca493393c373bea08ea866ba483f20dcd71abac",
+    "size": 9356
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_6_12849_111\\candidates.parquet": {
+    "sha256": "884b7e2986d7e6f312cc7745c99f510c57585151935e67026a989f3c162e1d33",
+    "size": 6533
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_6_12849_111\\case.json": {
+    "sha256": "de8e74924b98c9cf0e6177ef1534c90e695fcb5e5d7635522b07c69d62bdf0d9",
+    "size": 23681
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_6_12849_111\\top_plans.parquet": {
+    "sha256": "d00e91ddb3c9b95a845052052a75ee21ceda3bd71fa5ea0055918391a151e4c2",
+    "size": 8434
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_7_29485_111\\actual_cleaned_courses.parquet": {
+    "sha256": "836879a2969737056f003bc64def38eadf086a8b163a32e1c50a17deadf38c4b",
+    "size": 9390
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_7_29485_111\\candidates.parquet": {
+    "sha256": "289f054eedc5db335217175549289ec5747c12bf161ddabfc322e574b13add14",
+    "size": 6732
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_7_29485_111\\case.json": {
+    "sha256": "22863df2beab52cb7818ad8bb6bed84a5285b6e15617804b4b9767d8e93dd0cb",
+    "size": 25955
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_7_29485_111\\top_plans.parquet": {
+    "sha256": "1ed22ae8e08541122f5c1fcdbf0605e1d97e1241a359e48577e4163d15b0efe1",
+    "size": 8427
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_9_23685_111\\actual_cleaned_courses.parquet": {
+    "sha256": "b76c4caded4c9af47371b5c58cdd02af3ef7554671a16b3fc7a57d9d2380093f",
+    "size": 9406
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_9_23685_111\\candidates.parquet": {
+    "sha256": "d796ad713ce94af51fe7dde4b3659ad14c958cf44f4f702bbbab0640c1414ecb",
+    "size": 6761
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_9_23685_111\\case.json": {
+    "sha256": "c2cca8284a478e71df5c4425ff898a891517806b7f07573f7bfbe5d76e9d3f75",
+    "size": 24624
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081126Z\\exportdata_9_23685_111\\top_plans.parquet": {
+    "sha256": "95877db3fcb290d56caa5b7bebbb09d7004c662d8a56e5f6ed6344427fe1e821",
+    "size": 8446
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\report_ar.md": {
+    "sha256": "0ac57b8d620baa8653caa47c2f149685baba306c1342cf2f1979e83ca8ecf6b6",
+    "size": 55056
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\run_manifest.json": {
+    "sha256": "27a61bad951c665fa0ab801d59025b2f905c9b653271e056285cea3cbfefc33b",
+    "size": 4191
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\summary.parquet": {
+    "sha256": "5c90986b725bdfe4d129f9c30a1864b46516482d00f2aac6728efe1e106377d6",
+    "size": 7780
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_10_27547_111\\actual_cleaned_courses.parquet": {
+    "sha256": "81d0e1784221e63f7ccf366d4d35d296c006ad3b550d465facb97bbcfb23c047",
+    "size": 9157
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_10_27547_111\\candidates.parquet": {
+    "sha256": "7381a8f36087f8d93372f843b2f0e9e1daf3a3c61e03781f21fb42e561b38d0b",
+    "size": 6990
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_10_27547_111\\case.json": {
+    "sha256": "c48f6f28c829d14df6a512f2a8e5a0b890b43694c2fe9ba83f2598ce8f3b9f32",
+    "size": 25563
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_10_27547_111\\top_plans.parquet": {
+    "sha256": "18822951cf5948f5c596c929ed7dc36ba1e690d3e71ed8d80468514e40ac699e",
+    "size": 8441
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_11_20335_111\\actual_cleaned_courses.parquet": {
+    "sha256": "1b9998aeb283925de9efe72db12f0f673b4b8f5804c1eb29e4faa9911cb0183c",
+    "size": 9111
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_11_20335_111\\candidates.parquet": {
+    "sha256": "ea720efdbe89b476241f680474c2283beb2f50a4ec3af2ae6db0a19005fe9ec4",
+    "size": 6646
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_11_20335_111\\case.json": {
+    "sha256": "6f69133b1eff5b3f324b3e3de615ed2c1dcb9066879665fe3793418a33e51e94",
+    "size": 22975
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_11_20335_111\\top_plans.parquet": {
+    "sha256": "8a0df77bf176a94f9403d63b14fc81bb7c6d85c81bee596edd0285ada8ac1325",
+    "size": 8418
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_12_29485_111\\actual_cleaned_courses.parquet": {
+    "sha256": "836879a2969737056f003bc64def38eadf086a8b163a32e1c50a17deadf38c4b",
+    "size": 9390
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_12_29485_111\\candidates.parquet": {
+    "sha256": "18c94259c5c22d0c94e53b3d0680bd321b14de43bfd241fc96782396aa0b9411",
+    "size": 6868
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_12_29485_111\\case.json": {
+    "sha256": "5bb63e56c30eb4128935de9823535ce58417420b5b7fdd252b19a79f1a53fb3b",
+    "size": 27900
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_12_29485_111\\top_plans.parquet": {
+    "sha256": "0db08e205f4189777a265c764cbf7baf7bd184d622edf984a53731b48a9feb7b",
+    "size": 8428
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_13_10011_111\\actual_cleaned_courses.parquet": {
+    "sha256": "e66644f0e91c61eea430d968bff63dc4e0f3c72207ced1bd6a0304357718311d",
+    "size": 9135
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_13_10011_111\\candidates.parquet": {
+    "sha256": "3f2266f34cd88d124b9e8d62fabc6468731359229700436732d00991e91f24a1",
+    "size": 6970
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_13_10011_111\\case.json": {
+    "sha256": "5cfb1cb8d6e519a3b90db7de4b18609b942909c471cc258d18ceb13c5fd9e43c",
+    "size": 29010
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_13_10011_111\\top_plans.parquet": {
+    "sha256": "2d17308f5452b7786ef0cbfd67d0d1c7e387a3c8ff4bc58b63c25c2900aafa7b",
+    "size": 8435
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_14_10021_111\\actual_cleaned_courses.parquet": {
+    "sha256": "b41710a956396b1713a963f7a6dcf8c8018d6cc76f3cb9488926db21994ff425",
+    "size": 9286
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_14_10021_111\\candidates.parquet": {
+    "sha256": "3c840301368e6daeda497904e052226759ac3f61348ba9b8b5ec58e5bf59cb39",
+    "size": 6626
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_14_10021_111\\case.json": {
+    "sha256": "9942f859f9006d3f76fcd852c31864f00e0e91af4eccd7f93bfcd87920961848",
+    "size": 23357
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_14_10021_111\\top_plans.parquet": {
+    "sha256": "9f691cf27a535c285a974e05162958c2884a6ce9f33010d0eed343494695d8c8",
+    "size": 8426
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_15_10079_111\\actual_cleaned_courses.parquet": {
+    "sha256": "3f09c0f3698565455c8478730ed8d59b1146f4297e0067edd38bdb7f3c435b3f",
+    "size": 9240
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_15_10079_111\\candidates.parquet": {
+    "sha256": "980d3988112b5ccafb445208e3e91fbe674251dc536f0e043601f62a19a252af",
+    "size": 6706
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_15_10079_111\\case.json": {
+    "sha256": "d3165e617121668370f607db89c065b8a893200d8fd0ce8189d4ce08bc2c2074",
+    "size": 25156
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_15_10079_111\\top_plans.parquet": {
+    "sha256": "e0f6487f3f46d7bdc26a133f98931fa914be9ab8235a9f5ebb68339cb63c9b10",
+    "size": 8419
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_16_10095_111\\actual_cleaned_courses.parquet": {
+    "sha256": "59e67b3fcf31abf45cda52ef7dadaa19137a073fba83ea99218d3c6648de43a0",
+    "size": 8970
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_16_10095_111\\candidates.parquet": {
+    "sha256": "69498278e8ccc0281e235908792481f5e3e69e99de15ac027de4d40bbb47c733",
+    "size": 6716
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_16_10095_111\\case.json": {
+    "sha256": "d9d546aeb385f0735178cbc54e75e07138931699f2c277ebd4128f8209f86567",
+    "size": 24670
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_16_10095_111\\top_plans.parquet": {
+    "sha256": "1c5e09116ff2a5c58cbe72b845faa9b1f1ae49118b8c68a3aacf70557fa8df1c",
+    "size": 8427
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_2_29616_111\\actual_cleaned_courses.parquet": {
+    "sha256": "0ab82cf03d866b54032a60805fa5f8dde701ea56352758327a7cf6bd8cf15c5c",
+    "size": 9337
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_2_29616_111\\candidates.parquet": {
+    "sha256": "b58d4a85aa667418cf6e0f647cab02f8d0f1bf0e3e95a2cd6bb966971ab51b39",
+    "size": 6714
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_2_29616_111\\case.json": {
+    "sha256": "a2ffbde4718b567dee78bde6c3cab031fbd44f546b028560026b47f1645ede62",
+    "size": 22062
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_2_29616_111\\top_plans.parquet": {
+    "sha256": "33ada1773d7595e24b17b63e60fd119ac4b6d4d139698fa56fa5fcbfbc88515e",
+    "size": 8419
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_3_17098_111\\actual_cleaned_courses.parquet": {
+    "sha256": "99fb71eeb9c4ac6e4474e295287bac0bb7728487caa18df5328766b41bf7f1e0",
+    "size": 9061
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_3_17098_111\\candidates.parquet": {
+    "sha256": "60129a34cd6b69783d05cb9928c83a562e1ba01e041460d5e16157db6b1a02c5",
+    "size": 6420
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_3_17098_111\\case.json": {
+    "sha256": "377896ec42742d384e6cedcfb02ecba1bedfadb1c6dc7bbe147c7d3ba827ca37",
+    "size": 17923
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_3_17098_111\\top_plans.parquet": {
+    "sha256": "34c84828aa0edbe82338f62705c66901c8ce3af61bec45b32debe3cc670f23d7",
+    "size": 8368
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_4_31082_111\\actual_cleaned_courses.parquet": {
+    "sha256": "31a71119e70eb4ff962b49cd225b8738604e4c021c5012789bff6bef264a2f19",
+    "size": 9516
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_4_31082_111\\candidates.parquet": {
+    "sha256": "25e43c12266aed1e80b9240fc42677c10efba0b05e19f64b0c37c0f5b0ffa00b",
+    "size": 6985
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_4_31082_111\\case.json": {
+    "sha256": "cfaa2bf67c6ab17d06a0b57d7a527d1c8fac58da8b65c3055c3ba9b0bf8b14d7",
+    "size": 25353
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_4_31082_111\\top_plans.parquet": {
+    "sha256": "fccaad7eb28819d0c9e4211f2294847d7729c2ad7790917b418ed9613c200f5c",
+    "size": 8375
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_5_17464_111\\actual_cleaned_courses.parquet": {
+    "sha256": "3fd053c42ee70f03849e1498837ee6e1981aeeb6e64232f5e4dc62377aa8b8ce",
+    "size": 9185
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_5_17464_111\\candidates.parquet": {
+    "sha256": "ef5aa0196df56eabebc4474b9f674ea3b4c12ad90e71ebf7a9134f7dccb0f193",
+    "size": 6398
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_5_17464_111\\case.json": {
+    "sha256": "2c856a674a2d3af5204d8f84db723ee970fdfe2bbc6754d56b72c1a9a0d5c2ce",
+    "size": 14366
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_5_17464_111\\top_plans.parquet": {
+    "sha256": "05bfc5e418f681c46cb69e8c14bd9ff3e2149adc72beadbacc77ca04da39c761",
+    "size": 8288
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_6_12849_111\\actual_cleaned_courses.parquet": {
+    "sha256": "b038942535fbf31fb5649f6ddca493393c373bea08ea866ba483f20dcd71abac",
+    "size": 9356
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_6_12849_111\\candidates.parquet": {
+    "sha256": "884b7e2986d7e6f312cc7745c99f510c57585151935e67026a989f3c162e1d33",
+    "size": 6533
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_6_12849_111\\case.json": {
+    "sha256": "b79a31d12cd71566cf12d4c3d0668cd44bb1132efce3ec15f25fb1ec2bc3d554",
+    "size": 26093
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_6_12849_111\\top_plans.parquet": {
+    "sha256": "d00e91ddb3c9b95a845052052a75ee21ceda3bd71fa5ea0055918391a151e4c2",
+    "size": 8434
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_7_29485_111\\actual_cleaned_courses.parquet": {
+    "sha256": "836879a2969737056f003bc64def38eadf086a8b163a32e1c50a17deadf38c4b",
+    "size": 9390
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_7_29485_111\\candidates.parquet": {
+    "sha256": "289f054eedc5db335217175549289ec5747c12bf161ddabfc322e574b13add14",
+    "size": 6732
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_7_29485_111\\case.json": {
+    "sha256": "d623133d0fb1bed22c027b937ce5732750324a4f875261e4b885aba304b458db",
+    "size": 28389
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_7_29485_111\\top_plans.parquet": {
+    "sha256": "1ed22ae8e08541122f5c1fcdbf0605e1d97e1241a359e48577e4163d15b0efe1",
+    "size": 8427
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_8_14861_111\\actual_cleaned_courses.parquet": {
+    "sha256": "73a084ed040009820536cf204d5aa9a968618213522551f9bf105e87cb17cdf7",
+    "size": 8803
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_8_14861_111\\candidates.parquet": {
+    "sha256": "6996110794f866b0c28630ce144b07bf3f8f4dde9904d48a13b86c943508b69f",
+    "size": 6318
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_8_14861_111\\case.json": {
+    "sha256": "520ce110b72f8b7c5a9f5e58cd7e40eb64df033b90475a2fa17cf5ecd9396557",
+    "size": 9685
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_8_14861_111\\top_plans.parquet": {
+    "sha256": "cd9225d1c4474875f27908d757a422d710e90f3321b3cb30aaa3d94e77f5e4ed",
+    "size": 636
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_9_23685_111\\actual_cleaned_courses.parquet": {
+    "sha256": "b76c4caded4c9af47371b5c58cdd02af3ef7554671a16b3fc7a57d9d2380093f",
+    "size": 9406
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_9_23685_111\\candidates.parquet": {
+    "sha256": "d796ad713ce94af51fe7dde4b3659ad14c958cf44f4f702bbbab0640c1414ecb",
+    "size": 6761
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_9_23685_111\\case.json": {
+    "sha256": "fc0e6a7f1782cd3a96e65154c202feca9e03e7395e0b2bee2a84df6406607908",
+    "size": 26258
+  },
+  "data\\evaluation\\xml_recommendations\\target_20251_20260915T081413Z\\exportdata_9_23685_111\\top_plans.parquet": {
+    "sha256": "95877db3fcb290d56caa5b7bebbb09d7004c662d8a56e5f6ed6344427fe1e821",
+    "size": 8446
+  },
+  "data\\features\\temporal_test_features.parquet": {
+    "sha256": "b0f50db3ff1f41c3e3f59fcc21b60d89942cb126b4b4ff9969bdf2694cd1dda2",
+    "size": 6462097
+  },
+  "data\\features\\temporal_train_features.parquet": {
+    "sha256": "61bb3a7abb580b50600f1d1ddcea9db6c8e092bbf7c9975d416f78d48a2f1ecd",
+    "size": 33452333
+  },
+  "data\\merged\\outlier_students.parquet": {
+    "sha256": "c264b0059eca52eef7f8e8a9d1827939ad2ca75589753dbdb4866700f7ef9d54",
+    "size": 12924
+  },
+  "data\\merged\\student_course_enriched_without_outliers.parquet": {
+    "sha256": "ff6806d0bdbb7a8da0a8dba85ca6b3ebb81e3cce0b1d57a197de0cb910da9442",
+    "size": 16495331
+  },
+  "data\\merged\\student_course_enriched_with_diploma.parquet": {
+    "sha256": "9187b2638575e89fe0468dd3223468e154569fd072ca2355e9c2e2db738eec71",
+    "size": 17551023
+  },
+  "data\\raw\\v_acd_degree_course.parquet": {
+    "sha256": "13eafd910db4caead2132b17ce4a90d470dbaf691e488f14647e16a20efee848",
+    "size": 97968
+  },
+  "data\\raw\\v_acs_grade.parquet": {
+    "sha256": "557e1cb7b03b09d690d639c8d61c50e5e537360d0dec0684e6a283047111aad2",
+    "size": 8363
+  },
+  "data\\raw\\v_add_academic_info.parquet": {
+    "sha256": "bbaca16bd24c01602e02d35ee8be1068a33d6fa4ad6f1bb194a5caf7ad7cd3a3",
+    "size": 304641
+  },
+  "data\\raw\\v_add_student_degree_status.parquet": {
+    "sha256": "8395641d4dfcfd4e731ead84a53d38b6593e7f5349abf75156f4a10a7a962371",
+    "size": 6935286
+  },
+  "data\\raw\\v_crg_std_cor_temp_request.parquet": {
+    "sha256": "1bd99cbb7abac635cbf9be6be7f2adb9718cfeb39fef0f9eca1f700262e10469",
+    "size": 4473901
+  },
+  "data\\raw\\v_crg_student_course_raw.parquet": {
+    "sha256": "bb25f5413d67cfb3fe41e24f4efee1b90330e4cbdd41a06dcddf91ea33081bba",
+    "size": 15288890
+  },
+  "data\\temporal\\temporal_test.parquet": {
+    "sha256": "33705df1717d6708f2ce720e1900a7fcbf1f8683d0f437a22d4e27483e147d0e",
+    "size": 2647459
+  },
+  "data\\temporal\\temporal_test_roster.parquet": {
+    "sha256": "6e47f44dc1ceac6527b9f5869057b5af0a6282c5380053794c3a8ac01e1bb679",
+    "size": 1121800
+  },
+  "data\\temporal\\temporal_train.parquet": {
+    "sha256": "ee3698879e3b32acdfebf3a593ca0f2e544e43369cfdf837fcae3f31e7247b95",
+    "size": 13724407
+  },
+  "data\\temporal\\temporal_train_roster.parquet": {
+    "sha256": "0092211074abc44c675d2514c1a16caa73e38c387fbddeeae0ff556a359d61c9",
+    "size": 5452143
+  },
+  "models\\fail_risk_classifier.txt": {
+    "sha256": "3800574525919857b0177793d2605a9ae9488c2255e0e879229c661d09f61995",
+    "size": 538251
+  },
+  "models\\grade_regressor.txt": {
+    "sha256": "1efa8bac335c05bcff98e43f540eaa939a1a9a615c0f721862e3c7db7cb5d73c",
+    "size": 459294
+  },
+  "models\\model_metadata.json": {
+    "sha256": "4115bdb25a588022388affd812af18217c0a0bc8bf5915c81efb0eebb5fe416b",
+    "size": 25105
+  },
+  "models\\experiments\\degree_points\\selected_category_levels.json": {
+    "sha256": "4fb4f3dff5f1d1bf70972ad9d02384a01f73e4689fb514937f2d70eb966982f6",
+    "size": 568
+  },
+  "models\\experiments\\degree_points\\selected_model.txt": {
+    "sha256": "80b4deee2c6b0334de24477287d181eb8a2723dba109a3e025775de4a0162977",
+    "size": 367458
+  }
+}

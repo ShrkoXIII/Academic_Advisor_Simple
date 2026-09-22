@@ -1,0 +1,42 @@
+Rows after the agreed filters: 108974
+
+Null report:
+                        null_count  null_percent
+finish_part_id               63294         58.08
+finish_status                63172         57.97
+observed_gap_semesters       13572         12.45
+last_enrolled_gpa             8990          8.25
+prev_gpa_points               8741          8.02
+part_id                          0          0.00
+student_id                       0          0.00
+student_status_id                0          0.00
+degree_id                        0          0.00
+grade_version_id                 0          0.00
+degree_name_sl                   0          0.00
+start_part_id                    0          0.00
+start_agpa_points                0          0.00
+start_total_in_courses           0          0.00
+start_total_in_credits           0          0.00
+end_total_in_courses             0          0.00
+end_total_in_credits             0          0.00
+end_agpa_points                  0          0.00
+semester_reg_courses             0          0.00
+gpa_points                       0          0.00
+semester_reg_credits             0          0.00
+semester_pass_courses            0          0.00
+semester_fail_courses            0          0.00
+semester_pass_credits            0          0.00
+total_semesters                  0          0.00
+total_reg_courses                0          0.00
+total_reg_credits                0          0.00
+semester_fail_credits            0          0.00
+total_pass_courses               0          0.00
+total_pass_credits               0          0.00
+total_fail_credits               0          0.00
+total_fail_courses               0          0.00
+reg_total_semesters              0          0.00
+degree_credits_count             0          0.00
+start_level_name_short           0          0.00
+end_level_name_short             0          0.00
+
+Saved: D:\AI\Real projects\Academic_Advisor_Simple\data\clean\student_status_v2.parquet

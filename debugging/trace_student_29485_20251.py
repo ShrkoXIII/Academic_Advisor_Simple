@@ -18,16 +18,16 @@ ROOT = next(p for p in [Path.cwd(), *Path.cwd().parents]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 from src import paths
-from src.clean_student_status import clean_student_status
+from src.data.clean_student_status import clean_student_status
 from src.recommendation import (AcademicPlanRecommender, enumerate_plan_indices,
     build_plan_rows, rank_plans, summarize_scored_plans, STUDENT_SNAPSHOT_COLUMNS, CANDIDATE_COURSE_COLUMNS)
 from src.recommendation_inputs import (load_local_inputs, normalize_candidates,
     build_student_snapshot, validate_snapshot)
-from src.temporal_features import (COURSE_HISTORY_COLUMNS, PLAN_CONTEXT_COLUMNS,
+from src.features.temporal_features import (COURSE_HISTORY_COLUMNS, PLAN_CONTEXT_COLUMNS,
     build_history_keys, compute_plan_context_features, add_student_history_features)
 from src.experiments.specialty_history import SPECIALTY_HISTORY_FEATURES
 from src.experiments.modeling import prepare_matrix
-from src.feature_contract import prepare_model_matrix, LEAKAGE_COLUMNS
+from src.features.feature_contract import prepare_model_matrix, LEAKAGE_COLUMNS
 
 SID, DID, PART = '29485.111', '42.111', 20251
 MIN_CREDITS, MAX_CREDITS = 12, 18

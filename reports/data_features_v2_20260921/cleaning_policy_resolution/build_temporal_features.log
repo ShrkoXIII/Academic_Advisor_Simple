@@ -1,0 +1,17 @@
+
+Temporal train features rows: 356816
+Temporal train features students: 10261
+Temporal train features fail rate: 8.441 %
+Temporal train features GPA trend coverage: 75.631 %
+Temporal train features direct course-history coverage: 89.944 %
+
+Temporal test features rows: 67536
+Temporal test features students: 7019
+Temporal test features fail rate: 10.258 %
+Temporal test features GPA trend coverage: 74.252 %
+Temporal test features direct course-history coverage: 95.02 %
+New course-history columns: ['course_history_avg_mark', 'course_history_fail_rate', 'course_history_avg_attempt', 'course_history_retake_rate', 'course_history_effective_support', 'course_history_fallback_level', 'course_history_missing']
+New plan-context columns: ['plan_course_count', 'plan_total_credits', 'plan_credit_weighted_fail_rate', 'plan_credit_weighted_avg_mark', 'plan_credit_weighted_avg_attempt', 'plan_difficulty_credit_load', 'peer_course_count', 'peer_total_credits', 'peer_credit_weighted_fail_rate', 'peer_credit_weighted_avg_mark', 'peer_credit_weighted_avg_attempt', 'peer_difficulty_credit_load', 'peer_max_fail_rate', 'peer_difficulty_missing']
+Saved: D:\AI\Real projects\Academic_Advisor_Simple\data\features\temporal_train_features_v2.parquet
+Saved: D:\AI\Real projects\Academic_Advisor_Simple\data\features\temporal_test_features_v2.parquet
+Saved: D:\AI\Real projects\Academic_Advisor_Simple\data\artifacts\course_history_state_v2.pkl

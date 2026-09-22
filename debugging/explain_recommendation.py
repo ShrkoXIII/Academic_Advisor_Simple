@@ -18,13 +18,13 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from src import paths
-from src.clean_student_status import clean_student_status
+from src.data.clean_student_status import clean_student_status
 from src.recommendation import AcademicPlanRecommender, build_plan_rows, rank_plans
 from src.recommendation_inputs import load_local_inputs, normalize_candidates
-from src.temporal_features import COURSE_HISTORY_COLUMNS, PLAN_CONTEXT_COLUMNS, build_history_keys, temporal_weight
+from src.features.temporal_features import COURSE_HISTORY_COLUMNS, PLAN_CONTEXT_COLUMNS, build_history_keys, temporal_weight
 from src.experiments.specialty_history import SPECIALTY_HISTORY_FEATURES
 from src.experiments.modeling import prepare_matrix
-from src.feature_contract import prepare_model_matrix
+from src.features.feature_contract import prepare_model_matrix
 
 SID, DID = '29485.111', '42.111'
 OUT = ROOT / 'data/evaluation/recommendation_trace_pilot' / (

@@ -5,14 +5,14 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from .cleaning_utils import clean_column_names, clean_id, clean_id_columns
-from .clean_student_status import clean_student_status
+from src.data.cleaning_utils import clean_column_names, clean_id, clean_id_columns
+from src.data.clean_student_status import clean_student_status
 from .paths import (
     CLEAN_DEGREE_COURSE_PATH, CLEAN_STUDENT_COURSE_PATH,
     CLEAN_STUDENT_DIPLOMA_PATH, STUDENT_STATUS_PATH,
 )
 from .recommendation import STUDENT_SNAPSHOT_COLUMNS
-from .temporal_features import add_student_history_features
+from src.features.temporal_features import add_student_history_features
 
 
 class CandidateImportError(ValueError):

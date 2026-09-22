@@ -9,9 +9,9 @@ from pandas.testing import assert_frame_equal
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from build_temporal_features import build_feature_tables
-from feature_contract import (
-    CATEGORICAL_FEATURES, FEATURE_ENGINEERING_VERSION, MODEL_FEATURES,
+from src.features.build_temporal_features import build_feature_tables
+from src.features.feature_contract import (
+    CATEGORICAL_FEATURES, FEATURE_ENGINEERING_VERSION, BASE_FEATURES,
     NUMERIC_FEATURES, require_current_features,
 )
 from src.experiments.degree_points import load_cached_validation, load_or_train_holdout
@@ -37,7 +37,7 @@ class FeaturePipelineTests(unittest.TestCase):
                 rows.append(row)
         frame = pd.DataFrame(rows)
         # These columns must actually be engineered, not copied from a fixture.
-        from temporal_features import COURSE_HISTORY_COLUMNS, PLAN_CONTEXT_COLUMNS, STUDENT_HISTORY_COLUMNS
+        from src.features.temporal_features import COURSE_HISTORY_COLUMNS, PLAN_CONTEXT_COLUMNS, STUDENT_HISTORY_COLUMNS
         frame = frame.drop(columns=[*COURSE_HISTORY_COLUMNS, *PLAN_CONTEXT_COLUMNS, *STUDENT_HISTORY_COLUMNS])
 
         def build(source, history):
@@ -57,7 +57,7 @@ class FeaturePipelineTests(unittest.TestCase):
             ] = [0, 5, 15, 0]
             updated = build(changed, changed_status)
             for before, after in zip(original, updated):
-                columns = [*MODEL_FEATURES, *SPECIALTY_HISTORY_FEATURES]
+                columns = [*BASE_FEATURES, *SPECIALTY_HISTORY_FEATURES]
                 assert_frame_equal(
                     before.loc[before.part_id.le(cutoff), columns],
                     after.loc[after.part_id.le(cutoff), columns],

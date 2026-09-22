@@ -1,0 +1,71 @@
+{
+  "course_scope": "R/E registrations, after key normalization and before key validation",
+  "missing_course_id_rows": 1,
+  "missing_part_id_rows": 1,
+  "both_missing_rows": 1,
+  "unique_course_rows_removed": 1,
+  "invalid_semester_4_rows": 8,
+  "invalid_part_ids": [
+    20214,
+    20224,
+    20254
+  ],
+  "invalid_parts_distribution": {
+    "20214": 3,
+    "20224": 2,
+    "20254": 3
+  },
+  "course_affected_students": 1,
+  "status_affected_students": 8,
+  "affected_students_union": 9,
+  "missing_key_rows": [
+    {
+      "student_course_id": 1095624.111,
+      "student_id": "3432.111",
+      "course_id": null,
+      "part_id": null
+    }
+  ],
+  "invalid_status_rows": [
+    {
+      "student_status_id": 343883.111,
+      "student_id": "9933.111",
+      "part_id": 20214
+    },
+    {
+      "student_status_id": 332180.111,
+      "student_id": "11163.111",
+      "part_id": 20214
+    },
+    {
+      "student_status_id": 331257.111,
+      "student_id": "12567.111",
+      "part_id": 20214
+    },
+    {
+      "student_status_id": 344233.111,
+      "student_id": "16971.111",
+      "part_id": 20224
+    },
+    {
+      "student_status_id": 344236.111,
+      "student_id": "24493.111",
+      "part_id": 20224
+    },
+    {
+      "student_status_id": 413281.111,
+      "student_id": "29618.111",
+      "part_id": 20254
+    },
+    {
+      "student_status_id": 413272.111,
+      "student_id": "30094.111",
+      "part_id": 20254
+    },
+    {
+      "student_status_id": 418214.111,
+      "student_id": "32221.111",
+      "part_id": 20254
+    }
+  ]
+}

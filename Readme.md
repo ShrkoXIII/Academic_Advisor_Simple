@@ -1,5 +1,7 @@
 # Academic Advisor — ترشيح الخطة الفصلية عبر توقع العلامة ومخاطر الرسوب
 
+> تحديث النقل إلى V2: مراحل `src.data` و`src.features` تكتب ملفات `_v2` وتقرأ الوسائط من الإصدار نفسه. المسارات غير الملحقة والأرقام القديمة أدناه تصف مخرجات V1 المحفوظة. التدريب والتقييم والتوصية ما زالت تستخدم مخرجاتها الحالية ولم تُحوّل إلى V2. التشغيل الفعلي الكامل لـV2 متوقف حاليًا على مفاتيح ناقصة في raw courses وفصول خام غير صالحة وفق الحراس الحالية؛ راجع [تقرير النقل](reports/data_features_v2_20260921/report.md).
+
 > نقطة الدخول الموصى بها لقراءة المشروع والتنقل بين التدريب والتجارب والنتائج:
 > [`START_HERE.md`](START_HERE.md).
 > وخريطة الملفات والتنفيذ الكاملة موجودة في
@@ -37,21 +39,28 @@
 
 ### مقررات الطلاب وحالاتهم
 
-ينفذ `src/clean_student_course.py` توحيد الأعمدة والمعرّفات، ويحتفظ بتسجيلات
+المسارات والأرقام الأساسية في الفقرات التالية تصف ملفات V1 التاريخية. سلسلة V2
+تنظف المصدرين باستقلال إلى `student_course_pre_common_v2.parquet` و
+`student_status_pre_common_v2.parquet`، ثم تشغّل `src/data/filter_common_students.py`
+للاحتفاظ بالطلاب المشتركين على مستوى `student_id` فقط. الملفات النهائية هي
+`student_course_v2.parquet` (456,595 صفًا) و`student_status_v2.parquet`
+(107,939 صفًا)، ولكل منهما 12,792 طالبًا.
+
+ينفذ `src/data/clean_student_course.py` توحيد الأعمدة والمعرّفات، ويحتفظ بتسجيلات
 `R/E` والنتائج النهائية `P/F/FE/FA` بعد 2019، ويحسب `attempt_number` زمنيًا.
 الناتج هو `data/clean/student_course.parquet` وفيه 456,453 صفًا.
 
-ينظف `src/clean_student_status.py` حالات الطالب، ويحسب `last_enrolled_gpa`
+ينظف `src/data/clean_student_status.py` حالات الطالب، ويحسب `last_enrolled_gpa`
 والفجوات المرصودة بين الفصول. الناتج هو
 `data/clean/student_status.parquet` وفيه 95,622 حالة فصلية.
 
-ينظف `src/clean_degree_course.py` الخطة الدراسية، ثم يدمج
-`src/build_student_course_enriched.py` المقرر مع حالة الطالب وخصائص الخطة.
+ينظف `src/data/clean_degree_course.py` الخطة الدراسية، ثم يدمج
+`src/data/build_student_course_enriched.py` المقرر مع حالة الطالب وخصائص الخطة.
 الناتج هو `data/clean/student_course_enriched.parquet` وفيه 456,453 صفًا.
 
 ### الشهادة قبل الجامعة
 
-ينفذ `src/clean_student_diploma.py` ما يلي:
+ينفذ `src/data/clean_student_diploma.py` ما يلي:
 
 - يحتفظ بـ `student_id`, `diploma_gpa`, `diploma_type_id`.
 - يحذف الصفوف ذات `diploma_type_id` المفقود.
@@ -67,7 +76,7 @@
 
 ### القيم الشاذة
 
-يطبق `src/clean_outliers.py` حدودًا ثابتة على خصائص الفصل والمقررات، ويحذف
+يطبق `src/data/clean_outliers.py` حدودًا ثابتة على خصائص الفصل والمقررات، ويحذف
 الطالب كاملًا إذا ظهر له سجل شاذ مثل حمل ساعات غير منطقي أو تراكمات رسوب شديدة
 الخروج عن المجتمع النظامي. حُذف 533 طالبًا و22,285 صفًا، وبقي 12,259 طالبًا
 و434,168 صفًا.
@@ -77,7 +86,7 @@
 
 ## 3. Roster الحمل الفصلي
 
-يبني `src/build_registration_roster.py` جدولًا منفصلًا من **كل تسجيلات `R/E` قبل
+يبني `src/data/build_registration_roster.py` جدولًا منفصلًا من **كل تسجيلات `R/E` قبل
 فلترة النتيجة**. لذلك يشمل المواد المنسحبة وغير المكتملة لأنها كانت جزءًا من
 الحمل الحقيقي للفصل.
 
@@ -94,7 +103,7 @@
 
 ## 4. التقسيم الزمني
 
-ينفذ `src/build_temporal_split.py` فلاتر زمنية مباشرة بدون shuffle وبدون إنشاء
+ينفذ `src/data/build_temporal_split.py` فلاتر زمنية مباشرة بدون shuffle وبدون إنشاء
 ملف validation ثابت:
 
 - `temporal_train`: من `20201` حتى `20243`، أي 2020–2024.
@@ -112,7 +121,7 @@
 
 ## 5. هندسة الخصائص الزمنية
 
-ينفذ `src/build_temporal_features.py` البناء الكامل ويحفظ حالة الصعوبة المتعلمة.
+ينفذ `src/features/build_temporal_features.py` البناء الكامل ويحفظ حالة الصعوبة المتعلمة.
 
 ### صعوبة المقرر التاريخية
 
@@ -174,7 +183,7 @@ smoothing بقيمة `k=20` وتسلسل fallback التالي:
 
 ## 6. عقد الخصائص الآمنة
 
-يعرف `src/feature_contract.py` allowlist ثابتة من 47 خاصية يستخدمها المودلان.
+يعرف `src/features/feature_contract.py` allowlist ثابتة من 47 خاصية يستخدمها المودلان.
 يشمل العقد تاريخ الطالب السابق، GPA والـAGPA المتاحين قبل الفصل، التراكمات
 السابقة، الشهادة، خصائص المقرر والخطة، صعوبة المقرر، واتجاه وحمل الخطة.
 
@@ -334,18 +343,24 @@ python -m unittest discover -s tests -v
 
 ## 12. ترتيب إعادة البناء
 
-بعد توفر الجداول الخام، يشغّل الخط الكامل بهذا الترتيب:
+من جذر المشروع، وبعد معالجة عوائق المصدر بقرار منفصل، ترتيب بناء قسمَي البيانات والخصائص V2 هو:
 
 ```powershell
-python src\clean_student_course.py
-python src\clean_student_status.py
-python src\clean_degree_course.py
-python src\build_student_course_enriched.py
-python src\clean_student_diploma.py
-python src\clean_outliers.py
-python src\build_temporal_split.py
-python src\build_registration_roster.py
-python src\build_temporal_features.py
+python -m src.data.clean_student_course
+python -m src.data.clean_student_status
+python -m src.data.filter_common_students
+python -m src.data.clean_degree_course
+python -m src.data.build_student_course_enriched
+python -m src.data.clean_student_diploma
+python -m src.data.clean_outliers
+python -m src.data.build_temporal_split
+python -m src.data.build_registration_roster
+python -m src.features.build_temporal_features
+```
+
+تنتهي سلسلة V2 هنا. الأوامر التالية مستقلة وتقرأ ملفات V1 الحالية؛ لا تدرّب على مخرجات V2 الجديدة:
+
+```powershell
 python src\train_models.py
 python src\evaluate_plan_gpa.py
 python src\analyze_model_errors.py

@@ -15,7 +15,7 @@ from src.recommendation import (
 )
 from src.recommendation_inputs import validate_snapshot
 from src.recommendation_output import save_recommendations
-from src.temporal_features import CourseHistoryState
+from src.features.temporal_features import CourseHistoryState
 
 
 class ProjectionTests(unittest.TestCase):
