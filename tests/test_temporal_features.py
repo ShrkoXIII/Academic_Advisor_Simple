@@ -24,6 +24,7 @@ from src.features.temporal_features import (  # noqa: E402
     STUDENT_HISTORY_COLUMNS,
     CourseHistoryState,
     add_student_history_features,
+    build_temporal_course_history,
     compute_plan_context_features,
     load_course_history_state,
     save_course_history_state,
@@ -72,6 +73,52 @@ def semester_rows(student_id, parts, gpas):
 
 
 class CourseHistoryTests(unittest.TestCase):
+    def test_fallback_uses_the_most_specific_available_history(self):
+        state = CourseHistoryState()
+        state.update(course_rows([20241], [40]))
+        targets = course_rows([20242] * 6, [90] * 6)
+        targets["degree_id"] = ["D1", "D2", "D1", "D2", "D2", "D2"]
+        targets["course_id"] = ["C1", "C1", "C2", "C3", "C4", "C5"]
+        targets["faculty_id"] = ["F1", "F1", "F1", "F1", "F2", "F2"]
+        targets["plan_requirement_type_id"] = ["R1", "R1", "R1", "R1", "R1", "R2"]
+        targets["course_credits"] = [3.0, 3.0, 3.0, 3.0, 3.0, 5.0]
+
+        result = state.apply(targets)
+        self.assertEqual(result.course_history_fallback_level.tolist(), [1, 2, 3, 4, 5, 6])
+        self.assertEqual(result.course_history_effective_support.tolist(), [1.0] * 6)
+        self.assertEqual(result.course_history_avg_mark.tolist(), [40.0] * 6)
+
+    def test_roster_only_courses_never_become_finalized_history(self):
+        train = course_rows([20241], [40])
+        roster_only = course_rows([20241], [100]).assign(course_id="C2")
+        train_roster = pd.concat([train, roster_only], ignore_index=True)
+        test = course_rows([20242], [80]).assign(course_id="C2")
+        _, _, test_features, _, state = build_temporal_course_history(
+            train, train_roster, test, test.copy(),
+        )
+        self.assertEqual(state.global_sums["raw_count"], 1)
+        self.assertEqual(test_features.iloc[0].course_history_fallback_level, 3)
+        self.assertEqual(test_features.iloc[0].course_history_avg_mark, 40.0)
+
+    def test_consecutive_test_parts_roll_forward_only_after_each_outcome(self):
+        train = course_rows([20243], [40])
+        test = course_rows([20251, 20252], [100, 55])
+
+        _, _, features, _, training_state = build_temporal_course_history(
+            train, train.copy(), test, test.copy(),
+        )
+        changed_test = test.copy()
+        changed_test.loc[changed_test.part_id.eq(20251), "final_mark"] = 0
+        _, _, changed_features, _, changed_training_state = build_temporal_course_history(
+            train, train.copy(), changed_test, changed_test.copy(),
+        )
+
+        self.assertEqual(features.course_history_avg_mark.tolist(), [40.0, 70.0])
+        self.assertEqual(changed_features.course_history_avg_mark.tolist(), [40.0, 20.0])
+        self.assertEqual(training_state.as_of_part, 20243)
+        self.assertEqual(changed_training_state.as_of_part, 20243)
+        self.assertEqual(training_state.global_sums["raw_count"], 1)
+
     def test_saved_state_cannot_score_its_own_or_earlier_semester(self):
         state = CourseHistoryState()
         state.update(course_rows([20241], [40]))
@@ -116,6 +163,38 @@ class CourseHistoryTests(unittest.TestCase):
 
 
 class PlanContextTests(unittest.TestCase):
+    def test_groups_are_isolated_by_student_degree_and_part(self):
+        roster = pd.DataFrame({
+            "student_id": ["S1", "S1", "S1", "S1", "S2"],
+            "degree_id": ["D1", "D1", "D2", "D1", "D1"],
+            "part_id": [20241, 20241, 20241, 20242, 20241],
+            "course_id": ["A", "B", "C", "D", "E"],
+            "course_credits": [2.0, 3.0, 5.0, 7.0, 11.0],
+            "course_history_fail_rate": [0.1, 0.4, 0.9, 0.8, 0.7],
+            "course_history_avg_mark": [90.0, 60.0, 20.0, 30.0, 40.0],
+            "course_history_avg_attempt": [1.0, 2.0, 3.0, 4.0, 5.0],
+        })
+        result = compute_plan_context_features(roster)
+        self.assertEqual(result.plan_course_count.tolist(), [2, 2, 1, 1, 1])
+        self.assertEqual(result.plan_total_credits.tolist(), [5.0, 5.0, 5.0, 7.0, 11.0])
+        self.assertAlmostEqual(result.loc[0, "peer_credit_weighted_fail_rate"], 0.4)
+        self.assertAlmostEqual(result.loc[1, "peer_credit_weighted_fail_rate"], 0.1)
+        self.assertTrue(result.loc[2:, "peer_credit_weighted_fail_rate"].isna().all())
+        self.assertEqual(result.peer_difficulty_missing.tolist(), [0, 0, 1, 1, 1])
+
+    def test_peer_max_handles_tied_maximum_and_missing_course_history(self):
+        roster = pd.DataFrame({
+            "student_id": ["S"] * 4, "degree_id": ["D"] * 4,
+            "part_id": [20241] * 4, "course_id": ["A", "B", "C", "D"],
+            "course_credits": [3.0] * 4,
+            "course_history_fail_rate": [0.6, 0.6, 0.2, np.nan],
+            "course_history_avg_mark": [40.0, 50.0, 80.0, np.nan],
+            "course_history_avg_attempt": [2.0, 2.0, 1.0, np.nan],
+        })
+        result = compute_plan_context_features(roster)
+        self.assertEqual(result.peer_max_fail_rate.tolist(), [0.6] * 4)
+        self.assertAlmostEqual(result.loc[3, "peer_credit_weighted_fail_rate"], (0.6 + 0.6 + 0.2) / 3)
+
     def test_credit_weighting_and_leave_one_out_match_manual_values(self):
         roster = pd.DataFrame(
             {

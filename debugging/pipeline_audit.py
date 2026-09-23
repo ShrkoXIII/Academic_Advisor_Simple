@@ -145,7 +145,7 @@ holdout={'selected':metrics(plans),'baseline_same_keys':metrics(comparison,actua
          'roster_vs_scored_credit_mismatch_plans':int((plans.total_credits-plans.plan_total_credits).abs().gt(1e-6).sum())}
 save('holdout_recomputed.json',holdout)
 prob=np.clip(engine.fail_model.predict(prepare_model_matrix(test,engine.fail_levels),num_threads=4),0,1)
-from src.train_models import classification_metrics,calibration_table
+from src.modeling.train_models import classification_metrics,calibration_table
 save('failure_risk.json',{'metrics':classification_metrics(test.is_fail,prob),
     'actual_rate':float(test.is_fail.mean()),'predicted_rate':float(prob.mean()),
     'recall_at_0_5':float((prob[test.is_fail.eq(1)]>=.5).mean()),

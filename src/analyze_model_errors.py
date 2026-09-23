@@ -8,7 +8,7 @@ import json
 
 import numpy as np
 import pandas as pd
-from src.experiments.experiment_config import TARGET_GRADE, training_weights
+from src.modeling.training_config import TARGET_GRADE, training_weights
 
 try:
     from .evaluate_plan_gpa import aggregate_plan_gpa, predict_course_points
@@ -36,7 +36,7 @@ try:
         TEMPORAL_TEST_FEATURES_PATH,
         TEMPORAL_TRAIN_FEATURES_PATH,
     )
-    from .train_models import shared_parameters, train_one
+    from src.modeling.train_models import shared_parameters, train_one
 except ImportError:
     from evaluate_plan_gpa import aggregate_plan_gpa, predict_course_points
     from src.features.feature_contract import (
@@ -63,7 +63,7 @@ except ImportError:
         TEMPORAL_TEST_FEATURES_PATH,
         TEMPORAL_TRAIN_FEATURES_PATH,
     )
-    from train_models import shared_parameters, train_one
+    from src.modeling.train_models import shared_parameters, train_one
 
 
 EXTRA_ANALYSIS_COLUMNS = [

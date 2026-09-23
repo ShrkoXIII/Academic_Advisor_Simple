@@ -159,7 +159,8 @@ def experiment_signature():
         MODEL_METADATA_PATH, GRADE_SCALE_PATH,
         *sorted((PROJECT_ROOT / "src" / "experiments").glob("*.py")),
         PROJECT_ROOT / "src" / "feature_contract.py",
-        PROJECT_ROOT / "src" / "train_models.py",
+        PROJECT_ROOT / "src" / "modeling" / "train_models.py",
+        PROJECT_ROOT / "src" / "modeling" / "training_config.py",
     ]
     for path in inputs:
         with path.open("rb") as stream:

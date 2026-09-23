@@ -205,7 +205,7 @@ smoothing بقيمة `k=20` وتسلسل fallback التالي:
 
 ## 7. التدريب والتقييم
 
-ينفذ `src/train_models.py` ضبطًا زمنيًا متوسعًا داخل 2020–2024:
+ينفذ `src/modeling/train_models.py` ضبطًا زمنيًا متوسعًا داخل 2020–2024:
 
 1. تدريب حتى نهاية 2022 وتقييم 2023.
 2. تدريب حتى نهاية 2023 وتقييم 2024.
@@ -361,7 +361,7 @@ python -m src.features.build_temporal_features
 تنتهي سلسلة V2 هنا. الأوامر التالية مستقلة وتقرأ ملفات V1 الحالية؛ لا تدرّب على مخرجات V2 الجديدة:
 
 ```powershell
-python src\train_models.py
+python src\modeling\train_models.py
 python src\evaluate_plan_gpa.py
 python src\analyze_model_errors.py
 python src\experiment_degree_points.py

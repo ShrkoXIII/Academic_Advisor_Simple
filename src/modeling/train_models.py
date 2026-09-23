@@ -2,14 +2,14 @@ from pathlib import Path
 import sys
 
 if __package__ in {None, ""}:
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from datetime import datetime, timezone
 import json
 
 import numpy as np
 import pandas as pd
-from src.experiments.experiment_config import TARGET_FAIL, TARGET_GRADE, training_weights
+from src.modeling.training_config import TARGET_FAIL, TARGET_GRADE, training_weights
 from sklearn.metrics import (
     average_precision_score,
     brier_score_loss,
@@ -30,7 +30,7 @@ try:
         require_current_features,
         save_category_levels,
     )
-    from .paths import (
+    from ..paths import (
         CATEGORY_LEVELS_PATH,
         FAIL_MODEL_PATH,
         GRADE_MODEL_PATH,
@@ -50,7 +50,7 @@ except ImportError:
         require_current_features,
         save_category_levels,
     )
-    from paths import (
+    from src.paths import (
         CATEGORY_LEVELS_PATH,
         FAIL_MODEL_PATH,
         GRADE_MODEL_PATH,

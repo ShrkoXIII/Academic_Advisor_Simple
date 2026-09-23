@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 
 from .experiments.modeling import prepare_matrix
+from .experiments.specialty_history import FrozenSpecialtyHistory
 from src.features.feature_contract import BASE_FEATURES, load_category_levels, prepare_model_matrix, require_current_features
 from src.features.frozen_history import load_frozen_history, validate_history_pair, validate_history_selection
 from .paths import (
@@ -197,6 +198,7 @@ class AcademicPlanRecommender:
             raise ValueError("The selected artifact must predict points directly.")
         course_history, specialty_history, history_provenance = load_frozen_history(
             history_as_of_part, root=history_root,
+            specialty_history_type=FrozenSpecialtyHistory,
         )
         points = lgb.Booster(model_file=str(DEGREE_POINTS_SELECTED_MODEL_PATH))
         fail = lgb.Booster(model_file=str(FAIL_MODEL_PATH))

@@ -41,7 +41,7 @@
 | شرح المشروع من البيانات حتى الترشيح | `Readme.md` |
 | ما الخصائص الرسمية التي تدخل المودل؟ | `src/features/feature_contract.py` |
 | كيف حُسبت الخصائص الزمنية؟ | `src/features/temporal_features.py` |
-| كيف تم تدريب المودلين الرسميين؟ | `src/train_models.py` |
+| كيف تم تدريب المودلين الرسميين؟ | `src/modeling/train_models.py` |
 | كيف تُبنى وتُرتب الخطط؟ | `src/recommendation.py` |
 | ما التجارب التي جُربت ونتيجة كل إضافة؟ | `reports/model_improvement_table.md` |
 | لماذا الخطأ مرتفع وأين؟ | `reports/model_error_analysis.md` |
@@ -67,7 +67,7 @@ src/features/build_temporal_features.py
                 └─ data/artifacts/course_history_state.pkl
                 │
                 ▼
-src/train_models.py
+src/modeling/train_models.py
                 │
                 ├─ models/grade_regressor.txt
                 ├─ models/fail_risk_classifier.txt
@@ -86,7 +86,7 @@ src/train_models.py
 لتشغيل التدريب الرسمي فقط:
 
 ```powershell
-python src\train_models.py
+python src\modeling\train_models.py
 ```
 
 ## مسار تجربة Expected Points والاختصاص
@@ -139,7 +139,7 @@ credit_weighted = false
 
 | التجربة | ملف التشغيل | تعريف الخصائص/النسخ | النتائج المحلية التفصيلية | التقرير المقروء | المودل |
 |---|---|---|---|---|---|
-| Baseline Grade + Fail | `src/train_models.py` | `src/features/feature_contract.py` | `models/model_metadata.json` | قسم التدريب في `Readme.md` | `models/grade_regressor.txt`, `models/fail_risk_classifier.txt` |
+| Baseline Grade + Fail | `src/modeling/train_models.py` | `src/features/feature_contract.py` | `models/model_metadata.json` | قسم التدريب في `Readme.md` | `models/grade_regressor.txt`, `models/fail_risk_classifier.txt` |
 | Plan GPA baseline | `src/evaluate_plan_gpa.py` | خصائص baseline | `data/evaluation/plan_gpa_*` | `reports/model_error_analysis.md` | يستخدم GradeRegressor |
 | تحليل السنة والاختصاص وSHAP | `src/analyze_model_errors.py` | خصائص baseline | `data/evaluation/error_analysis/` | `reports/model_error_analysis.md` | يستخدم GradeRegressor |
 | Degree + Direct Points | `src/experiment_degree_points.py` | `src/experiments/degree_points.py` و`specialty_history.py` | `data/evaluation/experiments/degree_points/` | `reports/degree_points_experiment.md` و`model_improvement_table.md` | `models/experiments/degree_points/selected_model.txt` |

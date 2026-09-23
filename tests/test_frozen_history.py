@@ -10,6 +10,7 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 
 from src.features.feature_contract import FEATURE_ENGINEERING_VERSION
+from src.experiments.specialty_history import FrozenSpecialtyHistory
 from src.features.frozen_history import (
     build_frozen_history, file_sha256, load_frozen_history, save_frozen_history,
     validate_history_selection, verify_legacy_course_history,
@@ -42,8 +43,11 @@ class FrozenHistoryTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.source = history_source()
 
-    def save(self, part):
-        bundle = build_frozen_history(self.source, part, finalized_through_part=part)
+    def save(self, part, *, specialty=False):
+        bundle = build_frozen_history(
+            self.source, part, finalized_through_part=part,
+            specialty_history_type=FrozenSpecialtyHistory if specialty else None,
+        )
         save_frozen_history(*bundle, root=self.root)
         return bundle
 
@@ -57,10 +61,13 @@ class FrozenHistoryTests(unittest.TestCase):
         reloaded, specialty, _ = load_frozen_history(20243, root=self.root)
         newer, updated_specialty, _ = load_frozen_history(20251, root=self.root)
         self.assertEqual(reloaded.global_sums, old_course.global_sums)
-        assert_frame_equal(specialty.degree_totals, old_specialty.degree_totals)
+        self.assertIsNone(old_specialty)
+        self.assertIsNone(specialty)
+        self.assertIsNone(updated_specialty)
+        for level in old_course.tables:
+            assert_frame_equal(reloaded.tables[level], old_course.tables[level])
         self.assertEqual(reloaded.global_sums["raw_count"], 1)
         self.assertEqual(newer.global_sums["raw_count"], 2)
-        self.assertEqual(updated_specialty.global_totals["global_history_points_sum"], 3)
         with self.assertRaises(FileExistsError):
             self.save(20243)
         self.assertEqual(before, {p.name: file_sha256(p) for p in frozen_history_dir(20243, self.root).iterdir()})
@@ -71,15 +78,25 @@ class FrozenHistoryTests(unittest.TestCase):
         poisoned.loc[poisoned.part_id.ge(20251), ["final_mark", "points", "is_fail"]] = float("nan")
         changed = build_frozen_history(poisoned, 20243, finalized_through_part=20243)
         self.assertEqual(original[0].global_sums, changed[0].global_sums)
-        assert_frame_equal(original[1].degree_totals, changed[1].degree_totals)
+        self.assertIsNone(original[1])
+        self.assertIsNone(changed[1])
         self.assertEqual(original[2], changed[2])
+
+    def test_prefix_fingerprint_survives_row_order_and_future_dtype_change(self):
+        original = build_frozen_history(self.source, 20251, finalized_through_part=20251)
+        reordered = self.source.iloc[[2, 1, 0]].reset_index(drop=True)
+        reordered.loc[0, "part_id"] = 20252.0
+        reordered.loc[0, "final_mark"] = 0.0
+        changed = build_frozen_history(reordered, 20251, finalized_through_part=20251)
+        self.assertEqual(original[2]["selected_source_sha256"], changed[2]["selected_source_sha256"])
+        self.assertEqual(original[0].global_sums, changed[0].global_sums)
 
     def test_rejects_unfinalized_missing_cutoff_duplicate_and_invalid_source(self):
         with self.assertRaisesRegex(ValueError, "finalized"):
             build_frozen_history(self.source, 20251, finalized_through_part=20243)
         with self.assertRaisesRegex(ValueError, "exact requested"):
             build_frozen_history(self.source, 20253, finalized_through_part=20253)
-        for changed in [pd.concat([self.source, self.source]), self.source.assign(points=float("nan"))]:
+        for changed in [pd.concat([self.source, self.source]), self.source.assign(final_mark=float("nan"))]:
             changed.attrs = self.source.attrs.copy()
             with self.assertRaises(ValueError):
                 build_frozen_history(changed, 20243, finalized_through_part=20243)
@@ -87,6 +104,33 @@ class FrozenHistoryTests(unittest.TestCase):
         old_version.attrs["feature_engineering_version"] = 1
         with self.assertRaises(ValueError):
             build_frozen_history(old_version, 20243, finalized_through_part=20243)
+
+    def test_base_history_ignores_experimental_labels_but_specialty_requires_them(self):
+        source = self.source.drop(columns=["is_fail", "points"])
+        course, specialty, _ = build_frozen_history(source, 20243, finalized_through_part=20243)
+        self.assertIsNone(specialty)
+        self.assertEqual(course.global_sums["raw_count"], 1)
+        with self.assertRaisesRegex(ValueError, "missing columns"):
+            build_frozen_history(
+                source, 20243, finalized_through_part=20243,
+                specialty_history_type=FrozenSpecialtyHistory,
+            )
+
+    def test_invalid_prefix_values_are_rejected(self):
+        changes = {
+            "missing_id": ("student_course_id", None),
+            "negative_credits": ("course_credits", -1),
+            "zero_attempt": ("attempt_number", 0),
+            "mark_over_100": ("final_mark", 101),
+            "infinite_mark": ("final_mark", float("inf")),
+            "invalid_part": ("part_id", 20244),
+        }
+        for name, (column, value) in changes.items():
+            with self.subTest(name=name):
+                changed = self.source.copy()
+                changed.loc[0, column] = value
+                with self.assertRaises(ValueError):
+                    build_frozen_history(changed, 20243, finalized_through_part=20243)
 
     def test_history_selection_requires_explicit_stale_opt_in(self):
         for target, cutoff in [(20251, 20243), (20252, 20251), (20253, 20252)]:
@@ -102,7 +146,7 @@ class FrozenHistoryTests(unittest.TestCase):
                 course_history_state_path(part, self.root)
 
     def test_course_specialty_mismatch_refused_by_save_load_and_recommender(self):
-        course, specialty, meta = self.save(20243)
+        course, specialty, meta = self.save(20243, specialty=True)
         wrong = copy.deepcopy(specialty)
         wrong.as_of_part = 20251
         with self.assertRaisesRegex(ValueError, "cutoffs"):
@@ -118,7 +162,19 @@ class FrozenHistoryTests(unittest.TestCase):
         saved_meta["artifact_sha256"][path.name] = file_sha256(path)
         metadata_path.write_text(json.dumps(saved_meta))
         with self.assertRaisesRegex(ValueError, "cutoffs"):
-            load_frozen_history(20243, root=self.root)
+            load_frozen_history(20243, root=self.root, specialty_history_type=FrozenSpecialtyHistory)
+
+    def test_optional_specialty_load_requires_matching_bundle(self):
+        self.save(20243)
+        with self.assertRaisesRegex(ValueError, "no specialty history"):
+            load_frozen_history(20243, root=self.root, specialty_history_type=FrozenSpecialtyHistory)
+        self.save(20251, specialty=True)
+        course, specialty, _ = load_frozen_history(
+            20251, root=self.root, specialty_history_type=FrozenSpecialtyHistory,
+        )
+        self.assertEqual(course.as_of_part, 20251)
+        self.assertEqual(specialty.as_of_part, 20251)
+        self.assertEqual(specialty.global_totals["global_history_points_sum"], 3)
 
     def test_hash_tampering_and_incomplete_bundle_are_rejected(self):
         self.save(20243)
@@ -152,7 +208,10 @@ class FrozenHistoryModelIntegrationTests(unittest.TestCase):
     def test_same_models_load_two_versions_without_reading_any_training_table(self):
         with tempfile.TemporaryDirectory() as root:
             for cutoff in [20243, 20251]:
-                save_frozen_history(*build_frozen_history(history_source(), cutoff, finalized_through_part=cutoff), root=root)
+                save_frozen_history(*build_frozen_history(
+                    history_source(), cutoff, finalized_through_part=cutoff,
+                    specialty_history_type=FrozenSpecialtyHistory,
+                ), root=root)
             with patch("pandas.read_parquet", side_effect=AssertionError("Serving read a training table")):
                 old = AcademicPlanRecommender.load(history_as_of_part=20243, history_root=root)
                 new = AcademicPlanRecommender.load(history_as_of_part=20251, history_root=root)

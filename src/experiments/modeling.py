@@ -11,8 +11,8 @@ from src.features.feature_contract import (
     CATEGORICAL_FEATURES,
     NUMERIC_FEATURES,
 )
-from .experiment_config import training_weights
-from ..train_models import EARLY_STOPPING_ROUNDS, MAX_BOOST_ROUNDS, shared_parameters
+from src.modeling.training_config import training_weights
+from src.modeling.train_models import EARLY_STOPPING_ROUNDS, MAX_BOOST_ROUNDS, shared_parameters
 from .specialty_history import SPECIALTY_HISTORY_FEATURES
 
 

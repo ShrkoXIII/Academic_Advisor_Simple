@@ -367,7 +367,7 @@ data/features/temporal_test_features.parquet
 src/features/feature_contract.py
 
 السكربت:
-src/train_models.py
+src/modeling/train_models.py
 
 المخرجات:
 models/grade_regressor.txt
@@ -614,7 +614,7 @@ python -m src.features.build_temporal_features
 تنتهي سلسلة V2 هنا. الأوامر التالية مستقلة وتقرأ ملفات V1 الحالية؛ لا تدرّب على مخرجات V2 الجديدة:
 
 ```powershell
-python src\train_models.py
+python src\modeling\train_models.py
 python src\evaluate_plan_gpa.py
 python src\analyze_model_errors.py
 python src\experiment_degree_points.py
