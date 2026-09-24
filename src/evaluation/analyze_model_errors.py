@@ -2,7 +2,7 @@ from pathlib import Path
 import sys
 
 if __package__ in {None, ""}:
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 import json
 
@@ -10,60 +10,32 @@ import numpy as np
 import pandas as pd
 from src.modeling.training_config import TARGET_GRADE, training_weights
 
-try:
-    from .evaluate_plan_gpa import aggregate_plan_gpa, predict_course_points
-    from src.features.feature_contract import (
-        BASE_FEATURES,
-        learn_category_levels,
-        load_category_levels,
-        prepare_model_matrix,
-        require_current_features,
-    )
-    from .grade_scale import GradeScale
-    from .paths import (
-        CATEGORY_LEVELS_PATH,
-        GRADE_MODEL_PATH,
-        GRADE_SCALE_PATH,
-        MODEL_ERROR_ANALYSIS_SUMMARY_PATH,
-        MODEL_ERROR_BY_DEGREE_PATH,
-        MODEL_ERROR_BY_YEAR_PATH,
-        MODEL_ERROR_BY_YEAR_DEGREE_PATH,
-        MODEL_ERROR_COURSE_SEGMENTS_PATH,
-        MODEL_ERROR_PLAN_SEGMENTS_PATH,
-        MODEL_METADATA_PATH,
-        MODEL_SHAP_FAMILY_PATH,
-        MODEL_SHAP_IMPORTANCE_PATH,
-        TEMPORAL_TEST_FEATURES_PATH,
-        TEMPORAL_TRAIN_FEATURES_PATH,
-    )
-    from src.modeling.train_models import shared_parameters, train_one
-except ImportError:
-    from evaluate_plan_gpa import aggregate_plan_gpa, predict_course_points
-    from src.features.feature_contract import (
-        BASE_FEATURES,
-        learn_category_levels,
-        load_category_levels,
-        prepare_model_matrix,
-        require_current_features,
-    )
-    from grade_scale import GradeScale
-    from paths import (
-        CATEGORY_LEVELS_PATH,
-        GRADE_MODEL_PATH,
-        GRADE_SCALE_PATH,
-        MODEL_ERROR_ANALYSIS_SUMMARY_PATH,
-        MODEL_ERROR_BY_DEGREE_PATH,
-        MODEL_ERROR_BY_YEAR_PATH,
-        MODEL_ERROR_BY_YEAR_DEGREE_PATH,
-        MODEL_ERROR_COURSE_SEGMENTS_PATH,
-        MODEL_ERROR_PLAN_SEGMENTS_PATH,
-        MODEL_METADATA_PATH,
-        MODEL_SHAP_FAMILY_PATH,
-        MODEL_SHAP_IMPORTANCE_PATH,
-        TEMPORAL_TEST_FEATURES_PATH,
-        TEMPORAL_TRAIN_FEATURES_PATH,
-    )
-    from src.modeling.train_models import shared_parameters, train_one
+from src.evaluation.evaluate_plan_gpa import aggregate_plan_gpa, predict_course_points
+from src.features.feature_contract import (
+    BASE_FEATURES,
+    learn_category_levels,
+    load_category_levels,
+    prepare_model_matrix,
+    require_current_features,
+)
+from src.grade_scale import GradeScale
+from src.paths import (
+    CATEGORY_LEVELS_PATH,
+    GRADE_MODEL_PATH,
+    GRADE_SCALE_PATH,
+    MODEL_ERROR_ANALYSIS_SUMMARY_PATH,
+    MODEL_ERROR_BY_DEGREE_PATH,
+    MODEL_ERROR_BY_YEAR_PATH,
+    MODEL_ERROR_BY_YEAR_DEGREE_PATH,
+    MODEL_ERROR_COURSE_SEGMENTS_PATH,
+    MODEL_ERROR_PLAN_SEGMENTS_PATH,
+    MODEL_METADATA_PATH,
+    MODEL_SHAP_FAMILY_PATH,
+    MODEL_SHAP_IMPORTANCE_PATH,
+    TEMPORAL_TEST_FEATURES_PATH,
+    TEMPORAL_TRAIN_FEATURES_PATH,
+)
+from src.modeling.train_models import shared_parameters, train_one
 
 
 EXTRA_ANALYSIS_COLUMNS = [

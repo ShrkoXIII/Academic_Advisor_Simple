@@ -1,13 +1,9 @@
-from pathlib import Path
-import sys
 import unittest
 
 import pandas as pd
 
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-
-from evaluate_plan_gpa import aggregate_plan_gpa, summarize_plan_errors  # noqa: E402
+from src.evaluation.evaluate_plan_gpa import aggregate_plan_gpa, summarize_plan_errors
 
 
 class PlanGpaEvaluationTests(unittest.TestCase):

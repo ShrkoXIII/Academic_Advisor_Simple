@@ -280,7 +280,7 @@ plans, result = advisor.recommend(
 
 ## 9. تقييم خطأ GPA للخطة الفعلية
 
-ينفذ `src/evaluate_plan_gpa.py` أول خطوة من backtesting على جميع الخطط المسجلة
+ينفذ `src/evaluation/evaluate_plan_gpa.py` أول خطوة من backtesting على جميع الخطط المسجلة
 فعليًا في اختبار 2025. يحول علامة كل مادة المتوقعة إلى نقاط عبر جدول الدرجات
 الرسمي ثم يحسب:
 
@@ -362,8 +362,8 @@ python -m src.features.build_temporal_features
 
 ```powershell
 python src\modeling\train_models.py
-python src\evaluate_plan_gpa.py
-python src\analyze_model_errors.py
+python src\evaluation\evaluate_plan_gpa.py
+python src\evaluation\analyze_model_errors.py
 python src\experiment_degree_points.py
 python -m unittest discover -s tests -v
 ```

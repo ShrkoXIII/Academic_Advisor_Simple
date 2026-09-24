@@ -2,51 +2,31 @@ from pathlib import Path
 import sys
 
 if __package__ in {None, ""}:
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 import json
 
 import numpy as np
 import pandas as pd
 
-try:
-    from src.features.feature_contract import (
-        FEATURE_ENGINEERING_VERSION,
-        BASE_FEATURES,
-        load_category_levels,
-        prepare_model_matrix,
-        require_current_features,
-    )
-    from .grade_scale import GradeScale
-    from .paths import (
-        CATEGORY_LEVELS_PATH,
-        GRADE_MODEL_PATH,
-        GRADE_SCALE_PATH,
-        MODEL_METADATA_PATH,
-        PLAN_GPA_COURSE_PREDICTIONS_PATH,
-        PLAN_GPA_EVALUATION_PATH,
-        PLAN_GPA_METRICS_PATH,
-        TEMPORAL_TEST_FEATURES_PATH,
-    )
-except ImportError:
-    from src.features.feature_contract import (
-        FEATURE_ENGINEERING_VERSION,
-        BASE_FEATURES,
-        load_category_levels,
-        prepare_model_matrix,
-        require_current_features,
-    )
-    from grade_scale import GradeScale
-    from paths import (
-        CATEGORY_LEVELS_PATH,
-        GRADE_MODEL_PATH,
-        GRADE_SCALE_PATH,
-        MODEL_METADATA_PATH,
-        PLAN_GPA_COURSE_PREDICTIONS_PATH,
-        PLAN_GPA_EVALUATION_PATH,
-        PLAN_GPA_METRICS_PATH,
-        TEMPORAL_TEST_FEATURES_PATH,
-    )
+from src.features.feature_contract import (
+    FEATURE_ENGINEERING_VERSION,
+    BASE_FEATURES,
+    load_category_levels,
+    prepare_model_matrix,
+    require_current_features,
+)
+from src.grade_scale import GradeScale
+from src.paths import (
+    CATEGORY_LEVELS_PATH,
+    GRADE_MODEL_PATH,
+    GRADE_SCALE_PATH,
+    MODEL_METADATA_PATH,
+    PLAN_GPA_COURSE_PREDICTIONS_PATH,
+    PLAN_GPA_EVALUATION_PATH,
+    PLAN_GPA_METRICS_PATH,
+    TEMPORAL_TEST_FEATURES_PATH,
+)
 
 
 PLAN_KEY = ["student_id", "degree_id", "part_id"]

@@ -55,7 +55,7 @@ recommendation
 | [train_models.py](<D:/AI/Real projects/Academic_Advisor_Simple/src/modeling/train_models.py>) | ساعتان | التقسيم الزمني، tuning، وزن السجلات، تدريب المودلين |
 | [model_metadata.json](<D:/AI/Real projects/Academic_Advisor_Simple/models/model_metadata.json>) | 20 دقيقة | الإعدادات والخصائص والنتائج الفعلية |
 | [grade_scale.py](<D:/AI/Real projects/Academic_Advisor_Simple/src/grade_scale.py>) | 15 دقيقة | تحويل العلامة إلى points |
-| [evaluate_plan_gpa.py](<D:/AI/Real projects/Academic_Advisor_Simple/src/evaluate_plan_gpa.py>) | 45 دقيقة | تجميع توقعات المواد إلى معدل خطة |
+| [evaluate_plan_gpa.py](<D:/AI/Real projects/Academic_Advisor_Simple/src/evaluation/evaluate_plan_gpa.py>) | 45 دقيقة | تجميع توقعات المواد إلى معدل خطة |
 | [test_plan_gpa_evaluation.py](<D:/AI/Real projects/Academic_Advisor_Simple/tests/test_plan_gpa_evaluation.py>) | 15 دقيقة | التأكد من معادلة المعدل |
 | [model_improvement_table.md](<D:/AI/Real projects/Academic_Advisor_Simple/reports/model_improvement_table.md>) | 20 دقيقة | مقارنة كل تحسين بالـbaseline |
 | [model_error_analysis.md](<D:/AI/Real projects/Academic_Advisor_Simple/reports/model_error_analysis.md>) | 20 دقيقة | أين يخطئ المودل أكثر |

@@ -140,8 +140,8 @@ credit_weighted = false
 | التجربة | ملف التشغيل | تعريف الخصائص/النسخ | النتائج المحلية التفصيلية | التقرير المقروء | المودل |
 |---|---|---|---|---|---|
 | Baseline Grade + Fail | `src/modeling/train_models.py` | `src/features/feature_contract.py` | `models/model_metadata.json` | قسم التدريب في `Readme.md` | `models/grade_regressor.txt`, `models/fail_risk_classifier.txt` |
-| Plan GPA baseline | `src/evaluate_plan_gpa.py` | خصائص baseline | `data/evaluation/plan_gpa_*` | `reports/model_error_analysis.md` | يستخدم GradeRegressor |
-| تحليل السنة والاختصاص وSHAP | `src/analyze_model_errors.py` | خصائص baseline | `data/evaluation/error_analysis/` | `reports/model_error_analysis.md` | يستخدم GradeRegressor |
+| Plan GPA baseline | `src/evaluation/evaluate_plan_gpa.py` | خصائص baseline | `data/evaluation/plan_gpa_*` | `reports/model_error_analysis.md` | يستخدم GradeRegressor |
+| تحليل السنة والاختصاص وSHAP | `src/evaluation/analyze_model_errors.py` | خصائص baseline | `data/evaluation/error_analysis/` | `reports/model_error_analysis.md` | يستخدم GradeRegressor |
 | Degree + Direct Points | `src/experiment_degree_points.py` | `src/experiments/degree_points.py` و`specialty_history.py` | `data/evaluation/experiments/degree_points/` | `reports/degree_points_experiment.md` و`model_improvement_table.md` | `models/experiments/degree_points/selected_model.txt` |
 
 مهم: مجلد `data/` موجود في `.gitignore`، لذلك النتائج التفصيلية داخله محلية

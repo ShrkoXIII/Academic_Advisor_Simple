@@ -402,7 +402,7 @@ data/artifacts/category_levels.json
 data/raw/v_acs_grade.parquet
 
 السكربت:
-src/evaluate_plan_gpa.py
+src/evaluation/evaluate_plan_gpa.py
 
 المخرجات:
 data/evaluation/plan_gpa_course_predictions_2025.parquet
@@ -430,7 +430,7 @@ category_levels.json
 v_acs_grade.parquet
 
 السكربت:
-src/analyze_model_errors.py
+src/evaluation/analyze_model_errors.py
 
 المخرجات:
 data/evaluation/error_analysis/model_error_by_year.parquet
@@ -615,8 +615,8 @@ python -m src.features.build_temporal_features
 
 ```powershell
 python src\modeling\train_models.py
-python src\evaluate_plan_gpa.py
-python src\analyze_model_errors.py
+python src\evaluation\evaluate_plan_gpa.py
+python src\evaluation\analyze_model_errors.py
 python src\experiment_degree_points.py
 python -m unittest discover -s tests -v
 ```
