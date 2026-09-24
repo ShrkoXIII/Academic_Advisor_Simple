@@ -14,7 +14,8 @@ from src.features.feature_contract import (
     CATEGORICAL_FEATURES, FEATURE_ENGINEERING_VERSION, BASE_FEATURES,
     NUMERIC_FEATURES, require_current_features,
 )
-from src.experiments.degree_points import load_cached_validation, load_or_train_holdout
+from src.experiments.degree_points import load_or_train_holdout
+from src.experiments.experiment_io import load_cached_validation
 from src.experiments.specialty_history import SPECIALTY_HISTORY_FEATURES, add_specialty_history_features
 from tests.test_temporal_features import semester_rows
 
@@ -80,7 +81,7 @@ class ExperimentCacheTests(unittest.TestCase):
         cached = pd.DataFrame({"variant": ["baseline"], "validation_year": [2023]})
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "validation.parquet"
-            with patch("src.experiments.degree_points.DEGREE_POINTS_VALIDATION_PATH", path):
+            with patch("src.experiments.experiment_io.DEGREE_POINTS_VALIDATION_PATH", path):
                 cached.to_parquet(path)
                 self.assertEqual(load_cached_validation("new"), ([], set()))
                 cached.assign(experiment_signature="old").to_parquet(path)

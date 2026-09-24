@@ -15,11 +15,11 @@ from src.recommendation import (
     AcademicPlanRecommender, STUDENT_SNAPSHOT_COLUMNS, build_plan_rows,
     enumerate_plan_indices, resolve_credit_bounds, summarize_scored_plans,
 )
-from src.recommendation_inputs import (
+from src.recommendation.inputs import (
     CandidateImportError, normalize_candidates, read_candidate_file,
     build_student_snapshot, validate_snapshot,
 )
-from src.recommendation_output import save_recommendations
+from src.recommendation.output import save_recommendations
 from src.experiments.specialty_history import FrozenSpecialtyHistory, add_specialty_history_features, SPECIALTY_HISTORY_FEATURES
 from src.paths import (
     DEGREE_POINTS_SELECTED_MODEL_PATH, TEMPORAL_TEST_FEATURES_PATH,

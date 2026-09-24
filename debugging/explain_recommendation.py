@@ -20,7 +20,7 @@ sys.path.insert(0, str(ROOT))
 from src import paths
 from src.data.clean_student_status import clean_student_status
 from src.recommendation import AcademicPlanRecommender, build_plan_rows, rank_plans
-from src.recommendation_inputs import load_local_inputs, normalize_candidates
+from src.recommendation.inputs import load_local_inputs, normalize_candidates
 from src.features.temporal_features import COURSE_HISTORY_COLUMNS, PLAN_CONTEXT_COLUMNS, build_history_keys, temporal_weight
 from src.experiments.specialty_history import SPECIALTY_HISTORY_FEATURES
 from src.experiments.modeling import prepare_matrix

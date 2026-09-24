@@ -13,8 +13,8 @@ from src.recommendation import (
     model_training_provenance, project_cumulative_gpa, rank_plans,
     resolve_current_gpa_credits, summarize_scored_plans,
 )
-from src.recommendation_inputs import validate_snapshot
-from src.recommendation_output import save_recommendations
+from src.recommendation.inputs import validate_snapshot
+from src.recommendation.output import save_recommendations
 from src.features.temporal_features import CourseHistoryState
 
 

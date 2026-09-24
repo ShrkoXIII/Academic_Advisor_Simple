@@ -99,7 +99,7 @@ src/features/feature_contract.py
                     │
                     ▼
              محرك ترشيح الخطط
-             src/recommendation.py
+             src/recommendation/engine.py
                     │
                     ▼
         [الخطوة الحالية] backtesting للخطط البديلة
@@ -131,7 +131,7 @@ data/raw/
 | `v_add_student_degree_status.parquet` | حالة الطالب وملخص الفصل والتراكمات | `clean_student_status.py` |
 | `v_acd_degree_course.parquet` | مقررات الخطط وأنواع المتطلبات والساعات | `clean_degree_course.py` |
 | `v_add_academic_info.parquet` | معدل ونوع الشهادة قبل الجامعة | `clean_student_diploma.py` |
-| `v_acs_grade.parquet` | جدول تحويل العلامة إلى grade وpoints | `evaluate_plan_gpa.py` و`recommendation.py` |
+| `v_acs_grade.parquet` | جدول تحويل العلامة إلى grade وpoints | `src/evaluation/evaluate_plan_gpa.py` و`src/experiments/degree_points.py` |
 
 ### ملفات معرفة للمراحل القادمة ولم تدخل المسار بعد
 
@@ -516,10 +516,16 @@ reports/model_improvement_table.md
 
 ```text
 الكود:
-src/recommendation.py
+src/recommendation/engine.py
+src/recommendation/plan_generation.py
+src/recommendation/plan_scoring.py
+src/recommendation/artifacts.py
 
 الأدوات المساندة:
-src/grade_scale.py
+src/recommendation/inputs.py
+src/recommendation/output.py
+src/recommendation/local_cli.py
+src/recommendation/benchmark.py
 src/features/temporal_features.py
 src/features/feature_contract.py
 ```
@@ -530,7 +536,7 @@ src/features/feature_contract.py
 - قائمة مواد قانونية جاهزة.
 - `part_id`.
 - ساعات محددة نطابقها بالضبط، أو مجال نقبل جميع الخطط ضمنه شاملاً طرفيه، مع عدد مواد متغير.
-- معدل الطالب الحالي: يقبل كل خطة معدلها المتوقع أعلى منه، دون حد استبعاد للرسوب.
+- معدل الطالب الحالي وساعات معدله التراكمي: تُرتّب كل الخطط المطابقة حسب المعدل التراكمي المتوقع، ويُعرض التحسن المتوقع دون استبعاد الخطط غير المحسّنة.
 
 الملفات التي يحملها:
 
@@ -538,13 +544,13 @@ src/features/feature_contract.py
 models/experiments/degree_points/selected_model.txt
 models/experiments/degree_points/selected_category_levels.json
 models/fail_risk_classifier.txt
+models/model_metadata.json
 data/artifacts/category_levels.json
-data/artifacts/course_history_state.pkl
-data/features/temporal_train_features.parquet
+data/artifacts/history/as_of_<history_as_of_part>/
 data/evaluation/experiments/degree_points/experiment_metadata.json
 ```
 
-المحرك يستخدم Expected Points مباشرة، ويحسب خصائص حمل كل خطة على دفعات.
+المحرك يستخدم Expected Points مباشرة، ويحسب خصائص حمل كل خطة على دفعات. يحمّل Frozen Historical State من النسخة المحددة صراحةً، دون إعادة بنائها من جدول التدريب وقت الخدمة.
 التشغيل: `python -m src.recommend_local`. تفاصيل الإدخال والحفظ والاختبارات
 في [LOCAL_RECOMMENDATION.md](LOCAL_RECOMMENDATION.md).
 
@@ -560,7 +566,7 @@ student snapshot + degree plan
 بناء قائمة المواد القانونية والجاهزة
                     │
                     ▼
-src/recommendation.py
+src/recommendation/engine.py
                     │
                     ▼
 خطط بديلة مرتبة

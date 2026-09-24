@@ -1,6 +1,6 @@
 import pandas as pd
 
-from paths import (
+from src.paths import (
     CLEAN_DEGREE_COURSE_PATH,
     CLEAN_STUDENT_COURSE_PATH,
     CLEAN_STUDENT_STATUS_PATH,

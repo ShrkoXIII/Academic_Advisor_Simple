@@ -10,7 +10,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from src.recommendation import AcademicPlanRecommender, enumerate_plan_indices, summarize_scored_plans, rank_plans
-from src.recommendation_inputs import normalize_candidates, build_student_snapshot, load_local_inputs
+from src.recommendation.inputs import normalize_candidates, build_student_snapshot, load_local_inputs
 from src.features.temporal_features import (CourseHistoryState, temporal_weight, compute_plan_context_features,
                                   add_student_history_features, COURSE_HISTORY_COLUMNS, PLAN_CONTEXT_COLUMNS)
 from src.experiments.specialty_history import _finish_specialty_history, SPECIALTY_HISTORY_FEATURES

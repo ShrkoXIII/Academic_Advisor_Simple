@@ -32,7 +32,7 @@ from .recommendation import (
     project_cumulative_gpa,
     summarize_scored_plans,
 )
-from .recommendation_inputs import (
+from src.recommendation.inputs import (
     CandidateImportError,
     build_student_snapshot,
     normalize_candidates,

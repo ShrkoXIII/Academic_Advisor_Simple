@@ -71,7 +71,7 @@ recommendation
 | [specialty_history.py](<D:/AI/Real projects/Academic_Advisor_Simple/src/experiments/specialty_history.py>) | 50 دقيقة | خصائص تاريخ الاختصاص دون تسرب |
 | [modeling.py](<D:/AI/Real projects/Academic_Advisor_Simple/src/experiments/modeling.py>) | 70 دقيقة | تدريب points، وزن الساعات، وتجميع الخطة |
 | [test_degree_points_experiment.py](<D:/AI/Real projects/Academic_Advisor_Simple/tests/test_degree_points_experiment.py>) | 20 دقيقة | إثبات صحة وزن الساعات والخصائص |
-| [recommendation.py](<D:/AI/Real projects/Academic_Advisor_Simple/src/recommendation.py>) | 90 دقيقة | توليد الخطط، إعادة حساب الحمل، التصفية والترتيب |
+| [engine.py](<D:/AI/Real projects/Academic_Advisor_Simple/src/recommendation/engine.py>) | 90 دقيقة | تنسيق تجهيز المرشحين والتنبؤ وإرجاع الخطط |
 | [test_recommendation.py](<D:/AI/Real projects/Academic_Advisor_Simple/tests/test_recommendation.py>) | 25 دقيقة | أمثلة صغيرة توضح اختيار الخطط |
 
 داخل `modeling.py` ركّز على:
@@ -81,12 +81,11 @@ recommendation
 - `aggregate_plans`: كيف تتحول المواد إلى معدل خطة.
 - `prediction_metrics`: كيف نقارن الخطط.
 
-وداخل `recommendation.py` ركّز على:
+وداخل `src/recommendation/` ركّز على:
 
-- `enumerate_plan_indices`
-- `build_plan_rows`
-- `summarize_scored_plans`
-- `AcademicPlanRecommender`
+- `plan_generation.py`: `enumerate_plan_indices` و`build_plan_rows`.
+- `plan_scoring.py`: `summarize_scored_plans` و`rank_plans`.
+- `engine.py`: `AcademicPlanRecommender`.
 
 ## ملفات لا تعطيها وقتًا كبيرًا الآن
 
@@ -96,7 +95,7 @@ recommendation
 
 - `analyze_model_errors.py`
 - `src/diagnostics/compare_student_status_course.py`
-- `analyze_course_plan_changes.py`
+- `src/diagnostics/analyze_course_plan_changes.py`
 
 الخطة العملية بعد الأيام الثلاثة:
 

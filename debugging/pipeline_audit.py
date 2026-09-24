@@ -24,7 +24,7 @@ from src.data.clean_student_status import clean_student_status
 from src.data.clean_outliers import build_outlier_audit
 from src.features.feature_contract import BASE_FEATURES, NUMERIC_FEATURES, prepare_model_matrix
 from src.recommendation import AcademicPlanRecommender, enumerate_plan_indices, build_plan_rows, rank_plans
-from src.recommendation_inputs import load_local_inputs
+from src.recommendation.inputs import load_local_inputs
 from src.experiments.modeling import prepare_matrix, aggregate_plans, course_predictions
 from src.features.temporal_features import COURSE_HISTORY_COLUMNS, PLAN_CONTEXT_COLUMNS, CourseHistoryState
 

@@ -14,14 +14,14 @@ import numpy as np
 import pandas as pd
 
 ROOT = next(p for p in [Path.cwd(), *Path.cwd().parents]
-            if (p / 'src/recommendation.py').exists())
+            if (p / 'src/recommendation/engine.py').exists())
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 from src import paths
 from src.data.clean_student_status import clean_student_status
 from src.recommendation import (AcademicPlanRecommender, enumerate_plan_indices,
     build_plan_rows, rank_plans, summarize_scored_plans, STUDENT_SNAPSHOT_COLUMNS, CANDIDATE_COURSE_COLUMNS)
-from src.recommendation_inputs import (load_local_inputs, normalize_candidates,
+from src.recommendation.inputs import (load_local_inputs, normalize_candidates,
     build_student_snapshot, validate_snapshot)
 from src.features.temporal_features import (COURSE_HISTORY_COLUMNS, PLAN_CONTEXT_COLUMNS,
     build_history_keys, compute_plan_context_features, add_student_history_features)

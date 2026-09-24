@@ -240,13 +240,13 @@ sample_weight = 1.00  # من 2022 حتى 2024
 
 ## 8. ترشيح الخطط الفصلية
 
-يوفر `src/recommendation.py` الصنف `AcademicPlanRecommender`. المدخلات هي:
+يوفر `src/recommendation/engine.py` الصنف `AcademicPlanRecommender`، والمتاح أيضًا عبر `src.recommendation`. المدخلات هي:
 
 - snapshot آمن يمثل حالة الطالب قبل الفصل المستهدف.
 - قائمة مقررات قانونية وجاهزة؛ توليد الأهلية والمتطلبات السابقة خارج نطاق هذه
   الطبقة.
 - `credits` لقيمة محددة بالضبط، أو `min_credits` و`max_credits` لقبول جميع الخطط ضمن المجال شاملاً طرفيه.
-- `current_gpa`: معدل الطالب الحالي لمقارنة معدل كل خطة به.
+- `current_gpa` وساعات معدله التراكمي من snapshot أو `current_gpa_credits`: لحساب التوقع التراكمي.
 
 يعدّد النظام كل المجموعات المطابقة للساعات بعدد مواد متغير، ثم يعيد حساب
 خصائص الحمل ويتوقع كل مقرر داخل سياق كل خطة على دفعات. مثال الاستدعاء:
@@ -254,11 +254,11 @@ sample_weight = 1.00  # من 2022 حتى 2024
 ```python
 from src.recommendation import AcademicPlanRecommender
 
-advisor = AcademicPlanRecommender.load()
+advisor = AcademicPlanRecommender.load(history_as_of_part=20243)
 plans, result = advisor.recommend(
     student_snapshot=snapshot,
     candidate_courses=legal_candidates,
-    part_id=20261,
+    part_id=20251,
     min_credits=12,
     max_credits=18,
     current_gpa=2.5,
@@ -267,12 +267,14 @@ plans, result = advisor.recommend(
 )
 ```
 
-يتوقع المودل المختار من `degree_points` النقاط مباشرة. ترتيب الخطط ثابت:
+يتوقع المودل المختار من `degree_points` النقاط مباشرة. تُرتّب كل الخطط المطابقة دون استبعاد غير المحسّنة:
 
-1. الاحتفاظ بالخطط التي معدلها المتوقع أعلى تماماً من `current_gpa`.
-2. أعلى `expected_plan_gpa = Σ credits × expected_points / Σ credits`.
-3. عند التعادل: أقل `expected_failed_credits = Σ credits × p_fail`.
-4. ثم `plan_id` ثابت لكسر التعادل.
+1. أعلى `projected_cumulative_gpa`.
+2. عند التعادل: أقل `expected_failed_credits = Σ credits × p_fail`.
+3. ثم أعلى `expected_plan_gpa = Σ credits × expected_points / Σ credits`.
+4. ثم أصغر `plan_id` لكسر التعادل.
+
+يُعرض التحسن المتوقع كمؤشر في النتائج، وليس شرطًا للاحتفاظ بالخطة.
 
 يعيد كل اقتراح النقاط المتوقعة واحتمال الرسوب لكل مادة وعدد المواد والساعات.
 لحفظ تفاصيل جميع الخطط استخدم `python -m src.recommend_local`؛ دليل الملفات

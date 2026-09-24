@@ -42,7 +42,7 @@
 | ما الخصائص الرسمية التي تدخل المودل؟ | `src/features/feature_contract.py` |
 | كيف حُسبت الخصائص الزمنية؟ | `src/features/temporal_features.py` |
 | كيف تم تدريب المودلين الرسميين؟ | `src/modeling/train_models.py` |
-| كيف تُبنى وتُرتب الخطط؟ | `src/recommendation.py` |
+| كيف تُبنى وتُرتب الخطط؟ | `src/recommendation/plan_generation.py` و`src/recommendation/plan_scoring.py` |
 | ما التجارب التي جُربت ونتيجة كل إضافة؟ | `reports/model_improvement_table.md` |
 | لماذا الخطأ مرتفع وأين؟ | `reports/model_error_analysis.md` |
 | تفاصيل تجربة الاختصاص والنقاط | `reports/degree_points_experiment.md` |

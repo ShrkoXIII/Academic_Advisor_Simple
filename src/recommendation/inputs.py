@@ -7,12 +7,25 @@ import pandas as pd
 
 from src.data.cleaning_utils import clean_column_names, clean_id, clean_id_columns
 from src.data.clean_student_status import clean_student_status
-from .paths import (
+from src.paths import (
     CLEAN_DEGREE_COURSE_PATH, CLEAN_STUDENT_COURSE_PATH,
     CLEAN_STUDENT_DIPLOMA_PATH, STUDENT_STATUS_PATH,
 )
-from .recommendation import STUDENT_SNAPSHOT_COLUMNS
 from src.features.temporal_features import add_student_history_features
+
+
+STUDENT_SNAPSHOT_COLUMNS = [
+    "student_id", "degree_id", "faculty_id", "grade_version_id",
+    "gpa_prev_1", "gpa_prev_2", "gpa_trend_delta", "gpa_trend_missing",
+    "start_agpa_points", "start_total_in_courses", "start_total_in_credits",
+    "prior_total_reg_courses", "prior_total_reg_credits", "prior_total_fail_courses",
+    "prior_total_fail_credits", "prior_fail_credit_ratio", "prior_registered_semesters",
+    "observed_gap_semesters", "diploma_gpa", "diploma_type_id", "degree_credits_count",
+]
+CANDIDATE_COURSE_COLUMNS = [
+    "course_id", "course_credits", "attempt_number", "plan_course_type_id",
+    "plan_requirement_type_id", "plan_year_order", "plan_semester_order", "plan_credits_count",
+]
 
 
 class CandidateImportError(ValueError):
