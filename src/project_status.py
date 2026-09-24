@@ -5,7 +5,7 @@ from pathlib import Path
 try:
     from .paths import (
         CATEGORY_LEVELS_PATH,
-        COURSE_HISTORY_STATE_PATH,
+        COURSE_HISTORY_STATE_PATH_V2,
         DEGREE_POINTS_EXPERIMENT_METADATA_PATH,
         DEGREE_POINTS_EXPERIMENT_REPORT_PATH,
         DEGREE_POINTS_HOLDOUT_PLANS_PATH,
@@ -21,23 +21,23 @@ try:
         MODEL_ERROR_REPORT_PATH,
         MODEL_IMPROVEMENT_TABLE_REPORT_PATH,
         MODEL_SHAP_IMPORTANCE_PATH,
-        OUTLIER_STUDENTS_AUDIT_PATH,
+        OUTLIER_STUDENTS_AUDIT_PATH_V2,
         PLAN_GPA_COURSE_PREDICTIONS_PATH,
         PLAN_GPA_EVALUATION_PATH,
         PLAN_GPA_METRICS_PATH,
         PROJECT_ROOT,
-        STUDENT_COURSE_WITHOUT_OUTLIERS_PATH,
-        TEMPORAL_TEST_FEATURES_PATH,
-        TEMPORAL_TEST_PATH,
-        TEMPORAL_TEST_ROSTER_PATH,
-        TEMPORAL_TRAIN_FEATURES_PATH,
-        TEMPORAL_TRAIN_PATH,
-        TEMPORAL_TRAIN_ROSTER_PATH,
+        STUDENT_COURSE_WITHOUT_OUTLIERS_PATH_V2,
+        TEMPORAL_TEST_FEATURES_PATH_V2,
+        TEMPORAL_TEST_PATH_V2,
+        TEMPORAL_TEST_ROSTER_PATH_V2,
+        TEMPORAL_TRAIN_FEATURES_PATH_V2,
+        TEMPORAL_TRAIN_PATH_V2,
+        TEMPORAL_TRAIN_ROSTER_PATH_V2,
     )
 except ImportError:
     from paths import (
         CATEGORY_LEVELS_PATH,
-        COURSE_HISTORY_STATE_PATH,
+        COURSE_HISTORY_STATE_PATH_V2,
         DEGREE_POINTS_EXPERIMENT_METADATA_PATH,
         DEGREE_POINTS_EXPERIMENT_REPORT_PATH,
         DEGREE_POINTS_HOLDOUT_PLANS_PATH,
@@ -53,18 +53,18 @@ except ImportError:
         MODEL_ERROR_REPORT_PATH,
         MODEL_IMPROVEMENT_TABLE_REPORT_PATH,
         MODEL_SHAP_IMPORTANCE_PATH,
-        OUTLIER_STUDENTS_AUDIT_PATH,
+        OUTLIER_STUDENTS_AUDIT_PATH_V2,
         PLAN_GPA_COURSE_PREDICTIONS_PATH,
         PLAN_GPA_EVALUATION_PATH,
         PLAN_GPA_METRICS_PATH,
         PROJECT_ROOT,
-        STUDENT_COURSE_WITHOUT_OUTLIERS_PATH,
-        TEMPORAL_TEST_FEATURES_PATH,
-        TEMPORAL_TEST_PATH,
-        TEMPORAL_TEST_ROSTER_PATH,
-        TEMPORAL_TRAIN_FEATURES_PATH,
-        TEMPORAL_TRAIN_PATH,
-        TEMPORAL_TRAIN_ROSTER_PATH,
+        STUDENT_COURSE_WITHOUT_OUTLIERS_PATH_V2,
+        TEMPORAL_TEST_FEATURES_PATH_V2,
+        TEMPORAL_TEST_PATH_V2,
+        TEMPORAL_TEST_ROSTER_PATH_V2,
+        TEMPORAL_TRAIN_FEATURES_PATH_V2,
+        TEMPORAL_TRAIN_PATH_V2,
+        TEMPORAL_TRAIN_ROSTER_PATH_V2,
     )
 
 
@@ -82,48 +82,39 @@ class ProjectStage:
 STAGES = [
     ProjectStage(
         1,
-        "Clean and merge data",
+        "Clean and merge data (V2)",
         (
-            STUDENT_COURSE_WITHOUT_OUTLIERS_PATH,
-            OUTLIER_STUDENTS_AUDIT_PATH,
+            STUDENT_COURSE_WITHOUT_OUTLIERS_PATH_V2,
+            OUTLIER_STUDENTS_AUDIT_PATH_V2,
         ),
     ),
     ProjectStage(
         2,
-        "Temporal split",
-        (TEMPORAL_TRAIN_PATH, TEMPORAL_TEST_PATH),
+        "Temporal split (V2)",
+        (TEMPORAL_TRAIN_PATH_V2, TEMPORAL_TEST_PATH_V2),
     ),
     ProjectStage(
         3,
-        "Full registration roster",
-        (TEMPORAL_TRAIN_ROSTER_PATH, TEMPORAL_TEST_ROSTER_PATH),
+        "Full registration roster (V2)",
+        (TEMPORAL_TRAIN_ROSTER_PATH_V2, TEMPORAL_TEST_ROSTER_PATH_V2),
     ),
     ProjectStage(
         4,
-        "Temporal feature engineering",
+        "Temporal feature engineering (V2)",
         (
-            TEMPORAL_TRAIN_FEATURES_PATH,
-            TEMPORAL_TEST_FEATURES_PATH,
-            COURSE_HISTORY_STATE_PATH,
-            CATEGORY_LEVELS_PATH,
+            TEMPORAL_TRAIN_FEATURES_PATH_V2,
+            TEMPORAL_TEST_FEATURES_PATH_V2,
+            COURSE_HISTORY_STATE_PATH_V2,
         ),
     ),
     ProjectStage(
         5,
-        "LightGBM model training",
-        (GRADE_MODEL_PATH, FAIL_MODEL_PATH, MODEL_METADATA_PATH),
+        "LightGBM model training (V1)",
+        (GRADE_MODEL_PATH, FAIL_MODEL_PATH, MODEL_METADATA_PATH, CATEGORY_LEVELS_PATH),
     ),
     ProjectStage(
         6,
-        "Plan recommendation engine",
-        (
-            PROJECT_ROOT / "src" / "recommendation.py",
-            PROJECT_ROOT / "src" / "grade_scale.py",
-        ),
-    ),
-    ProjectStage(
-        7,
-        "Observed-plan GPA evaluation",
+        "Observed-plan GPA evaluation (V1)",
         (
             PLAN_GPA_COURSE_PREDICTIONS_PATH,
             PLAN_GPA_EVALUATION_PATH,
@@ -131,8 +122,8 @@ STAGES = [
         ),
     ),
     ProjectStage(
-        8,
-        "Error analysis by year, degree, and SHAP",
+        7,
+        "Error analysis by year, degree, and SHAP (V1)",
         (
             MODEL_ERROR_BY_YEAR_PATH,
             MODEL_ERROR_BY_DEGREE_PATH,
@@ -143,8 +134,8 @@ STAGES = [
         ),
     ),
     ProjectStage(
-        9,
-        "Degree and direct-points experiments",
+        8,
+        "Degree and direct-points experiments (V1)",
         (
             DEGREE_POINTS_VALIDATION_SUMMARY_PATH,
             DEGREE_POINTS_HOLDOUT_PLANS_PATH,
@@ -152,6 +143,14 @@ STAGES = [
             DEGREE_POINTS_SELECTED_MODEL_PATH,
             DEGREE_POINTS_EXPERIMENT_REPORT_PATH,
             MODEL_IMPROVEMENT_TABLE_REPORT_PATH,
+        ),
+    ),
+    ProjectStage(
+        9,
+        "Plan recommendation engine (V1)",
+        (
+            PROJECT_ROOT / "src" / "recommendation" / "engine.py",
+            PROJECT_ROOT / "src" / "grade_scale.py",
         ),
     ),
 ]
@@ -215,6 +214,10 @@ def main():
     print("Academic Advisor - project build status\n")
     print("Start here: START_HERE.md")
     print("Full pipeline: PIPELINE_README.md\n")
+    print(
+        "VERSION BOUNDARY: data/features write V2; "
+        "modeling/evaluation/experiments/recommendation use V1 artifacts.\n"
+    )
     for stage in STAGES:
         status = "DONE" if stage.complete else "PENDING"
         print(f"[{status:7}] {stage.number}. {stage.name}")

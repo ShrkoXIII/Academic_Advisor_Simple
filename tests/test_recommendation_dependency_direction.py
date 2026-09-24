@@ -8,6 +8,8 @@ from pathlib import Path
 
 SRC_ROOT = Path(__file__).resolve().parents[1] / "src"
 UPSTREAM_PACKAGES = ("data", "features", "modeling", "evaluation", "experiments")
+PRODUCTION_PACKAGES = (*UPSTREAM_PACKAGES, "recommendation", "diagnostics")
+XML_RECOMMENDATION_EVALUATOR = SRC_ROOT / "evaluation" / "evaluate_xml_recommendations.py"
 
 
 def _import_targets(node, package):
@@ -26,12 +28,27 @@ def _import_targets(node, package):
 def test_upstream_packages_do_not_import_recommendation():
     for package_name in UPSTREAM_PACKAGES:
         for source in (SRC_ROOT / package_name).rglob("*.py"):
+            if source == XML_RECOMMENDATION_EVALUATOR:
+                # This explicit evaluation workflow scores candidate plans with the recommender.
+                continue
             package = ".".join(("src", *source.relative_to(SRC_ROOT).parts[:-1]))
             tree = ast.parse(source.read_text(encoding="utf-8"), filename=str(source))
             for node in ast.walk(tree):
                 for target in _import_targets(node, package):
                     assert target != "src.recommendation" and not target.startswith(
                         "src.recommendation."
+                    ), f"{source}:{node.lineno} imports {target}"
+
+
+def test_production_packages_do_not_import_project_runner():
+    for package_name in PRODUCTION_PACKAGES:
+        for source in (SRC_ROOT / package_name).rglob("*.py"):
+            package = ".".join(("src", *source.relative_to(SRC_ROOT).parts[:-1]))
+            tree = ast.parse(source.read_text(encoding="utf-8"), filename=str(source))
+            for node in ast.walk(tree):
+                for target in _import_targets(node, package):
+                    assert target != "src.main" and not target.startswith(
+                        "src.main."
                     ), f"{source}:{node.lineno} imports {target}"
 
 

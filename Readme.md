@@ -23,6 +23,43 @@
 > لمتابعة ما أُنجز والخطوة التالية افتح [`PROJECT_TRACKER.md`](PROJECT_TRACKER.md)
 > أو شغّل `python src\project_status.py` من جذر المشروع.
 
+## التشغيل الموحّد
+
+من جذر المشروع، يعرض `src.main` الخطوات المتاحة ويشغّلها بترتيب اعتمادها:
+
+```powershell
+python -m src.main --list
+python -m src.main --all
+python -m src.main --all --dry-run
+python -m src.main --section data
+python -m src.main --section features
+python -m src.main --section modeling
+python -m src.main --section evaluation
+python -m src.main --section experiments
+python -m src.main --section diagnostics
+python -m src.main --step <step>
+python -m src.main --from data --to modeling
+python -m src.main --step recommend -- <args>
+python -m src.main --step evaluate_xml_recommendations -- <args>
+```
+
+يشمل `--all` الأقسام الخمسة `data` ثم `features` ثم `modeling` ثم
+`evaluation` ثم `experiments`. يستثني بناء التاريخ المجمّد المرتبط بحد زمني
+محدد، وتوصية الطالب وتقييم XML، وقياس أداء التوصية، والتشخيصات. تمرَّر خيارات
+الخطوة المحددة بعد `--`؛ استخدم `--list` لمعرفة أسماء الخطوات. يعرض
+`--all --dry-run` الأوامر دون تنفيذ الخطوات.
+
+لبناء تاريخ مجمّد عند الحاجة، حدّد الفصل المرجعي وآخر فصل ذي نتائج نهائية،
+واختر ملف خصائص صادرًا بالإصدار المطلوب:
+
+```powershell
+python -m src.main --step build_frozen_history -- --as-of-part <part> --finalized-through-part <finalized-part> --sources <versioned-features.parquet>
+```
+
+قسمَا `data` و`features` يكتبان مخرجات V2، بينما تقرأ أقسام `modeling`
+و`evaluation` و`experiments` مخرجات V1 الحالية. يعرض المشغّل تنبيهًا صريحًا
+عند تشغيل مسار يجمع الإصدارين. تحويل السلسلة كاملة إلى V2 مهمة لاحقة.
+
 ## 1. مصادر البيانات
 
 الجداول الخام موجودة تحت `data/raw/`:
