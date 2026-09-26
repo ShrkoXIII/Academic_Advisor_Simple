@@ -13,6 +13,7 @@ from src.modeling.training_config import TARGET_GRADE, training_weights
 from src.evaluation.evaluate_plan_gpa import aggregate_plan_gpa, predict_course_points
 from src.features.feature_contract import (
     BASE_FEATURES,
+    FEATURE_ENGINEERING_VERSION,
     learn_category_levels,
     load_category_levels,
     prepare_model_matrix,
@@ -20,20 +21,21 @@ from src.features.feature_contract import (
 )
 from src.grade_scale import GradeScale
 from src.paths import (
-    CATEGORY_LEVELS_PATH,
-    GRADE_MODEL_PATH,
+    CATEGORY_LEVELS_PATH_V2,
+    GRADE_MODEL_PATH_V2,
     GRADE_SCALE_PATH,
-    MODEL_ERROR_ANALYSIS_SUMMARY_PATH,
-    MODEL_ERROR_BY_DEGREE_PATH,
-    MODEL_ERROR_BY_YEAR_PATH,
-    MODEL_ERROR_BY_YEAR_DEGREE_PATH,
-    MODEL_ERROR_COURSE_SEGMENTS_PATH,
-    MODEL_ERROR_PLAN_SEGMENTS_PATH,
-    MODEL_METADATA_PATH,
-    MODEL_SHAP_FAMILY_PATH,
-    MODEL_SHAP_IMPORTANCE_PATH,
-    TEMPORAL_TEST_FEATURES_PATH,
-    TEMPORAL_TRAIN_FEATURES_PATH,
+    MODEL_ERROR_ANALYSIS_SUMMARY_PATH_V2,
+    MODEL_ERROR_BY_DEGREE_PATH_V2,
+    MODEL_ERROR_BY_YEAR_PATH_V2,
+    MODEL_ERROR_BY_YEAR_DEGREE_PATH_V2,
+    MODEL_ERROR_COURSE_SEGMENTS_PATH_V2,
+    MODEL_ERROR_PLAN_SEGMENTS_PATH_V2,
+    MODEL_METADATA_PATH_V2,
+    MODEL_SHAP_FAMILY_PATH_V2,
+    MODEL_SHAP_IMPORTANCE_PATH_V2,
+    PROJECT_ROOT,
+    TEMPORAL_TEST_FEATURES_PATH_V2,
+    TEMPORAL_TRAIN_FEATURES_PATH_V2,
 )
 from src.modeling.train_models import shared_parameters, train_one
 
@@ -176,7 +178,7 @@ def make_out_of_time_predictions(train, test, metadata, grade_scale, final_model
     predicted_2025 = predict_course_points(
         test,
         final_model,
-        load_category_levels(CATEGORY_LEVELS_PATH),
+        load_category_levels(CATEGORY_LEVELS_PATH_V2),
         grade_scale,
     )
     predictions.append(attach_analysis_columns(predicted_2025, test))
@@ -366,7 +368,7 @@ def build_shap_importance(model, test):
     )
     matrix = prepare_model_matrix(
         sample,
-        load_category_levels(CATEGORY_LEVELS_PATH),
+        load_category_levels(CATEGORY_LEVELS_PATH_V2),
     )
     contributions = model.predict(matrix, pred_contrib=True)
     mean_absolute_shap = np.abs(contributions[:, :-1]).mean(axis=0)
@@ -405,7 +407,7 @@ def build_shap_importance(model, test):
 def main():
     import lightgbm as lgb
 
-    metadata = json.loads(MODEL_METADATA_PATH.read_text(encoding="utf-8"))
+    metadata = json.loads(MODEL_METADATA_PATH_V2.read_text(encoding="utf-8"))
     require_current_features(metadata)
     read_columns = list(
         dict.fromkeys(
@@ -426,11 +428,11 @@ def main():
             ]
         )
     )
-    train = pd.read_parquet(TEMPORAL_TRAIN_FEATURES_PATH, columns=read_columns)
-    test = pd.read_parquet(TEMPORAL_TEST_FEATURES_PATH, columns=read_columns)
+    train = pd.read_parquet(TEMPORAL_TRAIN_FEATURES_PATH_V2, columns=read_columns)
+    test = pd.read_parquet(TEMPORAL_TEST_FEATURES_PATH_V2, columns=read_columns)
     require_current_features(train.attrs)
     require_current_features(test.attrs)
-    final_model = lgb.Booster(model_file=str(GRADE_MODEL_PATH))
+    final_model = lgb.Booster(model_file=str(GRADE_MODEL_PATH_V2))
     grade_scale = GradeScale.from_parquet(GRADE_SCALE_PATH)
 
     course_predictions = make_out_of_time_predictions(
@@ -449,6 +451,16 @@ def main():
     shap_importance, shap_families = build_shap_importance(final_model, test)
 
     summary = {
+        "dataset_version": "V2",
+        "feature_engineering_version": FEATURE_ENGINEERING_VERSION,
+        "sources": {
+            "train_features": TEMPORAL_TRAIN_FEATURES_PATH_V2.relative_to(PROJECT_ROOT).as_posix(),
+            "test_features": TEMPORAL_TEST_FEATURES_PATH_V2.relative_to(PROJECT_ROOT).as_posix(),
+            "grade_model": GRADE_MODEL_PATH_V2.relative_to(PROJECT_ROOT).as_posix(),
+            "category_levels": CATEGORY_LEVELS_PATH_V2.relative_to(PROJECT_ROOT).as_posix(),
+            "model_metadata": MODEL_METADATA_PATH_V2.relative_to(PROJECT_ROOT).as_posix(),
+            "grade_scale": GRADE_SCALE_PATH.relative_to(PROJECT_ROOT).as_posix(),
+        },
         "prediction_protocol": {
             "2023": "trained through 2022",
             "2024": "trained through 2023",
@@ -524,15 +536,15 @@ def main():
         },
     }
 
-    MODEL_ERROR_BY_YEAR_PATH.parent.mkdir(parents=True, exist_ok=True)
-    by_year.to_parquet(MODEL_ERROR_BY_YEAR_PATH, index=False)
-    by_degree.to_parquet(MODEL_ERROR_BY_DEGREE_PATH, index=False)
-    by_year_degree.to_parquet(MODEL_ERROR_BY_YEAR_DEGREE_PATH, index=False)
-    plan_segments.to_parquet(MODEL_ERROR_PLAN_SEGMENTS_PATH, index=False)
-    course_segments.to_parquet(MODEL_ERROR_COURSE_SEGMENTS_PATH, index=False)
-    shap_importance.to_parquet(MODEL_SHAP_IMPORTANCE_PATH, index=False)
-    shap_families.to_parquet(MODEL_SHAP_FAMILY_PATH, index=False)
-    MODEL_ERROR_ANALYSIS_SUMMARY_PATH.write_text(
+    MODEL_ERROR_BY_YEAR_PATH_V2.parent.mkdir(parents=True, exist_ok=True)
+    by_year.to_parquet(MODEL_ERROR_BY_YEAR_PATH_V2, index=False)
+    by_degree.to_parquet(MODEL_ERROR_BY_DEGREE_PATH_V2, index=False)
+    by_year_degree.to_parquet(MODEL_ERROR_BY_YEAR_DEGREE_PATH_V2, index=False)
+    plan_segments.to_parquet(MODEL_ERROR_PLAN_SEGMENTS_PATH_V2, index=False)
+    course_segments.to_parquet(MODEL_ERROR_COURSE_SEGMENTS_PATH_V2, index=False)
+    shap_importance.to_parquet(MODEL_SHAP_IMPORTANCE_PATH_V2, index=False)
+    shap_families.to_parquet(MODEL_SHAP_FAMILY_PATH_V2, index=False)
+    MODEL_ERROR_ANALYSIS_SUMMARY_PATH_V2.write_text(
         json.dumps(summary, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
@@ -545,7 +557,7 @@ def main():
     print(shap_importance.head(15).to_string(index=False))
     print("\nFactor effect sizes")
     print(json.dumps(summary["factor_effect_sizes"], indent=2))
-    print("\nSaved analysis under:", MODEL_ERROR_BY_YEAR_PATH.parent)
+    print("\nSaved analysis under:", MODEL_ERROR_BY_YEAR_PATH_V2.parent)
 
 
 if __name__ == "__main__":

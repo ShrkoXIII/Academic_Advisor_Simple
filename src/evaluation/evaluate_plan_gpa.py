@@ -18,14 +18,15 @@ from src.features.feature_contract import (
 )
 from src.grade_scale import GradeScale
 from src.paths import (
-    CATEGORY_LEVELS_PATH,
-    GRADE_MODEL_PATH,
+    CATEGORY_LEVELS_PATH_V2,
+    GRADE_MODEL_PATH_V2,
     GRADE_SCALE_PATH,
-    MODEL_METADATA_PATH,
-    PLAN_GPA_COURSE_PREDICTIONS_PATH,
-    PLAN_GPA_EVALUATION_PATH,
-    PLAN_GPA_METRICS_PATH,
-    TEMPORAL_TEST_FEATURES_PATH,
+    MODEL_METADATA_PATH_V2,
+    PLAN_GPA_COURSE_PREDICTIONS_PATH_V2,
+    PLAN_GPA_EVALUATION_PATH_V2,
+    PLAN_GPA_METRICS_PATH_V2,
+    PROJECT_ROOT,
+    TEMPORAL_TEST_FEATURES_PATH_V2,
 )
 
 
@@ -182,34 +183,42 @@ def print_report(report, plans):
 def main():
     import lightgbm as lgb
 
-    require_current_features(json.loads(MODEL_METADATA_PATH.read_text(encoding="utf-8")))
+    require_current_features(json.loads(MODEL_METADATA_PATH_V2.read_text(encoding="utf-8")))
     columns = list(dict.fromkeys([*AUDIT_COLUMNS, *BASE_FEATURES]))
-    test = pd.read_parquet(TEMPORAL_TEST_FEATURES_PATH, columns=columns)
+    test = pd.read_parquet(TEMPORAL_TEST_FEATURES_PATH_V2, columns=columns)
     require_current_features(test.attrs)
     course_predictions = predict_course_points(
         test,
-        lgb.Booster(model_file=str(GRADE_MODEL_PATH)),
-        load_category_levels(CATEGORY_LEVELS_PATH),
+        lgb.Booster(model_file=str(GRADE_MODEL_PATH_V2)),
+        load_category_levels(CATEGORY_LEVELS_PATH_V2),
         GradeScale.from_parquet(GRADE_SCALE_PATH),
     )
     plans = aggregate_plan_gpa(course_predictions)
     report = build_metrics_report(course_predictions, plans)
+    report["dataset_version"] = "V2"
+    report["sources"] = {
+        "test_features": TEMPORAL_TEST_FEATURES_PATH_V2.relative_to(PROJECT_ROOT).as_posix(),
+        "grade_model": GRADE_MODEL_PATH_V2.relative_to(PROJECT_ROOT).as_posix(),
+        "category_levels": CATEGORY_LEVELS_PATH_V2.relative_to(PROJECT_ROOT).as_posix(),
+        "model_metadata": MODEL_METADATA_PATH_V2.relative_to(PROJECT_ROOT).as_posix(),
+        "grade_scale": GRADE_SCALE_PATH.relative_to(PROJECT_ROOT).as_posix(),
+    }
 
-    PLAN_GPA_EVALUATION_PATH.parent.mkdir(parents=True, exist_ok=True)
+    PLAN_GPA_EVALUATION_PATH_V2.parent.mkdir(parents=True, exist_ok=True)
     course_predictions.to_parquet(
-        PLAN_GPA_COURSE_PREDICTIONS_PATH,
+        PLAN_GPA_COURSE_PREDICTIONS_PATH_V2,
         index=False,
     )
-    plans.to_parquet(PLAN_GPA_EVALUATION_PATH, index=False)
-    PLAN_GPA_METRICS_PATH.write_text(
+    plans.to_parquet(PLAN_GPA_EVALUATION_PATH_V2, index=False)
+    PLAN_GPA_METRICS_PATH_V2.write_text(
         json.dumps(report, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
 
     print_report(report, plans)
-    print("\nSaved:", PLAN_GPA_COURSE_PREDICTIONS_PATH)
-    print("Saved:", PLAN_GPA_EVALUATION_PATH)
-    print("Saved:", PLAN_GPA_METRICS_PATH)
+    print("\nSaved:", PLAN_GPA_COURSE_PREDICTIONS_PATH_V2)
+    print("Saved:", PLAN_GPA_EVALUATION_PATH_V2)
+    print("Saved:", PLAN_GPA_METRICS_PATH_V2)
 
 
 if __name__ == "__main__":

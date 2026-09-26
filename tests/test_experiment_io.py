@@ -15,14 +15,18 @@ def test_signature_hashes_current_dependencies_deterministically(tmp_path, monke
 
     root = tmp_path
     paths = {
-        "TEMPORAL_TRAIN_FEATURES_PATH": root / "train.parquet",
-        "TEMPORAL_TEST_FEATURES_PATH": root / "test.parquet",
-        "MODEL_METADATA_PATH": root / "model_metadata.json",
+        "TEMPORAL_TRAIN_FEATURES_PATH_V2": root / "train_v2.parquet",
+        "TEMPORAL_TEST_FEATURES_PATH_V2": root / "test_v2.parquet",
+        "MODEL_METADATA_PATH_V2": root / "model_metadata_v2.json",
         "GRADE_SCALE_PATH": root / "grade_scale.parquet",
     }
     for name, path in paths.items():
         path.write_bytes(name.encode())
-        monkeypatch.setattr(experiment_io, name, path)
+        monkeypatch.setattr(experiment_io, name, path, raising=False)
+        if name.endswith("_V2"):
+            legacy_path = root / ("legacy_" + path.name)
+            legacy_path.write_bytes(b"V1 must not affect V2 cache")
+            monkeypatch.setattr(experiment_io, name[:-3], legacy_path, raising=False)
     monkeypatch.setattr(experiment_io, "PROJECT_ROOT", root)
     code_paths = [
         root / "src" / "experiments" / "a.py",
@@ -41,16 +45,26 @@ def test_signature_hashes_current_dependencies_deterministically(tmp_path, monke
     assert experiment_io.experiment_signature() == expected
     assert len(expected) == 64
 
-    feature_contract = root / "src" / "features" / "feature_contract.py"
-    feature_contract.write_bytes(b"changed contract")
-    assert experiment_io.experiment_signature() != expected
+    for path in ordered:
+        original = path.read_bytes()
+        path.write_bytes(original + b"changed dependency")
+        assert experiment_io.experiment_signature() != expected, path
+        path.write_bytes(original)
+    for name in paths:
+        if name.endswith("_V2"):
+            getattr(experiment_io, name[:-3]).write_bytes(b"changed V1 dependency")
+    assert experiment_io.experiment_signature() == expected
 
 
 def test_validation_cache_reuses_only_matching_signature(tmp_path, monkeypatch):
     from src.experiments import experiment_io
 
     path = tmp_path / "validation.parquet"
-    monkeypatch.setattr(experiment_io, "DEGREE_POINTS_VALIDATION_PATH", path)
+    monkeypatch.setattr(experiment_io, "DEGREE_POINTS_VALIDATION_PATH_V2", path, raising=False)
+    legacy = tmp_path / "validation_v1.parquet"
+    monkeypatch.setattr(experiment_io, "DEGREE_POINTS_VALIDATION_PATH", legacy, raising=False)
+    pd.DataFrame({"variant": ["legacy"], "validation_year": [2023],
+                  "experiment_signature": ["current"]}).to_parquet(legacy)
     assert experiment_io.load_cached_validation("current") == ([], set())
 
     pd.DataFrame({"variant": ["old"], "validation_year": [2023]}).to_parquet(path)
@@ -77,12 +91,13 @@ def test_metadata_retains_protocol_and_artifact_contract():
     from src.experiments.degree_points_config import VARIANTS
     from src.experiments.experiment_io import build_metadata
     from src.features.feature_contract import FEATURE_ENGINEERING_VERSION
-    from src.paths import PROJECT_ROOT, DEGREE_POINTS_SELECTED_MODEL_PATH, DEGREE_POINTS_CATEGORY_LEVELS_PATH
+    from src.paths import PROJECT_ROOT
 
     selected = VARIANTS[-1]
     summary = pd.DataFrame([{"variant": selected["name"], "mean_plan_gpa_mae": 0.4}])
     metadata = build_metadata(
-        selected, 17, summary, {"plan_gpa_mae": 0.4}, {"mae": 0.5}, "signature"
+        selected, 17, summary, {"plan_gpa_mae": 0.4}, {"mae": 0.5}, "signature",
+        train_parts=[20231, 20243], test_parts=[20252, 20251],
     )
     assert metadata["feature_engineering_version"] == FEATURE_ENGINEERING_VERSION
     assert metadata["experiment_signature"] == "signature"
@@ -90,7 +105,9 @@ def test_metadata_retains_protocol_and_artifact_contract():
     assert "both 2023 and 2024" in metadata["selection_protocol"]
     assert metadata["history_protocol"] == {
         "training": "strictly prior academic parts",
-        "holdout_2025": "frozen after 2024",
+        "holdout_2025": "sequential_roll_forward",
+        "initial_history_cutoff": 20243,
+        "test_history_cutoffs": {"20251": 20243, "20252": 20251},
         "pre_2022_weight": 0.25,
         "from_2022_weight": 1.0,
         "smoothing_k": 20.0,
@@ -111,8 +128,17 @@ def test_metadata_retains_protocol_and_artifact_contract():
         "mae_relative_change": -0.19999999999999996,
     }
     assert metadata["artifacts"] == {
-        "model": DEGREE_POINTS_SELECTED_MODEL_PATH.relative_to(PROJECT_ROOT).as_posix(),
-        "category_levels": DEGREE_POINTS_CATEGORY_LEVELS_PATH.relative_to(PROJECT_ROOT).as_posix(),
+        "model": "models/experiments/degree_points/selected_model_v2.txt",
+        "category_levels": "models/experiments/degree_points/selected_category_levels_v2.json",
+    }
+    assert metadata["dataset_version"] == "V2"
+    assert metadata["sources"] == {
+        "baseline_model_metadata": "models/model_metadata_v2.json",
+        "train_features": "data/features/temporal_train_features_v2.parquet",
+        "test_features": "data/features/temporal_test_features_v2.parquet",
+        "baseline_plan_gpa_metrics": "data/evaluation/plan_gpa_metrics_2025_v2.json",
+        "baseline_plan_gpa_evaluation": "data/evaluation/plan_gpa_evaluation_2025_v2.parquet",
+        "grade_scale": "data/raw/v_acs_grade.parquet",
     }
     json.dumps(metadata)
 
@@ -129,7 +155,10 @@ def test_save_results_preserves_parquet_and_json_outputs(tmp_path, monkeypatch):
         "DEGREE_POINTS_EXPERIMENT_METADATA_PATH": tmp_path / "results" / "experiment_metadata.json",
     }
     for name, path in outputs.items():
-        monkeypatch.setattr(experiment_io, name, path)
+        monkeypatch.setattr(experiment_io, name + "_V2", path, raising=False)
+        legacy_path = tmp_path / ("legacy_" + path.name)
+        legacy_path.write_bytes(b"Preserved V1 output")
+        monkeypatch.setattr(experiment_io, name, legacy_path, raising=False)
     frames = [pd.DataFrame({"value": [number]}) for number in range(5)]
     experiment_io.save_results(*frames, {"rounds": np.int64(17)})
 

@@ -22,7 +22,7 @@ class Step:
 
 STANDARD_SECTIONS = ("data", "features", "modeling", "evaluation", "experiments")
 
-# Order follows the V2 source dependencies, then the existing V1 model workflow.
+# Order follows the V2 data/features/modeling/evaluation/experiments dependencies.
 # Request-specific/diagnostic steps are listed here but excluded from --all.
 PIPELINE = {
     "data": (
@@ -41,15 +41,15 @@ PIPELINE = {
         Step("build_frozen_history", "features", "src.features.build_frozen_history", "Build immutable history for an explicit cutoff", "explicit cutoff", False, True),
     ),
     "modeling": (
-        Step("train_models", "modeling", "src.modeling.train_models", "Train baseline models", "V1"),
+        Step("train_models", "modeling", "src.modeling.train_models", "Train baseline models", "V2"),
     ),
     "evaluation": (
-        Step("evaluate_plan_gpa", "evaluation", "src.evaluation.evaluate_plan_gpa", "Evaluate observed-plan GPA", "V1"),
-        Step("analyze_model_errors", "evaluation", "src.evaluation.analyze_model_errors", "Analyze model errors", "V1"),
+        Step("evaluate_plan_gpa", "evaluation", "src.evaluation.evaluate_plan_gpa", "Evaluate observed-plan GPA", "V2"),
+        Step("analyze_model_errors", "evaluation", "src.evaluation.analyze_model_errors", "Analyze model errors", "V2"),
         Step("evaluate_xml_recommendations", "evaluation", "src.evaluation.evaluate_xml_recommendations", "Evaluate request-specific XML candidates", "request", False, True),
     ),
     "experiments": (
-        Step("degree_points", "experiments", "src.experiments.degree_points", "Run degree/direct-points experiment (expensive)", "V1"),
+        Step("degree_points", "experiments", "src.experiments.degree_points", "Run degree/direct-points experiment (expensive)", "V2"),
     ),
     "diagnostics": (
         Step("compare_student_status_course", "diagnostics", "src.diagnostics.compare_student_status_course", "Compare cleaned student tables", "V2", False),
@@ -90,15 +90,14 @@ def _select_steps(args, parser):
 def _show_version_boundary(steps):
     standard = [step for step in steps if step.section in STANDARD_SECTIONS and step.standard]
     if {step.dataset for step in standard} >= {"V1", "V2"}:
-        print("VERSION BOUNDARY: data/features write V2; modeling/evaluation/experiments read V1.", flush=True)
-        print("V2 outputs are not inputs to the current V1 training path. A full V2 model pipeline is a later task.\n", flush=True)
+        print("VERSION BOUNDARY: selected standard stages mix V1 and V2 artifacts.\n", flush=True)
         return True
     return False
 
 
 def _list_steps():
     print("Standard build order: " + " -> ".join(STANDARD_SECTIONS))
-    print("Data/features use V2; modeling/evaluation/experiments currently use V1.\n")
+    print("Data/features/modeling/evaluation/experiments use V2; request-specific workflows retain their existing artifact sources.\n")
     for section, steps in PIPELINE.items():
         print(f"{section}:")
         for step in steps:
@@ -142,7 +141,7 @@ def _run_steps(steps, forwarded, dry_run):
         for section in sections:
             print(f"  {section:12} PASS")
     if mixed_versions:
-        print("VERSION BOUNDARY REMAINS: V2 feature outputs are not inputs to the V1 model stages.")
+        print("VERSION BOUNDARY REMAINS: selected standard stages use different artifact versions.")
     return 0
 
 

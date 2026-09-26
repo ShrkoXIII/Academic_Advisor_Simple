@@ -81,7 +81,7 @@ class ExperimentCacheTests(unittest.TestCase):
         cached = pd.DataFrame({"variant": ["baseline"], "validation_year": [2023]})
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "validation.parquet"
-            with patch("src.experiments.experiment_io.DEGREE_POINTS_VALIDATION_PATH", path):
+            with patch("src.experiments.experiment_io.DEGREE_POINTS_VALIDATION_PATH_V2", path, create=True):
                 cached.to_parquet(path)
                 self.assertEqual(load_cached_validation("new"), ([], set()))
                 cached.assign(experiment_signature="old").to_parquet(path)
@@ -98,7 +98,7 @@ class ExperimentCacheTests(unittest.TestCase):
                 "experiment_signature": "old", "selected_variant": {"name": "winner"},
             }))
             with (
-                patch("src.experiments.degree_points.DEGREE_POINTS_EXPERIMENT_METADATA_PATH", path),
+                patch("src.experiments.degree_points.DEGREE_POINTS_EXPERIMENT_METADATA_PATH_V2", path, create=True),
                 patch("src.experiments.degree_points.evaluate_selected_holdout", return_value=(None, "courses", "plans", "metrics")) as fit,
             ):
                 result = load_or_train_holdout(None, None, {"name": "winner"}, 10, {}, None, "new")

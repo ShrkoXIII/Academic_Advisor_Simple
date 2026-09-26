@@ -238,16 +238,38 @@ def _finish_specialty_history(frame):
 
 
 def add_specialty_history_features(train, test):
-    if not train.empty and not test.empty and test["part_id"].min() <= train["part_id"].max():
-        raise ValueError("Frozen specialty history must precede every test semester.")
+    """Apply each test part before adding its finalized outcomes to history."""
+    if not train.empty and not test.empty and pd.to_numeric(test["part_id"]).min() <= pd.to_numeric(train["part_id"]).max():
+        raise ValueError("Training specialty history must precede every test semester.")
     source = _weighted_history_source(train)
     enriched_train = _finish_specialty_history(
         _merge_training_history(train, source)
     )
     enriched_test = _finish_specialty_history(
-        _merge_frozen_test_history(test, source)
+        _merge_sequential_test_history(test, source)
     )
     return enriched_train, enriched_test
+
+
+def _merge_sequential_test_history(test, source):
+    if test.empty:
+        return _merge_frozen_test_history(test, source)
+    ordered = test.copy()
+    ordered["_experiment_row_order"] = np.arange(len(ordered))
+    part_ids = pd.to_numeric(ordered["part_id"])
+    enriched_parts = []
+    for part in sorted(part_ids.unique()):
+        current = ordered.loc[part_ids.eq(part)]
+        enriched_parts.append(
+            _merge_frozen_test_history(current, source.loc[source["part_id"].lt(part)])
+        )
+        source = pd.concat([source, _weighted_history_source(current)], ignore_index=True)
+    return (
+        pd.concat(enriched_parts, ignore_index=True)
+        .sort_values("_experiment_row_order", kind="stable")
+        .drop(columns="_experiment_row_order")
+        .reset_index(drop=True)
+    )
 
 
 @dataclass

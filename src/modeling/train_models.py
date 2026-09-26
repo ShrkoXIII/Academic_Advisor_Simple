@@ -31,13 +31,13 @@ try:
         save_category_levels,
     )
     from ..paths import (
-        CATEGORY_LEVELS_PATH,
-        FAIL_MODEL_PATH,
-        GRADE_MODEL_PATH,
-        MODEL_METADATA_PATH,
+        CATEGORY_LEVELS_PATH_V2,
+        FAIL_MODEL_PATH_V2,
+        GRADE_MODEL_PATH_V2,
+        MODEL_METADATA_PATH_V2,
         PROJECT_ROOT,
-        TEMPORAL_TEST_FEATURES_PATH,
-        TEMPORAL_TRAIN_FEATURES_PATH,
+        TEMPORAL_TEST_FEATURES_PATH_V2,
+        TEMPORAL_TRAIN_FEATURES_PATH_V2,
     )
 except ImportError:
     from src.features.feature_contract import (
@@ -51,13 +51,13 @@ except ImportError:
         save_category_levels,
     )
     from src.paths import (
-        CATEGORY_LEVELS_PATH,
-        FAIL_MODEL_PATH,
-        GRADE_MODEL_PATH,
-        MODEL_METADATA_PATH,
+        CATEGORY_LEVELS_PATH_V2,
+        FAIL_MODEL_PATH_V2,
+        GRADE_MODEL_PATH_V2,
+        MODEL_METADATA_PATH_V2,
         PROJECT_ROOT,
-        TEMPORAL_TEST_FEATURES_PATH,
-        TEMPORAL_TRAIN_FEATURES_PATH,
+        TEMPORAL_TEST_FEATURES_PATH_V2,
+        TEMPORAL_TRAIN_FEATURES_PATH_V2,
     )
 
 
@@ -91,7 +91,7 @@ PARAMETER_CANDIDATES = [
         "lambda_l2": 1.00,
     },
     {
-        "name": "capacity_63",
+        "name": "capaciy_63",
         "num_leaves": 63,
         "min_data_in_leaf": 100,
         "feature_fraction": 0.85,
@@ -368,8 +368,8 @@ def main():
     data_columns = list(
         dict.fromkeys(["part_id", TARGET_GRADE, TARGET_FAIL, *BASE_FEATURES])
     )
-    train = pd.read_parquet(TEMPORAL_TRAIN_FEATURES_PATH, columns=data_columns)
-    test = pd.read_parquet(TEMPORAL_TEST_FEATURES_PATH, columns=data_columns)
+    train = pd.read_parquet(TEMPORAL_TRAIN_FEATURES_PATH_V2, columns=data_columns)
+    test = pd.read_parquet(TEMPORAL_TEST_FEATURES_PATH_V2, columns=data_columns)
     require_current_features(train.attrs)
     require_current_features(test.attrs)
 
@@ -413,10 +413,10 @@ def main():
     grade_test_metrics = regression_metrics(test[TARGET_GRADE], grade_prediction)
     fail_test_metrics = classification_metrics(test[TARGET_FAIL], fail_probability)
 
-    GRADE_MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
-    grade_model.save_model(str(GRADE_MODEL_PATH))
-    fail_model.save_model(str(FAIL_MODEL_PATH))
-    save_category_levels(final_levels, CATEGORY_LEVELS_PATH)
+    GRADE_MODEL_PATH_V2.parent.mkdir(parents=True, exist_ok=True)
+    grade_model.save_model(str(GRADE_MODEL_PATH_V2))
+    fail_model.save_model(str(FAIL_MODEL_PATH_V2))
+    save_category_levels(final_levels, CATEGORY_LEVELS_PATH_V2)
 
     metadata = {
         "feature_engineering_version": FEATURE_ENGINEERING_VERSION,
@@ -439,7 +439,10 @@ def main():
         },
         "course_history": {
             "training_walk_forward": True,
-            "test_state_frozen_after_part": 20243,
+            "initial_history_cutoff": 20243,
+            "test_protocol": "sequential_roll_forward",
+            "test_history_cutoffs": {"20251": 20243, "20252": 20251},
+            "update_after_finalized_outcomes": True,
             "smoothing_k": 20,
         },
         "temporal_validation": TEMPORAL_FOLDS,
@@ -464,14 +467,15 @@ def main():
             "top_feature_importance": feature_importance(fail_model),
         },
         "artifacts": {
-            "grade_model": GRADE_MODEL_PATH.relative_to(PROJECT_ROOT).as_posix(),
-            "fail_model": FAIL_MODEL_PATH.relative_to(PROJECT_ROOT).as_posix(),
-            "category_levels": CATEGORY_LEVELS_PATH.relative_to(
+            "grade_model": GRADE_MODEL_PATH_V2.relative_to(PROJECT_ROOT).as_posix(),
+            "fail_model": FAIL_MODEL_PATH_V2.relative_to(PROJECT_ROOT).as_posix(),
+            "category_levels": CATEGORY_LEVELS_PATH_V2.relative_to(
                 PROJECT_ROOT
             ).as_posix(),
+            "model_metadata": MODEL_METADATA_PATH_V2.relative_to(PROJECT_ROOT).as_posix(),
         },
     }
-    MODEL_METADATA_PATH.write_text(
+    MODEL_METADATA_PATH_V2.write_text(
         json.dumps(
             metadata,
             ensure_ascii=False,
@@ -485,10 +489,10 @@ def main():
     print("2025 grade metrics:", grade_test_metrics)
     print("Selected fail candidate:", best_fail["candidate"]["name"])
     print("2025 fail metrics:", fail_test_metrics)
-    print("Saved:", GRADE_MODEL_PATH)
-    print("Saved:", FAIL_MODEL_PATH)
-    print("Saved:", CATEGORY_LEVELS_PATH)
-    print("Saved:", MODEL_METADATA_PATH)
+    print("Saved:", GRADE_MODEL_PATH_V2)
+    print("Saved:", FAIL_MODEL_PATH_V2)
+    print("Saved:", CATEGORY_LEVELS_PATH_V2)
+    print("Saved:", MODEL_METADATA_PATH_V2)
 
 
 if __name__ == "__main__":

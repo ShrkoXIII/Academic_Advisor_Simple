@@ -9,19 +9,21 @@ import pandas as pd
 
 from src.features.feature_contract import FEATURE_ENGINEERING_VERSION
 from ..paths import (
-    DEGREE_POINTS_CATEGORY_LEVELS_PATH,
-    DEGREE_POINTS_EXPERIMENT_METADATA_PATH,
-    DEGREE_POINTS_HOLDOUT_BY_DEGREE_PATH,
-    DEGREE_POINTS_HOLDOUT_COURSES_PATH,
-    DEGREE_POINTS_HOLDOUT_PLANS_PATH,
-    DEGREE_POINTS_SELECTED_MODEL_PATH,
-    DEGREE_POINTS_VALIDATION_PATH,
-    DEGREE_POINTS_VALIDATION_SUMMARY_PATH,
+    DEGREE_POINTS_CATEGORY_LEVELS_PATH_V2,
+    DEGREE_POINTS_EXPERIMENT_METADATA_PATH_V2,
+    DEGREE_POINTS_HOLDOUT_BY_DEGREE_PATH_V2,
+    DEGREE_POINTS_HOLDOUT_COURSES_PATH_V2,
+    DEGREE_POINTS_HOLDOUT_PLANS_PATH_V2,
+    DEGREE_POINTS_SELECTED_MODEL_PATH_V2,
+    DEGREE_POINTS_VALIDATION_PATH_V2,
+    DEGREE_POINTS_VALIDATION_SUMMARY_PATH_V2,
     GRADE_SCALE_PATH,
-    MODEL_METADATA_PATH,
+    MODEL_METADATA_PATH_V2,
+    PLAN_GPA_EVALUATION_PATH_V2,
+    PLAN_GPA_METRICS_PATH_V2,
     PROJECT_ROOT,
-    TEMPORAL_TEST_FEATURES_PATH,
-    TEMPORAL_TRAIN_FEATURES_PATH,
+    TEMPORAL_TEST_FEATURES_PATH_V2,
+    TEMPORAL_TRAIN_FEATURES_PATH_V2,
 )
 from .degree_points_config import VARIANTS
 from .modeling import feature_columns
@@ -32,8 +34,8 @@ def experiment_signature():
     """Invalidate cached runs when data, feature code, or baseline changes."""
     digest = hashlib.sha256()
     inputs = [
-        TEMPORAL_TRAIN_FEATURES_PATH, TEMPORAL_TEST_FEATURES_PATH,
-        MODEL_METADATA_PATH, GRADE_SCALE_PATH,
+        TEMPORAL_TRAIN_FEATURES_PATH_V2, TEMPORAL_TEST_FEATURES_PATH_V2,
+        MODEL_METADATA_PATH_V2, GRADE_SCALE_PATH,
         *sorted((PROJECT_ROOT / "src" / "experiments").glob("*.py")),
         PROJECT_ROOT / "src" / "features" / "feature_contract.py",
         PROJECT_ROOT / "src" / "modeling" / "train_models.py",
@@ -47,9 +49,9 @@ def experiment_signature():
 
 
 def load_cached_validation(signature):
-    if not DEGREE_POINTS_VALIDATION_PATH.exists():
+    if not DEGREE_POINTS_VALIDATION_PATH_V2.exists():
         return [], set()
-    previous = pd.read_parquet(DEGREE_POINTS_VALIDATION_PATH).drop(
+    previous = pd.read_parquet(DEGREE_POINTS_VALIDATION_PATH_V2).drop(
         columns=[
             "baseline_plan_gpa_mae",
             "plan_gpa_mae_delta_vs_baseline",
@@ -63,25 +65,45 @@ def load_cached_validation(signature):
     return previous.to_dict(orient="records"), completed
 
 
-def build_metadata(selected, rounds, summary, holdout_metrics, baseline_holdout, signature):
+def build_metadata(
+    selected, rounds, summary, holdout_metrics, baseline_holdout, signature,
+    *, train_parts=(), test_parts=(),
+):
     numeric_features, categorical_features = feature_columns(
         selected["feature_profile"]
     )
+    history_protocol = {
+        "training": "strictly prior academic parts",
+        "holdout_2025": "sequential_roll_forward",
+        "pre_2022_weight": 0.25,
+        "from_2022_weight": 1.0,
+        "smoothing_k": HISTORY_SMOOTHING_K,
+    }
+    if len(train_parts):
+        initial_cutoff = int(pd.to_numeric(pd.Series(train_parts)).max())
+        parts = sorted(set(pd.to_numeric(pd.Series(test_parts)).astype(int)))
+        history_protocol["initial_history_cutoff"] = initial_cutoff
+        history_protocol["test_history_cutoffs"] = {
+            str(part): previous for previous, part in zip([initial_cutoff, *parts], parts)
+        }
     return {
+        "dataset_version": "V2",
         "feature_engineering_version": FEATURE_ENGINEERING_VERSION,
+        "sources": {
+            "baseline_model_metadata": MODEL_METADATA_PATH_V2.relative_to(PROJECT_ROOT).as_posix(),
+            "train_features": TEMPORAL_TRAIN_FEATURES_PATH_V2.relative_to(PROJECT_ROOT).as_posix(),
+            "test_features": TEMPORAL_TEST_FEATURES_PATH_V2.relative_to(PROJECT_ROOT).as_posix(),
+            "baseline_plan_gpa_metrics": PLAN_GPA_METRICS_PATH_V2.relative_to(PROJECT_ROOT).as_posix(),
+            "baseline_plan_gpa_evaluation": PLAN_GPA_EVALUATION_PATH_V2.relative_to(PROJECT_ROOT).as_posix(),
+            "grade_scale": GRADE_SCALE_PATH.relative_to(PROJECT_ROOT).as_posix(),
+        },
         "experiment_signature": signature,
         "created_at_utc": datetime.now(timezone.utc).isoformat(),
         "selection_protocol": (
             "Select only variants improving Plan GPA MAE in both 2023 and 2024; "
             "evaluate the selected variant once on the untouched 2025 holdout."
         ),
-        "history_protocol": {
-            "training": "strictly prior academic parts",
-            "holdout_2025": "frozen after 2024",
-            "pre_2022_weight": 0.25,
-            "from_2022_weight": 1.0,
-            "smoothing_k": HISTORY_SMOOTHING_K,
-        },
+        "history_protocol": history_protocol,
         "selected_variant": selected,
         "selected_boost_rounds": rounds,
         "variant_catalog": VARIANTS,
@@ -101,10 +123,10 @@ def build_metadata(selected, rounds, summary, holdout_metrics, baseline_holdout,
             ),
         },
         "artifacts": {
-            "model": DEGREE_POINTS_SELECTED_MODEL_PATH.relative_to(
+            "model": DEGREE_POINTS_SELECTED_MODEL_PATH_V2.relative_to(
                 PROJECT_ROOT
             ).as_posix(),
-            "category_levels": DEGREE_POINTS_CATEGORY_LEVELS_PATH.relative_to(
+            "category_levels": DEGREE_POINTS_CATEGORY_LEVELS_PATH_V2.relative_to(
                 PROJECT_ROOT
             ).as_posix(),
         },
@@ -125,13 +147,13 @@ def save_results(
     by_degree,
     metadata,
 ):
-    DEGREE_POINTS_VALIDATION_PATH.parent.mkdir(parents=True, exist_ok=True)
-    validation_results.to_parquet(DEGREE_POINTS_VALIDATION_PATH, index=False)
-    summary.to_parquet(DEGREE_POINTS_VALIDATION_SUMMARY_PATH, index=False)
-    holdout_predictions.to_parquet(DEGREE_POINTS_HOLDOUT_COURSES_PATH, index=False)
-    holdout_plans.to_parquet(DEGREE_POINTS_HOLDOUT_PLANS_PATH, index=False)
-    by_degree.to_parquet(DEGREE_POINTS_HOLDOUT_BY_DEGREE_PATH, index=False)
-    DEGREE_POINTS_EXPERIMENT_METADATA_PATH.write_text(
+    DEGREE_POINTS_VALIDATION_PATH_V2.parent.mkdir(parents=True, exist_ok=True)
+    validation_results.to_parquet(DEGREE_POINTS_VALIDATION_PATH_V2, index=False)
+    summary.to_parquet(DEGREE_POINTS_VALIDATION_SUMMARY_PATH_V2, index=False)
+    holdout_predictions.to_parquet(DEGREE_POINTS_HOLDOUT_COURSES_PATH_V2, index=False)
+    holdout_plans.to_parquet(DEGREE_POINTS_HOLDOUT_PLANS_PATH_V2, index=False)
+    by_degree.to_parquet(DEGREE_POINTS_HOLDOUT_BY_DEGREE_PATH_V2, index=False)
+    DEGREE_POINTS_EXPERIMENT_METADATA_PATH_V2.write_text(
         json.dumps(metadata, ensure_ascii=False, indent=2, default=_json_default),
         encoding="utf-8",
     )
@@ -158,4 +180,4 @@ def print_summary(summary, selected, holdout_metrics, baseline_holdout, metadata
         "Relative MAE change:",
         f"{metadata['holdout_2025']['mae_relative_change']:.2%}",
     )
-    print("Saved under:", DEGREE_POINTS_VALIDATION_PATH.parent)
+    print("Saved under:", DEGREE_POINTS_VALIDATION_PATH_V2.parent)

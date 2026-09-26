@@ -20,7 +20,7 @@ class SpecialtyHistoryTests(unittest.TestCase):
         _, updated_test = add_specialty_history_features(
             self.train, self.test.assign(final_mark=50, points=2, is_fail=0)
         )
-        assert_frame_equal(original_test[SPECIALTY_HISTORY_FEATURES], updated_test[SPECIALTY_HISTORY_FEATURES])
+        assert_frame_equal(original_test.iloc[:1][SPECIALTY_HISTORY_FEATURES], updated_test.iloc[:1][SPECIALTY_HISTORY_FEATURES])
 
     def test_frozen_history_rejects_overlap_with_test_semester(self):
         with self.assertRaisesRegex(ValueError, "precede every test"):
@@ -60,13 +60,12 @@ class SpecialtyHistoryTests(unittest.TestCase):
         ].iloc[0]
         self.assertAlmostEqual(later_a["degree_history_effective_support"], 0.5)
 
-    def test_test_history_is_frozen_and_ignores_test_outcomes(self):
+    def test_later_test_part_includes_only_prior_test_outcomes(self):
         _, enriched_test = add_specialty_history_features(self.train, self.test)
-        for feature in SPECIALTY_HISTORY_FEATURES:
-            self.assertEqual(
-                enriched_test.iloc[0][feature],
-                enriched_test.iloc[1][feature],
-            )
+        self.assertEqual(enriched_test.iloc[0].degree_history_effective_support, 1.5)
+        self.assertEqual(enriched_test.iloc[1].degree_history_effective_support, 2.5)
+        self.assertNotEqual(enriched_test.iloc[0].degree_history_avg_mark,
+                            enriched_test.iloc[1].degree_history_avg_mark)
 
     def test_credit_weight_multiplies_temporal_weight(self):
         weights = fit_weights(self.train, credit_weighted=True)
