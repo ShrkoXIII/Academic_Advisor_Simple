@@ -11,8 +11,8 @@ from time import perf_counter
 import pandas as pd
 
 from src.paths import (
-    RECOMMENDATION_BENCHMARK_DIR, TEMPORAL_TEST_FEATURES_PATH,
-    CLEAN_DEGREE_COURSE_PATH, CLEAN_STUDENT_COURSE_PATH,
+    RECOMMENDATION_BENCHMARK_DIR, TEMPORAL_TEST_FEATURES_PATH_V2,
+    CLEAN_DEGREE_COURSE_PATH_V2, CLEAN_STUDENT_COURSE_PATH_V2,
 )
 from .engine import AcademicPlanRecommender
 from .inputs import STUDENT_SNAPSHOT_COLUMNS, normalize_candidates
@@ -47,10 +47,10 @@ def peak_memory_mib():
 
 def benchmark(size, output, threads, history_as_of_part):
     start = perf_counter()
-    catalog = pd.read_parquet(CLEAN_DEGREE_COURSE_PATH)
+    catalog = pd.read_parquet(CLEAN_DEGREE_COURSE_PATH_V2)
     eligible_sizes = catalog[catalog.course_credits.isin([2, 3])].groupby("degree_id").course_id.nunique()
     degrees = eligible_sizes[eligible_sizes.ge(25)].index
-    test = pd.read_parquet(TEMPORAL_TEST_FEATURES_PATH)
+    test = pd.read_parquet(TEMPORAL_TEST_FEATURES_PATH_V2)
     row = test[test.degree_id.isin(degrees) & test.start_agpa_points.ge(3)].sort_values(
         ["degree_id", "student_id", "part_id"], kind="stable",
     ).iloc[0]
@@ -59,7 +59,7 @@ def benchmark(size, output, threads, history_as_of_part):
     pool = catalog[catalog.degree_id.eq(row.degree_id) & catalog.course_credits.isin([2, 3])].sort_values("course_id").copy()
     pool["position"] = pool.groupby("course_credits").cumcount()
     raw = pool.sort_values(["position", "course_credits"])[["course_id", "course_credits"]].head(size)
-    candidates, report = normalize_candidates(raw, catalog, pd.read_parquet(CLEAN_STUDENT_COURSE_PATH),
+    candidates, report = normalize_candidates(raw, catalog, pd.read_parquet(CLEAN_STUDENT_COURSE_PATH_V2),
                                               row.student_id, row.degree_id, int(row.part_id))
     output.mkdir(parents=True, exist_ok=False)
     raw.to_parquet(output / "input_courses.parquet", index=False)

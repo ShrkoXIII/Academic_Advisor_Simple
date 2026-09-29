@@ -6,10 +6,9 @@ import numpy as np
 import pandas as pd
 
 from src.data.cleaning_utils import clean_column_names, clean_id, clean_id_columns
-from src.data.clean_student_status import clean_student_status
 from src.paths import (
-    CLEAN_DEGREE_COURSE_PATH, CLEAN_STUDENT_COURSE_PATH,
-    CLEAN_STUDENT_DIPLOMA_PATH, STUDENT_STATUS_PATH,
+    CLEAN_DEGREE_COURSE_PATH_V2, CLEAN_STUDENT_COURSE_PATH_V2,
+    CLEAN_STUDENT_DIPLOMA_PATH_V2, CLEAN_STUDENT_STATUS_PATH_V2,
 )
 from src.features.temporal_features import add_student_history_features
 
@@ -167,16 +166,19 @@ def validate_snapshot(snapshot, student_id, degree_id, part_id):
 
 
 def load_local_inputs(candidate_path, student_id, degree_id, part_id, snapshot_path=None):
-    history = pd.read_parquet(CLEAN_STUDENT_COURSE_PATH)
+    # This common-student table retains the cleaner's cross-degree attempt
+    # numbers and GPA-bearing outcomes, before model-specific outcome filters.
+    history = pd.read_parquet(CLEAN_STUDENT_COURSE_PATH_V2)
     candidates, report = normalize_candidates(
-        read_candidate_file(candidate_path), pd.read_parquet(CLEAN_DEGREE_COURSE_PATH),
+        read_candidate_file(candidate_path), pd.read_parquet(CLEAN_DEGREE_COURSE_PATH_V2),
         history, student_id, degree_id, part_id,
     )
     if snapshot_path:
         snapshot = json.loads(Path(snapshot_path).read_text(encoding="utf-8-sig"))
     else:
-        # No course-key semi-join: retain status history before outcome filtering.
-        status = clean_student_status(pd.read_parquet(STUDENT_STATUS_PATH))
-        snapshot = build_student_snapshot(status, history, pd.read_parquet(CLEAN_STUDENT_DIPLOMA_PATH),
+        # Common-student filtering preserves all cleaned status semesters;
+        # this is also the official feature builder's student-history source.
+        status = pd.read_parquet(CLEAN_STUDENT_STATUS_PATH_V2)
+        snapshot = build_student_snapshot(status, history, pd.read_parquet(CLEAN_STUDENT_DIPLOMA_PATH_V2),
                                           student_id, degree_id, part_id)
     return candidates, validate_snapshot(snapshot, student_id, degree_id, part_id), report

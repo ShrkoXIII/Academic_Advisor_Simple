@@ -64,8 +64,9 @@ def test_all_standard_stages_are_v2_and_request_workflows_keep_their_labels(monk
                           ("analyze_model_errors", "V2"), ("degree_points", "V2")]:
         line = next(line for line in output.splitlines() if line.strip().startswith(step + " "))
         assert f"[{version}]" in line
-    assert runner.STEPS["evaluate_xml_recommendations"].dataset == "request"
-    assert runner.STEPS["recommend"].dataset == "request"
+    for name in ("evaluate_xml_recommendations", "recommend", "benchmark_recommendation"):
+        assert runner.STEPS[name].dataset == "V2 request"
+        assert runner.STEPS[name].request_specific
     assert runner.main(["--from", "data", "--to", "evaluation", "--dry-run"]) == 0
     assert "VERSION BOUNDARY" not in capsys.readouterr().out
     assert runner.main(["--all", "--dry-run"]) == 0

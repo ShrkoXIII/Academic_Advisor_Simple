@@ -6,8 +6,7 @@ from time import perf_counter
 import numpy as np
 import pandas as pd
 
-from src.experiments.modeling import prepare_matrix
-from src.features.feature_contract import prepare_model_matrix
+from src.features.feature_contract import BASE_FEATURES, prepare_model_matrix, require_current_features
 from src.features.frozen_history import validate_history_pair, validate_history_selection
 from src.features.temporal_features import (
     COURSE_HISTORY_COLUMNS, PLAN_CONTEXT_COLUMNS, compute_plan_context_features,
@@ -36,13 +35,16 @@ def resolve_current_gpa_credits(snapshot, override=None):
 
 
 class AcademicPlanRecommender:
-    def __init__(self, points_model, fail_model, points_levels, fail_levels,
-                 course_history, specialty_history, metadata, provenance=None, num_threads=4):
-        self.points_model, self.fail_model = points_model, fail_model
-        self.points_levels, self.fail_levels = points_levels, fail_levels
-        self.course_history, self.specialty_history = course_history, specialty_history
+    def __init__(self, grade_model, fail_model, category_levels, grade_scale,
+                 course_history, metadata, provenance=None, num_threads=4):
+        self.grade_model, self.fail_model = grade_model, fail_model
+        self.category_levels, self.grade_scale = category_levels, grade_scale
+        self.course_history = course_history
         self.metadata, self.provenance = metadata, provenance or {}
-        validate_history_pair(course_history, specialty_history, course_history.as_of_part)
+        require_current_features(metadata)
+        if metadata.get("feature_contract", {}).get("model_features") != BASE_FEATURES:
+            raise ValueError("Recommendation V2 requires the ordered BASE_FEATURES contract.")
+        validate_history_pair(course_history, None, course_history.as_of_part)
         self.num_threads = num_threads
 
     @classmethod
@@ -52,10 +54,10 @@ class AcademicPlanRecommender:
         ), num_threads=num_threads)
 
     def prepare_candidates(self, student_snapshot, candidate_courses, part_id, *, allow_older_history=False):
-        validate_history_pair(self.course_history, self.specialty_history, self.course_history.as_of_part)
+        validate_history_pair(self.course_history, None, self.course_history.as_of_part)
         validate_history_selection(part_id, self.course_history.as_of_part, allow_older_history=allow_older_history)
         for training in self.provenance.get("training", {}).values():
-            cutoff = training["training_as_of_part"]
+            cutoff = training.get("training_as_of_part")
             if cutoff is not None and cutoff >= int(part_id):
                 raise ValueError("Model training cutoff must precede the target semester.")
         if int(student_snapshot["part_id"]) != int(part_id):
@@ -78,17 +80,25 @@ class AcademicPlanRecommender:
         rows["part_semester"] = int(part_id) % 10
         history = self.course_history.apply(rows)
         rows[COURSE_HISTORY_COLUMNS] = history[COURSE_HISTORY_COLUMNS].to_numpy()
-        return self.specialty_history.apply(rows)
+        return rows
 
     def score_rows(self, rows):
         rows = rows.copy()
         context = compute_plan_context_features(rows, group_columns=["plan_id"])
         rows[PLAN_CONTEXT_COLUMNS] = context.to_numpy()
-        contract = self.metadata["feature_contract"]
-        matrix = prepare_matrix(rows, contract["numeric_features"], contract["categorical_features"], self.points_levels)
-        rows["expected_points"] = np.clip(self.points_model.predict(matrix, num_threads=self.num_threads), 0, 4)
-        fail_matrix = prepare_model_matrix(rows, self.fail_levels)
-        rows["fail_probability"] = np.clip(self.fail_model.predict(fail_matrix, num_threads=self.num_threads), 0, 1)
+        missing = set(BASE_FEATURES) - set(rows.columns)
+        if missing:
+            raise ValueError(f"Missing BASE_FEATURES: {sorted(missing)}")
+        matrix = prepare_model_matrix(rows, self.category_levels)
+        marks = np.asarray(self.grade_model.predict(matrix, num_threads=self.num_threads), dtype=float)
+        failures = np.asarray(self.fail_model.predict(matrix, num_threads=self.num_threads), dtype=float)
+        if not np.isfinite(marks).all() or not np.isfinite(failures).all():
+            raise ValueError("Model returned non-finite predictions.")
+        rows["predicted_mark"] = np.clip(marks, 0, 100)
+        rows["expected_points"], rows["expected_grade"] = self.grade_scale.convert(
+            rows["predicted_mark"], rows["grade_version_id"],
+        )
+        rows["fail_probability"] = np.clip(failures, 0, 1)
         if not np.isfinite(rows[["expected_points", "fail_probability"]].to_numpy()).all():
             raise ValueError("Model returned non-finite predictions.")
         return rows
@@ -110,7 +120,7 @@ class AcademicPlanRecommender:
         lower, upper = resolve_credit_bounds(credits, min_credits, max_credits)
         candidates = self.prepare_candidates(student_snapshot, candidate_courses, part_id,
                                               allow_older_history=allow_older_history)
-        iterator = enumerate_plan_indices(candidates, min_credits=lower, max_credits=upper)
+        iterator = enumerate_plan_indices(candidates, target_credits=upper)
         summaries, top = [], empty_summaries()
         top_courses = pd.DataFrame(columns=COURSE_OUTPUT_COLUMNS)
         evaluated = 0
@@ -140,7 +150,13 @@ class AcademicPlanRecommender:
         return all_plans, {
             "status": status, "student_id": str(student_snapshot["student_id"]),
             "degree_id": str(student_snapshot["degree_id"]), "part_id": int(part_id),
-            "target_credits": float(lower) if lower == upper else None,
+            "dataset_version": "V2", "feature_engineering_version": self.metadata["feature_engineering_version"],
+            "grade_model_target": "final_mark", "expected_points_method": "predicted_mark_to_grade_scale",
+            **{key: self.provenance.get(key) for key in ["grade_model", "fail_model", "category_levels", "model_metadata", "grade_scale"]},
+            "target_credits": float(upper),
+            "requested_min_credits": float(lower), "requested_max_credits": float(upper),
+            "credit_policy": "upper_bound_exact",
+            "reason": None if evaluated else f"No candidate combination exactly matches target_credits={format(upper.normalize(), 'f')}.",
             "min_credits": float(lower), "max_credits": float(upper), "current_gpa": current_gpa,
             "current_gpa_credits": current_gpa_credits, "current_gpa_credits_source": credits_source,
             "projected_gpa_method": "standard_additive_without_repeat_replacement",

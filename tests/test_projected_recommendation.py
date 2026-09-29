@@ -7,15 +7,14 @@ import numpy as np
 import pandas as pd
 from pandas.testing import assert_frame_equal
 
-from src.experiments.specialty_history import FrozenSpecialtyHistory
 from src.recommendation import (
-    AcademicPlanRecommender, CANDIDATE_COURSE_COLUMNS, STUDENT_SNAPSHOT_COLUMNS,
+    STUDENT_SNAPSHOT_COLUMNS,
     model_training_provenance, project_cumulative_gpa, rank_plans,
     resolve_current_gpa_credits, summarize_scored_plans,
 )
 from src.recommendation.inputs import validate_snapshot
 from src.recommendation.output import save_recommendations
-from src.features.temporal_features import CourseHistoryState
+from tests.recommendation_fixtures import synthetic_engine, synthetic_snapshot, synthetic_candidates
 
 
 class ProjectionTests(unittest.TestCase):
@@ -62,25 +61,13 @@ class ProjectionTests(unittest.TestCase):
         self.assertIsNone(model_training_provenance({})["training_as_of_part"])
 
 
-class FixedScoreRecommender(AcademicPlanRecommender):
-    def score_rows(self, rows):
-        return rows.assign(expected_points=2., fail_probability=.9)
-
-
 class PlanPreservationTests(unittest.TestCase):
     def setUp(self):
-        history = pd.DataFrame({"part_id": [20243], "degree_id": ["D"],
-                                "plan_requirement_type_id": ["R"], "final_mark": [60.],
-                                "is_fail": [0], "points": [2.]})
-        self.engine = FixedScoreRecommender(None, None, {}, {}, CourseHistoryState(as_of_part=20243),
-                                            FrozenSpecialtyHistory.from_training(history), {})
-        self.snapshot = {c: 1 for c in STUDENT_SNAPSHOT_COLUMNS}
+        self.engine = synthetic_engine(grade=60., fail=.9)
+        self.snapshot = synthetic_snapshot()
         self.snapshot.update(student_id="S", degree_id="D", part_id=20251,
                              start_agpa_points=3.5, start_total_in_credits=999, current_gpa_credits=60)
-        self.candidates = pd.DataFrame({c: [1] * 6 for c in CANDIDATE_COURSE_COLUMNS})
-        self.candidates["course_id"] = list("ABCDEF")
-        self.candidates["course_credits"] = 3.
-        self.candidates["plan_requirement_type_id"] = "R"
+        self.candidates = synthetic_candidates()
         self.kwargs = dict(student_snapshot=self.snapshot, candidate_courses=self.candidates,
                            part_id=20251, current_gpa=3.5, credits=9)
 
@@ -146,8 +133,8 @@ class PlanPreservationTests(unittest.TestCase):
         checked = validate_snapshot(self.snapshot, "S", "D", 20251)
         self.assertEqual(checked["current_gpa_credits"], 60)
         self.assertNotIn("current_gpa_credits", STUDENT_SNAPSHOT_COLUMNS)
-        with self.assertRaisesRegex(ValueError, "cutoffs"):
-            self.engine.specialty_history.as_of_part = 20251
+        with self.assertRaisesRegex(ValueError, "follow frozen"):
+            self.engine.course_history.as_of_part = 20251
             self.engine.recommend(**self.kwargs)
 
 

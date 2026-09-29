@@ -1,0 +1,545 @@
+{
+  "experiment": "previous_course_status",
+  "variant": "course_only_34",
+  "dataset_version": "V2",
+  "feature_engineering_version": 2,
+  "created_at_utc": "2026-09-29T08:04:08.946004+00:00",
+  "feature_contract": {
+    "model_features": [
+      "gpa_prev_1",
+      "gpa_prev_2",
+      "gpa_trend_delta",
+      "gpa_trend_missing",
+      "start_agpa_points",
+      "start_total_in_courses",
+      "start_total_in_credits",
+      "prior_total_reg_courses",
+      "prior_total_reg_credits",
+      "prior_total_fail_courses",
+      "prior_total_fail_credits",
+      "prior_fail_credit_ratio",
+      "prior_registered_semesters",
+      "observed_gap_semesters",
+      "diploma_gpa",
+      "course_credits",
+      "attempt_number",
+      "plan_year_order",
+      "plan_semester_order",
+      "plan_credits_count",
+      "degree_credits_count",
+      "course_history_avg_mark",
+      "course_history_fail_rate",
+      "course_history_avg_attempt",
+      "course_history_retake_rate",
+      "course_history_effective_support",
+      "course_history_fallback_level",
+      "course_history_missing",
+      "plan_course_type_id",
+      "plan_requirement_type_id",
+      "diploma_type_id",
+      "grade_version_id",
+      "part_semester",
+      "previous_course_status"
+    ],
+    "numeric_features": [
+      "gpa_prev_1",
+      "gpa_prev_2",
+      "gpa_trend_delta",
+      "gpa_trend_missing",
+      "start_agpa_points",
+      "start_total_in_courses",
+      "start_total_in_credits",
+      "prior_total_reg_courses",
+      "prior_total_reg_credits",
+      "prior_total_fail_courses",
+      "prior_total_fail_credits",
+      "prior_fail_credit_ratio",
+      "prior_registered_semesters",
+      "observed_gap_semesters",
+      "diploma_gpa",
+      "course_credits",
+      "attempt_number",
+      "plan_year_order",
+      "plan_semester_order",
+      "plan_credits_count",
+      "degree_credits_count",
+      "course_history_avg_mark",
+      "course_history_fail_rate",
+      "course_history_avg_attempt",
+      "course_history_retake_rate",
+      "course_history_effective_support",
+      "course_history_fallback_level",
+      "course_history_missing"
+    ],
+    "categorical_features": [
+      "plan_course_type_id",
+      "plan_requirement_type_id",
+      "diploma_type_id",
+      "grade_version_id",
+      "part_semester",
+      "previous_course_status"
+    ],
+    "feature_count": 34
+  },
+  "targets": {
+    "grade": "final_mark",
+    "fail": "is_fail"
+  },
+  "training_as_of_part": 20243,
+  "train_rows": 356816,
+  "test_rows": 67536,
+  "temporal_folds": [
+    {
+      "name": "train_through_2022_validate_2023",
+      "train_through": 20223,
+      "valid_from": 20231,
+      "valid_through": 20233
+    },
+    {
+      "name": "train_through_2023_validate_2024",
+      "train_through": 20233,
+      "valid_from": 20241,
+      "valid_through": 20243
+    }
+  ],
+  "training_weight": {
+    "before_2022": 0.25,
+    "from_2022": 1.0,
+    "fit_only": true
+  },
+  "candidate_grid": [
+    {
+      "name": "balanced_31",
+      "num_leaves": 31,
+      "min_data_in_leaf": 80,
+      "feature_fraction": 0.9,
+      "bagging_fraction": 0.9,
+      "lambda_l1": 0.1,
+      "lambda_l2": 1.0
+    },
+    {
+      "name": "capaciy_63",
+      "num_leaves": 63,
+      "min_data_in_leaf": 100,
+      "feature_fraction": 0.85,
+      "bagging_fraction": 0.9,
+      "lambda_l1": 0.2,
+      "lambda_l2": 2.0
+    },
+    {
+      "name": "regularized_47",
+      "num_leaves": 47,
+      "min_data_in_leaf": 160,
+      "feature_fraction": 0.8,
+      "bagging_fraction": 0.85,
+      "lambda_l1": 0.5,
+      "lambda_l2": 4.0
+    }
+  ],
+  "seed": 42,
+  "max_boost_rounds": 900,
+  "early_stopping_rounds": 75,
+  "holdout_history_protocol": "existing_V2_features_sequential_roll_forward",
+  "status_source": "V2 registration roster + V2 cleaned graded marks",
+  "input_sha256": {
+    "data/features/temporal_train_features_v2.parquet": "026faac5933709c0903dac1b0ea2ca88be71d55c1bb6f805eb265d0f4cbe204f",
+    "data/features/temporal_test_features_v2.parquet": "6d2c8dd0f8aa44d68812d66a21480cc328ca51beb482c0431c3d304c1a14bf05",
+    "data/features/experiments/previous_course_status/temporal_train_features.parquet": "e52708cb957ff4b1bc0c569b0089eda0200673957d072ced1d17bd35a73bd85f",
+    "data/features/experiments/previous_course_status/temporal_test_features.parquet": "da43f4fd3dcd7beb38c2ebd77bdf88e7709910047f763f458bf35df7baa070ea",
+    "data/clean/registration_roster_v2.parquet": "d372a713da87725b94bfbceaf920db52e5c28225b4c0900e175d99b8875d9175",
+    "data/clean/student_course_v2.parquet": "55dfbddf62ca641e5186ddd713b13c91134cf0a20c53ef87c943ee911eaf1c00",
+    "src/features/student_course_status.py": "82c5510f53b006198c12228246fd751275f52f2c0c7569c6c8534a1ff19f6b0c",
+    "src/experiments/previous_course_status_data.py": "2a7a88a2a48c2c55d03a335865a6a5a40139a50ff8da20d8b56ed4bdf403851c",
+    "src/experiments/previous_course_status_training.py": "8331a340d29f6779226eb54fa303cd7f17f7ce00b7d1de2cf7d0d267aa61eceb",
+    "src/modeling/train_models.py": "d9c88283a0237050cd32f696cc58d511ca8a59b394617a3de13e1340e9f149aa",
+    "src/modeling/training_config.py": "0ebd3ce8d8348c31d81ee1611d9be99f8afb686dfd505f9adbf79153ffe94206",
+    "src/features/feature_contract.py": "2efe110db00069ae1b34cf7b564eebeebcc28a83e8766f17a15a53aa1530f06d"
+  },
+  "grade": {
+    "selected_candidate": {
+      "candidate": {
+        "name": "capaciy_63",
+        "num_leaves": 63,
+        "min_data_in_leaf": 100,
+        "feature_fraction": 0.85,
+        "bagging_fraction": 0.9,
+        "lambda_l1": 0.2,
+        "lambda_l2": 2.0
+      },
+      "folds": [
+        {
+          "fold": "train_through_2022_validate_2023",
+          "fit_rows": 205369,
+          "valid_rows": 77014,
+          "best_iteration": 124,
+          "metrics": {
+            "mae": 9.258306317788769,
+            "rmse": 12.39824038657192,
+            "within_5": 0.3563248240579635,
+            "within_10": 0.6390526397797803
+          }
+        },
+        {
+          "fold": "train_through_2023_validate_2024",
+          "fit_rows": 282383,
+          "valid_rows": 74433,
+          "best_iteration": 117,
+          "metrics": {
+            "mae": 9.748220216331754,
+            "rmse": 13.072865096278576,
+            "within_5": 0.3362755766931334,
+            "within_10": 0.6160573938978678
+          }
+        }
+      ],
+      "mean_primary_metric": 9.503263267060262,
+      "mean_best_iteration": 120
+    },
+    "parameters": {
+      "learning_rate": 0.04,
+      "num_leaves": 63,
+      "min_data_in_leaf": 100,
+      "feature_fraction": 0.85,
+      "bagging_fraction": 0.9,
+      "bagging_freq": 1,
+      "lambda_l1": 0.2,
+      "lambda_l2": 2.0,
+      "max_bin": 255,
+      "verbosity": -1,
+      "seed": 42,
+      "feature_fraction_seed": 42,
+      "bagging_seed": 42,
+      "data_random_seed": 42,
+      "deterministic": true,
+      "force_col_wise": true,
+      "num_threads": 0,
+      "objective": "regression",
+      "metric": "l1"
+    },
+    "final_boost_rounds": 120,
+    "feature_importance": [
+      {
+        "feature": "gpa_prev_1",
+        "gain": 102929721.06958008,
+        "gain_share": 0.3357426439594972
+      },
+      {
+        "feature": "course_history_avg_mark",
+        "gain": 62281219.889160156,
+        "gain_share": 0.203152803848308
+      },
+      {
+        "feature": "start_agpa_points",
+        "gain": 35741085.92626953,
+        "gain_share": 0.11658252409678141
+      },
+      {
+        "feature": "prior_fail_credit_ratio",
+        "gain": 29097560.713867188,
+        "gain_share": 0.09491225532654231
+      },
+      {
+        "feature": "gpa_prev_2",
+        "gain": 12804543.262207031,
+        "gain_share": 0.041766665302056215
+      },
+      {
+        "feature": "course_history_fail_rate",
+        "gain": 10937548.065673828,
+        "gain_share": 0.03567678283632987
+      },
+      {
+        "feature": "course_history_effective_support",
+        "gain": 7489625.198730469,
+        "gain_share": 0.024430130970505518
+      },
+      {
+        "feature": "course_history_avg_attempt",
+        "gain": 5499360.428466797,
+        "gain_share": 0.01793816004894774
+      },
+      {
+        "feature": "plan_credits_count",
+        "gain": 4878694.720458984,
+        "gain_share": 0.01591363356955828
+      },
+      {
+        "feature": "diploma_gpa",
+        "gain": 4226797.994873047,
+        "gain_share": 0.0137872357909341
+      },
+      {
+        "feature": "course_history_retake_rate",
+        "gain": 3894654.12890625,
+        "gain_share": 0.012703828019341699
+      },
+      {
+        "feature": "prior_total_fail_courses",
+        "gain": 3864875.7900390625,
+        "gain_share": 0.012606695158977364
+      },
+      {
+        "feature": "degree_credits_count",
+        "gain": 3861854.7944335938,
+        "gain_share": 0.012596841085329536
+      },
+      {
+        "feature": "part_semester",
+        "gain": 3761234.3981933594,
+        "gain_share": 0.012268631142478222
+      },
+      {
+        "feature": "course_credits",
+        "gain": 2220318.2282714844,
+        "gain_share": 0.0072423737735324255
+      },
+      {
+        "feature": "start_total_in_credits",
+        "gain": 1754173.3962402344,
+        "gain_share": 0.005721873215016085
+      },
+      {
+        "feature": "plan_course_type_id",
+        "gain": 1711495.8410644531,
+        "gain_share": 0.0055826648788470015
+      },
+      {
+        "feature": "plan_year_order",
+        "gain": 1537028.0480957031,
+        "gain_share": 0.005013574848402744
+      },
+      {
+        "feature": "plan_requirement_type_id",
+        "gain": 1499713.720703125,
+        "gain_share": 0.004891860626250275
+      },
+      {
+        "feature": "start_total_in_courses",
+        "gain": 1418978.7309570312,
+        "gain_share": 0.004628514154155275
+      },
+      {
+        "feature": "previous_course_status",
+        "gain": 1081841.6875,
+        "gain_share": 0.0035288193218877824
+      },
+      {
+        "feature": "prior_total_reg_credits",
+        "gain": 713195.396484375,
+        "gain_share": 0.00232634564231976
+      },
+      {
+        "feature": "prior_total_reg_courses",
+        "gain": 685014.1015625,
+        "gain_share": 0.002234422120435574
+      },
+      {
+        "feature": "course_history_fallback_level",
+        "gain": 542376.4318847656,
+        "gain_share": 0.0017691575899560755
+      },
+      {
+        "feature": "diploma_type_id",
+        "gain": 458113.6281738281,
+        "gain_share": 0.0014943038721827032
+      }
+    ]
+  },
+  "fail": {
+    "selected_candidate": {
+      "candidate": {
+        "name": "balanced_31",
+        "num_leaves": 31,
+        "min_data_in_leaf": 80,
+        "feature_fraction": 0.9,
+        "bagging_fraction": 0.9,
+        "lambda_l1": 0.1,
+        "lambda_l2": 1.0
+      },
+      "folds": [
+        {
+          "fold": "train_through_2022_validate_2023",
+          "fit_rows": 205369,
+          "valid_rows": 77014,
+          "best_iteration": 104,
+          "metrics": {
+            "pr_auc": 0.2848208549756412,
+            "roc_auc": 0.8140584741972496,
+            "brier": 0.0716872424292155,
+            "log_loss": 0.24602977275575894,
+            "calibration_error_10_bins": 0.0068538573933674025
+          }
+        },
+        {
+          "fold": "train_through_2023_validate_2024",
+          "fit_rows": 282383,
+          "valid_rows": 74433,
+          "best_iteration": 82,
+          "metrics": {
+            "pr_auc": 0.2072158525004116,
+            "roc_auc": 0.7978683659834287,
+            "brier": 0.05713258785274861,
+            "log_loss": 0.2076886932998218,
+            "calibration_error_10_bins": 0.009042066138407185
+          }
+        }
+      ],
+      "mean_primary_metric": 0.22685923302779037,
+      "mean_best_iteration": 93
+    },
+    "parameters": {
+      "learning_rate": 0.04,
+      "num_leaves": 31,
+      "min_data_in_leaf": 80,
+      "feature_fraction": 0.9,
+      "bagging_fraction": 0.9,
+      "bagging_freq": 1,
+      "lambda_l1": 0.1,
+      "lambda_l2": 1.0,
+      "max_bin": 255,
+      "verbosity": -1,
+      "seed": 42,
+      "feature_fraction_seed": 42,
+      "bagging_seed": 42,
+      "data_random_seed": 42,
+      "deterministic": true,
+      "force_col_wise": true,
+      "num_threads": 0,
+      "objective": "binary",
+      "metric": "binary_logloss"
+    },
+    "final_boost_rounds": 93,
+    "feature_importance": [
+      {
+        "feature": "prior_fail_credit_ratio",
+        "gain": 126464.00937843323,
+        "gain_share": 0.357613012973159
+      },
+      {
+        "feature": "gpa_prev_1",
+        "gain": 57059.070004463196,
+        "gain_share": 0.16135077514964744
+      },
+      {
+        "feature": "course_history_fail_rate",
+        "gain": 56445.789823532104,
+        "gain_share": 0.15961655072977154
+      },
+      {
+        "feature": "start_agpa_points",
+        "gain": 25391.0439453125,
+        "gain_share": 0.07180041003322478
+      },
+      {
+        "feature": "gpa_prev_2",
+        "gain": 13592.792741775513,
+        "gain_share": 0.03843749372645622
+      },
+      {
+        "feature": "course_history_avg_mark",
+        "gain": 12802.536558151245,
+        "gain_share": 0.03620281924289727
+      },
+      {
+        "feature": "course_history_effective_support",
+        "gain": 9259.667071342468,
+        "gain_share": 0.026184346493413002
+      },
+      {
+        "feature": "degree_credits_count",
+        "gain": 7554.520492553711,
+        "gain_share": 0.02136255878797345
+      },
+      {
+        "feature": "course_history_avg_attempt",
+        "gain": 4894.635509490967,
+        "gain_share": 0.01384097626318799
+      },
+      {
+        "feature": "diploma_gpa",
+        "gain": 4598.760215759277,
+        "gain_share": 0.013004304582638283
+      },
+      {
+        "feature": "start_total_in_courses",
+        "gain": 4431.207323074341,
+        "gain_share": 0.01253050104691354
+      },
+      {
+        "feature": "plan_year_order",
+        "gain": 3081.5083808898926,
+        "gain_share": 0.008713842792177082
+      },
+      {
+        "feature": "previous_course_status",
+        "gain": 3079.2246894836426,
+        "gain_share": 0.008707385004158942
+      },
+      {
+        "feature": "plan_credits_count",
+        "gain": 3042.385606765747,
+        "gain_share": 0.008603212003234295
+      },
+      {
+        "feature": "prior_total_fail_courses",
+        "gain": 2955.9509239196777,
+        "gain_share": 0.008358793314392429
+      },
+      {
+        "feature": "course_history_retake_rate",
+        "gain": 2924.475707054138,
+        "gain_share": 0.008269788172197493
+      },
+      {
+        "feature": "part_semester",
+        "gain": 2571.5946826934814,
+        "gain_share": 0.007271916548777414
+      },
+      {
+        "feature": "course_credits",
+        "gain": 2452.1837997436523,
+        "gain_share": 0.0069342482600416935
+      },
+      {
+        "feature": "start_total_in_credits",
+        "gain": 1968.9328899383545,
+        "gain_share": 0.005567718646384162
+      },
+      {
+        "feature": "attempt_number",
+        "gain": 1568.5384998321533,
+        "gain_share": 0.0044354894459406125
+      },
+      {
+        "feature": "plan_requirement_type_id",
+        "gain": 1508.7843036651611,
+        "gain_share": 0.004266517433791902
+      },
+      {
+        "feature": "course_history_fallback_level",
+        "gain": 1414.483585357666,
+        "gain_share": 0.0039998552888446965
+      },
+      {
+        "feature": "prior_total_fail_credits",
+        "gain": 1194.5883922576904,
+        "gain_share": 0.003378038987674923
+      },
+      {
+        "feature": "plan_course_type_id",
+        "gain": 900.7179012298584,
+        "gain_share": 0.002547036457888874
+      },
+      {
+        "feature": "prior_total_reg_courses",
+        "gain": 607.7363986968994,
+        "gain_share": 0.0017185477963228227
+      }
+    ]
+  },
+  "artifact_sha256": {
+    "grade_model.txt": "88355bba22b5d940b70ee961cb33eaf904e17fda2c6d198cf97bd19f9edf8bca",
+    "fail_model.txt": "7d10763108bfc229c23e7c7a19b94bf4a45fcec749bd1812121742f751e86c4d",
+    "category_levels.json": "07bd7dce755e190e4a84a0c235a2314ca174c6c0b60e9427fbb3153f8b5c8da1"
+  }
+}

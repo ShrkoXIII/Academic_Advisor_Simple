@@ -16,7 +16,7 @@ from .output import save_recommendations, write_json
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Rank all plans matching exact credits or an inclusive credit range.")
+    parser = argparse.ArgumentParser(description="Official V2 baseline: single credits match exactly; a range matches its upper bound exactly.")
     parser.add_argument("--candidates", type=Path, required=True)
     parser.add_argument("--student-id", required=True)
     parser.add_argument("--degree-id", required=True)
@@ -24,9 +24,9 @@ def main():
     parser.add_argument("--history-as-of-part", type=int, required=True)
     parser.add_argument("--allow-older-history", action="store_true",
                         help="Explicit backtest opt-in when history predates the previous academic part.")
-    parser.add_argument("--credits", type=float)
-    parser.add_argument("--min-credits", type=float)
-    parser.add_argument("--max-credits", type=float)
+    parser.add_argument("--credits", type=float, help="Exact target credits; no lower-credit fallback.")
+    parser.add_argument("--min-credits", type=float, help="Requested lower bound, recorded for provenance.")
+    parser.add_argument("--max-credits", type=float, help="Exact target when a range is supplied; lower-credit plans are not accepted.")
     parser.add_argument("--current-gpa", type=float, help="Defaults to snapshot start_agpa_points.")
     parser.add_argument("--current-gpa-credits", type=float,
                         help="Overrides snapshot.current_gpa_credits or, by default, snapshot.prior_total_reg_credits (source total_reg_credits).")
@@ -56,7 +56,7 @@ def main():
         def progress(count):
             nonlocal last_message
             if perf_counter() - last_message >= 10:
-                print(f"Evaluated {count:,} plans matching credit bounds...", flush=True)
+                print(f"Evaluated {count:,} plans matching exact target credits...", flush=True)
                 last_message = perf_counter()
 
         result = save_recommendations(

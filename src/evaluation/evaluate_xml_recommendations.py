@@ -17,14 +17,13 @@ import xml.etree.ElementTree as ET
 import numpy as np
 import pandas as pd
 
-from src.data.clean_student_status import clean_student_status
 from src.data.cleaning_utils import clean_column_names, clean_id
 from src.paths import (
-    CLEAN_DEGREE_COURSE_PATH,
-    CLEAN_STUDENT_COURSE_PATH,
-    CLEAN_STUDENT_DIPLOMA_PATH,
+    CLEAN_DEGREE_COURSE_PATH_V2,
+    CLEAN_STUDENT_COURSE_PATH_V2,
+    CLEAN_STUDENT_DIPLOMA_PATH_V2,
+    CLEAN_STUDENT_STATUS_PATH_V2,
     EVALUATION_DIR,
-    STUDENT_STATUS_PATH,
 )
 from src.recommendation import (
     AcademicPlanRecommender,
@@ -46,6 +45,8 @@ def parse_args():
     parser.add_argument("--xml-dir", type=Path, default=Path("xml"))
     parser.add_argument("--target-part", type=int, required=True)
     parser.add_argument("--history-as-of-part", type=int, required=True)
+    parser.add_argument("--allow-older-history", action="store_true",
+                        help="Explicit backtest opt-in for history older than the previous academic part.")
     parser.add_argument("--min-credits", type=float, default=12)
     parser.add_argument("--max-credits", type=float, default=18)
     parser.add_argument("--top-n", type=int, default=3)
@@ -147,7 +148,8 @@ def actual_metrics(status_row, actual):
     }
 
 
-def observed_plan_estimate(engine, snapshot, actual, catalog, history, student_id, degree_id, target_part):
+def observed_plan_estimate(engine, snapshot, actual, catalog, history, student_id, degree_id, target_part,
+                           *, allow_older_history=False):
     if actual.empty:
         return {"status": "no_cleaned_actual_courses"}
     try:
@@ -155,7 +157,8 @@ def observed_plan_estimate(engine, snapshot, actual, catalog, history, student_i
             actual[["course_id", "course_credits"]].drop_duplicates("course_id"),
             catalog, history, student_id, degree_id, target_part,
         )
-        prepared = engine.prepare_candidates(snapshot, actual_candidates, target_part)
+        prepared = engine.prepare_candidates(snapshot, actual_candidates, target_part,
+                                             allow_older_history=allow_older_history)
         scored = engine.score_rows(build_plan_rows(prepared, [tuple(range(len(prepared)))], first_plan_id=-1))
         summary = summarize_scored_plans(
             scored, snapshot["start_agpa_points"], snapshot["prior_total_reg_credits"],
@@ -197,7 +200,7 @@ def report_markdown(cases, args, run_dir):
         "",
         f"- عدد الملفات: **{len(cases)}**؛ الحالات المنفذة: **{len(successful)}**.",
         f"- فصل التوصية ثابت بطلب المستخدم: **{args.target_part}**. تاريخ الحالة التاريخية للنموذج: **{args.history_as_of_part}**.",
-        f"- نطاق الخطة: **{args.min_credits:g}–{args.max_credits:g} ساعة**، وأفضل **{args.top_n}** خطط محفوظة لكل حالة حيث توجد خطط مطابقة.",
+        f"- المجال المطلوب: **{args.min_credits:g}–{args.max_credits:g} ساعة**؛ هدف الخطة **{args.max_credits:g} ساعة بالضبط**، وأفضل **{args.top_n}** خطط محفوظة لكل حالة حيث توجد خطط مطابقة.",
         "- توقعات أفضل الخطط هي بدائل مضادة للواقع؛ لا تعني أن الطالب كان سيحققها لو اختارها. تقييم النموذج على اختيار الطالب نفسه يظهر منفصلًا عندما يكون متاحًا.",
         "",
         "## المعادلات المستخدمة",
@@ -347,6 +350,7 @@ def run_case(path, engine, status, history, diplomas, catalog, args, run_dir):
     all_plans, result = engine.recommend(
         snapshot, candidates, args.target_part, snapshot["start_agpa_points"],
         min_credits=args.min_credits, max_credits=args.max_credits, top_n=args.top_n,
+        allow_older_history=args.allow_older_history,
     )
     actual = history[(history.student_id.eq(student_id)) & (history.degree_id.eq(degree_id)) & (history.part_id.eq(args.target_part))].copy()
     status_row = target_status.iloc[0]
@@ -367,6 +371,7 @@ def run_case(path, engine, status, history, diplomas, catalog, args, run_dir):
         "mixed_student_xml_rows_excluded": foreign_rows,
         "observed_plan_estimate": observed_plan_estimate(
             engine, snapshot, actual, catalog, history, student_id, degree_id, args.target_part,
+            allow_older_history=args.allow_older_history,
         ),
     }
     stem = re.sub(r"[^A-Za-z0-9]+", "_", path.stem).strip("_")
@@ -387,10 +392,10 @@ def main():
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     run_dir = args.output_dir or EVALUATION_DIR / "xml_recommendations" / f"target_{args.target_part}_{timestamp}"
     run_dir.mkdir(parents=True, exist_ok=False)
-    status = clean_student_status(pd.read_parquet(STUDENT_STATUS_PATH))
-    history = pd.read_parquet(CLEAN_STUDENT_COURSE_PATH)
-    diplomas = pd.read_parquet(CLEAN_STUDENT_DIPLOMA_PATH)
-    catalog = pd.read_parquet(CLEAN_DEGREE_COURSE_PATH)
+    status = pd.read_parquet(CLEAN_STUDENT_STATUS_PATH_V2)
+    history = pd.read_parquet(CLEAN_STUDENT_COURSE_PATH_V2)
+    diplomas = pd.read_parquet(CLEAN_STUDENT_DIPLOMA_PATH_V2)
+    catalog = pd.read_parquet(CLEAN_DEGREE_COURSE_PATH_V2)
     engine = AcademicPlanRecommender.load(history_as_of_part=args.history_as_of_part, num_threads=args.threads)
     cases = []
     for path in xml_files:

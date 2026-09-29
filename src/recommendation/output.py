@@ -8,7 +8,8 @@ import pyarrow.parquet as pq
 
 COURSE_SCHEMA = pa.schema([
     ("plan_id", pa.int64()), ("course_id", pa.string()), ("course_name", pa.string()),
-    ("course_credits", pa.float64()), ("expected_points", pa.float64()), ("fail_probability", pa.float64()),
+    ("course_credits", pa.float64()), ("predicted_mark", pa.float64()),
+    ("expected_points", pa.float64()), ("expected_grade", pa.string()), ("fail_probability", pa.float64()),
 ])
 
 

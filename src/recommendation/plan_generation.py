@@ -5,7 +5,7 @@ import numpy as np
 
 
 def resolve_credit_bounds(credits=None, min_credits=None, max_credits=None):
-    """A single value becomes equal bounds; a range keeps both inclusive bounds."""
+    """Validate requested bounds; callers use the upper bound as the exact target."""
     if credits is not None:
         if min_credits is not None or max_credits is not None:
             raise ValueError("Use credits OR min_credits/max_credits, not both.")
@@ -20,12 +20,13 @@ def resolve_credit_bounds(credits=None, min_credits=None, max_credits=None):
 
 
 def enumerate_plan_indices(candidate_courses, target_credits=None, *, min_credits=None, max_credits=None):
-    """Yield all positive-credit subsets within inclusive bounds, without rounding.
+    """Yield all subsets exactly matching the requested upper bound, without rounding.
 
     Zero-credit courses remain optional members even after reaching the upper bound.
     """
     values = [Decimal(str(v)) for v in candidate_courses["course_credits"]]
     lower, upper = resolve_credit_bounds(target_credits, min_credits, max_credits)
+    lower = upper
     if any(not v.is_finite() or v < 0 for v in values):
         raise ValueError("Course credits must be finite and nonnegative.")
     scale = 10 ** max(0, *[-v.as_tuple().exponent for v in [*values, lower, upper]])

@@ -46,7 +46,7 @@ PIPELINE = {
     "evaluation": (
         Step("evaluate_plan_gpa", "evaluation", "src.evaluation.evaluate_plan_gpa", "Evaluate observed-plan GPA", "V2"),
         Step("analyze_model_errors", "evaluation", "src.evaluation.analyze_model_errors", "Analyze model errors", "V2"),
-        Step("evaluate_xml_recommendations", "evaluation", "src.evaluation.evaluate_xml_recommendations", "Evaluate request-specific XML candidates", "request", False, True),
+        Step("evaluate_xml_recommendations", "evaluation", "src.evaluation.evaluate_xml_recommendations", "Evaluate XML candidates with Official V2 models", "V2 request", False, True),
     ),
     "experiments": (
         Step("degree_points", "experiments", "src.experiments.degree_points", "Run degree/direct-points experiment (expensive)", "V2"),
@@ -56,8 +56,8 @@ PIPELINE = {
         Step("analyze_course_plan_changes", "diagnostics", "src.diagnostics.analyze_course_plan_changes", "Analyze course-plan changes", "V1", False),
     ),
     "recommendation": (
-        Step("recommend", "recommendation", "src.recommendation.local_cli", "Run a student-specific recommendation", "request", False, True),
-        Step("benchmark_recommendation", "recommendation", "src.recommendation.benchmark", "Benchmark recommendation inference (expensive)", "request", False, True),
+        Step("recommend", "recommendation", "src.recommendation.local_cli", "Recommend with Official V2 baseline models", "V2 request", False, True),
+        Step("benchmark_recommendation", "recommendation", "src.recommendation.benchmark", "Benchmark Official V2 inference (expensive)", "V2 request", False, True),
     ),
 }
 
@@ -97,7 +97,7 @@ def _show_version_boundary(steps):
 
 def _list_steps():
     print("Standard build order: " + " -> ".join(STANDARD_SECTIONS))
-    print("Data/features/modeling/evaluation/experiments use V2; request-specific workflows retain their existing artifact sources.\n")
+    print("Data/features/modeling/evaluation/experiments use V2; Recommendation and XML requests use Official V2 models.\n")
     for section, steps in PIPELINE.items():
         print(f"{section}:")
         for step in steps:

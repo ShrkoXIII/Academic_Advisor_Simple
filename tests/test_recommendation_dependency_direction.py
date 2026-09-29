@@ -10,6 +10,10 @@ SRC_ROOT = Path(__file__).resolve().parents[1] / "src"
 UPSTREAM_PACKAGES = ("data", "features", "modeling", "evaluation", "experiments")
 PRODUCTION_PACKAGES = (*UPSTREAM_PACKAGES, "recommendation", "diagnostics")
 XML_RECOMMENDATION_EVALUATOR = SRC_ROOT / "evaluation" / "evaluate_xml_recommendations.py"
+COURSE_ONLY_RECOMMENDATION_WORKFLOW = {
+    SRC_ROOT / "experiments" / name
+    for name in ("course_only_core.py", "course_only_evaluation.py", "course_only_recommendation.py")
+}
 
 
 def _import_targets(node, package):
@@ -28,8 +32,9 @@ def _import_targets(node, package):
 def test_upstream_packages_do_not_import_recommendation():
     for package_name in UPSTREAM_PACKAGES:
         for source in (SRC_ROOT / package_name).rglob("*.py"):
-            if source == XML_RECOMMENDATION_EVALUATOR:
-                # This explicit evaluation workflow scores candidate plans with the recommender.
+            if source == XML_RECOMMENDATION_EVALUATOR or source in COURSE_ONLY_RECOMMENDATION_WORKFLOW:
+                # These explicit evaluation/recommendation workflows read the serving
+                # implementation. Feature engineering and training remain upstream.
                 continue
             package = ".".join(("src", *source.relative_to(SRC_ROOT).parts[:-1]))
             tree = ast.parse(source.read_text(encoding="utf-8"), filename=str(source))

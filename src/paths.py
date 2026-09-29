@@ -17,6 +17,12 @@ ARTIFACT_DIR = DATA_DIR / "artifacts"
 EVALUATION_DIR = DATA_DIR / "evaluation"
 MODEL_DIR = PROJECT_ROOT / "models"
 
+# Isolated course-only research; never consumed by the official recommender.
+COURSE_ONLY_MODEL_DIR = MODEL_DIR / "experiments" / "course_only_recommendation"
+COURSE_ONLY_EVALUATION_DIR = EVALUATION_DIR / "experiments" / "course_only_recommendation"
+COURSE_ONLY_DEBUG_DIR = DATA_DIR / "debug" / "course_only_29485_111"
+COURSE_ONLY_REPORT_PATH = PROJECT_ROOT / "reports" / "course_only_33_feature_experiment.md"
+
 
 STUDENT_COURSE_PATH = RAW_DIR / "v_crg_student_course_raw.parquet"
 STUDENT_STATUS_PATH = RAW_DIR / "v_add_student_degree_status.parquet"
@@ -52,6 +58,7 @@ TEMPORAL_TRAIN_FEATURES_PATH = FEATURE_DIR / "temporal_train_features.parquet"
 TEMPORAL_TEST_FEATURES_PATH = FEATURE_DIR / "temporal_test_features.parquet"
 COURSE_HISTORY_STATE_PATH = ARTIFACT_DIR / "course_history_state.pkl"
 FROZEN_HISTORY_DIR = ARTIFACT_DIR / "history"
+FROZEN_HISTORY_DIR_V2 = ARTIFACT_DIR / "history_v2"
 
 
 def academic_part(value):

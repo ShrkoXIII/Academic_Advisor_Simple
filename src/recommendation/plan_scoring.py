@@ -12,7 +12,8 @@ SUMMARY_COLUMNS = [
 
 
 COURSE_OUTPUT_COLUMNS = [
-    "plan_id", "course_id", "course_name", "course_credits", "expected_points", "fail_probability",
+    "plan_id", "course_id", "course_name", "course_credits", "predicted_mark",
+    "expected_points", "expected_grade", "fail_probability",
 ]
 
 

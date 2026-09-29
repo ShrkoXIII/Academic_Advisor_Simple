@@ -1,0 +1,515 @@
+{
+  "experiment": "course_only_recommendation",
+  "dataset_version": "V2",
+  "created_at_utc": "2026-09-27T12:35:15.931976+00:00",
+  "feature_engineering_version": 2,
+  "feature_contract": {
+    "model_features": [
+      "gpa_prev_1",
+      "gpa_prev_2",
+      "gpa_trend_delta",
+      "gpa_trend_missing",
+      "start_agpa_points",
+      "start_total_in_courses",
+      "start_total_in_credits",
+      "prior_total_reg_courses",
+      "prior_total_reg_credits",
+      "prior_total_fail_courses",
+      "prior_total_fail_credits",
+      "prior_fail_credit_ratio",
+      "prior_registered_semesters",
+      "observed_gap_semesters",
+      "diploma_gpa",
+      "course_credits",
+      "attempt_number",
+      "plan_year_order",
+      "plan_semester_order",
+      "plan_credits_count",
+      "degree_credits_count",
+      "course_history_avg_mark",
+      "course_history_fail_rate",
+      "course_history_avg_attempt",
+      "course_history_retake_rate",
+      "course_history_effective_support",
+      "course_history_fallback_level",
+      "course_history_missing",
+      "plan_course_type_id",
+      "plan_requirement_type_id",
+      "diploma_type_id",
+      "grade_version_id",
+      "part_semester"
+    ],
+    "feature_count": 33,
+    "removed_features": [
+      "peer_course_count",
+      "peer_credit_weighted_avg_attempt",
+      "peer_credit_weighted_avg_mark",
+      "peer_credit_weighted_fail_rate",
+      "peer_difficulty_credit_load",
+      "peer_difficulty_missing",
+      "peer_max_fail_rate",
+      "peer_total_credits",
+      "plan_course_count",
+      "plan_credit_weighted_avg_attempt",
+      "plan_credit_weighted_avg_mark",
+      "plan_credit_weighted_fail_rate",
+      "plan_difficulty_credit_load",
+      "plan_total_credits"
+    ]
+  },
+  "training_as_of_part": 20243,
+  "train_rows": 356816,
+  "test_rows": 67536,
+  "temporal_folds": [
+    {
+      "name": "train_through_2022_validate_2023",
+      "train_through": 20223,
+      "valid_from": 20231,
+      "valid_through": 20233
+    },
+    {
+      "name": "train_through_2023_validate_2024",
+      "train_through": 20233,
+      "valid_from": 20241,
+      "valid_through": 20243
+    }
+  ],
+  "training_weight": {
+    "before_2022": 0.25,
+    "from_2022": 1.0,
+    "fit_only": true
+  },
+  "seed": 42,
+  "input_sha256": {
+    "data/features/temporal_train_features_v2.parquet": "026faac5933709c0903dac1b0ea2ca88be71d55c1bb6f805eb265d0f4cbe204f",
+    "data/features/temporal_test_features_v2.parquet": "6d2c8dd0f8aa44d68812d66a21480cc328ca51beb482c0431c3d304c1a14bf05",
+    "src/modeling/train_models.py": "d9c88283a0237050cd32f696cc58d511ca8a59b394617a3de13e1340e9f149aa",
+    "src/modeling/training_config.py": "0ebd3ce8d8348c31d81ee1611d9be99f8afb686dfd505f9adbf79153ffe94206",
+    "src/features/feature_contract.py": "2efe110db00069ae1b34cf7b564eebeebcc28a83e8766f17a15a53aa1530f06d",
+    "src/experiments/course_only_training.py": "37185634f168aa2dce8cb1449ffe7a9b3168dca4871e9fe3be0e2483a7c22f33",
+    "src/experiments/course_only_core.py": "86c0a0093198c4bc16570c606278d3c9017a2fc9bcdb6052e14afd4cc222967f",
+    "models/grade_regressor_v2.txt": "3794be06899046e15e854129bdd3a16437f791f3e4b72a7b0a99bf656bdebf8a",
+    "models/fail_risk_classifier_v2.txt": "28bd34fb756c7670157a1748a0469e2b066b711d5decb9064fd433190a96d1e2",
+    "data/artifacts/category_levels_v2.json": "4fb4f3dff5f1d1bf70972ad9d02384a01f73e4689fb514937f2d70eb966982f6",
+    "models/model_metadata_v2.json": "8af46218a697eebc9873349a2a8ae9a2d8488278b56909cd5fc6b4a7ef82c83a"
+  },
+  "holdout_history_protocol": "existing_V2_features_sequential_roll_forward",
+  "grade": {
+    "selected_candidate": {
+      "candidate": {
+        "name": "regularized_47",
+        "num_leaves": 47,
+        "min_data_in_leaf": 160,
+        "feature_fraction": 0.8,
+        "bagging_fraction": 0.85,
+        "lambda_l1": 0.5,
+        "lambda_l2": 4.0
+      },
+      "folds": [
+        {
+          "fold": "train_through_2022_validate_2023",
+          "fit_rows": 205369,
+          "valid_rows": 77014,
+          "best_iteration": 143,
+          "metrics": {
+            "mae": 9.256954485953914,
+            "rmse": 12.393925600718122,
+            "within_5": 0.35766224322850393,
+            "within_10": 0.6390007011712157
+          }
+        },
+        {
+          "fold": "train_through_2023_validate_2024",
+          "fit_rows": 282383,
+          "valid_rows": 74433,
+          "best_iteration": 107,
+          "metrics": {
+            "mae": 9.754773474625663,
+            "rmse": 13.093300017250316,
+            "within_5": 0.3341125576021388,
+            "within_10": 0.6165141805382022
+          }
+        }
+      ],
+      "mean_primary_metric": 9.505863980289789,
+      "mean_best_iteration": 125
+    },
+    "parameters": {
+      "learning_rate": 0.04,
+      "num_leaves": 47,
+      "min_data_in_leaf": 160,
+      "feature_fraction": 0.8,
+      "bagging_fraction": 0.85,
+      "bagging_freq": 1,
+      "lambda_l1": 0.5,
+      "lambda_l2": 4.0,
+      "max_bin": 255,
+      "verbosity": -1,
+      "seed": 42,
+      "feature_fraction_seed": 42,
+      "bagging_seed": 42,
+      "data_random_seed": 42,
+      "deterministic": true,
+      "force_col_wise": true,
+      "num_threads": 0,
+      "objective": "regression",
+      "metric": "l1"
+    },
+    "final_boost_rounds": 125,
+    "experimental_test_metrics": {
+      "mae": 9.718016590723643,
+      "rmse": 13.079372452850626,
+      "within_5": 0.35067223406775644,
+      "within_10": 0.6244817578772802
+    },
+    "official_test_metrics_fresh": {
+      "mae": 9.707697595205712,
+      "rmse": 13.045275784864371,
+      "within_5": 0.3499763089315328,
+      "within_10": 0.6258884150675196
+    },
+    "official_cv_mean_saved": 9.522407056666879,
+    "official_cv_provenance": "saved official metadata; not retrained in this experiment",
+    "feature_importance": [
+      {
+        "feature": "gpa_prev_1",
+        "gain": 96210409.41796875,
+        "gain_share": 0.340266586797969
+      },
+      {
+        "feature": "course_history_avg_mark",
+        "gain": 59617266.6484375,
+        "gain_share": 0.2108479109423637
+      },
+      {
+        "feature": "start_agpa_points",
+        "gain": 33476575.47241211,
+        "gain_share": 0.1183963371800686
+      },
+      {
+        "feature": "prior_fail_credit_ratio",
+        "gain": 28882016.982910156,
+        "gain_share": 0.10214679885542992
+      },
+      {
+        "feature": "gpa_prev_2",
+        "gain": 12037116.225585938,
+        "gain_share": 0.04257157284485706
+      },
+      {
+        "feature": "course_history_fail_rate",
+        "gain": 6833407.898925781,
+        "gain_share": 0.024167659154888638
+      },
+      {
+        "feature": "course_history_effective_support",
+        "gain": 6377093.065673828,
+        "gain_share": 0.02255381412756535
+      },
+      {
+        "feature": "plan_credits_count",
+        "gain": 5020370.056152344,
+        "gain_share": 0.017755502692525096
+      },
+      {
+        "feature": "course_history_avg_attempt",
+        "gain": 4189348.6987304688,
+        "gain_share": 0.01481643609300863
+      },
+      {
+        "feature": "diploma_gpa",
+        "gain": 3875572.993408203,
+        "gain_share": 0.013706708061332755
+      },
+      {
+        "feature": "course_history_retake_rate",
+        "gain": 3829476.7807617188,
+        "gain_share": 0.013543679954120447
+      },
+      {
+        "feature": "part_semester",
+        "gain": 3367521.4470214844,
+        "gain_share": 0.011909886213756745
+      },
+      {
+        "feature": "degree_credits_count",
+        "gain": 2947704.5,
+        "gain_share": 0.010425122969247936
+      },
+      {
+        "feature": "course_credits",
+        "gain": 1956821.6962890625,
+        "gain_share": 0.006920675669052244
+      },
+      {
+        "feature": "prior_total_fail_credits",
+        "gain": 1814194.98828125,
+        "gain_share": 0.00641624892964181
+      },
+      {
+        "feature": "plan_year_order",
+        "gain": 1598562.6142578125,
+        "gain_share": 0.005653623634146553
+      },
+      {
+        "feature": "prior_total_fail_courses",
+        "gain": 1585573.8090820312,
+        "gain_share": 0.005607686230590286
+      },
+      {
+        "feature": "plan_course_type_id",
+        "gain": 1459092.1806640625,
+        "gain_share": 0.005160359665255108
+      },
+      {
+        "feature": "plan_requirement_type_id",
+        "gain": 1343051.5361328125,
+        "gain_share": 0.0047499596442662105
+      },
+      {
+        "feature": "start_total_in_credits",
+        "gain": 1316035.8432617188,
+        "gain_share": 0.004654413458995405
+      },
+      {
+        "feature": "start_total_in_courses",
+        "gain": 1253668.412109375,
+        "gain_share": 0.004433839063210722
+      },
+      {
+        "feature": "attempt_number",
+        "gain": 699830.6025390625,
+        "gain_share": 0.002475085304213025
+      },
+      {
+        "feature": "course_history_fallback_level",
+        "gain": 536406.0595703125,
+        "gain_share": 0.0018971030279562422
+      },
+      {
+        "feature": "prior_total_reg_courses",
+        "gain": 526543.4130859375,
+        "gain_share": 0.001862221884883105
+      },
+      {
+        "feature": "gpa_trend_delta",
+        "gain": 485831.001953125,
+        "gain_share": 0.001718234625497319
+      }
+    ]
+  },
+  "fail": {
+    "selected_candidate": {
+      "candidate": {
+        "name": "capaciy_63",
+        "num_leaves": 63,
+        "min_data_in_leaf": 100,
+        "feature_fraction": 0.85,
+        "bagging_fraction": 0.9,
+        "lambda_l1": 0.2,
+        "lambda_l2": 2.0
+      },
+      "folds": [
+        {
+          "fold": "train_through_2022_validate_2023",
+          "fit_rows": 205369,
+          "valid_rows": 77014,
+          "best_iteration": 95,
+          "metrics": {
+            "pr_auc": 0.28122777539978805,
+            "roc_auc": 0.8123074490059258,
+            "brier": 0.07189664970254547,
+            "log_loss": 0.24693141665392643,
+            "calibration_error_10_bins": 0.007296880664253932
+          }
+        },
+        {
+          "fold": "train_through_2023_validate_2024",
+          "fit_rows": 282383,
+          "valid_rows": 74433,
+          "best_iteration": 75,
+          "metrics": {
+            "pr_auc": 0.2073369088454947,
+            "roc_auc": 0.7978393731970033,
+            "brier": 0.05711905460517221,
+            "log_loss": 0.20768279415260402,
+            "calibration_error_10_bins": 0.008975426070759653
+          }
+        }
+      ],
+      "mean_primary_metric": 0.2273071054032652,
+      "mean_best_iteration": 85
+    },
+    "parameters": {
+      "learning_rate": 0.04,
+      "num_leaves": 63,
+      "min_data_in_leaf": 100,
+      "feature_fraction": 0.85,
+      "bagging_fraction": 0.9,
+      "bagging_freq": 1,
+      "lambda_l1": 0.2,
+      "lambda_l2": 2.0,
+      "max_bin": 255,
+      "verbosity": -1,
+      "seed": 42,
+      "feature_fraction_seed": 42,
+      "bagging_seed": 42,
+      "data_random_seed": 42,
+      "deterministic": true,
+      "force_col_wise": true,
+      "num_threads": 0,
+      "objective": "binary",
+      "metric": "binary_logloss"
+    },
+    "final_boost_rounds": 85,
+    "experimental_test_metrics": {
+      "pr_auc": 0.29913243156014035,
+      "roc_auc": 0.8079710818840979,
+      "brier": 0.08147277849681905,
+      "log_loss": 0.27549501506020874,
+      "calibration_error_10_bins": 0.022241705512938074
+    },
+    "official_test_metrics_fresh": {
+      "pr_auc": 0.3051099612394929,
+      "roc_auc": 0.8097625713592638,
+      "brier": 0.08117668507728103,
+      "log_loss": 0.27402278997634577,
+      "calibration_error_10_bins": 0.021415814206858348
+    },
+    "official_cv_mean_saved": 0.22731651650850643,
+    "official_cv_provenance": "saved official metadata; not retrained in this experiment",
+    "feature_importance": [
+      {
+        "feature": "prior_fail_credit_ratio",
+        "gain": 129564.1021976471,
+        "gain_share": 0.3386543034353162
+      },
+      {
+        "feature": "gpa_prev_1",
+        "gain": 59157.55966567993,
+        "gain_share": 0.15462587106845876
+      },
+      {
+        "feature": "course_history_fail_rate",
+        "gain": 59140.08643531799,
+        "gain_share": 0.15458019958572075
+      },
+      {
+        "feature": "start_agpa_points",
+        "gain": 23546.30661201477,
+        "gain_share": 0.06154527318069937
+      },
+      {
+        "feature": "course_history_avg_mark",
+        "gain": 16057.66325378418,
+        "gain_share": 0.041971477220701256
+      },
+      {
+        "feature": "gpa_prev_2",
+        "gain": 13033.981245040894,
+        "gain_share": 0.03406818528171346
+      },
+      {
+        "feature": "course_history_effective_support",
+        "gain": 11833.755182266235,
+        "gain_share": 0.030931037612262426
+      },
+      {
+        "feature": "degree_credits_count",
+        "gain": 8739.107141494751,
+        "gain_share": 0.022842254848760478
+      },
+      {
+        "feature": "course_history_avg_attempt",
+        "gain": 7741.935794830322,
+        "gain_share": 0.02023585105262912
+      },
+      {
+        "feature": "diploma_gpa",
+        "gain": 5691.223197937012,
+        "gain_share": 0.014875703957351796
+      },
+      {
+        "feature": "course_history_retake_rate",
+        "gain": 5569.485057830811,
+        "gain_share": 0.014557505132678235
+      },
+      {
+        "feature": "plan_credits_count",
+        "gain": 5197.021080970764,
+        "gain_share": 0.013583959787179153
+      },
+      {
+        "feature": "start_total_in_courses",
+        "gain": 4687.067321777344,
+        "gain_share": 0.012251044016725839
+      },
+      {
+        "feature": "plan_year_order",
+        "gain": 4001.3360109329224,
+        "gain_share": 0.010458681352385769
+      },
+      {
+        "feature": "start_total_in_credits",
+        "gain": 3833.973285675049,
+        "gain_share": 0.010021229109195905
+      },
+      {
+        "feature": "prior_total_fail_credits",
+        "gain": 3816.7703561782837,
+        "gain_share": 0.009976264138135583
+      },
+      {
+        "feature": "course_credits",
+        "gain": 3195.379104614258,
+        "gain_share": 0.008352073348481533
+      },
+      {
+        "feature": "part_semester",
+        "gain": 3167.4119062423706,
+        "gain_share": 0.008278972760255169
+      },
+      {
+        "feature": "attempt_number",
+        "gain": 3122.2079906463623,
+        "gain_share": 0.008160818886697181
+      },
+      {
+        "feature": "prior_total_fail_courses",
+        "gain": 1910.6525926589966,
+        "gain_share": 0.004994058631199808
+      },
+      {
+        "feature": "plan_requirement_type_id",
+        "gain": 1725.3377027511597,
+        "gain_share": 0.0045096830681121605
+      },
+      {
+        "feature": "gpa_trend_delta",
+        "gain": 1519.5529022216797,
+        "gain_share": 0.003971803307446848
+      },
+      {
+        "feature": "course_history_fallback_level",
+        "gain": 1468.359097480774,
+        "gain_share": 0.003837993077678977
+      },
+      {
+        "feature": "prior_total_reg_credits",
+        "gain": 1155.2398023605347,
+        "gain_share": 0.003019562702424715
+      },
+      {
+        "feature": "prior_total_reg_courses",
+        "gain": 1119.3069105148315,
+        "gain_share": 0.0029256414059234677
+      }
+    ]
+  },
+  "training_seconds": 61.515457100002095,
+  "artifact_sha256": {
+    "category_levels.json": "4fb4f3dff5f1d1bf70972ad9d02384a01f73e4689fb514937f2d70eb966982f6",
+    "fail_risk_classifier.txt": "dfb2325a6728151d26d02653a665be25c74e6ee3e51dd3f7be57af61212b5470",
+    "grade_regressor.txt": "5b300050c974a68a5bc62dee923f2236878eb0f1a9e09e2c4321c4e124f1df97"
+  }
+}

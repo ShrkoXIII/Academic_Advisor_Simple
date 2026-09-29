@@ -16,11 +16,12 @@ from src.features.frozen_history import (
     validate_history_selection, verify_legacy_course_history,
 )
 from src.paths import (
-    DEGREE_POINTS_SELECTED_MODEL_PATH, course_history_state_path, frozen_history_dir,
+    course_history_state_path, frozen_history_dir,
     history_metadata_path, specialty_history_state_path,
 )
 from src.recommendation import AcademicPlanRecommender
 from src.features.temporal_features import save_course_history_state
+from tests.recommendation_fixtures import synthetic_components
 
 
 def history_source():
@@ -145,14 +146,12 @@ class FrozenHistoryTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 course_history_state_path(part, self.root)
 
-    def test_course_specialty_mismatch_refused_by_save_load_and_recommender(self):
+    def test_legacy_optional_course_specialty_mismatch_refused_by_save_and_load(self):
         course, specialty, meta = self.save(20243, specialty=True)
         wrong = copy.deepcopy(specialty)
         wrong.as_of_part = 20251
         with self.assertRaisesRegex(ValueError, "cutoffs"):
             save_frozen_history(course, wrong, meta, root=self.root)
-        with self.assertRaisesRegex(ValueError, "cutoffs"):
-            AcademicPlanRecommender(None, None, {}, {}, course, wrong, {})
         path = specialty_history_state_path(20243, self.root)
         payload = pickle.loads(path.read_bytes())
         payload["as_of_part"] = 20251
@@ -203,21 +202,33 @@ class FrozenHistoryTests(unittest.TestCase):
             verify_legacy_course_history(legacy, changed)
 
 
-@unittest.skipUnless(DEGREE_POINTS_SELECTED_MODEL_PATH.exists(), "Local models unavailable")
 class FrozenHistoryModelIntegrationTests(unittest.TestCase):
     def test_same_models_load_two_versions_without_reading_any_training_table(self):
         with tempfile.TemporaryDirectory() as root:
             for cutoff in [20243, 20251]:
                 save_frozen_history(*build_frozen_history(
                     history_source(), cutoff, finalized_through_part=cutoff,
-                    specialty_history_type=FrozenSpecialtyHistory,
                 ), root=root)
-            with patch("pandas.read_parquet", side_effect=AssertionError("Serving read a training table")):
+            fixed = synthetic_components()
+
+            def serving_components(*, history_as_of_part, history_root):
+                course, specialty, metadata = load_frozen_history(history_as_of_part, root=history_root)
+                self.assertIsNone(specialty)
+                components = list(fixed)
+                components[4] = course
+                components[-1] = {**fixed[-1], "history": metadata}
+                return tuple(components)
+
+            with patch("pandas.read_parquet", side_effect=AssertionError("Serving read a training table")), \
+                    patch("src.recommendation.engine.load_recommendation_artifacts", side_effect=serving_components):
                 old = AcademicPlanRecommender.load(history_as_of_part=20243, history_root=root)
                 new = AcademicPlanRecommender.load(history_as_of_part=20251, history_root=root)
             self.assertEqual(old.provenance["artifact_sha256"], new.provenance["artifact_sha256"])
             self.assertEqual(old.provenance["training"], new.provenance["training"])
-            self.assertEqual(old.provenance["training"]["expected_points"]["training_as_of_part"], 20243)
+            self.assertEqual(old.provenance["training"]["grade"]["training_as_of_part"], 20243)
+            self.assertIs(old.grade_model, new.grade_model)
+            self.assertIs(old.fail_model, new.fail_model)
+            self.assertFalse(hasattr(old, "specialty_history"))
             self.assertEqual((old.course_history.as_of_part, new.course_history.as_of_part), (20243, 20251))
             self.assertEqual(validate_history_selection(20251, old.course_history.as_of_part)["target_part"], 20251)
             self.assertEqual(validate_history_selection(20252, new.course_history.as_of_part)["target_part"], 20252)
@@ -226,8 +237,13 @@ class FrozenHistoryModelIntegrationTests(unittest.TestCase):
         with self.assertRaises(TypeError):
             AcademicPlanRecommender.load()
         with tempfile.TemporaryDirectory() as root:
-            with self.assertRaises(FileNotFoundError):
-                AcademicPlanRecommender.load(history_as_of_part=20243, history_root=root)
+            def serving_components(*, history_as_of_part, history_root):
+                # Fail on the requested serving bundle before any mock model is constructed.
+                load_frozen_history(history_as_of_part, root=history_root)
+
+            with patch("src.recommendation.engine.load_recommendation_artifacts", side_effect=serving_components):
+                with self.assertRaises(FileNotFoundError):
+                    AcademicPlanRecommender.load(history_as_of_part=20243, history_root=root)
             self.assertFalse(list(Path(root).iterdir()))
 
 
