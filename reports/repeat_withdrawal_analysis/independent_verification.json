@@ -1,0 +1,9 @@
+{
+  "independent_method": "pandas merge_asof, backward, allow_exact_matches=False",
+  "registration_rows_verified": 474165,
+  "previous_status_differences": 0,
+  "previous_part_differences": 0,
+  "previous_credit_differences": 0,
+  "credit_partition_differences": 0,
+  "snapshot_strict_prior": true
+}

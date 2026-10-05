@@ -1,0 +1,133 @@
+bucket,count,percentage,cohort,component
+0,71864,75.52706253284288,all,failed
+3,7753,8.148187073042564,all,failed
+6,2623,2.7566999474513927,all,failed
+9,791,0.8313189700472937,all,failed
+12+,631,0.6631634261692065,all,failed
+OTHER (<12),11488,12.073568050446664,all,failed
+0,82566,86.77456647398843,all,withdrawn
+3,5055,5.3126642143983185,all,withdrawn
+6,926,0.9732002101944298,all,withdrawn
+9,259,0.2722017866526537,all,withdrawn
+12+,265,0.278507619548082,all,withdrawn
+OTHER (<12),6079,6.388859695218077,all,withdrawn
+0,14065,37.65628764959439,failed_available,failed
+3,7753,20.75714170972665,failed_available,failed
+6,2623,7.022569676849348,failed_available,failed
+9,791,2.1177478514631467,failed_available,failed
+12+,631,1.6893791330888062,failed_available,failed
+OTHER (<12),11488,30.756873979277664,failed_available,failed
+0,30676,82.12899253032047,failed_available,withdrawn
+3,2789,7.467002222162726,failed_available,withdrawn
+6,516,1.3814891167572487,failed_available,withdrawn
+9,118,0.31592192980107625,failed_available,withdrawn
+12+,86,0.23024818612620815,failed_available,withdrawn
+OTHER (<12),3166,8.476346014832266,failed_available,withdrawn
+0,20629,64.2407822620827,withdrawn_available,failed
+3,4034,12.56228201295466,withdrawn_available,failed
+6,1350,4.204035874439462,withdrawn_available,failed
+9,398,1.2394120577977081,withdrawn_available,failed
+12+,237,0.7380418535127056,withdrawn_available,failed
+OTHER (<12),5464,17.015445939212757,withdrawn_available,failed
+0,19528,60.81215744892875,withdrawn_available,withdrawn
+3,5055,15.741778774289985,withdrawn_available,withdrawn
+6,926,2.8836571998006972,withdrawn_available,withdrawn
+9,259,0.8065520677628301,withdrawn_available,withdrawn
+12+,265,0.8252366716492278,withdrawn_available,withdrawn
+OTHER (<12),6079,18.930617837568512,withdrawn_available,withdrawn
+0,6715,36.89965930322013,both_available,failed
+3,4034,22.16727112869546,both_available,failed
+6,1350,7.418397626112759,both_available,failed
+9,398,2.1870535223650953,both_available,failed
+12+,237,1.3023409165842401,both_available,failed
+OTHER (<12),5464,30.025277503022313,both_available,failed
+0,11523,63.320145070886916,both_available,withdrawn
+3,2789,15.325859984613693,both_available,withdrawn
+6,516,2.835476425980877,both_available,withdrawn
+9,118,0.6484229036157819,both_available,withdrawn
+12+,86,0.47257940433014617,both_available,withdrawn
+OTHER (<12),3166,17.39751621057259,both_available,withdrawn
+0,27979,54.57719691797522,any_available,failed
+3,7753,15.123378523359015,any_available,failed
+6,2623,5.1165512532917194,any_available,failed
+9,791,1.542963035209207,any_available,failed
+12+,631,1.2308592607041842,any_available,failed
+OTHER (<12),11488,22.409051009460647,any_available,failed
+0,38681,75.45303813517995,any_available,withdrawn
+3,5055,9.860528625768069,any_available,withdrawn
+6,926,1.8063005949478201,any_available,withdrawn
+9,259,0.5052179849800059,any_available,withdrawn
+12+,265,0.5169218765239442,any_available,withdrawn
+OTHER (<12),6079,11.857992782600215,any_available,withdrawn
+0,34,0.1457975986277873,failed_available_and_repeated,failed
+3,7753,33.246140651801035,failed_available_and_repeated,failed
+6,2623,11.24785591766724,failed_available_and_repeated,failed
+9,791,3.3919382504288165,failed_available_and_repeated,failed
+12+,631,2.7058319039451115,failed_available_and_repeated,failed
+OTHER (<12),11488,49.26243567753002,failed_available_and_repeated,failed
+0,19238,82.49571183533448,failed_available_and_repeated,withdrawn
+3,1793,7.688679245283018,failed_available_and_repeated,withdrawn
+6,308,1.3207547169811322,failed_available_and_repeated,withdrawn
+9,62,0.2658662092624357,failed_available_and_repeated,withdrawn
+12+,19,0.08147512864493997,failed_available_and_repeated,withdrawn
+OTHER (<12),1900,8.147512864493997,failed_available_and_repeated,withdrawn
+0,8511,67.61738301422102,withdrawn_available_and_repeated,failed
+3,1563,12.417573687137523,withdrawn_available_and_repeated,failed
+6,424,3.368554858187019,withdrawn_available_and_repeated,failed
+9,112,0.8898069436720425,withdrawn_available_and_repeated,failed
+12+,37,0.2939540796059426,withdrawn_available_and_repeated,failed
+OTHER (<12),1940,15.412727417176452,withdrawn_available_and_repeated,failed
+0,3,0.023834114562643997,withdrawn_available_and_repeated,withdrawn
+3,5055,40.16048303805513,withdrawn_available_and_repeated,withdrawn
+6,926,7.356796695002781,withdrawn_available_and_repeated,withdrawn
+9,259,2.0576785572415988,withdrawn_available_and_repeated,withdrawn
+12+,265,2.1053467863668867,withdrawn_available_and_repeated,withdrawn
+OTHER (<12),6079,48.295860808770954,withdrawn_available_and_repeated,withdrawn
+0,13313,56.566815381346935,policy_reference_any,failed
+3,3825,16.252390057361378,policy_reference_any,failed
+6,1036,4.401954535797748,policy_reference_any,failed
+9,351,1.491395793499044,policy_reference_any,failed
+12+,372,1.5806246016571064,policy_reference_any,failed
+OTHER (<12),4638,19.706819630337794,policy_reference_any,failed
+0,16498,70.09985128531973,policy_reference_any,withdrawn
+3,3077,13.074144890588485,policy_reference_any,withdrawn
+6,541,2.2987040577862756,policy_reference_any,withdrawn
+9,176,0.7478223921818569,policy_reference_any,withdrawn
+12+,216,0.9177820267686425,policy_reference_any,withdrawn
+OTHER (<12),3027,12.861695347355004,policy_reference_any,withdrawn
+0,6039,37.137937396224096,policy_reference_failed,failed
+3,3825,23.522538589262652,policy_reference_failed,failed
+6,1036,6.371071889797674,policy_reference_failed,failed
+9,351,2.158538835249985,policy_reference_failed,failed
+12+,372,2.287682184367505,policy_reference_failed,failed
+OTHER (<12),4638,28.52223110509809,policy_reference_failed,failed
+0,12566,77.27692023860772,policy_reference_failed,withdrawn
+3,1682,10.343767295984257,policy_reference_failed,withdrawn
+6,312,1.9187011868888753,policy_reference_failed,withdrawn
+9,80,0.49197466330483985,policy_reference_failed,withdrawn
+12+,67,0.4120287805178033,policy_reference_failed,withdrawn
+OTHER (<12),1554,9.556607834696514,policy_reference_failed,withdrawn
+0,10233,66.1260096930533,policy_reference_withdrawn,failed
+3,2007,12.96930533117932,policy_reference_withdrawn,failed
+6,547,3.5347334410339255,policy_reference_withdrawn,failed
+9,204,1.3182552504038774,policy_reference_withdrawn,failed
+12+,157,1.0145395799676897,policy_reference_withdrawn,failed
+OTHER (<12),2327,15.037156704361873,policy_reference_withdrawn,failed
+0,8438,54.52665589660744,policy_reference_withdrawn,withdrawn
+3,3077,19.88368336025848,policy_reference_withdrawn,withdrawn
+6,541,3.495961227786753,policy_reference_withdrawn,withdrawn
+9,176,1.1373182552504038,policy_reference_withdrawn,withdrawn
+12+,216,1.3957996768982228,policy_reference_withdrawn,withdrawn
+OTHER (<12),3027,19.560581583198708,policy_reference_withdrawn,withdrawn
+0,2959,36.08096573588587,policy_reference_both,failed
+3,2007,24.472625289598827,policy_reference_both,failed
+6,547,6.669918302646019,policy_reference_both,failed
+9,204,2.487501524204365,policy_reference_both,failed
+12+,157,1.9144006828435558,policy_reference_both,failed
+OTHER (<12),2327,28.374588464821365,policy_reference_both,failed
+0,4506,54.944518961102304,policy_reference_both,withdrawn
+3,1682,20.509693939763444,policy_reference_both,withdrawn
+6,312,3.8044140958419703,policy_reference_both,withdrawn
+9,80,0.9754907938056334,policy_reference_both,withdrawn
+12+,67,0.816973539812218,policy_reference_both,withdrawn
+OTHER (<12),1554,18.94890866967443,policy_reference_both,withdrawn

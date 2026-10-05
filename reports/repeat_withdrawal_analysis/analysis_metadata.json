@@ -1,0 +1,59 @@
+{
+  "roster_path": "D:\\AI\\Real projects\\Academic_Advisor_Simple\\data\\clean\\registration_roster_v2.parquet",
+  "raw_path": "D:\\AI\\Real projects\\Academic_Advisor_Simple\\data\\raw\\v_crg_student_course_raw.parquet",
+  "grade_path": "D:\\AI\\Real projects\\Academic_Advisor_Simple\\data\\raw\\v_acs_grade.parquet",
+  "graph_path": "C:\\Users\\ASUS\\.codex\\visualizations\\2026\\10\\03\\01a10196-e9c3-7641-b6fe-45613c0ef920\\architecture-analysis\\graphify-out\\graph.json",
+  "roster_rows": 474165,
+  "roster_students": 12030,
+  "student_semesters": 95150,
+  "target_parts": [
+    20201,
+    20202,
+    20203,
+    20211,
+    20212,
+    20213,
+    20221,
+    20222,
+    20223,
+    20231,
+    20232,
+    20233,
+    20241,
+    20242,
+    20243,
+    20251,
+    20252,
+    20253
+  ],
+  "raw_R_E_history_rows": 636557,
+  "raw_pre_window_rows": 162194,
+  "first_raw_part": 20111,
+  "raw_latest_part": 20253,
+  "roster_raw_join_matched_rows": 474165,
+  "all_roster_source_fields_reconcile": true,
+  "history_semantics": "Latest student+course, strictly part<T, raw R/E from same roster cohort; no within-semester outcomes or attempt_number",
+  "classifications_partition_courses_and_credits": true,
+  "zero_total_credit_semesters": 0,
+  "duplicate_conflicts": 0,
+  "roster_new_corrected_by_raw": 6731,
+  "policy_requires_backlog": true,
+  "policy_outcome": "Descriptive candidate only; formal eligibility and causal benefit INSUFFICIENT EVIDENCE",
+  "publication_time_evidence": "Unavailable: prior finalized state at beginning of T not recoverable from final snapshot",
+  "raw_unusable_by_reason": {
+    "invalid_part": 5926,
+    "invalid_keys": 0,
+    "invalid_credits": 0
+  },
+  "nonstandard_part_sensitivity": {
+    "source_rows": 5926,
+    "affected_students": 1172,
+    "excluded_part_counts": {
+      "20164": 2963,
+      "20154": 1938,
+      "20144": 795,
+      "20134": 230
+    },
+    "changed_registered_cases": 0
+  }
+}

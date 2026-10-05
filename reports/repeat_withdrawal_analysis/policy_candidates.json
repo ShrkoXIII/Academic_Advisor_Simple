@@ -1,0 +1,161 @@
+{
+  "evidence": "SUFFICIENT_FOR_DESCRIPTIVE_CANDIDATES",
+  "hard_university_limit": {
+    "allowed_failed_repeat_credits": "BACKEND_ONLY"
+  },
+  "reference": "Roster target semesters, parts 1/2, registered credits 12..18, no registered other-prior courses, positive failed/withdrawn backlog",
+  "reference_cases": 23535,
+  "reference_students": 6910,
+  "component_reference_cases": {
+    "failed": 16261,
+    "withdrawn": 15475
+  },
+  "minimum_descriptive_support": "100 any-backlog cases and 30 observed repeats per component; operational screen, not statistical proof",
+  "interpretation": "Marginal conditional quantile envelopes, not quotas. Missing backlog disables its component; new is the feasible residual. Joint combinations must be tested. Student semesters are dependent.",
+  "priority": "Failure and withdrawal have separate evidence; historical prevalence does not establish academic priority.",
+  "policies": [
+    {
+      "name": "A_conservative",
+      "percentile_band": [
+        0.25,
+        0.5
+      ],
+      "failed_component": {
+        "condition": "available_failed_credits>0",
+        "preferred_ratio": [
+          0.0,
+          0.1666666666666666
+        ],
+        "observed_credits": [
+          0.0,
+          3.0
+        ]
+      },
+      "withdrawn_component": {
+        "condition": "available_withdrawn_credits>0",
+        "preferred_ratio": [
+          0.0,
+          0.0
+        ],
+        "observed_credits": [
+          0.0,
+          0.0
+        ]
+      },
+      "total_previous_component": {
+        "condition": "either backlog>0",
+        "preferred_ratio": [
+          0.0,
+          0.1666666666666666
+        ]
+      },
+      "new_component": {
+        "observed_ratio": [
+          0.7142857142857143,
+          0.8333333333333334
+        ],
+        "preferred_ratio_from_total_residual": [
+          0.8333333333333334,
+          1.0
+        ]
+      },
+      "proposed_use": "Soft penalty envelope for future testing; no required minimum, no hard ceiling, no promotion"
+    },
+    {
+      "name": "B_observed_middle",
+      "percentile_band": [
+        0.5,
+        0.75
+      ],
+      "failed_component": {
+        "condition": "available_failed_credits>0",
+        "preferred_ratio": [
+          0.1666666666666666,
+          0.2352941176470588
+        ],
+        "observed_credits": [
+          3.0,
+          4.0
+        ]
+      },
+      "withdrawn_component": {
+        "condition": "available_withdrawn_credits>0",
+        "preferred_ratio": [
+          0.0,
+          0.1764705882352941
+        ],
+        "observed_credits": [
+          0.0,
+          3.0
+        ]
+      },
+      "total_previous_component": {
+        "condition": "either backlog>0",
+        "preferred_ratio": [
+          0.1666666666666666,
+          0.2857142857142857
+        ]
+      },
+      "new_component": {
+        "observed_ratio": [
+          0.8333333333333334,
+          1.0
+        ],
+        "preferred_ratio_from_total_residual": [
+          0.7142857142857143,
+          0.8333333333333334
+        ]
+      },
+      "proposed_use": "Soft penalty envelope for future testing; no required minimum, no hard ceiling, no promotion"
+    },
+    {
+      "name": "C_retake_heavier",
+      "percentile_band": [
+        0.75,
+        0.9
+      ],
+      "failed_component": {
+        "condition": "available_failed_credits>0",
+        "preferred_ratio": [
+          0.2352941176470588,
+          0.4615384615384615
+        ],
+        "observed_credits": [
+          4.0,
+          6.0
+        ]
+      },
+      "withdrawn_component": {
+        "condition": "available_withdrawn_credits>0",
+        "preferred_ratio": [
+          0.1764705882352941,
+          0.3076923076923077
+        ],
+        "observed_credits": [
+          3.0,
+          5.0
+        ]
+      },
+      "total_previous_component": {
+        "condition": "either backlog>0",
+        "preferred_ratio": [
+          0.2857142857142857,
+          0.5
+        ]
+      },
+      "new_component": {
+        "observed_ratio": [
+          1.0,
+          1.0
+        ],
+        "preferred_ratio_from_total_residual": [
+          0.5,
+          0.7142857142857143
+        ]
+      },
+      "proposed_use": "Soft penalty envelope for future testing; no required minimum, no hard ceiling, no promotion"
+    }
+  ],
+  "recommended_starting_candidate": "B_observed_middle",
+  "calendar_sensitivity_note": "Numeric-only inclusion of old part-4 registrations changes middle failed upper ratio from 0.235294 to 0.25; middle failed credits 3..4, withdrawn 0..3, and total previous ratio 1/6..2/7 remain unchanged. Calendar meanings remain unverified."
+}

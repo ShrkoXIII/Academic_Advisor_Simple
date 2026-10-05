@@ -1,0 +1,15 @@
+finish_status,count,total_course_credits,unique_students,percentage,semantic_category,verification,meaning,grade_source_labels,grade_ids,evidence_source
+D,1387,3878.5,357.0,0.2925142091887845,OTHER,VERIFIED,محروم؛ إذن إعادة الرسوب غير مثبت,محروم,970.111 | 971.111 | 991.111,data/raw/v_acs_grade.parquet
+F,36823,109950.0,7552.0,7.765862094418609,FAILED,VERIFIED,رسوب,رسوب,684.111 | 94.111 | 985.111,data/raw/v_acs_grade.parquet; src/data/clean_student_course.py:16
+FA,295,796.5,244.0,0.062214629928400454,FAILED,VERIFIED,محروم بالغياب؛ يصنفه الكود fail,محروم بالغياب,686.111 | 96.111 | 987.111,data/raw/v_acs_grade.parquet; src/data/clean_student_course.py:16
+FE,463,1346.0,418.0,0.097645334429998,FAILED,VERIFIED,راسب امتحان نهائي,راسب امتحان نهائي,1003.111 | 995.111 | 998.111,data/raw/v_acs_grade.parquet; src/data/clean_student_course.py:16
+I,26,79.0,26.0,0.005483323315723429,UNRESOLVED,VERIFIED,غير مكتمل,غير مكتمل,687.111 | 97.111 | 988.111,data/raw/v_acs_grade.parquet
+IP,0,0.0,0.0,0.0,UNRESOLVED,VERIFIED,قيد الإنجاز,قيد الانجاز,962.111 | 969.111 | 990.111,data/raw/v_acs_grade.parquet
+L,0,0.0,0.0,0.0,UNRESOLVED,UNVERIFIED,معنى غير مثبت / قيمة مفقودة,,1005.111 | 1007.111 | 1009.111,data/raw/v_acs_grade.parquet
+P,386780,1114357.0,11860.0,81.57076123290416,PASSED,VERIFIED,نجاح حسب سلم الدرجة,امتياز | جيد | جيد جداً | شرف | مقبول | ممتاز | نجاح شرطي,673.111 | 674.111 | 675.111 | 676.111 | 677.111 | 678.111 | 679.111 | 680.111 | 681.111 | 682.111 | 683.111 | 85.111 | 86.111 | 87.111 | 88.111 | 89.111 | 90.111 | 91.111 | 92.111 | 93.111 | 974.111 | 975.111 | 976.111 | 977.111 | 978.111 | 979.111 | 980.111 | 981.111 | 982.111 | 983.111 | 984.111,data/raw/v_acs_grade.parquet; src/data/clean_student_course.py:16
+ST,9073,24225.0,1048.0,1.913468940136872,OTHER,VERIFIED,تدريب سريري علامته من الامتحان الوطني,تدريب سريري علامته من علامة الامتحان الوطني,1002.111 | 994.111 | 997.111,data/raw/v_acs_grade.parquet
+T,0,0.0,0.0,0.0,OTHER,VERIFIED,معادل,معادل,688.111 | 98.111 | 989.111,data/raw/v_acs_grade.parquet
+W,23613,66280.0,6130.0,4.979912055929898,WITHDRAWN,VERIFIED,منسحب,منسحب,685.111 | 95.111 | 986.111,data/raw/v_acs_grade.parquet
+X,0,0.0,0.0,0.0,UNRESOLVED,UNVERIFIED,معنى غير مثبت / قيمة مفقودة,,1004.111 | 1006.111 | 1008.111,data/raw/v_acs_grade.parquet
+Z,5562,14825.0,2289.0,1.1730093954636045,OTHER,VERIFIED,محروم من الامتحان؛ إذن إعادة الرسوب غير مثبت,محروم من الامتحان,973.111 | 992.111,data/raw/v_acs_grade.parquet
+__MISSING__,10143,28982.0,4374.0,2.139128784283952,UNKNOWN,MISSING,معنى غير مثبت / قيمة مفقودة,,,data/raw/v_acs_grade.parquet

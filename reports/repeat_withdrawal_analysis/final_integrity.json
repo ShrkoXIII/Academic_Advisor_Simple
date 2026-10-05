@@ -1,0 +1,14 @@
+{
+  "existing_data_model_and_production_source_files_verified": 951,
+  "existing_files_changed": [],
+  "added_protected_files": [],
+  "new_analysis_sources_updated": [
+    "src/diagnostics/analyze_repeat_withdrawal_balance.py",
+    "src/diagnostics/repeat_withdrawal_balance.py",
+    "src/diagnostics/repeat_withdrawal_report.py"
+  ],
+  "original_supplied_graph_unchanged": true,
+  "local_ast_graph_nodes": 1862,
+  "local_ast_graph_edges": 4430,
+  "production_and_data_unchanged": true
+}

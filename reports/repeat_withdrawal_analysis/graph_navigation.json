@@ -1,0 +1,1095 @@
+{
+  "graph_path": "C:\\Users\\ASUS\\.codex\\visualizations\\2026\\10\\03\\01a10196-e9c3-7641-b6fe-45613c0ef920\\architecture-analysis\\graphify-out\\graph.json",
+  "sha256": "ba9188ead8e92527b601613cdee7ffce3c5270895b10116891d59b06c548daa3",
+  "nodes": 541,
+  "edges": 1318,
+  "expanded_tokens": [
+    "registration",
+    "roster",
+    "student",
+    "course",
+    "status",
+    "previous",
+    "grade",
+    "temporal",
+    "clean",
+    "paths"
+  ],
+  "traversal": "BFS depth 1 on actual graph seed labels; original graph read-only",
+  "scoped_nodes": [
+    {
+      "id": "data_build_registration_roster_build_registration_roster",
+      "label": "build_registration_roster()",
+      "source_file": "data/build_registration_roster.py",
+      "source_location": "L35",
+      "depth": 0
+    },
+    {
+      "id": "features_student_course_status",
+      "label": "student_course_status.py",
+      "source_file": "features/student_course_status.py",
+      "source_location": "L1",
+      "depth": 0
+    },
+    {
+      "id": "paths",
+      "label": "paths.py",
+      "source_file": "paths.py",
+      "source_location": "L1",
+      "depth": 0
+    },
+    {
+      "id": "data_build_registration_roster",
+      "label": "build_registration_roster.py",
+      "source_file": "data/build_registration_roster.py",
+      "source_location": "L1",
+      "depth": 0
+    },
+    {
+      "id": "data_clean_student_course",
+      "label": "clean_student_course.py",
+      "source_file": "data/clean_student_course.py",
+      "source_location": "L1",
+      "depth": 0
+    },
+    {
+      "id": "experiments_previous_course_status_data",
+      "label": "previous_course_status_data.py",
+      "source_file": "experiments/previous_course_status_data.py",
+      "source_location": "L1",
+      "depth": 0
+    },
+    {
+      "id": "data_build_registration_roster_main",
+      "label": "main()",
+      "source_file": "data/build_registration_roster.py",
+      "source_location": "L95",
+      "depth": 1
+    },
+    {
+      "id": "data_cleaning_utils_clean_column_names",
+      "label": "clean_column_names()",
+      "source_file": "data/cleaning_utils.py",
+      "source_location": "L7",
+      "depth": 1
+    },
+    {
+      "id": "data_cleaning_utils_to_integer",
+      "label": "to_integer()",
+      "source_file": "data/cleaning_utils.py",
+      "source_location": "L37",
+      "depth": 1
+    },
+    {
+      "id": "data_cleaning_utils_clean_id_columns",
+      "label": "clean_id_columns()",
+      "source_file": "data/cleaning_utils.py",
+      "source_location": "L25",
+      "depth": 1
+    },
+    {
+      "id": "data_cleaning_utils_to_float",
+      "label": "to_float()",
+      "source_file": "data/cleaning_utils.py",
+      "source_location": "L41",
+      "depth": 1
+    },
+    {
+      "id": "numpy",
+      "label": "numpy",
+      "source_file": "",
+      "source_location": null,
+      "depth": 1
+    },
+    {
+      "id": "pandas",
+      "label": "pandas",
+      "source_file": "",
+      "source_location": null,
+      "depth": 1
+    },
+    {
+      "id": "features_student_course_status_keys",
+      "label": "_keys()",
+      "source_file": "features/student_course_status.py",
+      "source_location": "L17",
+      "depth": 1
+    },
+    {
+      "id": "features_student_course_status_previous_status_for_targets",
+      "label": "previous_status_for_targets()",
+      "source_file": "features/student_course_status.py",
+      "source_location": "L33",
+      "depth": 1
+    },
+    {
+      "id": "features_student_course_status_rationale_1",
+      "label": "Student-specific previous course attempt status at a target semester.",
+      "source_file": "features/student_course_status.py",
+      "source_location": "L1",
+      "depth": 1
+    },
+    {
+      "id": "experiments_degree_points",
+      "label": "degree_points.py",
+      "source_file": "experiments/degree_points.py",
+      "source_location": "L1",
+      "depth": 1
+    },
+    {
+      "id": "experiments_experiment_io",
+      "label": "experiment_io.py",
+      "source_file": "experiments/experiment_io.py",
+      "source_location": "L1",
+      "depth": 1
+    },
+    {
+      "id": "modeling_train_models",
+      "label": "train_models.py",
+      "source_file": "modeling/train_models.py",
+      "source_location": "L1",
+      "depth": 1
+    },
+    {
+      "id": "pathlib",
+      "label": "pathlib",
+      "source_file": "",
+      "source_location": null,
+      "depth": 1
+    },
+    {
+      "id": "project_status",
+      "label": "project_status.py",
+      "source_file": "project_status.py",
+      "source_location": "L1",
+      "depth": 1
+    },
+    {
+      "id": "paths_academic_part",
+      "label": "academic_part()",
+      "source_file": "paths.py",
+      "source_location": "L64",
+      "depth": 1
+    },
+    {
+      "id": "paths_course_history_state_path",
+      "label": "course_history_state_path()",
+      "source_file": "paths.py",
+      "source_location": "L76",
+      "depth": 1
+    },
+    {
+      "id": "paths_frozen_history_dir",
+      "label": "frozen_history_dir()",
+      "source_file": "paths.py",
+      "source_location": "L72",
+      "depth": 1
+    },
+    {
+      "id": "paths_history_metadata_path",
+      "label": "history_metadata_path()",
+      "source_file": "paths.py",
+      "source_location": "L84",
+      "depth": 1
+    },
+    {
+      "id": "paths_specialty_history_state_path",
+      "label": "specialty_history_state_path()",
+      "source_file": "paths.py",
+      "source_location": "L80",
+      "depth": 1
+    },
+    {
+      "id": "paths_versioned_path",
+      "label": "versioned_path()",
+      "source_file": "paths.py",
+      "source_location": "L4",
+      "depth": 1
+    },
+    {
+      "id": "src_data_build_temporal_split",
+      "label": "src_data_build_temporal_split",
+      "source_file": "",
+      "source_location": null,
+      "depth": 1
+    },
+    {
+      "id": "src_data_cleaning_utils",
+      "label": "src_data_cleaning_utils",
+      "source_file": "",
+      "source_location": null,
+      "depth": 1
+    },
+    {
+      "id": "src_paths",
+      "label": "src_paths",
+      "source_file": "",
+      "source_location": null,
+      "depth": 1
+    },
+    {
+      "id": "data_clean_student_course_clean_student_course",
+      "label": "clean_student_course()",
+      "source_file": "data/clean_student_course.py",
+      "source_location": "L24",
+      "depth": 1
+    },
+    {
+      "id": "data_clean_student_course_main",
+      "label": "main()",
+      "source_file": "data/clean_student_course.py",
+      "source_location": "L104",
+      "depth": 1
+    },
+    {
+      "id": "json",
+      "label": "json",
+      "source_file": "",
+      "source_location": null,
+      "depth": 1
+    },
+    {
+      "id": "src_features_student_course_status",
+      "label": "src_features_student_course_status",
+      "source_file": "",
+      "source_location": null,
+      "depth": 1
+    },
+    {
+      "id": "experiments_previous_course_status_data_augment_feature_frame",
+      "label": "augment_feature_frame()",
+      "source_file": "experiments/previous_course_status_data.py",
+      "source_location": "L74",
+      "depth": 1
+    },
+    {
+      "id": "experiments_previous_course_status_data_build_experimental_datasets",
+      "label": "build_experimental_datasets()",
+      "source_file": "experiments/previous_course_status_data.py",
+      "source_location": "L95",
+      "depth": 1
+    },
+    {
+      "id": "experiments_previous_course_status_data_build_status_history",
+      "label": "build_status_history()",
+      "source_file": "experiments/previous_course_status_data.py",
+      "source_location": "L22",
+      "depth": 1
+    },
+    {
+      "id": "experiments_previous_course_status_data_distribution",
+      "label": "_distribution()",
+      "source_file": "experiments/previous_course_status_data.py",
+      "source_location": "L86",
+      "depth": 1
+    },
+    {
+      "id": "experiments_previous_course_status_data_rationale_1",
+      "label": "Build isolated V2 feature tables with a previous student-course status.",
+      "source_file": "experiments/previous_course_status_data.py",
+      "source_location": "L1",
+      "depth": 1
+    }
+  ],
+  "scoped_edges": [
+    {
+      "source": "data_build_registration_roster_build_registration_roster",
+      "target": "data_build_registration_roster_main",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "data/build_registration_roster.py",
+      "source_location": "L96",
+      "weight": 1.0
+    },
+    {
+      "source": "data_clean_student_course_clean_student_course",
+      "target": "data_clean_student_course_main",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "data/clean_student_course.py",
+      "source_location": "L106",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_previous_course_status_data_augment_feature_frame",
+      "target": "experiments_previous_course_status_data_build_experimental_datasets",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "experiments/previous_course_status_data.py",
+      "source_location": "L124",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_previous_course_status_data_build_experimental_datasets",
+      "target": "experiments_previous_course_status_data_build_status_history",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "experiments/previous_course_status_data.py",
+      "source_location": "L107",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_previous_course_status_data_build_experimental_datasets",
+      "target": "experiments_previous_course_status_data_distribution",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "experiments/previous_course_status_data.py",
+      "source_location": "L144",
+      "weight": 1.0
+    },
+    {
+      "source": "features_student_course_status_keys",
+      "target": "features_student_course_status_previous_status_for_targets",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "features/student_course_status.py",
+      "source_location": "L47",
+      "weight": 1.0
+    },
+    {
+      "source": "paths_academic_part",
+      "target": "paths_frozen_history_dir",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "paths.py",
+      "source_location": "L73",
+      "weight": 1.0
+    },
+    {
+      "source": "paths_course_history_state_path",
+      "target": "paths_frozen_history_dir",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "paths.py",
+      "source_location": "L77",
+      "weight": 1.0
+    },
+    {
+      "source": "paths_frozen_history_dir",
+      "target": "paths_specialty_history_state_path",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "paths.py",
+      "source_location": "L81",
+      "weight": 1.0
+    },
+    {
+      "source": "paths_frozen_history_dir",
+      "target": "paths_history_metadata_path",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "paths.py",
+      "source_location": "L85",
+      "weight": 1.0
+    },
+    {
+      "source": "data_build_registration_roster",
+      "target": "pandas",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "data/build_registration_roster.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "data_clean_student_course",
+      "target": "pandas",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "data/clean_student_course.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_degree_points",
+      "target": "json",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "experiments/degree_points.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_degree_points",
+      "target": "pandas",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "experiments/degree_points.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_experiment_io",
+      "target": "json",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "experiments/experiment_io.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_experiment_io",
+      "target": "numpy",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "experiments/experiment_io.py",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_experiment_io",
+      "target": "pandas",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "experiments/experiment_io.py",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_previous_course_status_data",
+      "target": "json",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "experiments/previous_course_status_data.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_previous_course_status_data",
+      "target": "pandas",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "experiments/previous_course_status_data.py",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "features_student_course_status",
+      "target": "numpy",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "features/student_course_status.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "features_student_course_status",
+      "target": "pandas",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "features/student_course_status.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "modeling_train_models",
+      "target": "numpy",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "modeling/train_models.py",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "modeling_train_models",
+      "target": "pandas",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "modeling/train_models.py",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "modeling_train_models",
+      "target": "json",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "modeling/train_models.py",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "project_status",
+      "target": "json",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "project_status.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "data_build_registration_roster",
+      "target": "src_data_build_temporal_split",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "data/build_registration_roster.py",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "data_build_registration_roster",
+      "target": "src_data_cleaning_utils",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "data/build_registration_roster.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "data_build_registration_roster",
+      "target": "src_paths",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "data/build_registration_roster.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "data_clean_student_course",
+      "target": "src_data_cleaning_utils",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "data/clean_student_course.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "data_clean_student_course",
+      "target": "src_paths",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "data/clean_student_course.py",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_degree_points",
+      "target": "experiments_experiment_io",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "experiments/degree_points.py",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_degree_points",
+      "target": "paths",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "experiments/degree_points.py",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_experiment_io",
+      "target": "paths",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "experiments/experiment_io.py",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_previous_course_status_data",
+      "target": "src_features_student_course_status",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "experiments/previous_course_status_data.py",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_previous_course_status_data",
+      "target": "src_paths",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "experiments/previous_course_status_data.py",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "modeling_train_models",
+      "target": "pathlib",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "modeling/train_models.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "modeling_train_models",
+      "target": "src_paths",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "modeling/train_models.py",
+      "source_location": "L53",
+      "weight": 1.0
+    },
+    {
+      "source": "paths",
+      "target": "modeling_train_models",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "modeling/train_models.py",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "paths",
+      "target": "pathlib",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "paths.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "paths",
+      "target": "project_status",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "project_status.py",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "project_status",
+      "target": "pathlib",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "project_status.py",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "data_build_registration_roster_build_registration_roster",
+      "target": "data_build_registration_roster",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "data/build_registration_roster.py",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "data_build_registration_roster_main",
+      "target": "data_build_registration_roster",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "data/build_registration_roster.py",
+      "source_location": "L95",
+      "weight": 1.0
+    },
+    {
+      "source": "data_clean_student_course_clean_student_course",
+      "target": "data_clean_student_course",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "data/clean_student_course.py",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "data_clean_student_course_main",
+      "target": "data_clean_student_course",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "data/clean_student_course.py",
+      "source_location": "L104",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_previous_course_status_data_augment_feature_frame",
+      "target": "experiments_previous_course_status_data",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "experiments/previous_course_status_data.py",
+      "source_location": "L74",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_previous_course_status_data_build_experimental_datasets",
+      "target": "experiments_previous_course_status_data",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "experiments/previous_course_status_data.py",
+      "source_location": "L95",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_previous_course_status_data_build_status_history",
+      "target": "experiments_previous_course_status_data",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "experiments/previous_course_status_data.py",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_previous_course_status_data_distribution",
+      "target": "experiments_previous_course_status_data",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "experiments/previous_course_status_data.py",
+      "source_location": "L86",
+      "weight": 1.0
+    },
+    {
+      "source": "features_student_course_status_keys",
+      "target": "features_student_course_status",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "features/student_course_status.py",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "features_student_course_status_previous_status_for_targets",
+      "target": "features_student_course_status",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "features/student_course_status.py",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "paths_academic_part",
+      "target": "paths",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "paths.py",
+      "source_location": "L64",
+      "weight": 1.0
+    },
+    {
+      "source": "paths_course_history_state_path",
+      "target": "paths",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "paths.py",
+      "source_location": "L76",
+      "weight": 1.0
+    },
+    {
+      "source": "paths_frozen_history_dir",
+      "target": "paths",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "paths.py",
+      "source_location": "L72",
+      "weight": 1.0
+    },
+    {
+      "source": "paths_history_metadata_path",
+      "target": "paths",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "paths.py",
+      "source_location": "L84",
+      "weight": 1.0
+    },
+    {
+      "source": "paths_specialty_history_state_path",
+      "target": "paths",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "paths.py",
+      "source_location": "L80",
+      "weight": 1.0
+    },
+    {
+      "source": "paths_versioned_path",
+      "target": "paths",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "paths.py",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "experiments_previous_course_status_data",
+      "target": "experiments_previous_course_status_data_rationale_1",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "experiments/previous_course_status_data.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "features_student_course_status",
+      "target": "features_student_course_status_rationale_1",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "features/student_course_status.py",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "data_build_registration_roster_build_registration_roster",
+      "target": "data_cleaning_utils_clean_column_names",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "data/build_registration_roster.py",
+      "source_location": "L36",
+      "weight": 1.0
+    },
+    {
+      "source": "data_build_registration_roster_build_registration_roster",
+      "target": "data_cleaning_utils_to_integer",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "data/build_registration_roster.py",
+      "source_location": "L44",
+      "weight": 1.0
+    },
+    {
+      "source": "data_build_registration_roster_build_registration_roster",
+      "target": "data_cleaning_utils_clean_id_columns",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "data/build_registration_roster.py",
+      "source_location": "L46",
+      "weight": 1.0
+    },
+    {
+      "source": "data_build_registration_roster_build_registration_roster",
+      "target": "data_cleaning_utils_to_float",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "data/build_registration_roster.py",
+      "source_location": "L56",
+      "weight": 1.0
+    },
+    {
+      "source": "data_clean_student_course_clean_student_course",
+      "target": "data_cleaning_utils_clean_column_names",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "data/clean_student_course.py",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "data_clean_student_course_clean_student_course",
+      "target": "data_cleaning_utils_clean_id_columns",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "data/clean_student_course.py",
+      "source_location": "L45",
+      "weight": 1.0
+    },
+    {
+      "source": "data_clean_student_course_clean_student_course",
+      "target": "data_cleaning_utils_to_integer",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "data/clean_student_course.py",
+      "source_location": "L62",
+      "weight": 1.0
+    },
+    {
+      "source": "data_clean_student_course_clean_student_course",
+      "target": "data_cleaning_utils_to_float",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "data/clean_student_course.py",
+      "source_location": "L63",
+      "weight": 1.0
+    },
+    {
+      "source": "features_student_course_status_previous_status_for_targets",
+      "target": "experiments_previous_course_status_data_augment_feature_frame",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "context": "call",
+      "source_file": "experiments/previous_course_status_data.py",
+      "source_location": "L79",
+      "weight": 1.0
+    }
+  ],
+  "interpretation": "Graph sources omit src/ prefix; verify corresponding live files. Graph provides navigation, not current data statistics."
+}

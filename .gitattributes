@@ -5,3 +5,6 @@
 *.json text eol=lf
 *.yml text eol=lf
 *.yaml text eol=lf
+
+# Preserve the immutable experimental artifacts and their recorded SHA-256 values.
+models/experiments/attempt_number/** -text

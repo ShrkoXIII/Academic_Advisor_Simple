@@ -1,0 +1,22 @@
+issue,affected_rows,affected_students,assessment,affected_cases,part_3_cases,zero_credit_course_cases
+raw_history_unusable_temporal_or_course_key_or_credits,5926.0,1172.0,Reported exclusion in analysis copy only; source retained. Unknown history may remain.,,,
+exact_duplicate_roster_rows,0.0,,Deduplicated in analysis copy only,,,
+exact_duplicate_raw_R_E_rows,0.0,,Deduplicated in analysis copy only,,,
+ambiguous_same_part_course_attempts,0.0,,Validation passed; conflicts would stop analysis,,,
+roster_window_new_corrected_by_raw_history,6731.0,,Primary analysis uses raw earlier registrations; roster-window sensitivity saved,,,
+repeat_credit_amount_changed,0.0,,Prior credits for available; current credits for registered; no capping,,,
+previous_attempt_in_different_degree,385.0,,Latest student+course contract spans degrees; eligibility/credit transfer unverified,,,
+zero_credit_registrations,1930.0,,Retained; undefined zero-load ratios remain NA,,,
+24_credit_course_registrations,961.0,,Source-backed national examination in Medicine; raw and current catalog both 24 course credits. Preserved; ordinary semester-load comparability unverified.,,,
+unverified_status_in_raw_R_E_history,0.0,,Never assigned Failed/Withdrawn/New from a mark,,,
+missing_finish_status_in_20253,10095.0,,Current target outcome never used for its own classification,,,
+very_high_failed_backlog_above_p99,,339.0,Retained observed registrations; not an invalid case solely because extreme. Part 3 timing is known; summer label unverified.,905.0,221.0,0.0
+very_high_withdrawn_backlog_above_p99,,368.0,Retained observed registrations; not an invalid case solely because extreme. Part 3 timing is known; summer label unverified.,825.0,234.0,2.0
+retakes_at_least_90_percent,,2582.0,Retained observed registrations; not an invalid case solely because extreme. Part 3 timing is known; summer label unverified.,3481.0,2260.0,8.0
+zero_new_credits,,3816.0,Retained observed registrations; not an invalid case solely because extreme. Part 3 timing is known; summer label unverified.,6524.0,3391.0,41.0
+zero_total_credits,,0.0,Retained observed registrations; not an invalid case solely because extreme. Part 3 timing is known; summer label unverified.,0.0,0.0,0.0
+high_load_above_24,,1148.0,Retained observed registrations; not an invalid case solely because extreme. Part 3 timing is known; summer label unverified.,1870.0,0.0,1.0
+course_credits_24_or_more,,859.0,Retained observed registrations; not an invalid case solely because extreme. Part 3 timing is known; summer label unverified.,961.0,0.0,0.0
+failed_consumption_above_one,,0.0,Retained observed registrations; not an invalid case solely because extreme. Part 3 timing is known; summer label unverified.,0.0,0.0,0.0
+withdrawn_consumption_above_one,,0.0,Retained observed registrations; not an invalid case solely because extreme. Part 3 timing is known; summer label unverified.,0.0,0.0,0.0
+F_mark_above_its_grade_id_failure_range,68.0,,Source inconsistency; explicit F preserved; final mark does not override status,,,
