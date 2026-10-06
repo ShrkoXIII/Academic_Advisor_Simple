@@ -432,3 +432,37 @@ memory_budget_per_request = UNRESOLVED
 `D:/AI/Real projects/Academic_Advisor_Simple/docs/architecture/RECOMMENDATION_TWO_STAGE_BASELINE_VALIDATION.md`
 
 هذه الوثيقة خطة معتمدة للتنفيذ، وليست ادعاءً بأن Production implementation أو Ranking approval أو Benchmark قد اكتمل.
+
+## Implementation Progress
+
+### Phase 1 — Artifacts & Contracts
+
+Status: COMPLETE
+Date: 2026-10-05
+Commit: Not created (user requested no automatic commit).
+
+- نُشرت نسخ Grade33 وFail33 وCategories مطابقة للبايتات تحت `models/shortlist_v2/`، مع Manifest واحد يثبت عقد Stage 1 المشتق من `BASE_FEATURES − PLAN_CONTEXT_COLUMNS` وعقد Stage 2 ومراجعها الرسمية دون نسخها أو تغييرها.
+- أضيف Loader مستقل يتحقق من أسماء/ترتيب/عدد Features وCategories داخل المودلات وTargets/Objectives وCutoff والبصمات وGradeScale وProvenance المكتملة؛ لا يقرأ مصادر التدريب أو التجارب وقت التحميل، ولا يفعّل محرك Recommendation أو Ranking.
+- حُفظت Metadata الأصلية وبصمات المدخلات/المصدر الـ11 قبل التعديل، مع أدلة تعريف Target وGradeScale. بقي الاسم الأصلي `capaciy_63` في Provenance، واستُخدم `sha256:<digest>` كإصدار محتوى GradeScale، دون الادعاء بوجود Version سابق في المصدر.
+- Tests: `tests/test_two_stage_artifacts.py`: **68 passed**؛ Regression المرتبط: **108 passed**؛ Full pytest النهائي: **680 passed, 1 failed, 6 subtests passed**. الفشل الوحيد **KNOWN BASELINE FAILURE**: `tests/test_train_models.py::test_tune_model_evaluates_every_candidate_fold_and_selects_mean_metric[grade-capacity_63-mae]`؛ لا New regression أو Skip في الملخص.
+- المودلات الفعلية على 32 صفًا Synthetic: فرق توقعات الأصل/النسخة **0.0** لكل من Grade وFail. فحص SHA-256: **873** ملفًا موجودًا بقيت دون تغيير/حذف؛ الإضافات الوحيدة داخل `models/` و`data/` هي ملفات Promotion الأربعة، ليصبح العدد **877**.
+- نُفّذ `graphify update .` باستخدام AST فقط. لم تُنفذ Matrix/Payload adapters أو History Delta أو البحث/الترتيب أو Engine أو Benchmark أو أي مرحلة لاحقة؛ حالات اعتماد الاستراتيجيتين وتوليفتهما بقيت `UNAPPROVED`.
+- قيد نقل موروث: نهايات أسطر ملفات Stage 2 الرسمية تختلف بين Git index والنسخة المحلية المدققة. Manifest يثبت بايتات هذه اللقطة، لذا يجب نقل/نشر الملفات الرسمية المثبتة دون تطبيع نهايات الأسطر؛ Git checkout وحده قد ينتج بصمات مختلفة ويرفض Loader تحميلها. لم تُعد كتابة أي Artifact أصلية لمعالجة هذا القيد. قواعد `-text` الجديدة تحمي نسخ Stage 1 المنشورة فقط.
+
+Next: البند 2 — Payload adapters وMatrix helper والتصنيف والقيود. Safe to continue: YES ضمن اللقطة المدققة؛ تفعيل Production Ranking يبقى مؤجلًا إلى بوابات الاعتماد اللاحقة.
+
+### Phase 2 — Payload Adapters, Matrix Helper, Classification & Constraints
+
+Status: COMPLETE
+Date: 2026-10-06
+Commit: Not created (user requested no automatic commit).
+
+- أضيفت adapters خالصة دون I/O تستقبل عقد Core محليًا: `student_payload={snapshot, candidates}` وRequest منفصلة بهوية الطالب/الاختصاص/الفصل والساعات وسياسات Requirements. هذا ليس عقد HTTP/Backend transport معتمدًا. تُحفظ Ratio وGap وAttempt الجاهزة؛ يُشتق فقط Trend/Missing وSemester، ويُلزم `current_gpa_credits` دون fallback محلي.
+- التصنيف يعتمد على المعنى الرسمي للحالة السابقة، ويرفض تعارض الحقلين حتى إن انتميا إلى المجموعة نفسها. Missing/Unknown لا يصبح NEW أو Failed، والرفض الصريح للأهلية فقط يحذف Candidate. Attempt موثق وفق عدّ المصدر الزمني عبر الاختصاصات قبل فلاتر الحالة وGPA؛ لا يُستنتج منه عدد مرات الرسوب.
+- سياسات Requirements تُطبّع `max_credits` إلى `requirement_max_credits` مع رفض التعارض، وتحسب المتبقي بـDecimal. غياب Overflow/Completed/Reserved يعني صفر adjustments، وNull الصريح يُرفض. كل Candidate مؤهل يحتاج سياسة مقابلة؛ تكلفة Repeat كاملة، وحد الراسب الصريح مطلوب، وحد المنسحب مستقل واختياري. الاسمان القديمان `allowed_fail_credits` و`allowed_pass_position_type` Metadata فقط.
+- `enumerate_feasible_plan_indices` يستخدم البحث الحالي دون تعديله ويفحص الخطط المكتملة قبل أي Shortlist مستقبلية. يبقى الحد الأعلى هدفًا دقيقًا دون تخفيض؛ الكسور والصفر محفوظة، وحدود الإعادة maxima لا minima.
+- عُمم `prepare_model_matrix` بعقد مرتب اختياري، مع تطابق الاستخدام القديم للـ47 وNumeric float32 وMissing/Unknown Categories. أصبح `prepare_course_matrix` wrapper توافق يستدعي helper المشترك بدل نسخ Logic. لم تتغير Features/Targets/Version أو فحوص signature/Metadata التجربة؛ لذلك التوقيع التجريبي السابق يظل مرفوضًا بعد تغيير المصدر. Loader النسخ المنشورة من Phase 1 نجح فعليًا بعقود 33/33/47/47 دون تشغيل توقعات.
+- Tests: المركزة **125 passed**؛ المجموعة الأوسع المرتبطة **258 passed**؛ Full pytest النهائي **805 passed, 1 failed, 6 subtests passed**. الفشل الوحيد **KNOWN BASELINE FAILURE**: `tests/test_train_models.py::test_tune_model_evaluates_every_candidate_fold_and_selects_mean_metric[grade-capacity_63-mae]` بسبب `capaciy_63`؛ **NEW REGRESSION: 0**، ولا Unrelated failure أو Skip في الملخص. المراجعة المستقلة واختبارات تحويل Decimal إلى float أغلقت حالة overflow إلى infinity.
+- SHA-256: الملفات الـ**877** الموجودة تحت `models/` و`data/` بقيت دون تغيير أو حذف أو إضافة. اكتمل `graphify update .` باستخدام AST فقط: 2296 nodes و5250 edges؛ لم يحدث تدريب أو Recommendation حقيقية أو اتصال Backend أو تفعيل Engine/Ranking أو تنفيذ Phase لاحقة.
+
+Next: Phase 3 — History Delta والحفظ immutable والتحويل الذري. Safe to continue: YES ضمن نطاق الخطة؛ استراتيجيتا Ranking وتوليفتهما تبقى UNAPPROVED.

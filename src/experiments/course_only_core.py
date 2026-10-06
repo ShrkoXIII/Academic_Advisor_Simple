@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 from src.features.feature_contract import (
-    BASE_FEATURES, CATEGORICAL_FEATURES, CATEGORY_MISSING, CATEGORY_UNKNOWN,
+    BASE_FEATURES, prepare_model_matrix,
 )
 from src.features.frozen_history import validate_history_pair, validate_history_selection
 from src.features.temporal_features import COURSE_HISTORY_COLUMNS
@@ -34,15 +34,7 @@ def prepare_course_matrix(frame, category_levels):
     missing = set(COURSE_ONLY_FEATURES) - set(frame)
     if missing:
         raise ValueError(f"Missing course-only features: {sorted(missing)}")
-    matrix = pd.DataFrame(index=frame.index)
-    for name in COURSE_ONLY_FEATURES:
-        if name in CATEGORICAL_FEATURES:
-            values = frame[name].astype("string").fillna(CATEGORY_MISSING)
-            values = values.where(values.isin(category_levels[name]), CATEGORY_UNKNOWN)
-            matrix[name] = pd.Categorical(values, categories=category_levels[name])
-        else:
-            matrix[name] = pd.to_numeric(frame[name], errors="coerce").astype("float32")
-    return matrix
+    return prepare_model_matrix(frame, category_levels, model_features=COURSE_ONLY_FEATURES)
 
 
 def prepare_course_rows(snapshot, candidates, part_id, history, *, training_as_of_part):

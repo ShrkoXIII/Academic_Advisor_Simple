@@ -353,7 +353,7 @@ No-feasible-plan cases (excluded from ranking overlap, retained in audit):
 
 Dependency test يسمح فقط لثلاث ملفات workflow تجريبية جديدة بقراءة src/recommendation، مثل استثناء XML evaluator الحالي. لم نخف الاستيراد ولم نغير اعتماد Features أو Modeling على التجارب.
 
-Validation: انظر `validation_summary.json` وlogs في مجلد نتائج التجربة. الفشل السابق في اختبار trainer بسبب capaciy_63 محفوظ ومذكور منفصلًا؛ لم نعدل config الرسمي لحل typo.
+Validation: انظر `validation_summary.json` وlogs في مجلد نتائج التجربة. الفشل السابق في اختبار trainer بسبب capacity_63محفوظ ومذكور منفصلًا؛ لم نعدل config الرسمي لحل typo.
 
 Provenance: training_signature يسجل SHA-256 لملفي features، المصدر التدريبي الرسمي، العقد الرسمي، كود التدريب/المصفوفة التجريبي، والـbaseline الرسمي وفئاته. مدخل JSON له بصمة في import_report.json لكل حالة. إعادة التحميل --skip-training ترفض تغير signature أو model headers/hashes. استقلال المسارات لا يلغي أي selection bias موروث في البيانات الرسمية؛ لا ندعي معالجة cleaning أو قياس causal outcomes.
 
@@ -372,5 +372,5 @@ Fresh verification results:
 
 Focused: **20 passed, 0 failed**. Full suite: **557 passed, 1 failed**, 6 subtests passed.
 
-Remaining pre-existing failure: `tests/test_train_models.py::test_tune_model_evaluates_every_candidate_fold_and_selects_mean_metric[grade-capacity_63-mae]`. Pre-existing capaciy_63 typo, also present in HEAD; official trainer left unchanged.
+Remaining pre-existing failure: `tests/test_train_models.py::test_tune_model_evaluates_every_candidate_fold_and_selects_mean_metric[grade-capacity_63-mae]`. Pre-existing capacity_63typo, also present in HEAD; official trainer left unchanged.
 

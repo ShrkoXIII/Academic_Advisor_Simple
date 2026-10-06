@@ -17,6 +17,13 @@ ARTIFACT_DIR = DATA_DIR / "artifacts"
 EVALUATION_DIR = DATA_DIR / "evaluation"
 MODEL_DIR = PROJECT_ROOT / "models"
 
+# Independent, byte-preserving promotion for the two-stage shortlist models.
+SHORTLIST_MODEL_DIR = MODEL_DIR / "shortlist_v2"
+SHORTLIST_GRADE_MODEL_PATH = SHORTLIST_MODEL_DIR / "grade_model.txt"
+SHORTLIST_FAIL_MODEL_PATH = SHORTLIST_MODEL_DIR / "fail_model.txt"
+SHORTLIST_CATEGORY_LEVELS_PATH = SHORTLIST_MODEL_DIR / "category_levels.json"
+TWO_STAGE_MANIFEST_PATH = SHORTLIST_MODEL_DIR / "manifest.json"
+
 # Isolated course-only research; never consumed by the official recommender.
 COURSE_ONLY_MODEL_DIR = MODEL_DIR / "experiments" / "course_only_recommendation"
 COURSE_ONLY_EVALUATION_DIR = EVALUATION_DIR / "experiments" / "course_only_recommendation"

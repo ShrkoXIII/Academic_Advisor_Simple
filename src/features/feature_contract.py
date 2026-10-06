@@ -135,21 +135,34 @@ def learn_category_levels(frame):
     return levels
 
 
-def prepare_model_matrix(frame, category_levels):
+def prepare_model_matrix(frame, category_levels, *, model_features=None):
+    """Coerce an ordered model-feature subset, defaulting to the official 47."""
+    features = BASE_FEATURES if model_features is None else list(model_features)
+    selected = set(features)
+    if len(selected) != len(features):
+        raise ValueError("Duplicate model features are not allowed.")
+    unknown = selected - set(BASE_FEATURES)
+    if unknown:
+        raise ValueError(f"Unknown model features: {sorted(unknown, key=str)}")
+
     matrix = pd.DataFrame(index=frame.index)
     for column in NUMERIC_FEATURES:
+        if column not in selected:
+            continue
         matrix[column] = pd.to_numeric(frame[column], errors="coerce").astype(
             "float32"
         )
 
     for column in CATEGORICAL_FEATURES:
+        if column not in selected:
+            continue
         values = frame[column].astype("string").fillna(CATEGORY_MISSING)
         values = values.where(values.isin(category_levels[column]), CATEGORY_UNKNOWN)
         matrix[column] = pd.Categorical(
             values,
             categories=category_levels[column],
         )
-    return matrix[BASE_FEATURES]
+    return matrix[features]
 
 
 def save_category_levels(category_levels, path):

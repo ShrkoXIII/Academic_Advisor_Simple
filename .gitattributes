@@ -8,3 +8,8 @@
 
 # Preserve the immutable experimental artifacts and their recorded SHA-256 values.
 models/experiments/attempt_number/** -text
+
+# Promoted files must retain their exact source bytes across Git checkouts.
+models/shortlist_v2/grade_model.txt -text
+models/shortlist_v2/fail_model.txt -text
+models/shortlist_v2/category_levels.json -text

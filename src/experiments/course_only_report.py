@@ -210,7 +210,7 @@ def build_report(metadata, primary, batch, verified):
                   "Dependency test يسمح فقط لثلاث ملفات workflow تجريبية جديدة بقراءة src/recommendation، "
                   "مثل استثناء XML evaluator الحالي. لم نخف الاستيراد ولم نغير اعتماد Features أو Modeling على التجارب.", "",
                   "Validation: انظر `validation_summary.json` وlogs في مجلد نتائج التجربة. "
-                  "الفشل السابق في اختبار trainer بسبب capaciy_63 محفوظ ومذكور منفصلًا؛ لم نعدل config الرسمي لحل typo.", "",
+                  "الفشل السابق في اختبار trainer بسبب capacity_63محفوظ ومذكور منفصلًا؛ لم نعدل config الرسمي لحل typo.", "",
                   "Provenance: training_signature يسجل SHA-256 لملفي features، المصدر التدريبي الرسمي، "
                   "العقد الرسمي، كود التدريب/المصفوفة التجريبي، والـbaseline الرسمي وفئاته. "
                   "مدخل JSON له بصمة في import_report.json لكل حالة. إعادة التحميل --skip-training ترفض تغير signature أو model headers/hashes. "

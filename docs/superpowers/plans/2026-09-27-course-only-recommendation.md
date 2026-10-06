@@ -41,7 +41,7 @@ Experiment CLI: `.venv/Scripts/python.exe -m src.experiments.course_only_recomme
 Progress: specification read; current V2 paths/models verified; no production edits yet.
 
 Progress 2: 12 focused tests passed. Training complete: Grade regularized_47,
-Fail capaciy_63 (the existing name spelling), same finite grid and official helper implementation. Primary
+Fail capacity_63(the existing name spelling), same finite grid and official helper implementation. Primary
 and six additional feasible scenarios measured with three timing repetitions.
 Pandas string aggregation converts tuple results to lists: immutable plan keys
 now built outside aggregation, covered by a regression test.

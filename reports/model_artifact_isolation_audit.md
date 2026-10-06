@@ -112,7 +112,7 @@ Commands, run with the project virtual environment:
 
 - Focused isolation and V2 modeling/evaluation/experiment I/O suites: **77 passed**, 0 failed.
 - Full `python -m pytest -q`: **481 passed, 1 failed, 6 subtests passed** in 26.16 seconds. No skipped tests were reported.
-- The single failure is `tests/test_train_models.py::test_tune_model_evaluates_every_candidate_fold_and_selects_mean_metric[grade-capacity_63-mae]`: `capaciy_63 != capacity_63`. It reproduces alone without the new test module. The trainer has no diff in this task.
+- The single failure is `tests/test_train_models.py::test_tune_model_evaluates_every_candidate_fold_and_selects_mean_metric[grade-capacity_63-mae]`: `capacity_63!= capacity_63`. It reproduces alone without the new test module. The trainer has no diff in this task.
 - Protected-file verification: **79 existing files**, 0 changed, 0 missing, 0 additional files in the protected set. This covers `models/`, `data/artifacts/` including immutable bundles, `data/features/`, experiment result directories, Recommendation source (excluding bytecode), and the pre-existing untracked winner report.
 - `git diff --check` passed; new files also have no trailing whitespace. Git only reported its existing line-ending/config-access warnings.
 
