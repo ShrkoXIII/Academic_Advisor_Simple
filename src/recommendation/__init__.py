@@ -9,6 +9,7 @@ from .inputs import (
 )
 from .constraints import PlanConstraints, enumerate_feasible_plan_indices, normalize_requirement_policies
 from .course_status import classify_candidate_status, normalize_previous_status
+from .history_update import FrozenHistoryManager, HistorySnapshot, apply_history_delta, normalize_history_delta
 from .plan_generation import build_plan_rows, enumerate_plan_indices, resolve_credit_bounds
 from .plan_scoring import (
     COURSE_OUTPUT_COLUMNS, SUMMARY_COLUMNS, empty_summaries,
@@ -17,6 +18,10 @@ from .plan_scoring import (
 
 __all__ = [
     "AcademicPlanRecommender",
+    "FrozenHistoryManager",
+    "HistorySnapshot",
+    "apply_history_delta",
+    "normalize_history_delta",
     "PreparedRecommendationInputs",
     "PlanConstraints",
     "CANDIDATE_COURSE_COLUMNS",

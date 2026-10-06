@@ -466,3 +466,20 @@ Commit: Not created (user requested no automatic commit).
 - SHA-256: الملفات الـ**877** الموجودة تحت `models/` و`data/` بقيت دون تغيير أو حذف أو إضافة. اكتمل `graphify update .` باستخدام AST فقط: 2296 nodes و5250 edges؛ لم يحدث تدريب أو Recommendation حقيقية أو اتصال Backend أو تفعيل Engine/Ranking أو تنفيذ Phase لاحقة.
 
 Next: Phase 3 — History Delta والحفظ immutable والتحويل الذري. Safe to continue: YES ضمن نطاق الخطة؛ استراتيجيتا Ranking وتوليفتهما تبقى UNAPPROVED.
+
+### Phase 3 — History Delta, Immutable Publication & Atomic State Swap
+
+Status: COMPLETE
+Date: 2026-10-06
+Commit: Not created (user requested no automatic commit).
+
+- أضيف `history_update.py` بعقد Core محلي `history_payload={delta_part, finalized: true, aggregates: [...]}`؛ ليس عقد HTTP معتمدًا. صفوف المجاميع تستخدم مفاتيح التاريخ الخمسة و`course_credits` الكاملة و`count/fail_count/retake_count/mark_sum/attempt_sum` وفق تعريف نتائج التدريب النهائية، دون قراءة raw/training أو Experiments. تُطبّع القيم وترتب الصفوف قبل Hash بإصدار ثابت؛ تُرفض القيم غير المحدودة والمجاميع غير المتسقة والمفاتيح المتعارضة والتكرار.
+- `apply_history_delta` يعيد Clone مستقلة ويضيف Delta بوزن 1 فقط، عبر `build_history_keys` الحالية ومستوياتها الخمسة وGlobal السادسة. لا يمرر Aggregates إلى `CourseHistoryState.update()`، ولا يعيد وزن التاريخ القديم؛ بقيت `smoothing_k=20` و`min_support=20` وميزات التاريخ السبع وقاعدة Missing دون تغيير. تطابق الخرج مع Oracle من صفوف Synthetic خام لنفس النتائج، بما فيها تاريخ قديم بوزن 0.25 وساعات كسرية/صفرية.
+- أضيف `save_frozen_history_atomic` كـhelper مشترك في Features، مع إعادة استخدام save/load الحاليين دون تغيير سلوكهما: Save staging محلية → Reload/hash/exact-state verification → حجز نشر حصري → Rename إلى Bundle جديدة. لا يُستبدل مجلد موجود حتى إن كان ناقصًا. فشل الحفظ/التحقق/النشر يبقي State القديمة؛ فشل تنظيف الملفات المؤقتة بعد نجاح النشر يُبلغ كـ`cleanup_warnings` ولا يعطل Swap إلى Bundle الصحيحة.
+- `FrozenHistoryManager` يحمّل أحدث Bundle V2 مكتملة وصحيحة دون rebuild أو fallback إلى V1، ويعرض النسخ المتجاوزة عبر `skipped_bundles`. يسلسل Updates ويبدل مرجع `HistorySnapshot` واحدًا؛ Snapshot القديمة تبقى ثابتة أثناء التحديث، وMetadata تُرجع نسخة منفصلة. `capture` يقبل التاريخ الأقدم ويمنع Current/Future؛ `metadata_for_target` توضح قِدمه صراحة. قواعد Local/Backtesting لم تتغير.
+- حُفظت سلسلة `previous_as_of_part/previous_history_sha256/delta_part/delta_sha256/new_history_sha256/created_at/feature_engineering_version` وسجل `applied_deltas`. Same-hash يصبح `already_applied` حتى بعد Update أحدث وإعادة التحميل، دون rollback؛ Different-hash يصبح `CONFLICT`، والتحديث القديم غير المسجل يُرفض. حدود التزامن محلية: Instance واحدة تمسك الحالة النشطة، وحارس النشر يمنع استبدال Bundle بين الكتاب المتعاونين؛ لا distributed state coordination أو استرداد تلقائي لقفل متروك بعد توقف العملية المفاجئ.
+- Tests النهائية: `tests/test_history_update.py` **61 passed**؛ المجموعة المرتبطة **352 passed, 6 subtests passed**؛ Full pytest **866 passed, 1 failed, 6 subtests passed**. الفشل الوحيد **KNOWN BASELINE FAILURE**: `tests/test_train_models.py::test_tune_model_evaluates_every_candidate_fold_and_selects_mean_metric[grade-capacity_63-mae]` بسبب `capaciy_63`؛ **NEW REGRESSION: 0**، و**UNRELATED EXISTING FAILURE: 0**، ولا Skip في الملخص.
+- SHA-256: بقيت الملفات الـ**877** الموجودة تحت `models/` و`data/` دون تغيير أو حذف أو إضافة. نُفّذ `graphify update .` باستخدام AST فقط: **2512 nodes, 5731 edges**؛ أسماء بعض Communities اشتُقت من Hub دون تشغيل LLM، والوثائق لا يعاد استخراجها دلاليًا بهذا الأمر.
+- لم يتطلب التنفيذ تصحيح Phase سابقة أو قرارًا معماريًا جديدًا. مكوّن إدارة التاريخ جاهز لتفويض `TwoStagePlanRecommender` في Phase 5؛ لم يُنفذ/يفعّل Engine أو Balance/Ranking أو Recommendation حقيقية أو تدريب أو اتصال Backend/HTTP أو Benchmark.
+
+Next: Phase 4 — Balance components وواجهة الاستراتيجيات ومرشحي التقييم المستقل. Safe to continue: YES ضمن نطاق الخطة؛ اعتماد الاستراتيجيتين وتوليفتهما يبقى UNAPPROVED.

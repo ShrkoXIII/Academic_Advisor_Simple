@@ -12,6 +12,7 @@ from hashlib import sha256
 import json
 from pathlib import Path
 import pickle
+from tempfile import TemporaryDirectory
 
 import numpy as np
 import pandas as pd
@@ -255,3 +256,59 @@ def load_frozen_history(as_of_part, *, root=None, specialty_history_type=None, d
     validate_history_pair(course, specialty, cutoff)
     provenance = {**metadata, "directory": str(meta_path.parent.resolve()), "metadata_sha256": file_sha256(meta_path)}
     return course, specialty, provenance
+
+
+def save_frozen_history_atomic(course, metadata, *, root=None):
+    """Stage/verify/publish a new base-only V2 bundle without replacing a version.
+
+    Existing save/load behavior stays unchanged. A same-filesystem staging
+    directory keeps partial files invisible to latest-bundle discovery. The
+    exclusive publication guard serializes cooperating local writers. All
+    verification and provenance construction finish before directory rename;
+    the caller can then swap its active state without further filesystem I/O.
+    """
+    if metadata.get("dataset_version") != "V2":
+        raise ValueError("Atomic history publication requires base-only V2 metadata.")
+    root = Path(paths.FROZEN_HISTORY_DIR_V2 if root is None else root)
+    destination = frozen_history_dir(course.as_of_part, root)
+    root.mkdir(parents=True, exist_ok=True)
+    temporary = TemporaryDirectory(prefix=".history-staging-", dir=root)
+    cleanup_warnings = []
+    try:
+        staging = Path(temporary.name)
+        saved = save_frozen_history(course, None, metadata, root=staging)
+        # These fields identify the serialized state bytes, not a reweighted source.
+        saved["new_history_sha256"] = saved["artifact_sha256"]["course_history_state.pkl"]
+        saved["created_at"] = saved["created_at_utc"]
+        meta_path = history_metadata_path(course.as_of_part, staging)
+        meta_path.write_text(json.dumps(saved, indent=2, ensure_ascii=False, allow_nan=False), encoding="utf-8")
+        loaded, _, provenance = load_frozen_history(course.as_of_part, root=staging, dataset_version="V2")
+        if (loaded.global_sums != course.global_sums or loaded.smoothing_k != course.smoothing_k
+                or loaded.min_support != course.min_support):
+            raise ValueError("Reloaded history differs from the staged state.")
+        for level in course.tables:
+            assert_frame_equal(loaded.tables[level], course.tables[level], check_exact=True)
+        provenance["directory"] = str(destination.resolve())
+        provenance["cleanup_warnings"] = cleanup_warnings
+        guard = root / f".publish_{destination.name}.lock"
+        # An exclusive marker and destination check protect even an empty/incomplete
+        # directory. Never use replace(), which can overwrite on some platforms.
+        with guard.open("x", encoding="utf-8"):
+            pass  # Close the handle before unlinking the exclusive marker on Windows.
+        try:
+            if destination.exists():
+                raise FileExistsError(f"Frozen History destination already exists: {destination}")
+            frozen_history_dir(course.as_of_part, staging).rename(destination)
+        finally:
+            try:
+                guard.unlink()
+            except OSError as exc:
+                cleanup_warnings.append(f"Publication guard cleanup: {exc}")
+    finally:
+        try:
+            temporary.cleanup()
+        except OSError as exc:
+            # Cleanup cannot turn a successful publish into a failed update.
+            # A leftover hidden staging directory is never a loadable bundle.
+            cleanup_warnings.append(f"Staging cleanup: {exc}")
+    return loaded, provenance
