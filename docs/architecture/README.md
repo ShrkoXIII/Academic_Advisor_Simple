@@ -1,6 +1,20 @@
 # Academic Advisor — Architecture Map
 
-لقطة فحص **2026-10-06** للـworking tree الحالي عند `eb0d8f74043a6fb8e5ecac5e3197452b975a261b`، بما فيه التغييرات المحلية الموجودة قبل هذه المهمة. الكود وmetadata والملفات المحلية هي مرجع الحالة؛ التقارير السابقة سياق تاريخي.
+README
+  ↓
+02 End-to-End Pipeline
+  ↓
+05 Recommendation Runtime
+  ↓
+03 Data + Features
+  ↓
+04 Model Training
+  ↓
+06 API Sequence
+  ↓
+01 System Context
+
+لقطة فحص **2026-10-06** للـworking tree؛ بدأ الفحص عند `eb0d8f74043a6fb8e5ecac5e3197452b975a261b` ووصل HEAD أثناء التحقق إلى `c3a42851d20696edca4644da09b106e420167f84` بسبب عمل متزامن. بقيت بايتات `src/` و`data/` و`models/` ثابتة بين فحص المصدر والتحقق، وراجعت المهمة تحديث الخطة واختبار Balance الجديد. الكود وmetadata والملفات المحلية هي مرجع الحالة؛ التقارير السابقة سياق تاريخي.
 
 ## Architecture Map
 
@@ -17,19 +31,19 @@
 
 | التصنيف | الحالة المثبتة الآن | الدليل |
 | --- | --- | --- |
-| Official baseline | محرك توصية محلي بـ47 ميزة، Grade/Fail V2 وGradeScale وتاريخ مقررات مجمد؛ يمكن استدعاؤه من Python أو CLI. هذه جاهزية baseline محلي، وليست إثبات تشغيل خدمة Production منشورة. | [engine.py](../../../src/recommendation/engine.py)، [artifacts.py](../../../src/recommendation/artifacts.py)، [LOCAL_RECOMMENDATION.md](../../../LOCAL_RECOMMENDATION.md) |
-| V2 offline | Cleaning → split → features → modeling → observed-plan evaluation ومسار degree/points تستخدم `_v2` فعليًا. | [main.py](../../../src/main.py)، [paths.py](../../../src/paths.py)، [train_models.py](../../../src/modeling/train_models.py) |
-| V1 / Legacy | جداول ومودلات وفئات وتاريخ دون `_v2` محفوظة، ويقرأها `project_status.py` جزئيًا وتشخيص تغيّر الخطط. ليست fallback للتوصية الرسمية. | [project_status.py](../../../src/project_status.py)، [analyze_course_plan_changes.py](../../../src/diagnostics/analyze_course_plan_changes.py) |
-| Experimental | degree/direct-points وspecialty history، course-only 33 الأصلي، previous-status 34/48، attempt-number A/B/C؛ لا تدخل scoring الرسمي. | [experiments/](../../../src/experiments/)، [recommendation_experiments/](../../../src/recommendation_experiments/)، [MODEL_ARTIFACT_POLICY.md](../../MODEL_ARTIFACT_POLICY.md) |
-| Two-Stage assets | نسخ Grade33/Fail33 منشورة تحت `models/shortlist_v2/` مع manifest يثبتها ويثبت مودلي47. هذا نشر أصول، لا تفعيل محرك `33 → ≤50 → 47`. | [two_stage_artifacts.py](../../../src/recommendation/two_stage_artifacts.py)، [manifest.json](../../../models/shortlist_v2/manifest.json) |
-| Two-Stage building blocks | payload adapters وتصنيف الحالة وقيود الخطط موجودة. History Delta و`FrozenHistoryManager` موجودان محليًا، و`history_update.py` واختباره غير متتبعين في Git وقت الفحص. | [inputs.py](../../../src/recommendation/inputs.py)، [constraints.py](../../../src/recommendation/constraints.py)، [history_update.py](../../../src/recommendation/history_update.py) |
-| غير موصول | لا `TwoStagePlanRecommender` أو `two_stage_engine.py` أو `shortlist.py` أو `balance_policy.py`؛ لا FastAPI/PHP implementation داخل هذا repository. | حصر ملفات وAST لـ`src/`، [two_stage_artifacts.py](../../../src/recommendation/two_stage_artifacts.py)، [PRODUCTION_CONTRACT.md](../../PRODUCTION_CONTRACT.md) |
-| الاستراتيجيات | `stage1_shortlist_strategy` و`final_ranking_strategy` و`combination` كلها `UNAPPROVED` في manifest. ترتيب baseline الحالي موجود؛ لا يعني اعتماد استراتيجية Two-Stage. | [manifest.json](../../../models/shortlist_v2/manifest.json)، [plan_scoring.py](../../../src/recommendation/plan_scoring.py) |
+| Official baseline | محرك توصية محلي بـ47 ميزة، Grade/Fail V2 وGradeScale وتاريخ مقررات مجمد؛ يمكن استدعاؤه من Python أو CLI. هذه جاهزية baseline محلي، وليست إثبات تشغيل خدمة Production منشورة. | [engine.py](../../src/recommendation/engine.py)، [artifacts.py](../../src/recommendation/artifacts.py)، [LOCAL_RECOMMENDATION.md](../../LOCAL_RECOMMENDATION.md) |
+| V2 offline | Cleaning → split → features → modeling → observed-plan evaluation ومسار degree/points تستخدم `_v2` فعليًا. | [main.py](../../src/main.py)، [paths.py](../../src/paths.py)، [train_models.py](../../src/modeling/train_models.py) |
+| V1 / Legacy | جداول ومودلات وفئات وتاريخ دون `_v2` محفوظة، ويقرأها `project_status.py` جزئيًا وتشخيص تغيّر الخطط. ليست fallback للتوصية الرسمية. | [project_status.py](../../src/project_status.py)، [analyze_course_plan_changes.py](../../src/diagnostics/analyze_course_plan_changes.py) |
+| Experimental | degree/direct-points وspecialty history، course-only 33 الأصلي، previous-status 34/48، attempt-number A/B/C؛ لا تدخل scoring الرسمي. | [experiments/](../../src/experiments/)، [recommendation_experiments/](../../src/recommendation_experiments/)، [MODEL_ARTIFACT_POLICY.md](../MODEL_ARTIFACT_POLICY.md) |
+| Two-Stage assets | نسخ Grade33/Fail33 منشورة تحت `models/shortlist_v2/` مع manifest يثبتها ويثبت مودلي47. هذا نشر أصول، لا تفعيل محرك `33 → ≤50 → 47`. | [two_stage_artifacts.py](../../src/recommendation/two_stage_artifacts.py)، [manifest.json](../../models/shortlist_v2/manifest.json) |
+| Two-Stage building blocks | payload adapters وتصنيف الحالة وقيود الخطط موجودة. History Delta و`FrozenHistoryManager` موجودان؛ سجلت الخطة إتمام Phase3 أثناء العمل المتزامن. كونهما component مكتملًا لا يربطهما بمحرك47 أو بمحرك Two-Stage. | [inputs.py](../../src/recommendation/inputs.py)، [constraints.py](../../src/recommendation/constraints.py)، [history_update.py](../../src/recommendation/history_update.py) |
+| غير موصول | لا `TwoStagePlanRecommender` أو `two_stage_engine.py` أو `shortlist.py` أو `balance_policy.py`؛ اختبار Balance جديد ظهر أثناء الكتابة لكن module المستورد غير موجود بعد. لا FastAPI/PHP implementation داخل هذا repository. | حصر ملفات وAST لـ`src/`، [two_stage_artifacts.py](../../src/recommendation/two_stage_artifacts.py)، [test_balance_policy.py](../../tests/test_balance_policy.py)، [PRODUCTION_CONTRACT.md](../PRODUCTION_CONTRACT.md) |
+| الاستراتيجيات | `stage1_shortlist_strategy` و`final_ranking_strategy` و`combination` كلها `UNAPPROVED` في manifest. ترتيب baseline الحالي موجود؛ لا يعني اعتماد استراتيجية Two-Stage. | [manifest.json](../../models/shortlist_v2/manifest.json)، [plan_scoring.py](../../src/recommendation/plan_scoring.py) |
 
 ### أكبر Technical Debt
 
 1. **إعادة إنتاج التدريب لا تتطابق تمامًا مع عقد التحميل.** المصدر يسمي المرشح `capaciy_63`، بينما metadata الحالية والمحمّل الصارم يشترطان `capacity_63`. إذا اختير المرشح نفسه عند إعادة التدريب، تُحفظ تسمية يرفضها serving. التدريب يكتب مباشرة في المسارات الرسمية؛ ليست هناك عملية release ذرية لحزمة المودلات الأربع. [تفصيل التدريب](04_model_training.md).
-2. **حالة المشروع مشتتة بين الكود والوثائق.** `PIPELINE_README.md` و`Readme.md` ومراحل `project_status.py` ما زالت تحمل حدود V1 أقدم، رغم ترحيل المراحل الفعلية إلى V2. `plan_explanation/` تصف History Delta بأنه غير منفذ، بينما يوجد في working tree الحالي. هذه لقطة محلية، لا إعلان اكتمال مرحلة. [تفصيل الحدود](02_end_to_end_pipeline.md).
+2. **حالة المشروع مشتتة بين الكود والوثائق.** `PIPELINE_README.md` و`Readme.md` ومراحل `project_status.py` ما زالت تحمل حدود V1 أقدم، رغم ترحيل المراحل الفعلية إلى V2. `plan_explanation/` تصف History Delta بأنه غير منفذ، بينما يوجد في الكود وسجلت الخطة إتمام Phase3 أثناء الفحص. هذه لقطة المصدر الحالي؛ لم تُعد تشغيل اختبارات المرحلة هنا. [تفصيل الحدود](02_end_to_end_pipeline.md).
 3. **Provenance غير مكتمل بين جميع الجداول.** فحص headers وجد `student_course_v2` بـ456,595 صفًا و`student_course_enriched_v2` بـ456,453؛ اختلاف العدد قد ينتج عن الـinner join أو عن أوقات بناء مختلفة ولا يثبت وحده خطأً. لا يجوز اعتبار وجود الملفات أو عداد `project_status.complete` شهادة توافق كامل. بالمقابل، بصمات مصادر حزم Frozen History V2 الحالية طابقت ملفات features الحالية. [تفصيل البيانات](03_data_features_pipeline.md).
 4. **كلفة البحث وحالة التكامل.** baseline يحصي كل التركيبات المطابقة، ويحسب ميزات وتوقعات المادة لكل خطة. batching يقلل ذاكرة صفوف المقررات مؤقتًا؛ جميع summaries تبقى في الذاكرة. `top_n` لا يقلل البحث. الاختصار Two-Stage والـAPI لم يربطا بعد. [Runtime](05_recommendation_runtime.md).
 5. **العقد الجامعي لا يُستنتج من ML.** سياسة استبدال درجات الإعادات في GPA غير منفذة، وتوفر المواد والمتطلبات السابقة وتوقيت إغلاق النتائج ليست مثبتة باتصال حي. Backend payload helpers وحدها لا تنفذ أهلية الجامعة. [API](06_api_sequence.md).
@@ -48,11 +62,13 @@
 
 ## نطاق الفحص وحدود التحقق
 
-- حصر recursive للأقسام المطلوبة، وتحليل AST لجميع79 ملف Python تحت `src/` و55 ملف اختبار و8 سكربتات و6 أدوات debugging؛ فحص imports ومواضع I/O واستدعاءات المسارات الرئيسية.
+- حصر recursive للأقسام المطلوبة، وتحليل AST لجميع79 ملف Python تحت `src/` و55 ملف اختبار في الفحص الأول، ثم مراجعة الاختبار56 الخاص بـBalance الذي ظهر متزامنًا؛8 سكربتات و6 أدوات debugging؛ فحص imports ومواضع I/O واستدعاءات المسارات الرئيسية.
 - فحص65 ملفًا تحت `models/` و812 تحت `data/`، وقراءة schemas/row counts من Parquet headers وmetadata والعقود، دون تضمين سجلات طلاب في هذا التوثيق. راجع [جرد مصادر البيانات](03_data_features_pipeline.md).
 - مراجعة documentation الحالية وتقارير المعمارية/العزل/الخصائص/التجارب، وnotebooks وXML/JSON adapters وCLI/configuration. graphify استُخدم للتوجيه الأولي، ثم طوبقت العلاقات على المصدر الحالي؛ لم يُبنَ graph جديد.
 - شُغّل `python -B -m src.main --list` و`--all --dry-run` فقط للتحقق من orchestration. لم يُشغّل pipeline أو training أو recommendation أو evaluation أو benchmark، ولم يُشغّل pytest. أسماء الاختبارات أدلة على العقود المستهدفة، وليست ادعاء نجاحها الآن.
-- مخرجات هذه المهمة سبعة ملفات Markdown جديدة فقط. الخطة وBaseline الموجودان مسبقًا داخل هذا المجلد محفوظان دون تعديل. لم تُصلح أي مشكلة مكتشفة.
+- تحقق read-only ناجح لتحميل Official V2 للحزمتين20243/20251 ولأصول Two-Stage33/47. هذا يثبت قابلية التحميل محليًا؛ ليس تقييم predictions أو اعتماد deployment/ranking.
+- فُحصت الروابط المحلية وسياج Markdown وتعريف عقد/أطراف Mermaid؛13 diagram بحدود6–12 عقدة/طرف. لم يتوفر Mermaid renderer محلي، لذلك لم يُتحقق من الشكل المرئي أو parsing بمحرك Mermaid؛ فحص البنية ليس بديلًا عن render.
+- مخرجات هذه المهمة سبعة ملفات Markdown جديدة فقط؛ لم تعدّل المهمة الخطة وBaseline الموجودين مسبقًا أو أي Production code. البصمات المجمعة لـ`src/` و877 ملف بيانات/مودلات وبقية مجموعات المصدر/التقارير القائمة ظلت ثابتة. الخطة واختبار Balance تغيرا من عمل متزامن؛ لم تُعدهما المهمة للخلف ولم تُصلح أي مشكلة مكتشفة. cache graphify مستبعد من مقارنة البصمات لأنه حالة أداة مساعدة، وليس مدخل serving.
 
 ## Flows غير مثبتة
 

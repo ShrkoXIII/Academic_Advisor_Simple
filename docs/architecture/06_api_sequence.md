@@ -34,10 +34,10 @@ sequenceDiagram
 
 | التسلسل | الدليل |
 | --- | --- |
-| User → CLI → adapters | [recommend_local.py](../../../src/recommend_local.py) → [local_cli.py](../../../src/recommendation/local_cli.py): `main` → [inputs.py](../../../src/recommendation/inputs.py): `load_local_inputs`. |
-| Load → assets | [engine.py](../../../src/recommendation/engine.py): `load` → [artifacts.py](../../../src/recommendation/artifacts.py): `load_recommendation_artifacts` → [frozen_history.py](../../../src/features/frozen_history.py): `load_frozen_history`. |
-| Request → inference → ranking | `engine.recommend/prepare_candidates/score_rows` → [plan_generation.py](../../../src/recommendation/plan_generation.py)، [temporal_features.py](../../../src/features/temporal_features.py)، [plan_scoring.py](../../../src/recommendation/plan_scoring.py). |
-| Response → files | [output.py](../../../src/recommendation/output.py): `save_recommendations` و`write_json`؛ CLI يعرض path/status فقط. لا PHP response منشور. |
+| User → CLI → adapters | [recommend_local.py](../../src/recommend_local.py) → [local_cli.py](../../src/recommendation/local_cli.py): `main` → [inputs.py](../../src/recommendation/inputs.py): `load_local_inputs`. |
+| Load → assets | [engine.py](../../src/recommendation/engine.py): `load` → [artifacts.py](../../src/recommendation/artifacts.py): `load_recommendation_artifacts` → [frozen_history.py](../../src/features/frozen_history.py): `load_frozen_history`. |
+| Request → inference → ranking | `engine.recommend/prepare_candidates/score_rows` → [plan_generation.py](../../src/recommendation/plan_generation.py)، [temporal_features.py](../../src/features/temporal_features.py)، [plan_scoring.py](../../src/recommendation/plan_scoring.py). |
+| Response → files | [output.py](../../src/recommendation/output.py): `save_recommendations` و`write_json`؛ CLI يعرض path/status فقط. لا PHP response منشور. |
 
 ## B. Planned Integration — 7 أطراف
 
@@ -79,21 +79,21 @@ sequenceDiagram
 
 | خطوة متوقعة | ما يوجد فعليًا | ما لم يُنفذ / يُثبت |
 | --- | --- | --- |
-| Student → PHP | اتجاه المنتج في [PRODUCTION_CONTRACT.md](../../PRODUCTION_CONTRACT.md). | Login/session/UI وPHP source خارج هذا checkout. |
-| PHP → context | exports فعلية في `data/raw/` وحقول View في [api_request_column_mapping.md](../../../reports/api_request_column_mapping.md). | Live queries وتعريفات Views وتوقيت تحديثها ومعنى الأهلية النهائي وسياسات الجامعة. |
-| PHP → FastAPI | الاتجاه موثق في [LOCAL_RECOMMENDATION.md](../../../LOCAL_RECOMMENDATION.md) و[PRODUCTION_CONTRACT.md](../../PRODUCTION_CONTRACT.md). | لا FastAPI app/route أو PHP HTTP client أو منشور request/response contract. |
-| API → normalize | [inputs.py](../../../src/recommendation/inputs.py): `prepare_recommendation_payloads` و`normalize_*_payload` تعمل in-process بلا I/O. | Transport/schema adapter الذي يستدعيها؛ لا route موجودة. |
-| Context → policies | [course_status.py](../../../src/recommendation/course_status.py) و[constraints.py](../../../src/recommendation/constraints.py) يفصلان status والحدود. | Engine orchestration الذي يطبقها؛ baseline يستخدم enumerator غير المقيد بها. |
+| Student → PHP | اتجاه المنتج في [PRODUCTION_CONTRACT.md](../PRODUCTION_CONTRACT.md). | Login/session/UI وPHP source خارج هذا checkout. |
+| PHP → context | exports فعلية في `data/raw/` وحقول View في [api_request_column_mapping.md](../../reports/api_request_column_mapping.md). | Live queries وتعريفات Views وتوقيت تحديثها ومعنى الأهلية النهائي وسياسات الجامعة. |
+| PHP → FastAPI | الاتجاه موثق في [LOCAL_RECOMMENDATION.md](../../LOCAL_RECOMMENDATION.md) و[PRODUCTION_CONTRACT.md](../PRODUCTION_CONTRACT.md). | لا FastAPI app/route أو PHP HTTP client أو منشور request/response contract. |
+| API → normalize | [inputs.py](../../src/recommendation/inputs.py): `prepare_recommendation_payloads` و`normalize_*_payload` تعمل in-process بلا I/O. | Transport/schema adapter الذي يستدعيها؛ لا route موجودة. |
+| Context → policies | [course_status.py](../../src/recommendation/course_status.py) و[constraints.py](../../src/recommendation/constraints.py) يفصلان status والحدود. | Engine orchestration الذي يطبقها؛ baseline يستخدم enumerator غير المقيد بها. |
 | Engine → models | `AcademicPlanRecommender.load/score_rows` منفذان؛ `load_two_stage_artifacts` منفذ للأصول فقط. | خدمة worker lifecycle، واختيار/تفعيل Two-Stage أو اعتماد استراتيجياته. |
 | Engine → history | `CourseHistoryState.apply` + frozen loader منفذان؛ manager/Delta موجودان محليًا. | ربط manager بـbaseline أو endpoint update/admin job؛ latest-valid manager لا يغير سياسة baseline الصريحة. |
-| Engine → Response | `recommend` ينتج dict والـCLI يحفظ `result.json`؛ [output.py](../../../src/recommendation/output.py). | Published HTTP response adapter/version/errors/serialization contract. |
+| Engine → Response | `recommend` ينتج dict والـCLI يحفظ `result.json`؛ [output.py](../../src/recommendation/output.py). | Published HTTP response adapter/version/errors/serialization contract. |
 | Response → PHP → Student | لا تنفيذ مثبت. | Display وregistration writeback؛ recommendation ليست تسجيلًا تلقائيًا. |
 
 ## فصل التحديث عن الطلب
 
-البناء offline في [build_frozen_history.py](../../../src/features/build_frozen_history.py) مستقل عن التدريب. المكون المحلي [history_update.py](../../../src/recommendation/history_update.py) يقبل finalized aggregate payload، ينسخ state ويضيف المجاميع، ثم يستدعي `save_frozen_history_atomic` ويتحقق وينشر إصدارًا immutable قبل تبديل reference. لا يجلب raw rows، ولا يعيد تدريب المودلات، ولا ينفذ scoring.
+البناء offline في [build_frozen_history.py](../../src/features/build_frozen_history.py) مستقل عن التدريب. المكون المحلي [history_update.py](../../src/recommendation/history_update.py) يقبل finalized aggregate payload، ينسخ state ويضيف المجاميع، ثم يستدعي `save_frozen_history_atomic` ويتحقق وينشر إصدارًا immutable قبل تبديل reference. لا يجلب raw rows، ولا يعيد تدريب المودلات، ولا ينفذ scoring.
 
-هذا implementation محلي جديد وغير موصول بالـAPI أو `AcademicPlanRecommender`. إقرار `finalized=True` لا يثبت أن الجامعة أغلقت الفصل. البروتوكول لتحديث service/admin scheduling ومصدر الإقرار غير منفذين هنا. كذلك إعادة التدريب الحالية تكتب في official paths؛ لا ينبغي رسمها كعملية request-time أو endpoint نشر مكتمل.
+هذا implementation جديد وغير موصول بالـAPI أو `AcademicPlanRecommender`؛ سجلت الخطة إتمام Phase3 أثناء العمل المتزامن. إقرار `finalized=True` لا يثبت أن الجامعة أغلقت الفصل. البروتوكول لتحديث service/admin scheduling ومصدر الإقرار غير منفذين هنا. كذلك إعادة التدريب الحالية تكتب في official paths؛ لا ينبغي رسمها كعملية request-time أو endpoint نشر مكتمل.
 
 ## Flows لا يمكن إثباتها من الكود
 

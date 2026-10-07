@@ -1812,15 +1812,15 @@
     "semantic_hash": ""
   },
   "src/recommendation/history_update.py": {
-    "mtime": 1791283432.3799126,
-    "seen": 1791283558.8922577,
-    "ast_hash": "444cac7049d2bd2c979513fbfee90399",
+    "mtime": 1791283651.8781354,
+    "seen": 1791283780.3550377,
+    "ast_hash": "ec2bdb8bf76cedeb21dd89661e2e4a64",
     "semantic_hash": ""
   },
   "tests/test_history_update.py": {
-    "mtime": 1791283412.5617068,
-    "seen": 1791283558.8922577,
-    "ast_hash": "092e4ea880ccea9329308cd4a3901519",
+    "mtime": 1791283638.9791107,
+    "seen": 1791283780.3550377,
+    "ast_hash": "dd7930e24b75277d5b82345221796872",
     "semantic_hash": ""
   },
   "plan_explanation/FILE_MAP.md": {

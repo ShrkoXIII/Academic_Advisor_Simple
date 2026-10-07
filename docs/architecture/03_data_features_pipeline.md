@@ -1,6 +1,6 @@
 # 03 — Data + Features Pipeline
 
-هذا Zoom لمسار **V2 المنفذ**. المصادر مشتركة دون suffix؛ المخرجات التالية ملحقة بـ`_v2`. مساراتها مركزية في [src/paths.py](../../../src/paths.py). الأرقام أدناه قراءة headers وقت الفحص **2026-10-06**، وليست نتائج إعادة بناء أو إثبات اتساق جميع الوسائط.
+هذا Zoom لمسار **V2 المنفذ**. المصادر مشتركة دون suffix؛ المخرجات التالية ملحقة بـ`_v2`. مساراتها مركزية في [src/paths.py](../../src/paths.py). الأرقام أدناه قراءة headers وقت الفحص **2026-10-06**، وليست نتائج إعادة بناء أو إثبات اتساق جميع الوسائط.
 
 ## مصادر البيانات الفعلية
 
@@ -42,15 +42,15 @@ flowchart LR
 
 | Stage / العلاقة | Input → Transformation | Output الفعلي | Next consumer / الدليل |
 | --- | --- | --- | --- |
-| D1 course cleaning | Raw course → أسماء وأرقام ومفاتيح موحدة؛ `register_status ∈ {R,E}`؛ `part_id > 20193`؛ عدّ attempts قبل ترشيح finish/GPA flags؛ الاحتفاظ بـF/FE/FA/P واستبعاد أي GPA/include flag=N. | `data/clean/student_course_pre_common_v2.parquet` | `filter_common_students`؛ [clean_student_course.py](../../../src/data/clean_student_course.py): `clean_student_course`, `main`. Withdrawal لا يبقى ضمن outcomes. |
-| D1 status cleaning | Raw status → semester4 مستبعد؛ تاريخ enrolled GPA مزاح؛ gap semesters؛ permanent-status/study-mode/withdrawn-status filters. | `data/clean/student_status_pre_common_v2.parquet` | `filter_common_students`؛ [clean_student_status.py](../../../src/data/clean_student_status.py): `clean_student_status`, `add_enrollment_features`؛ [academic_calendar.py](../../../src/data/academic_calendar.py). |
-| D2 common students | جدولا pre_common → تقاطع `student_id` فقط، مع إبقاء جميع صفوف الطالب المشترك. ليس تقاطعًا على `(student_id, degree_id, part_id)`. | `data/clean/student_course_v2.parquet`؛ `student_status_v2.parquet` | Enrichment، roster، student history، local inputs؛ [filter_common_students.py](../../../src/data/filter_common_students.py). |
-| D3 catalog cleaning | Raw catalog → types/IDs/sorting؛ لا تعلم أو اختيار مرشحين. | `data/clean/degree_course_v2.parquet` | Enrichment وroster وlocal candidate join؛ [clean_degree_course.py](../../../src/data/clean_degree_course.py). |
-| D3 enrichment | Clean course INNER status على `(student_id, degree_id, part_id)`؛ ثم LEFT catalog على `(degree_id, course_id)`، وكلاهما `many_to_one`. Prefix `plan_` لحقول catalog؛ `plan_match` مؤشر. | `data/clean/student_course_enriched_v2.parquet` | Diploma merge؛ [build_student_course_enriched.py](../../../src/data/build_student_course_enriched.py): `main`. |
-| D4 diploma cleaning + merge | Academic info → أعلى4 أنواع والبقية55.111، global GPA ffill كما ينفذه المصدر؛ ثم LEFT join على student_id دون إسقاط outcomes. | `data/clean/student_diploma_v2.parquet`؛ `data/merged/student_course_enriched_with_diploma_v2.parquet` | Outlier audit / local snapshot؛ [clean_student_diploma.py](../../../src/data/clean_student_diploma.py). |
-| D5 outlier policy | Diploma-enriched rows → audit لقواعد حدود ومجاميع واتساق status/course؛ حذف **كل صفوف الطلاب** الذين يظهرون في audit. | `data/merged/outlier_students_v2.parquet`؛ `student_course_enriched_without_outliers_v2.parquet` | Split وroster exclusion؛ [clean_outliers.py](../../../src/data/clean_outliers.py): `build_outlier_audit`, `remove_outlier_students`. audit ليس مجرد قائمة فصل واحد. |
-| D6 temporal split | Clean merged outcomes → train parts20201–20243 وtest20251/20252؛20253 مستبعد كغير مكتمل، وغير ذلك لا يدخل القائمتين. | `data/temporal/temporal_train_v2.parquet`؛ `temporal_test_v2.parquet` | `build_temporal_features`؛ [build_temporal_split.py](../../../src/data/build_temporal_split.py): `TRAIN_PARTS`, `TEST_PARTS`, `INCOMPLETE_PARTS`. |
-| D7 next feature consumer | Train/test + parallel rosters + clean status. | جدول features لكل مجموعة. | [build_temporal_features.py](../../../src/features/build_temporal_features.py): `main`؛ القسم C أدناه. |
+| D1 course cleaning | Raw course → أسماء وأرقام ومفاتيح موحدة؛ `register_status ∈ {R,E}`؛ `part_id > 20193`؛ عدّ attempts قبل ترشيح finish/GPA flags؛ الاحتفاظ بـF/FE/FA/P واستبعاد أي GPA/include flag=N. | `data/clean/student_course_pre_common_v2.parquet` | `filter_common_students`؛ [clean_student_course.py](../../src/data/clean_student_course.py): `clean_student_course`, `main`. Withdrawal لا يبقى ضمن outcomes. |
+| D1 status cleaning | Raw status → semester4 مستبعد؛ تاريخ enrolled GPA مزاح؛ gap semesters؛ permanent-status/study-mode/withdrawn-status filters. | `data/clean/student_status_pre_common_v2.parquet` | `filter_common_students`؛ [clean_student_status.py](../../src/data/clean_student_status.py): `clean_student_status`, `add_enrollment_features`؛ [academic_calendar.py](../../src/data/academic_calendar.py). |
+| D2 common students | جدولا pre_common → تقاطع `student_id` فقط، مع إبقاء جميع صفوف الطالب المشترك. ليس تقاطعًا على `(student_id, degree_id, part_id)`. | `data/clean/student_course_v2.parquet`؛ `student_status_v2.parquet` | Enrichment، roster، student history، local inputs؛ [filter_common_students.py](../../src/data/filter_common_students.py). |
+| D3 catalog cleaning | Raw catalog → types/IDs/sorting؛ لا تعلم أو اختيار مرشحين. | `data/clean/degree_course_v2.parquet` | Enrichment وroster وlocal candidate join؛ [clean_degree_course.py](../../src/data/clean_degree_course.py). |
+| D3 enrichment | Clean course INNER status على `(student_id, degree_id, part_id)`؛ ثم LEFT catalog على `(degree_id, course_id)`، وكلاهما `many_to_one`. Prefix `plan_` لحقول catalog؛ `plan_match` مؤشر. | `data/clean/student_course_enriched_v2.parquet` | Diploma merge؛ [build_student_course_enriched.py](../../src/data/build_student_course_enriched.py): `main`. |
+| D4 diploma cleaning + merge | Academic info → أعلى4 أنواع والبقية55.111، global GPA ffill كما ينفذه المصدر؛ ثم LEFT join على student_id دون إسقاط outcomes. | `data/clean/student_diploma_v2.parquet`؛ `data/merged/student_course_enriched_with_diploma_v2.parquet` | Outlier audit / local snapshot؛ [clean_student_diploma.py](../../src/data/clean_student_diploma.py). |
+| D5 outlier policy | Diploma-enriched rows → audit لقواعد حدود ومجاميع واتساق status/course؛ حذف **كل صفوف الطلاب** الذين يظهرون في audit. | `data/merged/outlier_students_v2.parquet`؛ `student_course_enriched_without_outliers_v2.parquet` | Split وroster exclusion؛ [clean_outliers.py](../../src/data/clean_outliers.py): `build_outlier_audit`, `remove_outlier_students`. audit ليس مجرد قائمة فصل واحد. |
+| D6 temporal split | Clean merged outcomes → train parts20201–20243 وtest20251/20252؛20253 مستبعد كغير مكتمل، وغير ذلك لا يدخل القائمتين. | `data/temporal/temporal_train_v2.parquet`؛ `temporal_test_v2.parquet` | `build_temporal_features`؛ [build_temporal_split.py](../../src/data/build_temporal_split.py): `TRAIN_PARTS`, `TEST_PARTS`, `INCOMPLETE_PARTS`. |
+| D7 next feature consumer | Train/test + parallel rosters + clean status. | جدول features لكل مجموعة. | [build_temporal_features.py](../../src/features/build_temporal_features.py): `main`؛ القسم C أدناه. |
 
 ## B. فرع Roster — تسجيلات السياق وليست Targets
 
@@ -73,12 +73,12 @@ flowchart LR
     T -->|"R4"| F
 ```
 
-R1–R3 في [build_registration_roster.py](../../../src/data/build_registration_roster.py): `build_registration_roster` و`main`. المخرجات:
+R1–R3 في [build_registration_roster.py](../../src/data/build_registration_roster.py): `build_registration_roster` و`main`. المخرجات:
 
 - `data/clean/registration_roster_v2.parquet`.
 - `data/temporal/temporal_train_roster_v2.parquet` و`temporal_test_roster_v2.parquet`.
 
-R4 في [build_temporal_features.py](../../../src/features/build_temporal_features.py): `attach_plan_context` يربط context إلى target بـ`student_course_id`. Roster يحافظ على تسجيلات withdrawals ضمن نطاق status/outlier joins؛ لا يمد history بنتائج إضافية. لا نساوي `W` بعلامة صفر أو ML fail label. هذا roster تاريخ تسجيل فعلي لبناء سياق التعلم؛ request-time context يأتي من الخطة المقترحة.
+R4 في [build_temporal_features.py](../../src/features/build_temporal_features.py): `attach_plan_context` يربط context إلى target بـ`student_course_id`. Roster يحافظ على تسجيلات withdrawals ضمن نطاق status/outlier joins؛ لا يمد history بنتائج إضافية. لا نساوي `W` بعلامة صفر أو ML fail label. هذا roster تاريخ تسجيل فعلي لبناء سياق التعلم؛ request-time context يأتي من الخطة المقترحة.
 
 ## C. Feature Engineering — 9 عقد
 
@@ -106,13 +106,13 @@ flowchart LR
 
 | Stage / علاقة | Input → Transformation → Output | Next consumer / دليل |
 | --- | --- | --- |
-| F1 course history | Outcomes مرتبة بفصلها + roster → `CourseHistoryState.apply` قبل `update` من outcomes النهائية →7 `course_history_*` لكل target/roster row. | Plan context وtarget features؛ [temporal_features.py](../../../src/features/temporal_features.py): `build_temporal_course_history`, `CourseHistoryState`. |
+| F1 course history | Outcomes مرتبة بفصلها + roster → `CourseHistoryState.apply` قبل `update` من outcomes النهائية →7 `course_history_*` لكل target/roster row. | Plan context وtarget features؛ [temporal_features.py](../../src/features/temporal_features.py): `build_temporal_course_history`, `CourseHistoryState`. |
 | F1 holdout | Clone training state حتى20243 → apply20251 ثم update بنتائج20251 → apply20252؛ النسخة المرجعة من الباني تبقى state التدريب20243. | Features2025 وحفظ training state؛ التابع نفسه. لم يدخل20252 في features20251. |
-| F2 context | Roster + course difficulty السابقة → group `(student_id, degree_id, part_id)` →14 `plan_*`/`peer_*`، مع leave-one-out للمادة الحالية. | `attach_plan_context` يدمجها في outcomes؛ [build_temporal_features.py](../../../src/features/build_temporal_features.py) و`compute_plan_context_features`. |
-| F3 student history | Clean status history → enrolled GPA shifts + trend + start counters + shifted `reg_total_semesters` →10 student-history features. | Train/test target merge بـstudent_status_id؛ `add_student_history_features` في [temporal_features.py](../../../src/features/temporal_features.py). |
-| F4 final table | جميع المكونات → `part_semester = part_id % 10`؛ `is_fail = final_mark < 50`؛ attrs version2. | `data/features/temporal_train_features_v2.parquet` و`temporal_test_features_v2.parquet`؛ [build_temporal_features.py](../../../src/features/build_temporal_features.py). |
-| F5 feature contract | جدول95 عمودًا → اختيار مرتب42 numeric +5 categorical، coercion float32/categories. Raw IDs وcurrent outcomes ليست ML inputs. | Trainers/evaluators/engine؛ [feature_contract.py](../../../src/features/feature_contract.py): `BASE_FEATURES`, `prepare_model_matrix`, `LEAKAGE_COLUMNS`. |
-| F6 Frozen History | Features/outcomes + cutoff وإقرار finalization → تجميع prefix بـ`part_id <= cutoff`، دون model predictions أو plan-dependent recomputation. | Immutable base bundle يستهلكه serving؛ [build_frozen_history.py](../../../src/features/build_frozen_history.py)، [frozen_history.py](../../../src/features/frozen_history.py). |
+| F2 context | Roster + course difficulty السابقة → group `(student_id, degree_id, part_id)` →14 `plan_*`/`peer_*`، مع leave-one-out للمادة الحالية. | `attach_plan_context` يدمجها في outcomes؛ [build_temporal_features.py](../../src/features/build_temporal_features.py) و`compute_plan_context_features`. |
+| F3 student history | Clean status history → enrolled GPA shifts + trend + start counters + shifted `reg_total_semesters` →10 student-history features. | Train/test target merge بـstudent_status_id؛ `add_student_history_features` في [temporal_features.py](../../src/features/temporal_features.py). |
+| F4 final table | جميع المكونات → `part_semester = part_id % 10`؛ `is_fail = final_mark < 50`؛ attrs version2. | `data/features/temporal_train_features_v2.parquet` و`temporal_test_features_v2.parquet`؛ [build_temporal_features.py](../../src/features/build_temporal_features.py). |
+| F5 feature contract | جدول95 عمودًا → اختيار مرتب42 numeric +5 categorical، coercion float32/categories. Raw IDs وcurrent outcomes ليست ML inputs. | Trainers/evaluators/engine؛ [feature_contract.py](../../src/features/feature_contract.py): `BASE_FEATURES`, `prepare_model_matrix`, `LEAKAGE_COLUMNS`. |
+| F6 Frozen History | Features/outcomes + cutoff وإقرار finalization → تجميع prefix بـ`part_id <= cutoff`، دون model predictions أو plan-dependent recomputation. | Immutable base bundle يستهلكه serving؛ [build_frozen_history.py](../../src/features/build_frozen_history.py)، [frozen_history.py](../../src/features/frozen_history.py). |
 
 History fallback يستخدم `(degree, course)` ثم course ثم مجموعات requirement/rounded credits داخل degree أو faculty ثم requirement العام ثم global. يقوم smoothing على المجاميع، ويخرج support/fallback/missing. لا يحتفظ بـsnapshot الطالب أو سجل محاولاته الشخصي. التفاصيل الحسابية موجودة في `build_history_keys` و`CourseHistoryState.apply`، دون جعل كل تابع عقدة في الرسم.
 
@@ -139,7 +139,7 @@ History fallback يستخدم `(degree, course)` ثم course ثم مجموعات
 
 ## حدود جودة البيانات والزمن
 
-- `attempt_number` يُعد قبل finish/GPA filtering في cleaner؛ Local adapter يأخذ max attempts من الصفوف المنظفة المتبقية ثم يضيف1. فقد المحاولة الأخيرة المستبعدة يمكن أن يسبب اختلاف training/serving. Backend adapter الجديد يطلب attempt صريحًا حسب semantics التنظيف، لكنه غير موصول بالـCLI الحالي. [inputs.py](../../../src/recommendation/inputs.py)، [تقرير التشخيص السابق](../../../reports/attempt_number_feature_analysis.md).
+- `attempt_number` يُعد قبل finish/GPA filtering في cleaner؛ Local adapter يأخذ max attempts من الصفوف المنظفة المتبقية ثم يضيف1. فقد المحاولة الأخيرة المستبعدة يمكن أن يسبب اختلاف training/serving. Backend adapter الجديد يطلب attempt صريحًا حسب semantics التنظيف، لكنه غير موصول بالـCLI الحالي. [inputs.py](../../src/recommendation/inputs.py)، [تقرير التشخيص السابق](../../reports/attempt_number_feature_analysis.md).
 - source status `total_*` يعاملها الكود كقيم بداية الفصل؛ لا تُطرح منها outcomes الفصل الحالي. تعريف View وتوقيت تحديثها الفعلي يحتاجان الجامعة، ولا يثبتان من export وحده.
 - إقرار `finalized-through-part` جزء من عقد بناء التاريخ، لا تحقق آليًا من اعتماد نتائج الجامعة. semester cutoff يمنع اختلاط الزمن لكنه لا يثبت وقت finalization خارجيًا.
 - ترشيح cohort/outlier والتنظيف لا ينفذ أثناء `engine.recommend`. snapshot المحلي يتطلب target status فريدًا أو JSON جاهزًا، وليس اكتشافًا تلقائيًا لأي طالب/فصل جديد.
