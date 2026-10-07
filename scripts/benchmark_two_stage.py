@@ -1,0 +1,417 @@
+"""Phase 6: isolated synthetic search, ranking and warm two-stage measurements.
+
+Run: python -m scripts.benchmark_two_stage --output-dir reports/two_stage_phase6
+Only model/category/GradeScale assets are read. Student inputs and history are
+synthetic; no catalog, training rows or saved history bundles are consumed.
+Each measurement uses a fresh worker, with setup excluded from elapsed_time.
+Worker deadlines censor observations; they never limit the production search.
+"""
+import argparse
+from collections import Counter
+from datetime import datetime, timezone
+from hashlib import sha256
+import itertools
+import json
+import math
+from pathlib import Path
+import platform
+import subprocess
+import sys
+from tempfile import TemporaryDirectory
+from time import perf_counter
+from unittest.mock import patch
+
+import pandas as pd
+
+from src.features.temporal_features import CourseHistoryState
+from src.recommendation.benchmark import peak_memory_mib
+from src.recommendation.constraints import enumerate_feasible_plan_indices
+from src.recommendation.history_update import FrozenHistoryManager, HistorySnapshot
+from src.recommendation.inputs import BACKEND_SNAPSHOT_COLUMNS, prepare_recommendation_payloads
+from src.recommendation.plan_generation import build_plan_rows
+from src.recommendation.plan_scoring import SUMMARY_COLUMNS, score_course_rows, summarize_scored_plans
+from src.recommendation.ranking import RankingStrategy, rank_academic_reference, rank_evaluation_plans
+from src.recommendation.shortlist import build_stage1_shortlist
+from src.recommendation.two_stage_artifacts import load_two_stage_artifacts, stage_feature_contract
+from src.recommendation.two_stage_engine import TwoStagePlanRecommender
+
+
+ROOT = Path(__file__).resolve().parents[1]
+SIZES = (15, 20, 25, 30, 35)
+SCENARIOS = ("easy", "fractional_zero_constraints", "dense_ties", "no_solution", "dense_upper_18")
+STRATEGIES = ("balance_first", "pareto")
+MODES = ("search", "stage1_ranking", "final_ranking", "full")
+METRICS = ("projected_cumulative_gpa", "expected_plan_gpa", "expected_failed_credits",
+           "failed_balance_penalty", "withdrawn_balance_penalty", "total_previous_balance_penalty")
+
+
+def synthetic_case(size, scenario):
+    """Deterministic easy/dense/decimal-zero/constrained/infeasible payloads."""
+    if size not in SIZES or scenario not in SCENARIOS:
+        raise ValueError("Use a documented synthetic size and scenario.")
+    snapshot = {key: 1 for key in BACKEND_SNAPSHOT_COLUMNS}
+    snapshot.update(student_id="SYNTHETIC_STUDENT", degree_id="SYNTHETIC_DEGREE",
+        faculty_id="SYNTHETIC_FACULTY", part_id=20251, grade_version_id=1,
+        diploma_type_id="1", diploma_gpa=75, gpa_prev_1=2.5, gpa_prev_2=2.25,
+        start_agpa_points=2.5, start_total_in_courses=20, start_total_in_credits=60,
+        prior_total_reg_courses=22, prior_total_reg_credits=66,
+        prior_total_fail_courses=2, prior_total_fail_credits=6, prior_fail_credit_ratio=6/66,
+        prior_registered_semesters=4, observed_gap_semesters=0,
+        degree_credits_count=120, current_gpa_credits=60)
+    if scenario == "easy":
+        credits, target = [3] * 6 + [19] * (size - 6), 18
+    elif scenario == "fractional_zero_constraints":
+        credits, target = [4.5, 1.5, 6, 0, 3, 3, 6] + [6, 9, 12] * size, 18
+        credits = credits[:size]
+    elif scenario in {"dense_ties", "dense_upper_18"}:
+        credits, target = [3] * size, 12 if scenario == "dense_ties" else 18
+    else:
+        credits, target = [4] * size, 15
+    records = []
+    for i, credit in enumerate(credits):
+        previous = "FAILED" if i == 0 else "WITHDRAWN" if i == 1 else "NEW"
+        records.append({"course_id": f"SYNTHETIC_C{i:02d}", "course_name": f"Synthetic course {i}",
+            "course_credits": credit, "attempt_number": 1 if previous == "NEW" else 2,
+            "previous_course_status": previous, "plan_course_type_id": "1",
+            "plan_requirement_type_id": "2" if scenario == "fractional_zero_constraints" and i % 2 else "1",
+            "plan_year_order": 1, "plan_semester_order": 1, "plan_credits_count": 120})
+    request = {"student_id": snapshot["student_id"], "degree_id": snapshot["degree_id"],
+        "part_id": snapshot["part_id"], "target_credits": target,
+        "allowed_failed_repeat_credits": 6, "allowed_withdrawn_repeat_credits": 3,
+        "requirement_policies": [{"plan_requirement_type_id": "1", "max_credits": 18}]}
+    if scenario == "fractional_zero_constraints":
+        request["requirement_policies"] = [
+            {"plan_requirement_type_id": "1", "requirement_max_credits": 12,
+             "completed_credits": 3, "reserved_credits": 1.5, "allowed_overflow_credits": 1.5},
+            {"plan_requirement_type_id": "2", "max_credits": 18}]
+    return {"snapshot": snapshot, "candidates": records}, request
+
+
+def synthetic_history_manager(root):
+    """An empty finalized synthetic state exercises real fallback; no bundle I/O."""
+    state = CourseHistoryState(as_of_part=20243)
+    metadata = {"as_of_part": 20243, "dataset_version": "V2",
+                "history_source": "empty_synthetic_state_in_memory"}
+    return FrozenHistoryManager(HistorySnapshot(state, metadata), root=root)
+
+
+def supported_synthetic_grade_version(artifacts):
+    """Choose a real pass-band version instead of assuming integer ID 1 exists."""
+    versions = pd.to_numeric(artifacts.grade_scale.pass_bands["grade_version_id"], errors="raise")
+    available = sorted({float(value) for value in versions.dropna() if math.isfinite(float(value))})
+    if not available:
+        raise ValueError("Synthetic inference needs a supported GradeScale version.")
+    return available[0]
+
+
+def _means(frame):
+    return {name: None if frame.empty or pd.isna(frame[name].mean()) else float(frame[name].mean())
+            for name in METRICS}
+
+
+def _comparison(ranked, reference, limit):
+    selected, academic = ranked.head(limit), reference.head(limit)
+    means, baseline = _means(selected), _means(academic)
+    return {"plan_ids": selected.plan_id.tolist(), "metric_means": means,
+        "academic_overlap": len(set(selected.plan_id) & set(academic.plan_id)),
+        "metric_change_vs_academic": {key: None if means[key] is None or baseline[key] is None
+                                      else means[key] - baseline[key] for key in METRICS}}
+
+
+def _final_metrics(engine, base, selection, snapshot):
+    ids = selection.shortlist.plan_id.tolist()
+    rows = build_plan_rows(base, [selection.plan_indices[key] for key in ids])
+    rows["plan_id"] = rows.plan_id.map(dict(enumerate(ids)))
+    scored = engine._score_stage2(rows)
+    summary = summarize_scored_plans(scored, snapshot["start_agpa_points"], snapshot["current_gpa_credits"])
+    balance = [key for key in selection.shortlist if key not in SUMMARY_COLUMNS
+               and key not in {"stage1_projected_cumulative_gpa", "pareto_front"}]
+    return summary.merge(selection.shortlist[["plan_id", *balance]], on="plan_id", validate="one_to_one")
+
+
+def measure_case(size, scenario, mode, *, stage1="balance_first", final="balance_first",
+                 threads=1, artifacts=None, history_root=None, checkpoint=None):
+    """One measurement. Ranking setup uses the shared core, outside its timer.
+
+    The Stage 1 collector intercepts only the ranking boundary in this offline
+    worker, returning the same complete metrics frame without choosing an order.
+    Final candidates are scored on one fixed academic-reference shortlist for
+    both Final choices. Full measurements call the actual engine unchanged.
+    """
+    if mode not in MODES:
+        raise ValueError("Unknown measurement mode.")
+    student, request = synthetic_case(size, scenario)
+    grade_version = None
+    if mode != "search":
+        artifacts = load_two_stage_artifacts() if artifacts is None else artifacts
+        grade_version = supported_synthetic_grade_version(artifacts)
+        student["snapshot"]["grade_version_id"] = grade_version
+    prepared = prepare_recommendation_payloads(student_payload=student, request_payload=request)
+    stats = {}
+    result = {"size": size, "candidate_count": size, "scenario": scenario, "mode": mode,
+        "stage1_strategy": stage1 if mode in {"stage1_ranking", "full"} else None,
+        "final_strategy": final if mode in {"final_ranking", "full"} else None,
+        "stress_only": size == 35, "status": "completed", "elapsed_time": None,
+        "peak_memory": None, "visited_search_states": None, "feasible_plan_count": None,
+        "shortlist_count": None, "production_ranking_strategy": "UNAPPROVED",
+        "grade_version_id": grade_version,
+        "grade_scale_version_supported": True if grade_version is not None else None,
+        "grade_version_selection": "smallest_finite_available_pass_band_version" if grade_version is not None else "not_used_by_search",
+        "credit_distribution": dict(sorted(Counter(str(row["course_credits"]) for row in student["candidates"]).items())),
+        "target_credits": request["target_credits"], "request_constraints": request,
+        "memory_unit": "MiB", "memory_scope": "fresh_worker_lifetime_peak_working_set_including_setup"}
+    def checkpoint_state(phase):
+        if checkpoint:
+            checkpoint({**result, **stats, "worker_phase": phase})
+    checkpoint_state("setup")
+    if mode == "search":
+        checkpoint_state("measurement")
+        start = perf_counter()
+        count = sum(1 for _ in enumerate_feasible_plan_indices(prepared.candidates, prepared.constraints, search_stats=stats))
+        result.update(elapsed_time=perf_counter()-start, **stats, shortlist_count=min(50, count))
+        result["shortlist_count_source"] = "min_50_feasible_count_only_no_ranking"
+    else:
+        engine = TwoStagePlanRecommender(artifacts, synthetic_history_manager(history_root or ROOT / "unused_synthetic_history"),
+            stage1_shortlist_strategy=RankingStrategy(stage="stage1", name=stage1),
+            final_ranking_strategy=RankingStrategy(stage="final", name=final), num_threads=threads)
+        def counted_search(candidates, constraints):
+            yield from enumerate_feasible_plan_indices(candidates, constraints, search_stats=stats)
+        if mode == "full":
+            checkpoint_state("measurement")
+            with patch("src.recommendation.shortlist.enumerate_feasible_plan_indices", counted_search):
+                start = perf_counter()
+                output = engine.recommend_from_payloads(student_payload=student, request_payload=request)
+                result["elapsed_time"] = perf_counter()-start
+            metadata = output["metadata"]
+            result.update(**stats, shortlist_count=metadata["shortlist_count"],
+                stage1_row_count=metadata["stage1_row_count"], stage2_row_count=metadata["stage2_row_count"],
+                result_status=output["status"], model_provenance=metadata["models"],
+                grade_scale_sha256=metadata["grade_scale_sha256"],
+                top_plan_ids=[row["plan_id"] for row in output["recommendations"]])
+            top = pd.DataFrame(output["recommendations"])
+            result["top_metric_means"] = _means(top) if not top.empty else {key: None for key in METRICS}
+        else:
+            base = engine._prepare_candidates(prepared, engine.history_manager.capture(target_part=20251))
+            pair = artifacts.stage1
+            scored = score_course_rows(base, pair.grade_model, pair.fail_model, pair.category_levels,
+                artifacts.grade_scale, features=stage_feature_contract("stage1")["model_features"], num_threads=threads)
+            with patch("src.recommendation.shortlist.rank_evaluation_plans", lambda frame, **kwargs: frame), \
+                 patch("src.recommendation.shortlist.enumerate_feasible_plan_indices", counted_search):
+                selection = build_stage1_shortlist(scored, prepared.constraints,
+                    stage1_shortlist_strategy=engine.stage1_shortlist_strategy,
+                    current_gpa=prepared.snapshot["start_agpa_points"],
+                    current_gpa_credits=prepared.snapshot["current_gpa_credits"], part_semester=1)
+            result.update(**stats, shortlist_count=min(50, len(selection.all_plans)))
+            frame = selection.all_plans
+            if frame.empty:
+                result.update(elapsed_time=0.0, measurement_note="No plans to rank; no ranker invocation.")
+            else:
+                reference = rank_academic_reference(frame, stage="stage1")
+                if mode == "final_ranking":
+                    # ShortlistResult is frozen, so create a new selection for the fixed IDs.
+                    selection = type(selection)(frame, reference.head(50).copy(), selection.plan_indices)
+                    frame = _final_metrics(engine, base, selection, prepared.snapshot)
+                    reference = rank_academic_reference(frame, stage="final")
+                    result["fixed_shortlist_plan_ids"] = frame.plan_id.tolist()
+                strategy = engine.stage1_shortlist_strategy if mode == "stage1_ranking" else engine.final_ranking_strategy
+                checkpoint_state("measurement")
+                start = perf_counter()
+                ranked = rank_evaluation_plans(frame, strategy=strategy)
+                result["elapsed_time"] = perf_counter()-start
+                result["comparison"] = _comparison(ranked, reference, 50 if mode == "stage1_ranking" else 3)
+                result["ranked_plan_count"] = len(frame)
+    result["peak_memory"] = peak_memory_mib()
+    result["timing_class"] = timing_class(result["elapsed_time"])
+    checkpoint_state("completed")
+    return result
+
+
+def timing_class(seconds):
+    if seconds is None:
+        return "unmeasured"
+    return "<1s" if seconds < 1 else "1-3s" if seconds <= 3 else "3-5s" if seconds <= 5 else ">5s"
+
+
+def benchmark_jobs(sizes=SIZES, scenarios=SCENARIOS):
+    jobs = []
+    for size, scenario in itertools.product(sizes, scenarios):
+        choices = [("search", "balance_first", "balance_first")]
+        choices += [("stage1_ranking", name, "balance_first") for name in STRATEGIES]
+        choices += [("final_ranking", "balance_first", name) for name in STRATEGIES]
+        choices += [("full", first, last) for first, last in itertools.product(STRATEGIES, repeat=2)]
+        jobs.extend({"size": size, "scenario": scenario, "mode": mode, "stage1": first, "final": last}
+                    for mode, first, last in choices)
+    return jobs
+
+
+def censored_result(job, deadline, checkpoint):
+    """Do not turn a setup/worker deadline into a measured request latency."""
+    return {**job, "candidate_count": job["size"], "stress_only": job["size"] == 35,
+        "status": "timeout", "elapsed_time": None, "peak_memory": None,
+        "visited_search_states": None, "feasible_plan_count": None, "shortlist_count": None,
+        "worker_wall_time_lower_bound": deadline, "last_checkpoint": checkpoint,
+        "worker_timeout_seconds": deadline,
+        "timing_class": "unmeasured", "production_ranking_strategy": "UNAPPROVED"}
+
+
+def run_worker(job, *, timeout_seconds, threads):
+    """A sequential fresh subprocess prevents peak contamination and contention."""
+    with TemporaryDirectory(prefix="two_stage_benchmark_") as temporary:
+        output, checkpoint = Path(temporary)/"result.json", Path(temporary)/"checkpoint.json"
+        command = [sys.executable, "-m", "scripts.benchmark_two_stage", "--worker",
+            "--size", str(job["size"]), "--scenario", job["scenario"], "--mode", job["mode"],
+            "--stage1", job["stage1"], "--final", job["final"], "--threads", str(threads),
+            "--worker-output", str(output), "--checkpoint", str(checkpoint)]
+        try:
+            completed = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=timeout_seconds)
+        except subprocess.TimeoutExpired:
+            saved = json.loads(checkpoint.read_text(encoding="utf8")) if checkpoint.exists() else {}
+            return censored_result(job, timeout_seconds, saved)
+        if completed.returncode:
+            return {**censored_result(job, timeout_seconds, {}), "status": "error",
+                    "worker_wall_time_lower_bound": None, "error": completed.stderr[-4000:]}
+        result = json.loads(output.read_text(encoding="utf8"))
+        result["worker_timeout_seconds"] = timeout_seconds
+        return result
+
+
+def _write_worker_json(path, value):
+    """Publish complete checkpoints even if a deadline terminates the worker."""
+    temporary = path.with_suffix(".tmp")
+    temporary.write_text(json.dumps(value, allow_nan=False), encoding="utf8")
+    temporary.replace(path)
+
+
+def build_report(results, *, timeout_seconds, threads):
+    sources = [Path(__file__), *[ROOT/f"src/recommendation/{name}.py" for name in
+        ("two_stage_engine", "shortlist", "ranking", "balance_policy", "plan_generation", "constraints", "plan_scoring")]]
+    comparison_path = ROOT/"reports/two_stage_phase5/comparison.json"
+    prior = json.loads(comparison_path.read_text(encoding="utf8"))
+    search_rows = [row for row in results if row["mode"] == "search" and row["size"] <= 30]
+    if any(row["status"] == "completed" and row["elapsed_time"] > 5 for row in search_rows):
+        search_decision = "PROPOSE SEPARATE search optimization study; current algorithm remains unchanged"
+    elif not search_rows or any(row["status"] != "completed" for row in search_rows):
+        search_decision = "INCOMPLETE search measurements; retain current algorithm pending further measurement"
+    else:
+        search_decision = "KEEP current exhaustive/pruned search for measured fixtures; production envelope unresolved"
+    return {"phase": 6, "created_at": datetime.now(timezone.utc).isoformat(),
+        "evidence_scope": "Synthetic payloads and empty synthetic in-memory history; pinned real 33/47 models.",
+        "environment": {"platform": platform.platform(), "python": platform.python_version(),
+            "threads": threads, "pandas": pd.__version__, "processor": platform.processor(),
+            "measurement_repetitions": 1},
+        "worker_timeout_seconds": timeout_seconds, "deadline_scope": "worker lifetime including imports/setup; diagnostic only",
+        "elapsed_time_scope": "warm operation; excludes imports, model loading and ranking preparation",
+        "memory_scope": "fresh_worker_lifetime_peak_working_set_including_setup", "memory_unit": "MiB",
+        "source_hashes": {p.relative_to(ROOT).as_posix(): sha256(p.read_bytes()).hexdigest() for p in sources},
+        "ranking_approval": {"stage1_shortlist_strategy": "UNAPPROVED", "final_ranking_strategy": "UNAPPROVED", "combination": "UNAPPROVED"},
+        "open_production_contract": {"backend_max_candidate_count": "UNRESOLVED", "recommendation_latency_sla": "UNRESOLVED", "memory_budget_per_request": "UNRESOLVED"},
+        "results": results, "job_status_counts": dict(Counter(row["status"] for row in results)),
+        "search_decision": search_decision,
+        "search_decision_scope": "All search-only observations at sizes <=30; ranking, full, setup and stress costs are evaluated separately",
+        "pipeline_cost_review": "Slow/censored full operations require a separate investigation of metrics construction, ranking and inference; they do not identify the search as the bottleneck",
+        "phase5_tradeoff_evidence": {"path": comparison_path.relative_to(ROOT).as_posix(),
+            "sha256": sha256(comparison_path.read_bytes()).hexdigest(), "snapshot_not_rerun": True,
+            "synthetic": {key: prior["synthetic"][key] for key in ("stage1_candidates", "fixed_shortlist_final_comparison", "combinations")},
+            "limitations": prior["limitations"]},
+        "limitations": ["One measurement per fresh process; no production SLA, tail latency or throughput claim.",
+            "Peak includes setup/native allocations; ranking preparation peak is not ranker-only incremental memory.",
+            "Search/full timing includes optional counter overhead; ranking timing excludes search and metrics preparation.",
+            "Timeouts censor complete counts, latency and memory; worker lower bounds are not request latency lower bounds.",
+            "Dense ties use identical new-course model features; repeat candidates retain their official attempt feature.",
+            "Synthetic history exercises fallback and does not measure the size/cost of real history.",
+            "Inference fixtures use a version present in loaded GradeScale pass bands; unsupported integer-ID observations must not be used as quality evidence.",
+            "Final comparisons use the same fixed academic Stage 1 shortlist; full pairs use their actual chosen shortlist.",
+            "Zero seconds for an empty ranking workload means no ranker invocation; it is not a timed inference/search measurement.",
+            "No global Top K guarantee or empirical student outcome improvement; approvals require human review."]}
+
+
+def save_report(report, output_dir):
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    (output_dir/"benchmark.json").write_text(json.dumps(report, ensure_ascii=False, indent=2, allow_nan=False)+"\n", encoding="utf8")
+    lines = ["# Phase 6 — Synthetic two-stage benchmark", "", report["evidence_scope"], "",
+        "Ranking approvals: Stage 1 / Final / combination = **UNAPPROVED**.", "",
+        f"Environment: `{report['environment']}`. Sequential fresh workers; one sample per job.", "",
+        f"Primary worker deadline: {report['worker_timeout_seconds']}s including setup; a timeout is censored, not a measured latency. Supplemental budgets, when used, are pinned per measurement batch in JSON.", "",
+        "Times are warm operation seconds. Peak memory is MiB, including worker setup; it is an actual process peak, not Python-only allocations.", "",
+        "| N | Scenario | Measurement | Stage1 / Final | Status | States | Feasible | Shortlist | Seconds | Peak MiB |",
+        "|---|---|---|---|---|---:|---:|---:|---:|---:|"]
+    def display(value):
+        return "unmeasured" if value is None else f"{value:.4f}" if isinstance(value, float) else str(value)
+    for row in report["results"]:
+        first = row.get("stage1_strategy", row.get("stage1"))
+        last = row.get("final_strategy", row.get("final"))
+        lines.append(f"| {row['size']}{' stress' if row['stress_only'] else ''} | {row['scenario']} | {row['mode']} | {first} / {last} | {row['status']} | "
+            + " | ".join(display(row.get(key)) for key in ("visited_search_states", "feasible_plan_count", "shortlist_count", "elapsed_time", "peak_memory"))+" |")
+    lines += ["", "Search-only shortlist counts are min(50, feasible), not a scored selection. Ranking rows count visits during untimed preparation.",
+        "", f"Search decision: **{report['search_decision']}**", "",
+        report["search_decision_scope"], "", report["pipeline_cost_review"], "",
+        "Diagnostic timing bands: <1s; 1–3s; 3–5s; >5s. No hard memory gate or production candidate cap.", "",
+        "Independent Stage 1 and Final comparisons and every cross-stage pair are recorded in benchmark.json; metrics keep each Balance component separate.", "",
+        "Prior global-shortlist retention/tradeoff evidence: [Phase 5 comparison](../two_stage_phase5/comparison.md), SHA-256 pinned in JSON. This is a saved evidence snapshot, not a new historical run.", ""]
+    for stage, mode in (("Stage 1", "stage1_ranking"), ("Final on fixed shortlist", "final_ranking")):
+        lines += [f"## {stage} tradeoffs", "", "| N / scenario / choice | Academic overlap | GPA change | Failed credits change | Failed penalty change | Withdrawn penalty change | Total penalty change |",
+                  "|---|---:|---:|---:|---:|---:|---:|"]
+        for row in report["results"]:
+            if row["mode"] == mode and "comparison" in row:
+                comparison = row["comparison"]
+                delta = comparison["metric_change_vs_academic"]
+                choice = row["stage1_strategy"] if mode == "stage1_ranking" else row["final_strategy"]
+                lines.append(f"| {row['size']} / {row['scenario']} / {choice} | {comparison['academic_overlap']} | "
+                    + " | ".join(display(delta[key]) for key in (METRICS[0], *METRICS[2:]))+" |")
+    lines += ["", "## Cross-stage combinations — actual warm engine", "",
+        "| N / scenario | Stage 1 / Final | Status | Seconds | Top-3 GPA mean | Failed credits mean | Failed penalty | Withdrawn penalty | Total penalty |",
+        "|---|---|---|---:|---:|---:|---:|---:|---:|"]
+    for row in report["results"]:
+        if row["mode"] == "full":
+            means = row.get("top_metric_means", {})
+            lines.append(f"| {row['size']} / {row['scenario']} | {row.get('stage1_strategy', row.get('stage1'))} / {row.get('final_strategy', row.get('final'))} | {row['status']} | {display(row['elapsed_time'])} | "
+                + " | ".join(display(means.get(key)) for key in (METRICS[0], *METRICS[2:]))+" |")
+    lines += ["", "## Limits and decisions still required", "", *[f"- {item}" for item in report["limitations"]], "",
+              "backend_max_candidate_count / recommendation_latency_sla / memory_budget_per_request = UNRESOLVED.", "",
+              "Review and approve Stage 1, Final, and their combination independently before Phase 7 manifest work. No choice was approved by this benchmark."]
+    if "verification" in report:
+        lines += ["", "## Verification", "", "```json", json.dumps(report["verification"], ensure_ascii=False, indent=2), "```"]
+    (output_dir/"benchmark.md").write_text("\n".join(lines)+"\n", encoding="utf8")
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output-dir", type=Path, default=ROOT/"reports/two_stage_phase6")
+    parser.add_argument("--timeout-seconds", type=float, default=15)
+    parser.add_argument("--threads", type=int, default=1)
+    parser.add_argument("--sizes", type=int, nargs="+", choices=SIZES, default=SIZES)
+    parser.add_argument("--scenarios", nargs="+", choices=SCENARIOS, default=SCENARIOS)
+    parser.add_argument("--worker", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("--size", type=int, choices=SIZES)
+    parser.add_argument("--scenario", choices=SCENARIOS)
+    parser.add_argument("--mode", choices=MODES)
+    parser.add_argument("--stage1", choices=STRATEGIES, default="balance_first")
+    parser.add_argument("--final", choices=STRATEGIES, default="balance_first")
+    parser.add_argument("--worker-output", type=Path)
+    parser.add_argument("--checkpoint", type=Path)
+    args = parser.parse_args(argv)
+    if args.threads < 1 or not math.isfinite(args.timeout_seconds) or args.timeout_seconds <= 0:
+        parser.error("Use positive threads and a finite positive diagnostic deadline.")
+    if args.worker:
+        def checkpoint(value):
+            _write_worker_json(args.checkpoint, value)
+        result = measure_case(args.size, args.scenario, args.mode, stage1=args.stage1, final=args.final,
+                              threads=args.threads, checkpoint=checkpoint)
+        _write_worker_json(args.worker_output, result)
+        return 0
+    results = []
+    jobs = benchmark_jobs(args.sizes, args.scenarios)
+    for index, job in enumerate(jobs, 1):
+        print(f"[{index}/{len(jobs)}] {job}", flush=True)
+        result = run_worker(job, timeout_seconds=args.timeout_seconds, threads=args.threads)
+        results.append(result)
+        print(f"  {result['status']}: elapsed={result['elapsed_time']} peak={result['peak_memory']}", flush=True)
+    report = build_report(results, timeout_seconds=args.timeout_seconds, threads=args.threads)
+    save_report(report, args.output_dir)
+    print(json.dumps(report["job_status_counts"]), flush=True)
+    return 1 if report["job_status_counts"].get("error") else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

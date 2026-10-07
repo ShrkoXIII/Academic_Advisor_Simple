@@ -6,7 +6,7 @@ from time import perf_counter
 import numpy as np
 import pandas as pd
 
-from src.features.feature_contract import BASE_FEATURES, prepare_model_matrix, require_current_features
+from src.features.feature_contract import BASE_FEATURES, require_current_features
 from src.features.frozen_history import validate_history_pair, validate_history_selection
 from src.features.temporal_features import (
     COURSE_HISTORY_COLUMNS, PLAN_CONTEXT_COLUMNS, compute_plan_context_features,
@@ -15,7 +15,7 @@ from src.features.temporal_features import (
 from .artifacts import load_recommendation_artifacts
 from .inputs import STUDENT_SNAPSHOT_COLUMNS, CANDIDATE_COURSE_COLUMNS
 from .plan_generation import resolve_credit_bounds, enumerate_plan_indices, build_plan_rows
-from .plan_scoring import COURSE_OUTPUT_COLUMNS, rank_plans, summarize_scored_plans, empty_summaries
+from .plan_scoring import COURSE_OUTPUT_COLUMNS, rank_plans, summarize_scored_plans, empty_summaries, score_course_rows
 
 
 def resolve_current_gpa_credits(snapshot, override=None):
@@ -89,19 +89,9 @@ class AcademicPlanRecommender:
         missing = set(BASE_FEATURES) - set(rows.columns)
         if missing:
             raise ValueError(f"Missing BASE_FEATURES: {sorted(missing)}")
-        matrix = prepare_model_matrix(rows, self.category_levels)
-        marks = np.asarray(self.grade_model.predict(matrix, num_threads=self.num_threads), dtype=float)
-        failures = np.asarray(self.fail_model.predict(matrix, num_threads=self.num_threads), dtype=float)
-        if not np.isfinite(marks).all() or not np.isfinite(failures).all():
-            raise ValueError("Model returned non-finite predictions.")
-        rows["predicted_mark"] = np.clip(marks, 0, 100)
-        rows["expected_points"], rows["expected_grade"] = self.grade_scale.convert(
-            rows["predicted_mark"], rows["grade_version_id"],
-        )
-        rows["fail_probability"] = np.clip(failures, 0, 1)
-        if not np.isfinite(rows[["expected_points", "fail_probability"]].to_numpy()).all():
-            raise ValueError("Model returned non-finite predictions.")
-        return rows
+        return score_course_rows(rows, self.grade_model, self.fail_model,
+                                 self.category_levels, self.grade_scale,
+                                 num_threads=self.num_threads)
 
     def recommend(self, student_snapshot, candidate_courses, part_id, current_gpa,
                   credits=None, min_credits=None, max_credits=None, batch_size=2000,

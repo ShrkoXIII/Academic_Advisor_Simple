@@ -780,9 +780,9 @@
     "semantic_hash": ""
   },
   "src/recommendation/__init__.py": {
-    "mtime": 1791358901.972607,
-    "seen": 1791359973.0054595,
-    "ast_hash": "02d0cab2def1da0b78ff67cdecab2711",
+    "mtime": 1791283324.6260774,
+    "seen": 1791283558.8922577,
+    "ast_hash": "e25b36c357c2f662516c8f4db25bf598",
     "semantic_hash": ""
   },
   "src/recommendation/artifacts.py": {
@@ -798,9 +798,9 @@
     "semantic_hash": ""
   },
   "src/recommendation/engine.py": {
-    "mtime": 1791358731.8217762,
-    "seen": 1791359973.0054595,
-    "ast_hash": "ca25e341d5bcb62505b1c57e5b84d59b",
+    "mtime": 1790501254.0886362,
+    "seen": 1791190625.178729,
+    "ast_hash": "a8cc3b49a91d022e7d3527eaf947595a",
     "semantic_hash": ""
   },
   "src/recommendation/inputs.py": {
@@ -822,15 +822,15 @@
     "semantic_hash": ""
   },
   "src/recommendation/plan_generation.py": {
-    "mtime": 1791359694.9679883,
-    "seen": 1791359973.0054595,
-    "ast_hash": "75628d0901bf1c83c2f11c421cad7616",
+    "mtime": 1790501254.965879,
+    "seen": 1791190625.178729,
+    "ast_hash": "427806cf720622a0729f41510fd652dd",
     "semantic_hash": ""
   },
   "src/recommendation/plan_scoring.py": {
-    "mtime": 1791358806.4544218,
-    "seen": 1791359973.0054595,
-    "ast_hash": "e4af1639b693a11bf2d9023613759938",
+    "mtime": 1790501255.8676543,
+    "seen": 1791190625.178729,
+    "ast_hash": "833bc0b6d1c61f2a2bd6eb474907d16f",
     "semantic_hash": ""
   },
   "src/recommendation_experiments/__init__.py": {
@@ -1758,9 +1758,9 @@
     "semantic_hash": ""
   },
   "docs/architecture/RECOMMENDATION_TWO_STAGE_IMPLEMENTATION_PLAN.md": {
-    "mtime": 1791356274.8056018,
-    "seen": 1791359973.0054595,
-    "ast_hash": "c718926f914ab5201bf2ad83949d8039",
+    "mtime": 1791283905.751856,
+    "seen": 1791285351.8174121,
+    "ast_hash": "662357141e41b13720712d0f01903583",
     "semantic_hash": ""
   },
   "models/shortlist_v2/fail_model.txt": {
@@ -1782,9 +1782,9 @@
     "semantic_hash": ""
   },
   "src/recommendation/constraints.py": {
-    "mtime": 1791359649.5114555,
-    "seen": 1791359973.0054595,
-    "ast_hash": "aae322c34e04ecc1a8cad5a6a998dd11",
+    "mtime": 1791280754.0969248,
+    "seen": 1791281096.739519,
+    "ast_hash": "4c468b4323eba33e80182321693f80a0",
     "semantic_hash": ""
   },
   "src/recommendation/course_status.py": {
@@ -1944,63 +1944,9 @@
     "semantic_hash": ""
   },
   "docs/architecture/README.md": {
-    "mtime": 1791287657.3932045,
-    "seen": 1791359973.0054595,
-    "ast_hash": "eceb4ab6e514766ab106237e1efa6fa7",
-    "semantic_hash": ""
-  },
-  "reports/two_stage_phase5/comparison.json": {
-    "mtime": 1791359785.2633564,
-    "seen": 1791359973.0054595,
-    "ast_hash": "f45a49990bf7bf1f723741d960ed76a0",
-    "semantic_hash": ""
-  },
-  "scripts/evaluate_two_stage_ranking.py": {
-    "mtime": 1791359763.6274538,
-    "seen": 1791359973.0054595,
-    "ast_hash": "0e4b588a2e36ebf0a9f8a26ddf1057be",
-    "semantic_hash": ""
-  },
-  "src/recommendation/shortlist.py": {
-    "mtime": 1791359192.8328104,
-    "seen": 1791359973.0054595,
-    "ast_hash": "1479467be8a47c9b4630c41546cda89d",
-    "semantic_hash": ""
-  },
-  "src/recommendation/two_stage_engine.py": {
-    "mtime": 1791359132.129966,
-    "seen": 1791359973.0054595,
-    "ast_hash": "457c5edf5b8cb4d66c404b07d37c3d85",
-    "semantic_hash": ""
-  },
-  "tests/test_two_stage_engine.py": {
-    "mtime": 1791359350.5860586,
-    "seen": 1791359973.0054595,
-    "ast_hash": "c9ce14dfd44e29e976dec95862993f56",
-    "semantic_hash": ""
-  },
-  "tests/test_two_stage_evaluation.py": {
-    "mtime": 1791359083.6429036,
-    "seen": 1791359973.0054595,
-    "ast_hash": "2e4582c269b3f3bef59450e7446eea3c",
-    "semantic_hash": ""
-  },
-  "tests/test_two_stage_shortlist.py": {
-    "mtime": 1791359610.0017803,
-    "seen": 1791359973.0054595,
-    "ast_hash": "4a91898fac8a305f8745f9f9946220a7",
-    "semantic_hash": ""
-  },
-  "tests/two_stage_fixtures.py": {
-    "mtime": 1791358735.6348617,
-    "seen": 1791359973.0054595,
-    "ast_hash": "897cb3ae47d14f2281adf90d0df80105",
-    "semantic_hash": ""
-  },
-  "reports/two_stage_phase5/comparison.md": {
-    "mtime": 1791359785.2633564,
-    "seen": 1791359973.0054595,
-    "ast_hash": "3e770665897550a7e7b771d8e3d44663",
+    "mtime": 1791284812.9799922,
+    "seen": 1791285351.8174121,
+    "ast_hash": "8bd97d655d9c84a3e17fba008bc0fffd",
     "semantic_hash": ""
   }
 }

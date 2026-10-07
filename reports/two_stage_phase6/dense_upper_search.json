@@ -1,0 +1,207 @@
+[
+  {
+    "size": 15,
+    "candidate_count": 15,
+    "scenario": "dense_upper_18",
+    "mode": "search",
+    "stage1_strategy": null,
+    "final_strategy": null,
+    "stress_only": false,
+    "status": "completed",
+    "elapsed_time": 0.14357400001608767,
+    "peak_memory": 85.63671875,
+    "visited_search_states": 28885,
+    "feasible_plan_count": 5005,
+    "shortlist_count": 50,
+    "production_ranking_strategy": "UNAPPROVED",
+    "credit_distribution": {
+      "3": 15
+    },
+    "target_credits": 18,
+    "request_constraints": {
+      "student_id": "SYNTHETIC_STUDENT",
+      "degree_id": "SYNTHETIC_DEGREE",
+      "part_id": 20251,
+      "target_credits": 18,
+      "allowed_failed_repeat_credits": 6,
+      "allowed_withdrawn_repeat_credits": 3,
+      "requirement_policies": [
+        {
+          "plan_requirement_type_id": "1",
+          "max_credits": 18
+        }
+      ]
+    },
+    "memory_unit": "MiB",
+    "memory_scope": "fresh_worker_lifetime_peak_working_set_including_setup",
+    "exact_credit_plan_count": 5005,
+    "shortlist_count_source": "min_50_feasible_count_only_no_ranking",
+    "timing_class": "<1s",
+    "worker_timeout_seconds": 90,
+    "measurement_batch": "dense_upper_18_search"
+  },
+  {
+    "size": 20,
+    "candidate_count": 20,
+    "scenario": "dense_upper_18",
+    "mode": "search",
+    "stage1_strategy": null,
+    "final_strategy": null,
+    "stress_only": false,
+    "status": "completed",
+    "elapsed_time": 1.2074586999951862,
+    "peak_memory": 85.72265625,
+    "visited_search_states": 263567,
+    "feasible_plan_count": 38760,
+    "shortlist_count": 50,
+    "production_ranking_strategy": "UNAPPROVED",
+    "credit_distribution": {
+      "3": 20
+    },
+    "target_credits": 18,
+    "request_constraints": {
+      "student_id": "SYNTHETIC_STUDENT",
+      "degree_id": "SYNTHETIC_DEGREE",
+      "part_id": 20251,
+      "target_credits": 18,
+      "allowed_failed_repeat_credits": 6,
+      "allowed_withdrawn_repeat_credits": 3,
+      "requirement_policies": [
+        {
+          "plan_requirement_type_id": "1",
+          "max_credits": 18
+        }
+      ]
+    },
+    "memory_unit": "MiB",
+    "memory_scope": "fresh_worker_lifetime_peak_working_set_including_setup",
+    "exact_credit_plan_count": 38760,
+    "shortlist_count_source": "min_50_feasible_count_only_no_ranking",
+    "timing_class": "1-3s",
+    "worker_timeout_seconds": 90,
+    "measurement_batch": "dense_upper_18_search"
+  },
+  {
+    "size": 25,
+    "candidate_count": 25,
+    "scenario": "dense_upper_18",
+    "mode": "search",
+    "stage1_strategy": null,
+    "final_strategy": null,
+    "stress_only": false,
+    "status": "completed",
+    "elapsed_time": 6.676917200005846,
+    "peak_memory": 85.59765625,
+    "visited_search_states": 1421859,
+    "feasible_plan_count": 177100,
+    "shortlist_count": 50,
+    "production_ranking_strategy": "UNAPPROVED",
+    "credit_distribution": {
+      "3": 25
+    },
+    "target_credits": 18,
+    "request_constraints": {
+      "student_id": "SYNTHETIC_STUDENT",
+      "degree_id": "SYNTHETIC_DEGREE",
+      "part_id": 20251,
+      "target_credits": 18,
+      "allowed_failed_repeat_credits": 6,
+      "allowed_withdrawn_repeat_credits": 3,
+      "requirement_policies": [
+        {
+          "plan_requirement_type_id": "1",
+          "max_credits": 18
+        }
+      ]
+    },
+    "memory_unit": "MiB",
+    "memory_scope": "fresh_worker_lifetime_peak_working_set_including_setup",
+    "exact_credit_plan_count": 177100,
+    "shortlist_count_source": "min_50_feasible_count_only_no_ranking",
+    "timing_class": ">5s",
+    "worker_timeout_seconds": 90,
+    "measurement_batch": "dense_upper_18_search"
+  },
+  {
+    "size": 30,
+    "candidate_count": 30,
+    "scenario": "dense_upper_18",
+    "mode": "search",
+    "stage1_strategy": null,
+    "final_strategy": null,
+    "stress_only": false,
+    "status": "completed",
+    "elapsed_time": 25.534685099992203,
+    "peak_memory": 85.66015625,
+    "visited_search_states": 5544161,
+    "feasible_plan_count": 593775,
+    "shortlist_count": 50,
+    "production_ranking_strategy": "UNAPPROVED",
+    "credit_distribution": {
+      "3": 30
+    },
+    "target_credits": 18,
+    "request_constraints": {
+      "student_id": "SYNTHETIC_STUDENT",
+      "degree_id": "SYNTHETIC_DEGREE",
+      "part_id": 20251,
+      "target_credits": 18,
+      "allowed_failed_repeat_credits": 6,
+      "allowed_withdrawn_repeat_credits": 3,
+      "requirement_policies": [
+        {
+          "plan_requirement_type_id": "1",
+          "max_credits": 18
+        }
+      ]
+    },
+    "memory_unit": "MiB",
+    "memory_scope": "fresh_worker_lifetime_peak_working_set_including_setup",
+    "exact_credit_plan_count": 593775,
+    "shortlist_count_source": "min_50_feasible_count_only_no_ranking",
+    "timing_class": ">5s",
+    "worker_timeout_seconds": 90,
+    "measurement_batch": "dense_upper_18_search"
+  },
+  {
+    "size": 35,
+    "candidate_count": 35,
+    "scenario": "dense_upper_18",
+    "mode": "search",
+    "stage1_strategy": null,
+    "final_strategy": null,
+    "stress_only": true,
+    "status": "completed",
+    "elapsed_time": 68.66093670000555,
+    "peak_memory": 85.73046875,
+    "visited_search_states": 17344623,
+    "feasible_plan_count": 1623160,
+    "shortlist_count": 50,
+    "production_ranking_strategy": "UNAPPROVED",
+    "credit_distribution": {
+      "3": 35
+    },
+    "target_credits": 18,
+    "request_constraints": {
+      "student_id": "SYNTHETIC_STUDENT",
+      "degree_id": "SYNTHETIC_DEGREE",
+      "part_id": 20251,
+      "target_credits": 18,
+      "allowed_failed_repeat_credits": 6,
+      "allowed_withdrawn_repeat_credits": 3,
+      "requirement_policies": [
+        {
+          "plan_requirement_type_id": "1",
+          "max_credits": 18
+        }
+      ]
+    },
+    "memory_unit": "MiB",
+    "memory_scope": "fresh_worker_lifetime_peak_working_set_including_setup",
+    "exact_credit_plan_count": 1623160,
+    "shortlist_count_source": "min_50_feasible_count_only_no_ranking",
+    "timing_class": ">5s",
+    "worker_timeout_seconds": 90,
+    "measurement_batch": "dense_upper_18_search"
+  }
+]

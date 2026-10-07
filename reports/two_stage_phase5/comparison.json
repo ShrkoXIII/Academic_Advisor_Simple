@@ -1,0 +1,5112 @@
+{
+  "phase": 5,
+  "production_ranking_strategy": "UNAPPROVED",
+  "benchmark_performed": false,
+  "evidence_scope": "Synthetic course identities/predictions and saved aggregate credit mixes; no student records or real recommendations.",
+  "source_hashes": {
+    "scripts/evaluate_two_stage_ranking.py": "1fdef913875c26f57e9157136e1462ca2520b3ebd45184e4b546b809be78795e",
+    "src/recommendation/shortlist.py": "be4b396a8e2dc33fe2cf7fcae56c272e10092f10674e80806f88f2ba4ef4929e",
+    "src/recommendation/ranking.py": "dc0370b1a05d3242308809fe7c005cec4b75c3750726fc5bc74e5fb5c628f0c3",
+    "src/recommendation/balance_policy.py": "bcdc851804116f3a97f84ba4602b187a55dfde343e68f958940e863d2ed0931b",
+    "src/recommendation/plan_generation.py": "eb3e5d58a34fa5b946e36007f4dcacdce8b93c72e7c329c356bc7ba5d9612891",
+    "src/recommendation/constraints.py": "893951b2597aa59ac3af1088cc01fff7f905d17143801c930bdab04f71985b65",
+    "src/recommendation/plan_scoring.py": "28cbf3e707cd262dde03292b0047dce41fd89cd9f7b9bfd18be062d651825fca"
+  },
+  "synthetic": {
+    "candidate_count": 10,
+    "feasible_plan_count": 176,
+    "target_credits": 15,
+    "allowed_failed_repeat_credits": 6,
+    "allowed_withdrawn_repeat_credits": 3,
+    "top_k": 3,
+    "shortlist_limit": 50,
+    "prediction_source": "fabricated_synthetic_values",
+    "diagnostic_stage2_scope": "all_feasible_synthetic_plans_only_outside_serving",
+    "hidden_stage2_best_academic_plan_id": "73ab03782649679f207b739f8e0c65c2dd880f1638a650cf2f66a8182cfcd234",
+    "stage1_candidates": {
+      "balance_first": {
+        "approval_status": "UNAPPROVED",
+        "version": "v1",
+        "plan_ids": [
+          "a5420ab59a9c7a23acb87ce3cb90b69d11bf173087d1783e05a155fbc2da7240",
+          "af57ce0d0b68f636427fdd148a5e7aa260d9baaf70be8fd1f82818e60e8eb096",
+          "48f8f4ad8050c47dcab6b4821eda4ded412eb4faf99f6acb9411ae5a67b31fd5",
+          "21278fafb8fa04741c639f8d07bc9170f125be1b10885eef546c2a9367e7ff0a",
+          "b487a1ff8e8d8e7cc6e04937ed82bcaef281869e5784603f725cd96e2167c74b",
+          "bda071c5f18601bd412d0965ddcec25cdd5c422e0937ccad90263de333aff4c2",
+          "5d671db1ab84cc599bcdff8de24c8b1d9855cc68cda2bcc7cba07f178562a4a0",
+          "41f2e40abd47256339030f09950f27fe790e14976d7fe5b4a4647fce7d14aed2",
+          "45cb02a1c459f6af0ac3b19f5086f22cfa5aaca1369412e10c27c4f597794603",
+          "33ddb1b57922fc135845f5d625997bdc6f6ce33d949f33a7cc595de84eabc155",
+          "61aa9e16b11b88421825b2823bd51ccfb4dd71e04e150a811370cf29a7326a61",
+          "ef4dc22921fbf369ab010ad6ba280cdce6aac480b05c9567bca5c54b06eb8779",
+          "af38d79a064c6e9cbba21ffea13282023aa353fc16497e64ddde7fce8e032547",
+          "317fe255e51820a99ec558c82f23ffa0bd8f4bafc614c309d794ad90537410c6",
+          "b6ed9db025a8a860a5d9b0dffd9cbb7d3c0df7b611f0fc219279eeddc7b1a426",
+          "5d49fa27ef0b6ee9d400a4e8d854e58da6e80d49cd1b89d97612c8c1ff921fa8",
+          "807b7eb16dc2d4633aa517206b7c7e4fa3f2dd0b4d1bb1eec676f76a85d0afd2",
+          "3420a22933f32e1d2023afa5e7ecc04325c1ca5b8830e9bd83702d444076d713",
+          "6fbdce7894287c02f3522da8bc0f7d2a8480cf01b414b27dbc5ccd67120a5005",
+          "d6924af114b7c0827d4a43f2aa5bfafd82de2fc170644a9f9674523a0f10e449",
+          "ad1aa0af4a9d37acdcb301dc3cb940894107dc4651a3007b08505206db86bee4",
+          "ca89e33964a35690b354c541a8ce6823943c9a6c1a093707ed5255835cfa3296",
+          "a34e790e87130e09c0d51d19e45c83d7091ef98f22b61b6d34357b72bde8af2d",
+          "2cf7ff074a9b19c40e5bff025a97d1bed4c01f1c434a769a6078fc1ffb00f7b3",
+          "7f593f130a9b8e40c9250ff12c47c45bf6300f7bef7797f205a2ebda2781c483",
+          "7e8af52c5ae6e9ea16dba90cd36f4ee78df1c86750dc15e748395acac499b42e",
+          "a06cd236f7cabb6ebf305715a273f64ec0269d7f6aa79c52a861bd4042422c8c",
+          "198ea17d565094d4b7d59bcbba9d5a0de5d790dc2914f7694686bdc60d40e38c",
+          "523af103748e5359039e04edf7046664eaf149d3f672bc8dec53cdc790ac4bf0",
+          "bc5591eee31a17e972d7e7e2d7d1fd9c937000b6de686471d9dec83c09c2f1a0",
+          "6de949e56e2393e6490cbc24a34a0313438ed35770427b6d8b70663242f244d7",
+          "82d7f3ad5538621232e95b73138a0c44f18163bdcd4c80a26aaff381bb1992b9",
+          "bf022c265de0cf69689c91fa9d4bb8b8e040fed36eb61987062bc5cc56fc5a18",
+          "8509ef9d6786141a39381d1688d318293b30bdb75c17dcca7bc3cc28c77b8ea3",
+          "b4fd8efc6f286ff478c33c214a09327a8792dcf30af6873c1f15279f7a561c01",
+          "db4fcb7ba9ed0deadc21b460adb4f246236afaacb1d2bf32493872b3df53b719",
+          "01b027ec4cc47adbf9082a2d9c07e3874e758c35f4be5b956aa28bc076cd6be0",
+          "0959a3c260a99e17dabd529e8f22e5330f28b2bc006dd8a84e492540747d1581",
+          "6ed0ca923ac2491d0ec96cbaf0462c905a76156d400064e805cbdc9fb63f8a9b",
+          "f3c3788e6fc32f32b88210b614f2c6e540451a55d2f066104e7c4b6ae2efd948",
+          "d1f57aaa10c9853c5778cf0dcdab0d22b0ce9e79664b9c25f4a5a752dd6de3f7",
+          "8359ef9d2fc38d5cde36f283315c50d7fc9ed134f87b60119841fde543d2bed8",
+          "9c03c85d80b53308b0e3a21baf3f943469585408d971da63020c44864ef0d89b",
+          "f86ac648538677c43c7c8b1d6dd71c1617dfd352075856eae7e35eaf66a46053",
+          "1ecf0c75fed5af2adca9dbb670b74e17dc2c03d52c84ff819b6ac921243657c2",
+          "82a210d45de1bccf755251b01843018b26d8a99c373bbf36faec073c19de3b39",
+          "a4b36ccf6ae0cb1ba5dba3766d1db8755b366136efc307298307aa5a00b98874",
+          "62d0d6c9d66e8f11934e86a98eeb15f7acac8a1b4584e9a2dd778d4dd4402271",
+          "342a664648cd0b8c241809498cd21cf15bbbefb6f78456fd7829bb1664c2fe67",
+          "1257ae72a4cbae1b2aa6934b3a7a22c6df21e62ad02e6152ed7e832f754e9b54"
+        ],
+        "academic_shortlist_overlap": 0,
+        "stage1_metric_means": {
+          "projected_cumulative_gpa": 2.0938,
+          "expected_plan_gpa": 2.469,
+          "expected_failed_credits": 2.925,
+          "failed_balance_penalty": 0.0,
+          "withdrawn_balance_penalty": 0.01647058823529412,
+          "total_previous_balance_penalty": 0.08
+        },
+        "stage1_metric_change_vs_academic": {
+          "projected_cumulative_gpa": -0.06800000000000006,
+          "expected_plan_gpa": -0.33999999999999986,
+          "expected_failed_credits": 0.6524999999999999,
+          "failed_balance_penalty": -0.16470588235294115,
+          "withdrawn_balance_penalty": -0.005647058823529404,
+          "total_previous_balance_penalty": -0.22228571428571425
+        },
+        "lost_global_academic_top_k": [
+          "73ab03782649679f207b739f8e0c65c2dd880f1638a650cf2f66a8182cfcd234",
+          "d2f37e3f204a8917eb03cae0453515d4a9ab75d9ba3500343c7511e470697592"
+        ],
+        "global_final_candidate_top_k_retention": {
+          "balance_first": 3,
+          "pareto": 3
+        },
+        "best_component_top_k_retention": {
+          "failed": 2,
+          "withdrawn": 1,
+          "total_previous": 2
+        },
+        "diversity": {
+          "distinct_courses": 10,
+          "distinct_credit_mixes": 2
+        }
+      },
+      "pareto": {
+        "approval_status": "UNAPPROVED",
+        "version": "v1",
+        "plan_ids": [
+          "a5420ab59a9c7a23acb87ce3cb90b69d11bf173087d1783e05a155fbc2da7240",
+          "5d49fa27ef0b6ee9d400a4e8d854e58da6e80d49cd1b89d97612c8c1ff921fa8",
+          "3181c39c0b75483006088ca9d602e8952319be8d1f232fe501f9223c9fa97188",
+          "bf826320e0854860bd9acd98105cf90bd401bd12b8176249d14a6ad95ba95cc1",
+          "af57ce0d0b68f636427fdd148a5e7aa260d9baaf70be8fd1f82818e60e8eb096",
+          "48f8f4ad8050c47dcab6b4821eda4ded412eb4faf99f6acb9411ae5a67b31fd5",
+          "807b7eb16dc2d4633aa517206b7c7e4fa3f2dd0b4d1bb1eec676f76a85d0afd2",
+          "3420a22933f32e1d2023afa5e7ecc04325c1ca5b8830e9bd83702d444076d713",
+          "6fbdce7894287c02f3522da8bc0f7d2a8480cf01b414b27dbc5ccd67120a5005",
+          "8a3f404a40b49be0020a5155f620bf271e322edf4005ea074b333937d6966978",
+          "ca7a7aae844acb0fe2b52cddb886009cb2010a6126da23119dba771f890605b6",
+          "35ecad496b471cc1d44793c81d63120f6592a8bee72caab59188d585961ab332",
+          "4293621f435e63f66d874d925ff3ac2582aa4f05a7f675e00ffc84f00d966fa9",
+          "43d4203e54eb23b87de3f00438723d2ab7fa153851da76abf616dbef9ec06a77",
+          "21278fafb8fa04741c639f8d07bc9170f125be1b10885eef546c2a9367e7ff0a",
+          "b487a1ff8e8d8e7cc6e04937ed82bcaef281869e5784603f725cd96e2167c74b",
+          "bda071c5f18601bd412d0965ddcec25cdd5c422e0937ccad90263de333aff4c2",
+          "d6924af114b7c0827d4a43f2aa5bfafd82de2fc170644a9f9674523a0f10e449",
+          "ad1aa0af4a9d37acdcb301dc3cb940894107dc4651a3007b08505206db86bee4",
+          "ca89e33964a35690b354c541a8ce6823943c9a6c1a093707ed5255835cfa3296",
+          "a34e790e87130e09c0d51d19e45c83d7091ef98f22b61b6d34357b72bde8af2d",
+          "2cf7ff074a9b19c40e5bff025a97d1bed4c01f1c434a769a6078fc1ffb00f7b3",
+          "7f593f130a9b8e40c9250ff12c47c45bf6300f7bef7797f205a2ebda2781c483",
+          "e0d4bb286793649dce663758fd26abb7ee5729a2567e3838c440e3399710f09c",
+          "30c286544fcf83ae767b159d04d8c10b171778a00ac06cd752ad4f4af8c51126",
+          "9c0a294e5749e3915085a8860283b4eed9996460062840ef41bbda182a16b5f2",
+          "5ea88c5ddfbac5bad17d3cc2dff5e9a9c4af99e5199321325b9a7d036f4f974d",
+          "929292cd49d13f5ac01300c17230466c6258b17ad5cdac2a64219aa67954c80c",
+          "59be8039694a8d03b03fdb47fdcf97735097a6ee765c808c978913ec77afdee3",
+          "ff04b857e61d3aacd44b0fc9c79e64c6a4c7b0c0e684d3b4ce1ab9405104f127",
+          "b750423379a930a7f8a3a3288e70557f95ac5fc9d4aeaea2107b070179d8fb0f",
+          "3b5b82ecdb6abcd71a51b0fc9487f01a42678b0c14fe3dc01de245c743787ae7",
+          "4a7e8e8d83ff56283d0bf2c9dc43912a8363f508f6b54ef63677e6ecffed49ae",
+          "5d671db1ab84cc599bcdff8de24c8b1d9855cc68cda2bcc7cba07f178562a4a0",
+          "41f2e40abd47256339030f09950f27fe790e14976d7fe5b4a4647fce7d14aed2",
+          "45cb02a1c459f6af0ac3b19f5086f22cfa5aaca1369412e10c27c4f597794603",
+          "7e8af52c5ae6e9ea16dba90cd36f4ee78df1c86750dc15e748395acac499b42e",
+          "a06cd236f7cabb6ebf305715a273f64ec0269d7f6aa79c52a861bd4042422c8c",
+          "198ea17d565094d4b7d59bcbba9d5a0de5d790dc2914f7694686bdc60d40e38c",
+          "523af103748e5359039e04edf7046664eaf149d3f672bc8dec53cdc790ac4bf0",
+          "bc5591eee31a17e972d7e7e2d7d1fd9c937000b6de686471d9dec83c09c2f1a0",
+          "6de949e56e2393e6490cbc24a34a0313438ed35770427b6d8b70663242f244d7",
+          "82d7f3ad5538621232e95b73138a0c44f18163bdcd4c80a26aaff381bb1992b9",
+          "bf022c265de0cf69689c91fa9d4bb8b8e040fed36eb61987062bc5cc56fc5a18",
+          "8509ef9d6786141a39381d1688d318293b30bdb75c17dcca7bc3cc28c77b8ea3",
+          "9516bae97c55db10ce10b0c7152a2a445b56f6d169f649e57220c3740e370565",
+          "770d7153ea8551da91a048713330b2d2c4948bcdcab6ac3b3c0b957747e65cb1",
+          "d4e05dd555c8d63bb2c1b27eae70abb66dc6c353b8157dd39108c6946339a566",
+          "7313d551d8c0da0465fb662ac15c910ed3508bfdadfd6072d5e421c64cb813e7",
+          "3f2fe8fa875b151326a3a049e1bdf5d57f005e888099d9f78ace92a450d8adab"
+        ],
+        "academic_shortlist_overlap": 13,
+        "stage1_metric_means": {
+          "projected_cumulative_gpa": 2.1279999999999997,
+          "expected_plan_gpa": 2.64,
+          "expected_failed_credits": 2.7225,
+          "failed_balance_penalty": 0.0724705882352941,
+          "withdrawn_balance_penalty": 0.013647058823529411,
+          "total_previous_balance_penalty": 0.1337142857142857
+        },
+        "stage1_metric_change_vs_academic": {
+          "projected_cumulative_gpa": -0.033800000000000274,
+          "expected_plan_gpa": -0.1689999999999996,
+          "expected_failed_credits": 0.4500000000000002,
+          "failed_balance_penalty": -0.09223529411764704,
+          "withdrawn_balance_penalty": -0.008470588235294112,
+          "total_previous_balance_penalty": -0.16857142857142857
+        },
+        "lost_global_academic_top_k": [
+          "342a664648cd0b8c241809498cd21cf15bbbefb6f78456fd7829bb1664c2fe67",
+          "73ab03782649679f207b739f8e0c65c2dd880f1638a650cf2f66a8182cfcd234",
+          "d2f37e3f204a8917eb03cae0453515d4a9ab75d9ba3500343c7511e470697592"
+        ],
+        "global_final_candidate_top_k_retention": {
+          "balance_first": 1,
+          "pareto": 1
+        },
+        "best_component_top_k_retention": {
+          "failed": 0,
+          "withdrawn": 0,
+          "total_previous": 1
+        },
+        "diversity": {
+          "distinct_courses": 10,
+          "distinct_credit_mixes": 4
+        }
+      }
+    },
+    "fixed_shortlist_final_comparison": {
+      "plan_ids": [
+        "bf826320e0854860bd9acd98105cf90bd401bd12b8176249d14a6ad95ba95cc1",
+        "35ecad496b471cc1d44793c81d63120f6592a8bee72caab59188d585961ab332",
+        "4293621f435e63f66d874d925ff3ac2582aa4f05a7f675e00ffc84f00d966fa9",
+        "43d4203e54eb23b87de3f00438723d2ab7fa153851da76abf616dbef9ec06a77",
+        "929292cd49d13f5ac01300c17230466c6258b17ad5cdac2a64219aa67954c80c",
+        "59be8039694a8d03b03fdb47fdcf97735097a6ee765c808c978913ec77afdee3",
+        "ff04b857e61d3aacd44b0fc9c79e64c6a4c7b0c0e684d3b4ce1ab9405104f127",
+        "b750423379a930a7f8a3a3288e70557f95ac5fc9d4aeaea2107b070179d8fb0f",
+        "3b5b82ecdb6abcd71a51b0fc9487f01a42678b0c14fe3dc01de245c743787ae7",
+        "4a7e8e8d83ff56283d0bf2c9dc43912a8363f508f6b54ef63677e6ecffed49ae",
+        "4b48162be96abe14bc5f0d4fef900a36ec0f76375ad93f976710542f892f5c2b",
+        "99060173cab5d0e1b2db1579f712531d376c031b55944bfd322f81df2a8c783c",
+        "594a4d96ab43f5e6a62257799cfbc2432183fbc57426181d7fc9de9f205583fb",
+        "f788d90e0348f5b67ef65c8be8bef04d79665006c990dccb97ebdccbd2faf20c",
+        "25cd7b91774085da53d758b8b9f91f208bb564e11cc325751d5d13f9dae2a1e3",
+        "53a0e3cb0f8effc68fffb0cda3749f15eb17009785b9868092913e0ae15a3918",
+        "0063e3eb4cbad4355924fa3218809e3387d2b6781f6fac0adafa3220917c50c7",
+        "c12c8fabc6f593c96b2152e85a64c387c2ffa0a10cc10b9e5bbb43f4e43c52f3",
+        "1e88babf10c19e7250a8e5882a1745f9c6d37bc83470e2a155c504025a123012",
+        "2a580b1df1531b9f8b8911527a13b48333383f3e7636daf7dda4f981b4f9da66",
+        "4f85eb5deccdd640cec8921d63750706353951670c54f237f21f621d3762d477",
+        "b485c5b83d99ff16d4df590a2a51415ea549a9cd730bf1a24fd780f03e5e53f6",
+        "f67318167ed8a2aa02f43e53e9c9a5d774223bd191171396de9ea00d1e4add4b",
+        "8a30a7cc640ecb18f4f7e32b11495173e2190f55e7874ad7b163e0099ab5b4f4",
+        "ffc57d2098b9e03abd9a8ac328bc066a2a5205acbe08e92e0cca2cf792769c90",
+        "f8109ad6e5fdb0d0f141ef65c46e424e97de449afdbbaf7088df22763d612784",
+        "cacbd9832ea28431b5e7251175ab25822efd29e5fa99b6410383211c92689bf4",
+        "66735862b5da0e7f9a39641891cb1abf7899159d2a836bbd44edef667af1949b",
+        "a07ea7c8e66de3654f9cbb576b5008ecc122114c1fef7e0193147e28c8fc6f88",
+        "c5cacf2a3058407f637230db2388e9304be9a3e20f850f6a708d76e45b7825cf",
+        "3181c39c0b75483006088ca9d602e8952319be8d1f232fe501f9223c9fa97188",
+        "fe71a31f76e0f4754ab9f674bb4719fdca22d7b78fada4e9bd1c002451540557",
+        "17f3405286ae409c1d536e0390f2ed026258c02d445f552871d0da6cfbcb421e",
+        "8c3c73164366394f91750ae63003cb9d45272f76777ecce162e42fc81ef07970",
+        "a086c6a95126e51175651e29d001696c197c5c43e988fa4eacb14e5f90a32aaf",
+        "e526b2e1f3932960ea8dda8a7bee846bbd2c9647dbc95fe8f4d2649700807566",
+        "fda173859607a089c96f8e332d49c455f0c14f1b13bbe718bb0018e731495e55",
+        "9ba918bc8bb54a0d8dd48f903ec8c360898d884e1cd43ee2a817bbe6b935fc35",
+        "ad0ec55f35c897616eca3c2f5d954be80e8e76090840c7e1fc92769215d8878c",
+        "fc30faa13eaf0979753c27ee1bbadba194e4fb9065563674569ea0a461408681",
+        "b5fef21bde049b6e972dc19e0b0f5225d65c7fe4fc26b7597e7f6fac8abc62ad",
+        "b38c8a55903e3f182450e71c3962eb870c6d9caed0edd3ef9370596b3283974f",
+        "8a3f404a40b49be0020a5155f620bf271e322edf4005ea074b333937d6966978",
+        "ca7a7aae844acb0fe2b52cddb886009cb2010a6126da23119dba771f890605b6",
+        "3be9734841e781632ff08d0eb4f4cc76fd87498cbaf5d6a3fe2b1298916edabd",
+        "bb299555b63cb2f67238b9b28a5e864b12345a144a17520d90eb45985dbb57da",
+        "802f8b69f0a1a24e9b8bb121c4a7b1bfd77f8a4692496d327706e509b5fd915c",
+        "f63c6f784f1b39b5f3038c23247fc15e6e2c5aac063d07bc7e5e3a85f8b627fb",
+        "b8281e89df5fbc7e32b5978e6311419c5566e7e9a899cca81d8ab83b5b257e96",
+        "95e6d233f99e2c97877945add4d8b37be54a17d828b65e9ccb3d874c14d29679"
+      ],
+      "strategies": [
+        {
+          "name": "balance_first",
+          "approval_status": "UNAPPROVED",
+          "top_plan_ids": [
+            "8a3f404a40b49be0020a5155f620bf271e322edf4005ea074b333937d6966978",
+            "ca7a7aae844acb0fe2b52cddb886009cb2010a6126da23119dba771f890605b6",
+            "3181c39c0b75483006088ca9d602e8952319be8d1f232fe501f9223c9fa97188"
+          ],
+          "top_course_tuples": [
+            [
+              "F1",
+              "F2",
+              "N1",
+              "N2",
+              "N4"
+            ],
+            [
+              "F1",
+              "F3",
+              "N1",
+              "N2",
+              "N3"
+            ],
+            [
+              "F1",
+              "F2",
+              "N1",
+              "N2",
+              "N3"
+            ]
+          ],
+          "top_k_overlap_vs_academic": 0,
+          "metric_means": {
+            "projected_cumulative_gpa": 2.1999999999999997,
+            "expected_plan_gpa": 3.0,
+            "expected_failed_credits": 0.7916666666666666,
+            "failed_balance_penalty": 0.16470588235294117,
+            "withdrawn_balance_penalty": 0.0,
+            "total_previous_balance_penalty": 0.11428571428571428
+          },
+          "metric_change_vs_academic": {
+            "projected_cumulative_gpa": -0.050000000000000266,
+            "expected_plan_gpa": -0.25,
+            "expected_failed_credits": 0.1875,
+            "failed_balance_penalty": 0.0,
+            "withdrawn_balance_penalty": -0.023529411764705882,
+            "total_previous_balance_penalty": -0.2
+          }
+        },
+        {
+          "name": "pareto",
+          "approval_status": "UNAPPROVED",
+          "top_plan_ids": [
+            "8a3f404a40b49be0020a5155f620bf271e322edf4005ea074b333937d6966978",
+            "8c3c73164366394f91750ae63003cb9d45272f76777ecce162e42fc81ef07970",
+            "3be9734841e781632ff08d0eb4f4cc76fd87498cbaf5d6a3fe2b1298916edabd"
+          ],
+          "top_course_tuples": [
+            [
+              "F1",
+              "F2",
+              "N1",
+              "N2",
+              "N4"
+            ],
+            [
+              "F1",
+              "F2",
+              "N3",
+              "N5",
+              "W1"
+            ],
+            [
+              "F1",
+              "F2",
+              "N3",
+              "N5",
+              "W2"
+            ]
+          ],
+          "top_k_overlap_vs_academic": 2,
+          "metric_means": {
+            "projected_cumulative_gpa": 2.2444444444444445,
+            "expected_plan_gpa": 3.222222222222222,
+            "expected_failed_credits": 0.6041666666666666,
+            "failed_balance_penalty": 0.16470588235294117,
+            "withdrawn_balance_penalty": 0.01568627450980392,
+            "total_previous_balance_penalty": 0.24761904761904763
+          },
+          "metric_change_vs_academic": {
+            "projected_cumulative_gpa": -0.005555555555555536,
+            "expected_plan_gpa": -0.027777777777778123,
+            "expected_failed_credits": 0.0,
+            "failed_balance_penalty": 0.0,
+            "withdrawn_balance_penalty": -0.00784313725490196,
+            "total_previous_balance_penalty": -0.06666666666666665
+          }
+        }
+      ]
+    },
+    "combinations": [
+      {
+        "stage1_strategy": "balance_first",
+        "final_strategy": "balance_first",
+        "stage1_approval": "UNAPPROVED",
+        "final_approval": "UNAPPROVED",
+        "top_plan_ids": [
+          "61aa9e16b11b88421825b2823bd51ccfb4dd71e04e150a811370cf29a7326a61",
+          "b487a1ff8e8d8e7cc6e04937ed82bcaef281869e5784603f725cd96e2167c74b",
+          "ef4dc22921fbf369ab010ad6ba280cdce6aac480b05c9567bca5c54b06eb8779"
+        ],
+        "top_course_tuples": [
+          [
+            "F2",
+            "N1",
+            "N3",
+            "N4",
+            "N5"
+          ],
+          [
+            "F2",
+            "N1",
+            "N2",
+            "N3",
+            "N5"
+          ],
+          [
+            "F3",
+            "N1",
+            "N2",
+            "N4",
+            "N5"
+          ]
+        ],
+        "top_k_overlap_vs_academic": 1,
+        "metric_means": {
+          "projected_cumulative_gpa": 2.248888888888889,
+          "expected_plan_gpa": 3.244444444444445,
+          "expected_failed_credits": 0.875,
+          "failed_balance_penalty": 0.0,
+          "withdrawn_balance_penalty": 0.0,
+          "total_previous_balance_penalty": 0.0
+        },
+        "metric_change_vs_academic": {
+          "projected_cumulative_gpa": -0.0033333333333329662,
+          "expected_plan_gpa": -0.016666666666666163,
+          "expected_failed_credits": 0.125,
+          "failed_balance_penalty": 0.0,
+          "withdrawn_balance_penalty": -0.01568627450980392,
+          "total_previous_balance_penalty": -0.07619047619047618
+        },
+        "overlap_with_complete_synthetic_final_candidate": 3,
+        "lost_complete_synthetic_final_candidate_top_k": []
+      },
+      {
+        "stage1_strategy": "balance_first",
+        "final_strategy": "pareto",
+        "stage1_approval": "UNAPPROVED",
+        "final_approval": "UNAPPROVED",
+        "top_plan_ids": [
+          "61aa9e16b11b88421825b2823bd51ccfb4dd71e04e150a811370cf29a7326a61",
+          "b487a1ff8e8d8e7cc6e04937ed82bcaef281869e5784603f725cd96e2167c74b",
+          "ef4dc22921fbf369ab010ad6ba280cdce6aac480b05c9567bca5c54b06eb8779"
+        ],
+        "top_course_tuples": [
+          [
+            "F2",
+            "N1",
+            "N3",
+            "N4",
+            "N5"
+          ],
+          [
+            "F2",
+            "N1",
+            "N2",
+            "N3",
+            "N5"
+          ],
+          [
+            "F3",
+            "N1",
+            "N2",
+            "N4",
+            "N5"
+          ]
+        ],
+        "top_k_overlap_vs_academic": 1,
+        "metric_means": {
+          "projected_cumulative_gpa": 2.248888888888889,
+          "expected_plan_gpa": 3.244444444444445,
+          "expected_failed_credits": 0.875,
+          "failed_balance_penalty": 0.0,
+          "withdrawn_balance_penalty": 0.0,
+          "total_previous_balance_penalty": 0.0
+        },
+        "metric_change_vs_academic": {
+          "projected_cumulative_gpa": -0.0033333333333329662,
+          "expected_plan_gpa": -0.016666666666666163,
+          "expected_failed_credits": 0.125,
+          "failed_balance_penalty": 0.0,
+          "withdrawn_balance_penalty": -0.01568627450980392,
+          "total_previous_balance_penalty": -0.07619047619047618
+        },
+        "overlap_with_complete_synthetic_final_candidate": 3,
+        "lost_complete_synthetic_final_candidate_top_k": []
+      },
+      {
+        "stage1_strategy": "pareto",
+        "final_strategy": "balance_first",
+        "stage1_approval": "UNAPPROVED",
+        "final_approval": "UNAPPROVED",
+        "top_plan_ids": [
+          "b487a1ff8e8d8e7cc6e04937ed82bcaef281869e5784603f725cd96e2167c74b",
+          "48f8f4ad8050c47dcab6b4821eda4ded412eb4faf99f6acb9411ae5a67b31fd5",
+          "a5420ab59a9c7a23acb87ce3cb90b69d11bf173087d1783e05a155fbc2da7240"
+        ],
+        "top_course_tuples": [
+          [
+            "F2",
+            "N1",
+            "N2",
+            "N3",
+            "N5"
+          ],
+          [
+            "F2",
+            "N1",
+            "N2",
+            "N3",
+            "N4"
+          ],
+          [
+            "F1",
+            "N1",
+            "N2",
+            "N3",
+            "N4"
+          ]
+        ],
+        "top_k_overlap_vs_academic": 1,
+        "metric_means": {
+          "projected_cumulative_gpa": 2.227777777777778,
+          "expected_plan_gpa": 3.138888888888889,
+          "expected_failed_credits": 0.8958333333333334,
+          "failed_balance_penalty": 0.0,
+          "withdrawn_balance_penalty": 0.0,
+          "total_previous_balance_penalty": 0.0
+        },
+        "metric_change_vs_academic": {
+          "projected_cumulative_gpa": -0.02111111111111086,
+          "expected_plan_gpa": -0.10555555555555607,
+          "expected_failed_credits": 0.1875,
+          "failed_balance_penalty": -0.054901960784313725,
+          "withdrawn_balance_penalty": -0.01568627450980392,
+          "total_previous_balance_penalty": -0.14285714285714285
+        },
+        "overlap_with_complete_synthetic_final_candidate": 1,
+        "lost_complete_synthetic_final_candidate_top_k": [
+          "61aa9e16b11b88421825b2823bd51ccfb4dd71e04e150a811370cf29a7326a61",
+          "ef4dc22921fbf369ab010ad6ba280cdce6aac480b05c9567bca5c54b06eb8779"
+        ]
+      },
+      {
+        "stage1_strategy": "pareto",
+        "final_strategy": "pareto",
+        "stage1_approval": "UNAPPROVED",
+        "final_approval": "UNAPPROVED",
+        "top_plan_ids": [
+          "b487a1ff8e8d8e7cc6e04937ed82bcaef281869e5784603f725cd96e2167c74b",
+          "48f8f4ad8050c47dcab6b4821eda4ded412eb4faf99f6acb9411ae5a67b31fd5",
+          "af57ce0d0b68f636427fdd148a5e7aa260d9baaf70be8fd1f82818e60e8eb096"
+        ],
+        "top_course_tuples": [
+          [
+            "F2",
+            "N1",
+            "N2",
+            "N3",
+            "N5"
+          ],
+          [
+            "F2",
+            "N1",
+            "N2",
+            "N3",
+            "N4"
+          ],
+          [
+            "F1",
+            "N1",
+            "N2",
+            "N3",
+            "N5"
+          ]
+        ],
+        "top_k_overlap_vs_academic": 1,
+        "metric_means": {
+          "projected_cumulative_gpa": 2.2255555555555557,
+          "expected_plan_gpa": 3.1277777777777778,
+          "expected_failed_credits": 0.75,
+          "failed_balance_penalty": 0.0,
+          "withdrawn_balance_penalty": 0.0,
+          "total_previous_balance_penalty": 0.0
+        },
+        "metric_change_vs_academic": {
+          "projected_cumulative_gpa": -0.023333333333332984,
+          "expected_plan_gpa": -0.11666666666666714,
+          "expected_failed_credits": 0.04166666666666663,
+          "failed_balance_penalty": -0.054901960784313725,
+          "withdrawn_balance_penalty": -0.01568627450980392,
+          "total_previous_balance_penalty": -0.14285714285714285
+        },
+        "overlap_with_complete_synthetic_final_candidate": 1,
+        "lost_complete_synthetic_final_candidate_top_k": [
+          "61aa9e16b11b88421825b2823bd51ccfb4dd71e04e150a811370cf29a7326a61",
+          "ef4dc22921fbf369ab010ad6ba280cdce6aac480b05c9567bca5c54b06eb8779"
+        ]
+      }
+    ],
+    "complete_synthetic_stage2": [
+      {
+        "plan_id": "0063e3eb4cbad4355924fa3218809e3387d2b6781f6fac0adafa3220917c50c7",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N2",
+          "N3",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.16,
+        "expected_plan_gpa": 2.8,
+        "expected_failed_credits": 0.125,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 42.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "011c87b2d29759e4d96c151cf919d4a0a3ae413cf18527e0e9a1634dc923a93d",
+        "course_tuple": [
+          "F2",
+          "N2",
+          "N3",
+          "N4",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.183333333333333,
+        "expected_plan_gpa": 2.9166666666666665,
+        "expected_failed_credits": 0.8125,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 43.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "01b027ec4cc47adbf9082a2d9c07e3874e758c35f4be5b956aa28bc076cd6be0",
+        "course_tuple": [
+          "F1",
+          "N2",
+          "N3",
+          "N4",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.2066666666666666,
+        "expected_plan_gpa": 3.033333333333333,
+        "expected_failed_credits": 0.3125,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 45.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "029949d4f72a772d3c23a879667d43c158da1f830b0a6b2ccb9a0594d61df257",
+        "course_tuple": [
+          "F3",
+          "N2",
+          "N4",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.23,
+        "expected_plan_gpa": 3.15,
+        "expected_failed_credits": 1.0,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 47.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "0458f782ea8523e68f2a6ab79bbfc6f364815edbbb308571c973615e00ba2122",
+        "course_tuple": [
+          "F3",
+          "N1",
+          "N3",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.2533333333333334,
+        "expected_plan_gpa": 3.2666666666666666,
+        "expected_failed_credits": 0.5,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 49.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "0959a3c260a99e17dabd529e8f22e5330f28b2bc006dd8a84e492540747d1581",
+        "course_tuple": [
+          "F1",
+          "N2",
+          "N3",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.18,
+        "expected_plan_gpa": 2.9,
+        "expected_failed_credits": 1.1875,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 43.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "0d7aa67aa41ed7f7b531bc7948dbe69da4d2092aa27d353e167b3068c8fb840f",
+        "course_tuple": [
+          "F2",
+          "N3",
+          "N4",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.203333333333333,
+        "expected_plan_gpa": 3.0166666666666666,
+        "expected_failed_credits": 0.6875,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 45.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "122fce797a7790909e809fc89afa8e75434cd298902082ae1c88e2e96ee22451",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N2",
+          "N3",
+          "N4"
+        ],
+        "projected_cumulative_gpa": 2.2266666666666666,
+        "expected_plan_gpa": 3.1333333333333333,
+        "expected_failed_credits": 0.1875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 47.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "1257ae72a4cbae1b2aa6934b3a7a22c6df21e62ad02e6152ed7e832f754e9b54",
+        "course_tuple": [
+          "F2",
+          "N1",
+          "N4",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.25,
+        "expected_plan_gpa": 3.25,
+        "expected_failed_credits": 0.875,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 48.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "12e4ccc4165510075c398f82fe108b3194894a625814016cfb44dfadc61c6dc6",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N3",
+          "N4",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.1766666666666667,
+        "expected_plan_gpa": 2.8833333333333333,
+        "expected_failed_credits": 0.375,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 43.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "17f3405286ae409c1d536e0390f2ed026258c02d445f552871d0da6cfbcb421e",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N3",
+          "N4",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.2,
+        "expected_plan_gpa": 3.0,
+        "expected_failed_credits": 1.0625,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 45.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "18d20c7b19e8a3ac461757a674f9924ad99f380df1806a7b7b5fd2963ee2b1ae",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N2",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.223333333333333,
+        "expected_plan_gpa": 3.1166666666666667,
+        "expected_failed_credits": 0.5625,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 46.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "198ea17d565094d4b7d59bcbba9d5a0de5d790dc2914f7694686bdc60d40e38c",
+        "course_tuple": [
+          "F1",
+          "N1",
+          "N3",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.2466666666666666,
+        "expected_plan_gpa": 3.2333333333333334,
+        "expected_failed_credits": 1.25,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 48.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "1c66797b39b62c4ac05384043959882f4ce8b72b94b06e55c6fd63bea2051a2d",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N2",
+          "N4",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.1733333333333333,
+        "expected_plan_gpa": 2.8666666666666667,
+        "expected_failed_credits": 0.75,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 43.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "1dee8cfe7fc9829c6ed9211b2d3124cd92fba5addafd15e74d2780dded584968",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N1",
+          "N3",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.1966666666666668,
+        "expected_plan_gpa": 2.9833333333333334,
+        "expected_failed_credits": 0.25,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 44.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "1e151854229758ba01ffefeaf54307cbef66682dafc502aba5dc08eb14def32f",
+        "course_tuple": [
+          "N1",
+          "N3",
+          "N4",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.22,
+        "expected_plan_gpa": 3.1,
+        "expected_failed_credits": 0.9375,
+        "failed_balance_penalty": 0.16666666666666666,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 46.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "1e88babf10c19e7250a8e5882a1745f9c6d37bc83470e2a155c504025a123012",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N1",
+          "N3",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.243333333333333,
+        "expected_plan_gpa": 3.216666666666667,
+        "expected_failed_credits": 0.4375,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 48.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "1ecf0c75fed5af2adca9dbb670b74e17dc2c03d52c84ff819b6ac921243657c2",
+        "course_tuple": [
+          "F3",
+          "N1",
+          "N3",
+          "N4",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.17,
+        "expected_plan_gpa": 2.85,
+        "expected_failed_credits": 1.125,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 42.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "21278fafb8fa04741c639f8d07bc9170f125be1b10885eef546c2a9367e7ff0a",
+        "course_tuple": [
+          "F1",
+          "N1",
+          "N2",
+          "N4",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.1933333333333334,
+        "expected_plan_gpa": 2.966666666666667,
+        "expected_failed_credits": 0.625,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 44.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "25cd7b91774085da53d758b8b9f91f208bb564e11cc325751d5d13f9dae2a1e3",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N1",
+          "N3",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.216666666666667,
+        "expected_plan_gpa": 3.0833333333333335,
+        "expected_failed_credits": 0.125,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 46.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "292f02fda48128c07fefd519d48a99023951dc5a601ea483adf2ee8dc1fa3262",
+        "course_tuple": [
+          "N2",
+          "N3",
+          "N4",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.24,
+        "expected_plan_gpa": 3.2,
+        "expected_failed_credits": 0.8125,
+        "failed_balance_penalty": 0.16666666666666666,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 48.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "2a580b1df1531b9f8b8911527a13b48333383f3e7636daf7dda4f981b4f9da66",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N1",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.1666666666666665,
+        "expected_plan_gpa": 2.8333333333333335,
+        "expected_failed_credits": 0.3125,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 42.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "2cf7ff074a9b19c40e5bff025a97d1bed4c01f1c434a769a6078fc1ffb00f7b3",
+        "course_tuple": [
+          "F2",
+          "N1",
+          "N2",
+          "N4",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.19,
+        "expected_plan_gpa": 2.95,
+        "expected_failed_credits": 1.0,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 44.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "2d9ff4a0d09f661aef1b838ca9778c7d958e8e841763123c29e9b8922fceba6d",
+        "course_tuple": [
+          "F2",
+          "N2",
+          "N4",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.2133333333333334,
+        "expected_plan_gpa": 3.066666666666667,
+        "expected_failed_credits": 0.5,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 46.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "2fc2c3648d56f37f74667ab8f85793d96fbc86f220c4e6ce9138d5744f73afe1",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N3",
+          "N4",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.236666666666667,
+        "expected_plan_gpa": 3.183333333333333,
+        "expected_failed_credits": 1.1875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 47.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "2fe7840ca28962758ef87cc7e09c5b1461e3e5c5bbae71aabf6e43b75b433946",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N2",
+          "N4",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.1633333333333336,
+        "expected_plan_gpa": 2.816666666666667,
+        "expected_failed_credits": 0.6875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 42.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "30c286544fcf83ae767b159d04d8c10b171778a00ac06cd752ad4f4af8c51126",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N1",
+          "N3",
+          "N4"
+        ],
+        "projected_cumulative_gpa": 2.1866666666666665,
+        "expected_plan_gpa": 2.933333333333333,
+        "expected_failed_credits": 0.1875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 44.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "312c5121eb9ab7c872779098096979cdad3c652675c174e14b31c1921d6905a7",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N2",
+          "N3",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.21,
+        "expected_plan_gpa": 3.05,
+        "expected_failed_credits": 0.875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 45.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "317fe255e51820a99ec558c82f23ffa0bd8f4bafc614c309d794ad90537410c6",
+        "course_tuple": [
+          "F3",
+          "N1",
+          "N3",
+          "N4",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.2333333333333334,
+        "expected_plan_gpa": 3.1666666666666665,
+        "expected_failed_credits": 0.375,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 47.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "3181c39c0b75483006088ca9d602e8952319be8d1f232fe501f9223c9fa97188",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N1",
+          "N2",
+          "N3"
+        ],
+        "projected_cumulative_gpa": 2.16,
+        "expected_plan_gpa": 2.8,
+        "expected_failed_credits": 1.0625,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 42.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "32196543cc3c496b6ed2583bf7e1c20010862fd2cd41c64d95b678b5d6194a2c",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N3",
+          "N4",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.183333333333333,
+        "expected_plan_gpa": 2.9166666666666665,
+        "expected_failed_credits": 0.5625,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 43.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "33ddb1b57922fc135845f5d625997bdc6f6ce33d949f33a7cc595de84eabc155",
+        "course_tuple": [
+          "F1",
+          "N2",
+          "N3",
+          "N4",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.2066666666666666,
+        "expected_plan_gpa": 3.033333333333333,
+        "expected_failed_credits": 1.25,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 45.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "3420a22933f32e1d2023afa5e7ecc04325c1ca5b8830e9bd83702d444076d713",
+        "course_tuple": [
+          "F1",
+          "N1",
+          "N2",
+          "N4",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.23,
+        "expected_plan_gpa": 3.15,
+        "expected_failed_credits": 0.75,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 47.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "342a664648cd0b8c241809498cd21cf15bbbefb6f78456fd7829bb1664c2fe67",
+        "course_tuple": [
+          "F2",
+          "N1",
+          "N3",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.2533333333333334,
+        "expected_plan_gpa": 3.2666666666666666,
+        "expected_failed_credits": 0.25,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 49.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "35ecad496b471cc1d44793c81d63120f6592a8bee72caab59188d585961ab332",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N1",
+          "N2",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.18,
+        "expected_plan_gpa": 2.9,
+        "expected_failed_credits": 0.9375,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 43.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "388bad62bb76c23b24f5daa2126e82862385474da6e1a36a3df39611124db819",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N2",
+          "N3",
+          "N4"
+        ],
+        "projected_cumulative_gpa": 2.203333333333333,
+        "expected_plan_gpa": 3.0166666666666666,
+        "expected_failed_credits": 0.4375,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 45.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "3b5b82ecdb6abcd71a51b0fc9487f01a42678b0c14fe3dc01de245c743787ae7",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N1",
+          "N3",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.2266666666666666,
+        "expected_plan_gpa": 3.1333333333333333,
+        "expected_failed_credits": 1.125,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 47.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "3be9734841e781632ff08d0eb4f4cc76fd87498cbaf5d6a3fe2b1298916edabd",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N3",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.25,
+        "expected_plan_gpa": 3.25,
+        "expected_failed_credits": 0.625,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 48.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "3f2fe8fa875b151326a3a049e1bdf5d57f005e888099d9f78ace92a450d8adab",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N1",
+          "N2",
+          "N4"
+        ],
+        "projected_cumulative_gpa": 2.1766666666666667,
+        "expected_plan_gpa": 2.8833333333333333,
+        "expected_failed_credits": 0.125,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 43.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "41f2e40abd47256339030f09950f27fe790e14976d7fe5b4a4647fce7d14aed2",
+        "course_tuple": [
+          "F2",
+          "N1",
+          "N2",
+          "N4",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.2,
+        "expected_plan_gpa": 3.0,
+        "expected_failed_credits": 0.8125,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 45.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "4293621f435e63f66d874d925ff3ac2582aa4f05a7f675e00ffc84f00d966fa9",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N1",
+          "N3",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.223333333333333,
+        "expected_plan_gpa": 3.1166666666666667,
+        "expected_failed_credits": 0.3125,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 46.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "43d4203e54eb23b87de3f00438723d2ab7fa153851da76abf616dbef9ec06a77",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N1",
+          "N2",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.2466666666666666,
+        "expected_plan_gpa": 3.2333333333333334,
+        "expected_failed_credits": 1.0,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 48.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "441fcbfaac0cab8f49f79103dd13a611296826d60fa5a0db17972f85ffb31211",
+        "course_tuple": [
+          "F3",
+          "N2",
+          "N3",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.1733333333333333,
+        "expected_plan_gpa": 2.8666666666666667,
+        "expected_failed_credits": 0.5,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 43.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "45cb02a1c459f6af0ac3b19f5086f22cfa5aaca1369412e10c27c4f597794603",
+        "course_tuple": [
+          "F3",
+          "N1",
+          "N2",
+          "N3",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.1966666666666668,
+        "expected_plan_gpa": 2.9833333333333334,
+        "expected_failed_credits": 1.1875,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 44.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "48f8f4ad8050c47dcab6b4821eda4ded412eb4faf99f6acb9411ae5a67b31fd5",
+        "course_tuple": [
+          "F2",
+          "N1",
+          "N2",
+          "N3",
+          "N4"
+        ],
+        "projected_cumulative_gpa": 2.22,
+        "expected_plan_gpa": 3.1,
+        "expected_failed_credits": 0.6875,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 46.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "4a47bad732730370adbba012943eb8d9b9137f82d20df258d36fb531de1d6b4d",
+        "course_tuple": [
+          "F2",
+          "N2",
+          "N3",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.243333333333333,
+        "expected_plan_gpa": 3.216666666666667,
+        "expected_failed_credits": 0.1875,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 48.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "4a7e8e8d83ff56283d0bf2c9dc43912a8363f508f6b54ef63677e6ecffed49ae",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N1",
+          "N2",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.17,
+        "expected_plan_gpa": 2.85,
+        "expected_failed_credits": 0.875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 42.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "4b48162be96abe14bc5f0d4fef900a36ec0f76375ad93f976710542f892f5c2b",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N1",
+          "N4",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.1933333333333334,
+        "expected_plan_gpa": 2.966666666666667,
+        "expected_failed_credits": 0.375,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 44.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "4e663a90de92d917998a17bdbbacf89c1aac7b72f6a4e6ccd9c02845038ebb7f",
+        "course_tuple": [
+          "F1",
+          "N3",
+          "N4",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.216666666666667,
+        "expected_plan_gpa": 3.0833333333333335,
+        "expected_failed_credits": 1.0625,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 46.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "4f0b1707f9caf2f2a381829b225ebf472a84ade54a22a884113b50d72da3f1f9",
+        "course_tuple": [
+          "F2",
+          "N2",
+          "N4",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.24,
+        "expected_plan_gpa": 3.2,
+        "expected_failed_credits": 0.5625,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 48.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "4f85eb5deccdd640cec8921d63750706353951670c54f237f21f621d3762d477",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N2",
+          "N4",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.1666666666666665,
+        "expected_plan_gpa": 2.8333333333333335,
+        "expected_failed_credits": 1.25,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 42.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "4fc037e07996b6edbfdb311e8b810307b1f1f170828f6351bc6107de9484b84c",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N1",
+          "N4",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.19,
+        "expected_plan_gpa": 2.95,
+        "expected_failed_credits": 0.75,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 44.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "509f3a36ce6128791343de3f9de54cfab7964a3a6321a1a9ada3e99f9dd86ec2",
+        "course_tuple": [
+          "N1",
+          "N2",
+          "N3",
+          "N4",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.2133333333333334,
+        "expected_plan_gpa": 3.066666666666667,
+        "expected_failed_credits": 0.25,
+        "failed_balance_penalty": 0.16666666666666666,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 46.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "523af103748e5359039e04edf7046664eaf149d3f672bc8dec53cdc790ac4bf0",
+        "course_tuple": [
+          "F1",
+          "N2",
+          "N3",
+          "N4",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.236666666666667,
+        "expected_plan_gpa": 3.183333333333333,
+        "expected_failed_credits": 0.9375,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 47.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "53a0e3cb0f8effc68fffb0cda3749f15eb17009785b9868092913e0ae15a3918",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N1",
+          "N4",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.1633333333333336,
+        "expected_plan_gpa": 2.816666666666667,
+        "expected_failed_credits": 0.4375,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 42.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "54960e2e0e827a40b2564b74dccbac0949fa66403839075e4fee2481ff6a64c1",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N2",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.1866666666666665,
+        "expected_plan_gpa": 2.933333333333333,
+        "expected_failed_credits": 1.125,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 44.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "594a4d96ab43f5e6a62257799cfbc2432183fbc57426181d7fc9de9f205583fb",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N2",
+          "N3",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.21,
+        "expected_plan_gpa": 3.05,
+        "expected_failed_credits": 0.625,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 45.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "59be8039694a8d03b03fdb47fdcf97735097a6ee765c808c978913ec77afdee3",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N1",
+          "N4",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.2333333333333334,
+        "expected_plan_gpa": 3.1666666666666665,
+        "expected_failed_credits": 0.125,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 47.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "5d49fa27ef0b6ee9d400a4e8d854e58da6e80d49cd1b89d97612c8c1ff921fa8",
+        "course_tuple": [
+          "F1",
+          "N1",
+          "N2",
+          "N3",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.16,
+        "expected_plan_gpa": 2.8,
+        "expected_failed_credits": 0.8125,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 42.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "5d671db1ab84cc599bcdff8de24c8b1d9855cc68cda2bcc7cba07f178562a4a0",
+        "course_tuple": [
+          "F1",
+          "N1",
+          "N3",
+          "N4",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.183333333333333,
+        "expected_plan_gpa": 2.9166666666666665,
+        "expected_failed_credits": 0.3125,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 43.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "5ea88c5ddfbac5bad17d3cc2dff5e9a9c4af99e5199321325b9a7d036f4f974d",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N1",
+          "N2",
+          "N3"
+        ],
+        "projected_cumulative_gpa": 2.2066666666666666,
+        "expected_plan_gpa": 3.033333333333333,
+        "expected_failed_credits": 1.0,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 45.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "5ed74e66aa474706f986e395c1f9c262bf47aff641161670e01b6d81780d2577",
+        "course_tuple": [
+          "F3",
+          "N1",
+          "N3",
+          "N4",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.23,
+        "expected_plan_gpa": 3.15,
+        "expected_failed_credits": 0.5,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 47.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "61aa9e16b11b88421825b2823bd51ccfb4dd71e04e150a811370cf29a7326a61",
+        "course_tuple": [
+          "F2",
+          "N1",
+          "N3",
+          "N4",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.2533333333333334,
+        "expected_plan_gpa": 3.2666666666666666,
+        "expected_failed_credits": 1.1875,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 49.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "62d0d6c9d66e8f11934e86a98eeb15f7acac8a1b4584e9a2dd778d4dd4402271",
+        "course_tuple": [
+          "F1",
+          "N2",
+          "N4",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.18,
+        "expected_plan_gpa": 2.9,
+        "expected_failed_credits": 0.6875,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 43.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "664c6be5d3b2cf4f773d8ff8c5c4c395dca493536cf695cc53cf34faa067bab3",
+        "course_tuple": [
+          "F3",
+          "N1",
+          "N4",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.203333333333333,
+        "expected_plan_gpa": 3.0166666666666666,
+        "expected_failed_credits": 0.1875,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 45.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "66735862b5da0e7f9a39641891cb1abf7899159d2a836bbd44edef667af1949b",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N1",
+          "N3",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.2266666666666666,
+        "expected_plan_gpa": 3.1333333333333333,
+        "expected_failed_credits": 0.875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 47.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "68ffb2cad31cbb1dc3de235587346a470b9a06a3530f488e0e59e5c28795867c",
+        "course_tuple": [
+          "F3",
+          "N2",
+          "N4",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.25,
+        "expected_plan_gpa": 3.25,
+        "expected_failed_credits": 0.375,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 48.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "69d7e282c1346c3ff30eba5cbb1d6cdeb096391167cdf390bb834c8906308c4d",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N1",
+          "N4",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.1766666666666667,
+        "expected_plan_gpa": 2.8833333333333333,
+        "expected_failed_credits": 1.0625,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 43.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "6b7d0cdbbb7bd1f02075af087425898efa2f6e0ceea49e4a9493737ef7c92574",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N4",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.2,
+        "expected_plan_gpa": 3.0,
+        "expected_failed_credits": 0.5625,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 45.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "6de949e56e2393e6490cbc24a34a0313438ed35770427b6d8b70663242f244d7",
+        "course_tuple": [
+          "F2",
+          "N1",
+          "N2",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.223333333333333,
+        "expected_plan_gpa": 3.1166666666666667,
+        "expected_failed_credits": 1.25,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 46.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "6ed0ca923ac2491d0ec96cbaf0462c905a76156d400064e805cbdc9fb63f8a9b",
+        "course_tuple": [
+          "F2",
+          "N1",
+          "N2",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.2466666666666666,
+        "expected_plan_gpa": 3.2333333333333334,
+        "expected_failed_credits": 0.75,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 48.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "6fbdce7894287c02f3522da8bc0f7d2a8480cf01b414b27dbc5ccd67120a5005",
+        "course_tuple": [
+          "F2",
+          "N1",
+          "N2",
+          "N3",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.1733333333333333,
+        "expected_plan_gpa": 2.8666666666666667,
+        "expected_failed_credits": 0.25,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 43.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "6ff27f314a4e78451a50e940ed3d6fe47fa4fe0a18c4838a0cc1980a06272228",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N3",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.1966666666666668,
+        "expected_plan_gpa": 2.9833333333333334,
+        "expected_failed_credits": 0.9375,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 44.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "71e1dbe8377dfcb3dbefd9c1dc3b7c675380e5fe9a97228eb6d17bfb6114a29c",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N1",
+          "N4",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.22,
+        "expected_plan_gpa": 3.1,
+        "expected_failed_credits": 0.4375,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 46.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "7313d551d8c0da0465fb662ac15c910ed3508bfdadfd6072d5e421c64cb813e7",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N1",
+          "N3",
+          "N4"
+        ],
+        "projected_cumulative_gpa": 2.243333333333333,
+        "expected_plan_gpa": 3.216666666666667,
+        "expected_failed_credits": 1.125,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 48.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "73ab03782649679f207b739f8e0c65c2dd880f1638a650cf2f66a8182cfcd234",
+        "course_tuple": [
+          "N1",
+          "N2",
+          "N3",
+          "N4",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.4,
+        "expected_plan_gpa": 4.0,
+        "expected_failed_credits": 0.03125,
+        "failed_balance_penalty": 0.16666666666666666,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.16666666666666666,
+        "expected_quality_points": 60.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "770d7153ea8551da91a048713330b2d2c4948bcdcab6ac3b3c0b957747e65cb1",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N2",
+          "N3",
+          "N4"
+        ],
+        "projected_cumulative_gpa": 2.1933333333333334,
+        "expected_plan_gpa": 2.966666666666667,
+        "expected_failed_credits": 0.125,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 44.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "78e3c078b4f1b60745a8cff3dff4975ae5878efe5e2570df532c17d082452a8d",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N4",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.216666666666667,
+        "expected_plan_gpa": 3.0833333333333335,
+        "expected_failed_credits": 0.8125,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 46.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "7dff05805fa1c85e3e951fe26d4f3fca7df435a0f66dc6d6c6599b02cee74d3d",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N1",
+          "N3",
+          "N4"
+        ],
+        "projected_cumulative_gpa": 2.24,
+        "expected_plan_gpa": 3.2,
+        "expected_failed_credits": 0.3125,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 48.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "7e8af52c5ae6e9ea16dba90cd36f4ee78df1c86750dc15e748395acac499b42e",
+        "course_tuple": [
+          "F1",
+          "N1",
+          "N2",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.1666666666666665,
+        "expected_plan_gpa": 2.8333333333333335,
+        "expected_failed_credits": 1.0,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 42.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "7f593f130a9b8e40c9250ff12c47c45bf6300f7bef7797f205a2ebda2781c483",
+        "course_tuple": [
+          "F3",
+          "N1",
+          "N2",
+          "N3",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.19,
+        "expected_plan_gpa": 2.95,
+        "expected_failed_credits": 0.5,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 44.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "802f8b69f0a1a24e9b8bb121c4a7b1bfd77f8a4692496d327706e509b5fd915c",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N2",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.2133333333333334,
+        "expected_plan_gpa": 3.066666666666667,
+        "expected_failed_credits": 1.1875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 46.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "807b7eb16dc2d4633aa517206b7c7e4fa3f2dd0b4d1bb1eec676f76a85d0afd2",
+        "course_tuple": [
+          "F1",
+          "N1",
+          "N2",
+          "N3",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.236666666666667,
+        "expected_plan_gpa": 3.183333333333333,
+        "expected_failed_credits": 0.6875,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 47.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "82a210d45de1bccf755251b01843018b26d8a99c373bbf36faec073c19de3b39",
+        "course_tuple": [
+          "F1",
+          "N1",
+          "N4",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.1633333333333336,
+        "expected_plan_gpa": 2.816666666666667,
+        "expected_failed_credits": 0.1875,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 42.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "82d7f3ad5538621232e95b73138a0c44f18163bdcd4c80a26aaff381bb1992b9",
+        "course_tuple": [
+          "F2",
+          "N1",
+          "N3",
+          "N4",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.1866666666666665,
+        "expected_plan_gpa": 2.933333333333333,
+        "expected_failed_credits": 0.875,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 44.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "8359ef9d2fc38d5cde36f283315c50d7fc9ed134f87b60119841fde543d2bed8",
+        "course_tuple": [
+          "F2",
+          "N2",
+          "N3",
+          "N4",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.21,
+        "expected_plan_gpa": 3.05,
+        "expected_failed_credits": 0.375,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 45.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "8509ef9d6786141a39381d1688d318293b30bdb75c17dcca7bc3cc28c77b8ea3",
+        "course_tuple": [
+          "F3",
+          "N1",
+          "N2",
+          "N4",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.2333333333333334,
+        "expected_plan_gpa": 3.1666666666666665,
+        "expected_failed_credits": 1.0625,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 47.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "854ed0d9799cb4b6ac33123ccbd0ba95c5122e4f69a1b4f40fa36c76125ebe2b",
+        "course_tuple": [
+          "F2",
+          "N1",
+          "N4",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.16,
+        "expected_plan_gpa": 2.8,
+        "expected_failed_credits": 0.5625,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 42.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "8612e4a31e103b018ea16965a1656f7b2d2d073be969efc6f526456272c12cfd",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N2",
+          "N3",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.183333333333333,
+        "expected_plan_gpa": 2.9166666666666665,
+        "expected_failed_credits": 1.25,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 43.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "8a30a7cc640ecb18f4f7e32b11495173e2190f55e7874ad7b163e0099ab5b4f4",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N1",
+          "N4",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.2066666666666666,
+        "expected_plan_gpa": 3.033333333333333,
+        "expected_failed_credits": 0.75,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 45.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "8a3f404a40b49be0020a5155f620bf271e322edf4005ea074b333937d6966978",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N1",
+          "N2",
+          "N4"
+        ],
+        "projected_cumulative_gpa": 2.23,
+        "expected_plan_gpa": 3.15,
+        "expected_failed_credits": 0.25,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 47.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "8c3c73164366394f91750ae63003cb9d45272f76777ecce162e42fc81ef07970",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N3",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.2533333333333334,
+        "expected_plan_gpa": 3.2666666666666666,
+        "expected_failed_credits": 0.9375,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 49.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "8f6b18840da2050eb09b63aa540f93ed197d897097121544dbac5352d8ad3524",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N3",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.18,
+        "expected_plan_gpa": 2.9,
+        "expected_failed_credits": 0.4375,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 43.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "8fc603e774b7bf9f6386bd187456a439f180d4b4b25016d70d95b9a1a37844a6",
+        "course_tuple": [
+          "F1",
+          "N2",
+          "N4",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.203333333333333,
+        "expected_plan_gpa": 3.0166666666666666,
+        "expected_failed_credits": 1.125,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 45.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "90898224a10d07d923e712934a3b68eb898480da74eb6e7c5970b63ac3d3f1f8",
+        "course_tuple": [
+          "F1",
+          "N3",
+          "N4",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.2266666666666666,
+        "expected_plan_gpa": 3.1333333333333333,
+        "expected_failed_credits": 0.625,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 47.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "919cd532d00e5ed70490088545bc1d0bc349c451d064202ef9f7797b40354ea6",
+        "course_tuple": [
+          "F3",
+          "N2",
+          "N3",
+          "N4",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.25,
+        "expected_plan_gpa": 3.25,
+        "expected_failed_credits": 0.125,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 48.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "9279d81d663d2e43afd626fa4ac1ade6be2644feae6337ef70a3d8afece72f47",
+        "course_tuple": [
+          "N1",
+          "N2",
+          "N3",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.1766666666666667,
+        "expected_plan_gpa": 2.8833333333333333,
+        "expected_failed_credits": 0.8125,
+        "failed_balance_penalty": 0.16666666666666666,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 43.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "929292cd49d13f5ac01300c17230466c6258b17ad5cdac2a64219aa67954c80c",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N1",
+          "N3",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.2,
+        "expected_plan_gpa": 3.0,
+        "expected_failed_credits": 0.3125,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 45.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "9516bae97c55db10ce10b0c7152a2a445b56f6d169f649e57220c3740e370565",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N1",
+          "N3",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.223333333333333,
+        "expected_plan_gpa": 3.1166666666666667,
+        "expected_failed_credits": 1.0,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 46.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "95e6d233f99e2c97877945add4d8b37be54a17d828b65e9ccb3d874c14d29679",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N1",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.2466666666666666,
+        "expected_plan_gpa": 3.2333333333333334,
+        "expected_failed_credits": 0.5,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 48.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "99060173cab5d0e1b2db1579f712531d376c031b55944bfd322f81df2a8c783c",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N1",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.1733333333333333,
+        "expected_plan_gpa": 2.8666666666666667,
+        "expected_failed_credits": 1.1875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 43.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "9ba918bc8bb54a0d8dd48f903ec8c360898d884e1cd43ee2a817bbe6b935fc35",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N3",
+          "N4",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.1966666666666668,
+        "expected_plan_gpa": 2.9833333333333334,
+        "expected_failed_credits": 0.6875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 44.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "9c03c85d80b53308b0e3a21baf3f943469585408d971da63020c44864ef0d89b",
+        "course_tuple": [
+          "F3",
+          "N1",
+          "N2",
+          "N4",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.22,
+        "expected_plan_gpa": 3.1,
+        "expected_failed_credits": 0.1875,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 46.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "9c0a294e5749e3915085a8860283b4eed9996460062840ef41bbda182a16b5f2",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N1",
+          "N2",
+          "N4"
+        ],
+        "projected_cumulative_gpa": 2.243333333333333,
+        "expected_plan_gpa": 3.216666666666667,
+        "expected_failed_credits": 0.875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 48.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "9e4a675ebc9e3daa19619a24006b1ac6c8cecb8bf0bf24a7d080cdf399c86c72",
+        "course_tuple": [
+          "F3",
+          "N1",
+          "N4",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.17,
+        "expected_plan_gpa": 2.85,
+        "expected_failed_credits": 0.375,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 42.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "a06cd236f7cabb6ebf305715a273f64ec0269d7f6aa79c52a861bd4042422c8c",
+        "course_tuple": [
+          "F1",
+          "N1",
+          "N3",
+          "N4",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.1933333333333334,
+        "expected_plan_gpa": 2.966666666666667,
+        "expected_failed_credits": 1.0625,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 44.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "a07ea7c8e66de3654f9cbb576b5008ecc122114c1fef7e0193147e28c8fc6f88",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N1",
+          "N4",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.216666666666667,
+        "expected_plan_gpa": 3.0833333333333335,
+        "expected_failed_credits": 0.5625,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 46.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "a086c6a95126e51175651e29d001696c197c5c43e988fa4eacb14e5f90a32aaf",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N1",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.24,
+        "expected_plan_gpa": 3.2,
+        "expected_failed_credits": 1.25,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 48.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "a34e790e87130e09c0d51d19e45c83d7091ef98f22b61b6d34357b72bde8af2d",
+        "course_tuple": [
+          "F2",
+          "N1",
+          "N2",
+          "N3",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.1666666666666665,
+        "expected_plan_gpa": 2.8333333333333335,
+        "expected_failed_credits": 0.75,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 42.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "a4b36ccf6ae0cb1ba5dba3766d1db8755b366136efc307298307aa5a00b98874",
+        "course_tuple": [
+          "F1",
+          "N2",
+          "N3",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.19,
+        "expected_plan_gpa": 2.95,
+        "expected_failed_credits": 0.25,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 44.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "a5420ab59a9c7a23acb87ce3cb90b69d11bf173087d1783e05a155fbc2da7240",
+        "course_tuple": [
+          "F1",
+          "N1",
+          "N2",
+          "N3",
+          "N4"
+        ],
+        "projected_cumulative_gpa": 2.2133333333333334,
+        "expected_plan_gpa": 3.066666666666667,
+        "expected_failed_credits": 0.9375,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 46.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "a8d47893b05abc9c28487f70e5e5c7a99f95becfd9f47fee6dc3e43b0a98ab74",
+        "course_tuple": [
+          "F3",
+          "N2",
+          "N3",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.236666666666667,
+        "expected_plan_gpa": 3.183333333333333,
+        "expected_failed_credits": 0.4375,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 47.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "aaf0bbc609688220cc3611927e2634923c1faa30121597b74264fe1a922ea05e",
+        "course_tuple": [
+          "F3",
+          "N1",
+          "N2",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.1633333333333336,
+        "expected_plan_gpa": 2.816666666666667,
+        "expected_failed_credits": 1.125,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 42.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "ab5569408800a7d30a66a9142f00cb7fc9cb5e49532cded6e0099f689cf880ea",
+        "course_tuple": [
+          "N1",
+          "N2",
+          "N3",
+          "N4",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.1866666666666665,
+        "expected_plan_gpa": 2.933333333333333,
+        "expected_failed_credits": 0.625,
+        "failed_balance_penalty": 0.16666666666666666,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 44.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "ac5163da0895ca7717880fa969d3103963bf1b2d844c0d841c9e1f101206216c",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N1",
+          "N2",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.21,
+        "expected_plan_gpa": 3.05,
+        "expected_failed_credits": 0.125,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 45.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "ad0ec55f35c897616eca3c2f5d954be80e8e76090840c7e1fc92769215d8878c",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N1",
+          "N4",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.2333333333333334,
+        "expected_plan_gpa": 3.1666666666666665,
+        "expected_failed_credits": 0.8125,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 47.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "ad1aa0af4a9d37acdcb301dc3cb940894107dc4651a3007b08505206db86bee4",
+        "course_tuple": [
+          "F1",
+          "N1",
+          "N2",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.16,
+        "expected_plan_gpa": 2.8,
+        "expected_failed_credits": 0.3125,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 42.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "af38d79a064c6e9cbba21ffea13282023aa353fc16497e64ddde7fce8e032547",
+        "course_tuple": [
+          "F2",
+          "N2",
+          "N3",
+          "N4",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.183333333333333,
+        "expected_plan_gpa": 2.9166666666666665,
+        "expected_failed_credits": 1.0,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 43.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "af57ce0d0b68f636427fdd148a5e7aa260d9baaf70be8fd1f82818e60e8eb096",
+        "course_tuple": [
+          "F1",
+          "N1",
+          "N2",
+          "N3",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.2066666666666666,
+        "expected_plan_gpa": 3.033333333333333,
+        "expected_failed_credits": 0.5,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 45.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "b1af87dc67a5fc42608e4168058608d6ccfcddee25a785cad399b1373768c4b5",
+        "course_tuple": [
+          "N1",
+          "N2",
+          "N4",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.23,
+        "expected_plan_gpa": 3.15,
+        "expected_failed_credits": 1.1875,
+        "failed_balance_penalty": 0.16666666666666666,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 47.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "b223f0a8587cac6fd75b63a16e15b14ff5f6f60094c691049e8e8a9c24674dc0",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N3",
+          "N4",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.2533333333333334,
+        "expected_plan_gpa": 3.2666666666666666,
+        "expected_failed_credits": 0.6875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 49.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "b269da63736f791bfd1a3232a809f866d37491699c6be16bffa25ffe13d0ce96",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N4",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.18,
+        "expected_plan_gpa": 2.9,
+        "expected_failed_credits": 0.1875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 43.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "b38c8a55903e3f182450e71c3962eb870c6d9caed0edd3ef9370596b3283974f",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N2",
+          "N4",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.203333333333333,
+        "expected_plan_gpa": 3.0166666666666666,
+        "expected_failed_credits": 0.875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 45.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "b485c5b83d99ff16d4df590a2a51415ea549a9cd730bf1a24fd780f03e5e53f6",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N2",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.2266666666666666,
+        "expected_plan_gpa": 3.1333333333333333,
+        "expected_failed_credits": 0.375,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 47.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "b487a1ff8e8d8e7cc6e04937ed82bcaef281869e5784603f725cd96e2167c74b",
+        "course_tuple": [
+          "F2",
+          "N1",
+          "N2",
+          "N3",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.25,
+        "expected_plan_gpa": 3.25,
+        "expected_failed_credits": 1.0625,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 48.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "b4fd8efc6f286ff478c33c214a09327a8792dcf30af6873c1f15279f7a561c01",
+        "course_tuple": [
+          "F1",
+          "N1",
+          "N3",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.1766666666666667,
+        "expected_plan_gpa": 2.8833333333333333,
+        "expected_failed_credits": 0.5625,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 43.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "b5fef21bde049b6e972dc19e0b0f5225d65c7fe4fc26b7597e7f6fac8abc62ad",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N2",
+          "N3",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.2,
+        "expected_plan_gpa": 3.0,
+        "expected_failed_credits": 1.25,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 45.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "b6ed9db025a8a860a5d9b0dffd9cbb7d3c0df7b611f0fc219279eeddc7b1a426",
+        "course_tuple": [
+          "F3",
+          "N2",
+          "N3",
+          "N4",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.223333333333333,
+        "expected_plan_gpa": 3.1166666666666667,
+        "expected_failed_credits": 0.75,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 46.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "b750423379a930a7f8a3a3288e70557f95ac5fc9d4aeaea2107b070179d8fb0f",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N1",
+          "N2",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.2466666666666666,
+        "expected_plan_gpa": 3.2333333333333334,
+        "expected_failed_credits": 0.25,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 48.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "b8281e89df5fbc7e32b5978e6311419c5566e7e9a899cca81d8ab83b5b257e96",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N3",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.1733333333333333,
+        "expected_plan_gpa": 2.8666666666666667,
+        "expected_failed_credits": 0.9375,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 43.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "bb299555b63cb2f67238b9b28a5e864b12345a144a17520d90eb45985dbb57da",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N4",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.1966666666666668,
+        "expected_plan_gpa": 2.9833333333333334,
+        "expected_failed_credits": 0.4375,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 44.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "bc5591eee31a17e972d7e7e2d7d1fd9c937000b6de686471d9dec83c09c2f1a0",
+        "course_tuple": [
+          "F2",
+          "N1",
+          "N2",
+          "N4",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.22,
+        "expected_plan_gpa": 3.1,
+        "expected_failed_credits": 1.125,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 46.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "bd1640b7a01044880d4c1d27f6aaf26144a94b8a882217b82a2ebf5241a0ff4f",
+        "course_tuple": [
+          "N1",
+          "N2",
+          "N3",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.243333333333333,
+        "expected_plan_gpa": 3.216666666666667,
+        "expected_failed_credits": 0.625,
+        "failed_balance_penalty": 0.16666666666666666,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 48.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "bda071c5f18601bd412d0965ddcec25cdd5c422e0937ccad90263de333aff4c2",
+        "course_tuple": [
+          "F3",
+          "N1",
+          "N2",
+          "N3",
+          "N4"
+        ],
+        "projected_cumulative_gpa": 2.17,
+        "expected_plan_gpa": 2.85,
+        "expected_failed_credits": 0.125,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 42.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "bf022c265de0cf69689c91fa9d4bb8b8e040fed36eb61987062bc5cc56fc5a18",
+        "course_tuple": [
+          "F3",
+          "N1",
+          "N2",
+          "N3",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.1933333333333334,
+        "expected_plan_gpa": 2.966666666666667,
+        "expected_failed_credits": 0.8125,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 44.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "bf826320e0854860bd9acd98105cf90bd401bd12b8176249d14a6ad95ba95cc1",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N1",
+          "N2",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.216666666666667,
+        "expected_plan_gpa": 3.0833333333333335,
+        "expected_failed_credits": 0.3125,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 46.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "c10b224682699f218259495f85ab91f915969a737eeebfb108fe67727563efe0",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N2",
+          "N4",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.24,
+        "expected_plan_gpa": 3.2,
+        "expected_failed_credits": 1.0,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 48.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "c12c8fabc6f593c96b2152e85a64c387c2ffa0a10cc10b9e5bbb43f4e43c52f3",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N1",
+          "N2",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.1666666666666665,
+        "expected_plan_gpa": 2.8333333333333335,
+        "expected_failed_credits": 0.5,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 42.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "c367611fc21aaae66f44e3341eb90cfb05b207c52d3e4308f20a3b1fad2e7fa6",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N3",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.19,
+        "expected_plan_gpa": 2.95,
+        "expected_failed_credits": 1.1875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 44.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "c5cacf2a3058407f637230db2388e9304be9a3e20f850f6a708d76e45b7825cf",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N2",
+          "N3",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.2133333333333334,
+        "expected_plan_gpa": 3.066666666666667,
+        "expected_failed_credits": 0.6875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 46.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "c746b450ebf56bae72480a167a77a99751e26c51655c2d6d2b6ca408b3eae681",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N1",
+          "N3",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.236666666666667,
+        "expected_plan_gpa": 3.183333333333333,
+        "expected_failed_credits": 0.1875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 47.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "c87e6ef427e3e3f037886cddb65bc8b5b704fad951acb6e060bb242fae32600a",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N4",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.1633333333333336,
+        "expected_plan_gpa": 2.816666666666667,
+        "expected_failed_credits": 0.875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 42.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "ca1eeba70d37149ffcf16d533632925538d63681e908cff8353b6911ba50f674",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N3",
+          "N4",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.1866666666666665,
+        "expected_plan_gpa": 2.933333333333333,
+        "expected_failed_credits": 0.375,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 44.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "ca7a7aae844acb0fe2b52cddb886009cb2010a6126da23119dba771f890605b6",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N1",
+          "N2",
+          "N3"
+        ],
+        "projected_cumulative_gpa": 2.21,
+        "expected_plan_gpa": 3.05,
+        "expected_failed_credits": 1.0625,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 45.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "ca89e33964a35690b354c541a8ce6823943c9a6c1a093707ed5255835cfa3296",
+        "course_tuple": [
+          "F1",
+          "N1",
+          "N3",
+          "N4",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.2333333333333334,
+        "expected_plan_gpa": 3.1666666666666665,
+        "expected_failed_credits": 0.5625,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 47.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "cacbd9832ea28431b5e7251175ab25822efd29e5fa99b6410383211c92689bf4",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N2",
+          "N4",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.16,
+        "expected_plan_gpa": 2.8,
+        "expected_failed_credits": 1.25,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 42.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "cb49dc81902f2a3478c0aadc7f3f7336f8185e69e7643a7ff6dacb8a302b671d",
+        "course_tuple": [
+          "N1",
+          "N3",
+          "N4",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.183333333333333,
+        "expected_plan_gpa": 2.9166666666666665,
+        "expected_failed_credits": 0.75,
+        "failed_balance_penalty": 0.16666666666666666,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 43.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "d07b16f608fc588cb3604ccda513f32d0e32a1efcc6266119e336d68c5c69910",
+        "course_tuple": [
+          "N1",
+          "N2",
+          "N4",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.2066666666666666,
+        "expected_plan_gpa": 3.033333333333333,
+        "expected_failed_credits": 0.25,
+        "failed_balance_penalty": 0.16666666666666666,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 45.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "d1f57aaa10c9853c5778cf0dcdab0d22b0ce9e79664b9c25f4a5a752dd6de3f7",
+        "course_tuple": [
+          "F2",
+          "N1",
+          "N3",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.23,
+        "expected_plan_gpa": 3.15,
+        "expected_failed_credits": 0.9375,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 47.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "d2f37e3f204a8917eb03cae0453515d4a9ab75d9ba3500343c7511e470697592",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N2",
+          "N3",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.2533333333333334,
+        "expected_plan_gpa": 3.2666666666666666,
+        "expected_failed_credits": 0.4375,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 49.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "d43c14604460735fbf2258369b89d044a5e3e3ded9d80f2b052f2384fe6d4f20",
+        "course_tuple": [
+          "F2",
+          "N3",
+          "N4",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.18,
+        "expected_plan_gpa": 2.9,
+        "expected_failed_credits": 1.125,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 43.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "d4e05dd555c8d63bb2c1b27eae70abb66dc6c353b8157dd39108c6946339a566",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N1",
+          "N2",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.203333333333333,
+        "expected_plan_gpa": 3.0166666666666666,
+        "expected_failed_credits": 0.625,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 45.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "d68176a062145a6c796059d5a6e1ae018a07d632fd8585b2bb801190500a346c",
+        "course_tuple": [
+          "F3",
+          "N2",
+          "N3",
+          "N4",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.2266666666666666,
+        "expected_plan_gpa": 3.1333333333333333,
+        "expected_failed_credits": 0.125,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 47.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "d6924af114b7c0827d4a43f2aa5bfafd82de2fc170644a9f9674523a0f10e449",
+        "course_tuple": [
+          "F1",
+          "N1",
+          "N2",
+          "N4",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.25,
+        "expected_plan_gpa": 3.25,
+        "expected_failed_credits": 0.8125,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 48.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "db4fcb7ba9ed0deadc21b460adb4f246236afaacb1d2bf32493872b3df53b719",
+        "course_tuple": [
+          "F1",
+          "N1",
+          "N4",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.1766666666666667,
+        "expected_plan_gpa": 2.8833333333333333,
+        "expected_failed_credits": 0.3125,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 43.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "ddfff26ecf0bb42a3e9790fa417a6283bb0a7780b305b014fbfad7af321a3812",
+        "course_tuple": [
+          "F3",
+          "N3",
+          "N4",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.2,
+        "expected_plan_gpa": 3.0,
+        "expected_failed_credits": 1.0,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 45.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "e0d4bb286793649dce663758fd26abb7ee5729a2567e3838c440e3399710f09c",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N1",
+          "N2",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.223333333333333,
+        "expected_plan_gpa": 3.1166666666666667,
+        "expected_failed_credits": 0.5,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 46.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "e1dc83f75a9cf29d261086efdaaef926e6a3886400e1f7b1d389bd2a6e8cd457",
+        "course_tuple": [
+          "F3",
+          "N3",
+          "N4",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.2466666666666666,
+        "expected_plan_gpa": 3.2333333333333334,
+        "expected_failed_credits": 1.1875,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 48.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "e526b2e1f3932960ea8dda8a7bee846bbd2c9647dbc95fe8f4d2649700807566",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N2",
+          "N4",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.1733333333333333,
+        "expected_plan_gpa": 2.8666666666666667,
+        "expected_failed_credits": 0.6875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 43.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "e52765679a39f32575e3b3affc9008a795557a47408b027382949c91986c30f8",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N2",
+          "N4",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.1966666666666668,
+        "expected_plan_gpa": 2.9833333333333334,
+        "expected_failed_credits": 0.1875,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 44.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "e8b0c6c7cca4041a0af814cad423269780384d6c02a327dfbf63852554f4c4da",
+        "course_tuple": [
+          "F3",
+          "N1",
+          "N3",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.22,
+        "expected_plan_gpa": 3.1,
+        "expected_failed_credits": 0.875,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 46.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "ef4dc22921fbf369ab010ad6ba280cdce6aac480b05c9567bca5c54b06eb8779",
+        "course_tuple": [
+          "F3",
+          "N1",
+          "N2",
+          "N4",
+          "N5"
+        ],
+        "projected_cumulative_gpa": 2.243333333333333,
+        "expected_plan_gpa": 3.216666666666667,
+        "expected_failed_credits": 0.375,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.0,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 48.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "f098d836660a2f9ffa59c0ab2e46399eee240f136ca30a7f7297823a0ff21751",
+        "course_tuple": [
+          "F2",
+          "N2",
+          "N3",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.17,
+        "expected_plan_gpa": 2.85,
+        "expected_failed_credits": 1.0625,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 42.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "f3c3788e6fc32f32b88210b614f2c6e540451a55d2f066104e7c4b6ae2efd948",
+        "course_tuple": [
+          "F2",
+          "N1",
+          "N3",
+          "N4",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.1933333333333334,
+        "expected_plan_gpa": 2.966666666666667,
+        "expected_failed_credits": 0.5625,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 44.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "f45b48ac1a9e3bb0d59c7fbd00b87d476800ba91443fae3d42d997911b740eb7",
+        "course_tuple": [
+          "N2",
+          "N3",
+          "N4",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.216666666666667,
+        "expected_plan_gpa": 3.0833333333333335,
+        "expected_failed_credits": 1.25,
+        "failed_balance_penalty": 0.16666666666666666,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.0,
+        "expected_quality_points": 46.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "f63c6f784f1b39b5f3038c23247fc15e6e2c5aac063d07bc7e5e3a85f8b627fb",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N3",
+          "N4",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.24,
+        "expected_plan_gpa": 3.2,
+        "expected_failed_credits": 0.75,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 48.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "f67318167ed8a2aa02f43e53e9c9a5d774223bd191171396de9ea00d1e4add4b",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N3",
+          "N4",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.1666666666666665,
+        "expected_plan_gpa": 2.8333333333333335,
+        "expected_failed_credits": 0.25,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 42.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "f788d90e0348f5b67ef65c8be8bef04d79665006c990dccb97ebdccbd2faf20c",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N2",
+          "N4",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.19,
+        "expected_plan_gpa": 2.95,
+        "expected_failed_credits": 0.9375,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 44.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "f8109ad6e5fdb0d0f141ef65c46e424e97de449afdbbaf7088df22763d612784",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N2",
+          "N3",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.2133333333333334,
+        "expected_plan_gpa": 3.066666666666667,
+        "expected_failed_credits": 0.4375,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 46.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "f86ac648538677c43c7c8b1d6dd71c1617dfd352075856eae7e35eaf66a46053",
+        "course_tuple": [
+          "F3",
+          "N1",
+          "N2",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.236666666666667,
+        "expected_plan_gpa": 3.183333333333333,
+        "expected_failed_credits": 1.125,
+        "failed_balance_penalty": 0.0,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.11428571428571428,
+        "expected_quality_points": 47.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "fc30faa13eaf0979753c27ee1bbadba194e4fb9065563674569ea0a461408681",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N1",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.1633333333333336,
+        "expected_plan_gpa": 2.816666666666667,
+        "expected_failed_credits": 0.625,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 42.25,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "fda173859607a089c96f8e332d49c455f0c14f1b13bbe718bb0018e731495e55",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N2",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.1866666666666665,
+        "expected_plan_gpa": 2.933333333333333,
+        "expected_failed_credits": 0.125,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 44.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "fe71a31f76e0f4754ab9f674bb4719fdca22d7b78fada4e9bd1c002451540557",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N2",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.21,
+        "expected_plan_gpa": 3.05,
+        "expected_failed_credits": 0.8125,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 45.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "fec18be6d6d16bd02d67cf91ab1424d0bf36e3348cdaf5eb3108f11b3d068d8e",
+        "course_tuple": [
+          "F2",
+          "F3",
+          "N4",
+          "N5",
+          "W2"
+        ],
+        "projected_cumulative_gpa": 2.2333333333333334,
+        "expected_plan_gpa": 3.1666666666666665,
+        "expected_failed_credits": 0.3125,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 47.5,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "ff04b857e61d3aacd44b0fc9c79e64c6a4c7b0c0e684d3b4ce1ab9405104f127",
+        "course_tuple": [
+          "F1",
+          "F2",
+          "N2",
+          "N3",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.16,
+        "expected_plan_gpa": 2.8,
+        "expected_failed_credits": 1.0,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 42.0,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      },
+      {
+        "plan_id": "ffc57d2098b9e03abd9a8ac328bc066a2a5205acbe08e92e0cca2cf792769c90",
+        "course_tuple": [
+          "F1",
+          "F3",
+          "N1",
+          "N5",
+          "W1"
+        ],
+        "projected_cumulative_gpa": 2.183333333333333,
+        "expected_plan_gpa": 2.9166666666666665,
+        "expected_failed_credits": 0.5,
+        "failed_balance_penalty": 0.16470588235294117,
+        "withdrawn_balance_penalty": 0.023529411764705882,
+        "total_previous_balance_penalty": 0.3142857142857143,
+        "expected_quality_points": 43.75,
+        "scope_applicable": true,
+        "component_active_flags": {
+          "failed": true,
+          "total_previous": true,
+          "withdrawn": true
+        }
+      }
+    ]
+  },
+  "historical_policy": {
+    "unique_mix_rows": 3507,
+    "descriptive_cases": 95150,
+    "all_group_sums_match_denominator": true,
+    "synthetic_scope_mix_rows": 686,
+    "synthetic_scope_descriptive_cases": 49907,
+    "excluded_mix_rows": 2821,
+    "saved_reference_cases": 23535,
+    "saved_reference_students": 6910,
+    "policy_version": "B_observed_middle_v1",
+    "eligibility_source": "explicit_synthetic_positive_failed_and_withdrawn",
+    "semester_source": "synthetic_part_semester_1",
+    "interpretation": "Descriptive weighted credit compositions only; not a reconstructed policy reference cohort or outcome improvement.",
+    "penalty_distributions": {
+      "failed": {
+        "zero_penalty_mix_rows": 101,
+        "positive_penalty_mix_rows": 585,
+        "zero_penalty_cases": 4356,
+        "positive_penalty_cases": 45551,
+        "weighted_mean_penalty": 0.15260376511639595,
+        "maximum_penalty": 0.7647058823529411
+      },
+      "withdrawn": {
+        "zero_penalty_mix_rows": 291,
+        "positive_penalty_mix_rows": 395,
+        "zero_penalty_cases": 46184,
+        "positive_penalty_cases": 3723,
+        "weighted_mean_penalty": 0.012785689944340874,
+        "maximum_penalty": 0.8235294117647058
+      },
+      "total_previous": {
+        "zero_penalty_mix_rows": 72,
+        "positive_penalty_mix_rows": 614,
+        "zero_penalty_cases": 6587,
+        "positive_penalty_cases": 43320,
+        "weighted_mean_penalty": 0.14746732854114405,
+        "maximum_penalty": 0.7142857142857143
+      }
+    },
+    "source_hashes": {
+      "policy_candidates.json": "e179c74825edf397f116ae6ee541400be7cac595f732857923ebc78b9a34d2a3",
+      "common_credit_mixes.csv": "3f5c24bc1a51caa13bf13830b006f278068101625323339aa3a9b3e55508f8df"
+    }
+  },
+  "sensitivity": [
+    {
+      "name": "failed_lower_boundary",
+      "course_tuple": [
+        "F",
+        "N",
+        "W"
+      ],
+      "plan_id": "22e52582cc49f336508937ce58af2d39bd56fd17293c438a3c581230c6edc94a",
+      "balance_policy_version": "B_observed_middle_v1",
+      "total_credits": 18.0,
+      "failed_retake_credits": 3.0,
+      "withdrawn_retake_credits": 0.0,
+      "new_credits": 15.0,
+      "other_previous_credits": 0.0,
+      "failed_ratio": 0.16666666666666666,
+      "withdrawn_ratio": 0.0,
+      "total_previous_ratio": 0.16666666666666666,
+      "failed_balance_penalty": 0.0,
+      "total_previous_balance_penalty": 0.0,
+      "withdrawn_balance_penalty": 0.0,
+      "scope_applicable": true,
+      "component_active_flags": {
+        "failed": true,
+        "total_previous": true,
+        "withdrawn": true
+      },
+      "disabled_reasons": {
+        "scope": [],
+        "failed": [],
+        "total_previous": [],
+        "withdrawn": []
+      }
+    },
+    {
+      "name": "failed_upper_boundary",
+      "course_tuple": [
+        "F",
+        "N",
+        "W"
+      ],
+      "plan_id": "22e52582cc49f336508937ce58af2d39bd56fd17293c438a3c581230c6edc94a",
+      "balance_policy_version": "B_observed_middle_v1",
+      "total_credits": 17.0,
+      "failed_retake_credits": 4.0,
+      "withdrawn_retake_credits": 0.0,
+      "new_credits": 13.0,
+      "other_previous_credits": 0.0,
+      "failed_ratio": 0.23529411764705882,
+      "withdrawn_ratio": 0.0,
+      "total_previous_ratio": 0.23529411764705882,
+      "failed_balance_penalty": 0.0,
+      "total_previous_balance_penalty": 0.0,
+      "withdrawn_balance_penalty": 0.0,
+      "scope_applicable": true,
+      "component_active_flags": {
+        "failed": true,
+        "total_previous": true,
+        "withdrawn": true
+      },
+      "disabled_reasons": {
+        "scope": [],
+        "failed": [],
+        "total_previous": [],
+        "withdrawn": []
+      }
+    },
+    {
+      "name": "failed_above_upper",
+      "course_tuple": [
+        "F",
+        "N",
+        "W"
+      ],
+      "plan_id": "22e52582cc49f336508937ce58af2d39bd56fd17293c438a3c581230c6edc94a",
+      "balance_policy_version": "B_observed_middle_v1",
+      "total_credits": 15.0,
+      "failed_retake_credits": 3.75,
+      "withdrawn_retake_credits": 0.0,
+      "new_credits": 11.25,
+      "other_previous_credits": 0.0,
+      "failed_ratio": 0.25,
+      "withdrawn_ratio": 0.0,
+      "total_previous_ratio": 0.25,
+      "failed_balance_penalty": 0.014705882352941176,
+      "total_previous_balance_penalty": 0.0,
+      "withdrawn_balance_penalty": 0.0,
+      "scope_applicable": true,
+      "component_active_flags": {
+        "failed": true,
+        "total_previous": true,
+        "withdrawn": true
+      },
+      "disabled_reasons": {
+        "scope": [],
+        "failed": [],
+        "total_previous": [],
+        "withdrawn": []
+      }
+    },
+    {
+      "name": "summer",
+      "course_tuple": [
+        "F",
+        "N",
+        "W"
+      ],
+      "plan_id": "22e52582cc49f336508937ce58af2d39bd56fd17293c438a3c581230c6edc94a",
+      "balance_policy_version": "B_observed_middle_v1",
+      "total_credits": 15.0,
+      "failed_retake_credits": 3.0,
+      "withdrawn_retake_credits": 0.0,
+      "new_credits": 12.0,
+      "other_previous_credits": 0.0,
+      "failed_ratio": 0.2,
+      "withdrawn_ratio": 0.0,
+      "total_previous_ratio": 0.2,
+      "failed_balance_penalty": null,
+      "total_previous_balance_penalty": null,
+      "withdrawn_balance_penalty": null,
+      "scope_applicable": false,
+      "component_active_flags": {
+        "failed": false,
+        "total_previous": false,
+        "withdrawn": false
+      },
+      "disabled_reasons": {
+        "scope": [
+          "semester_outside_reference"
+        ],
+        "failed": [
+          "semester_outside_reference"
+        ],
+        "total_previous": [
+          "semester_outside_reference"
+        ],
+        "withdrawn": [
+          "semester_outside_reference"
+        ]
+      }
+    },
+    {
+      "name": "outside_load",
+      "course_tuple": [
+        "F",
+        "N",
+        "W"
+      ],
+      "plan_id": "22e52582cc49f336508937ce58af2d39bd56fd17293c438a3c581230c6edc94a",
+      "balance_policy_version": "B_observed_middle_v1",
+      "total_credits": 11.99,
+      "failed_retake_credits": 3.0,
+      "withdrawn_retake_credits": 0.0,
+      "new_credits": 8.99,
+      "other_previous_credits": 0.0,
+      "failed_ratio": 0.25020850708924103,
+      "withdrawn_ratio": 0.0,
+      "total_previous_ratio": 0.25020850708924103,
+      "failed_balance_penalty": null,
+      "total_previous_balance_penalty": null,
+      "withdrawn_balance_penalty": null,
+      "scope_applicable": false,
+      "component_active_flags": {
+        "failed": false,
+        "total_previous": false,
+        "withdrawn": false
+      },
+      "disabled_reasons": {
+        "scope": [
+          "load_outside_reference"
+        ],
+        "failed": [
+          "load_outside_reference"
+        ],
+        "total_previous": [
+          "load_outside_reference"
+        ],
+        "withdrawn": [
+          "load_outside_reference"
+        ]
+      }
+    },
+    {
+      "name": "zero_other",
+      "course_tuple": [
+        "F",
+        "N",
+        "O",
+        "W"
+      ],
+      "plan_id": "b8117fe79647bc6ebd67abe7357c5119e56eec291bce9d46dbc8977ec8bc905b",
+      "balance_policy_version": "B_observed_middle_v1",
+      "total_credits": 15.0,
+      "failed_retake_credits": 3.0,
+      "withdrawn_retake_credits": 0.0,
+      "new_credits": 12.0,
+      "other_previous_credits": 0.0,
+      "failed_ratio": 0.2,
+      "withdrawn_ratio": 0.0,
+      "total_previous_ratio": 0.2,
+      "failed_balance_penalty": null,
+      "total_previous_balance_penalty": null,
+      "withdrawn_balance_penalty": null,
+      "scope_applicable": false,
+      "component_active_flags": {
+        "failed": false,
+        "total_previous": false,
+        "withdrawn": false
+      },
+      "disabled_reasons": {
+        "scope": [
+          "other_previous_selected"
+        ],
+        "failed": [
+          "other_previous_selected"
+        ],
+        "total_previous": [
+          "other_previous_selected"
+        ],
+        "withdrawn": [
+          "other_previous_selected"
+        ]
+      }
+    },
+    {
+      "name": "zero_new",
+      "course_tuple": [
+        "F",
+        "N",
+        "W",
+        "zeroN"
+      ],
+      "plan_id": "635078c82b5bd77dadd1f606d98e1ce2e7ed25aa9c0e69a35cfa77ea7e9c0c9f",
+      "balance_policy_version": "B_observed_middle_v1",
+      "total_credits": 15.0,
+      "failed_retake_credits": 3.0,
+      "withdrawn_retake_credits": 0.0,
+      "new_credits": 12.0,
+      "other_previous_credits": 0.0,
+      "failed_ratio": 0.2,
+      "withdrawn_ratio": 0.0,
+      "total_previous_ratio": 0.2,
+      "failed_balance_penalty": 0.0,
+      "total_previous_balance_penalty": 0.0,
+      "withdrawn_balance_penalty": 0.0,
+      "scope_applicable": true,
+      "component_active_flags": {
+        "failed": true,
+        "total_previous": true,
+        "withdrawn": true
+      },
+      "disabled_reasons": {
+        "scope": [],
+        "failed": [],
+        "total_previous": [],
+        "withdrawn": []
+      }
+    },
+    {
+      "name": "no_repeat_eligibility",
+      "course_tuple": [
+        "F",
+        "N",
+        "W"
+      ],
+      "plan_id": "22e52582cc49f336508937ce58af2d39bd56fd17293c438a3c581230c6edc94a",
+      "balance_policy_version": "B_observed_middle_v1",
+      "total_credits": 15.0,
+      "failed_retake_credits": 0.0,
+      "withdrawn_retake_credits": 0.0,
+      "new_credits": 15.0,
+      "other_previous_credits": 0.0,
+      "failed_ratio": 0.0,
+      "withdrawn_ratio": 0.0,
+      "total_previous_ratio": 0.0,
+      "failed_balance_penalty": null,
+      "total_previous_balance_penalty": null,
+      "withdrawn_balance_penalty": null,
+      "scope_applicable": true,
+      "component_active_flags": {
+        "failed": false,
+        "total_previous": false,
+        "withdrawn": false
+      },
+      "disabled_reasons": {
+        "scope": [],
+        "failed": [
+          "no_positive_eligible_candidates"
+        ],
+        "total_previous": [
+          "no_positive_eligible_candidates"
+        ],
+        "withdrawn": [
+          "no_positive_eligible_candidates"
+        ]
+      }
+    },
+    {
+      "name": "withdrawn_upper_boundary",
+      "course_tuple": [
+        "F",
+        "N",
+        "W"
+      ],
+      "plan_id": "22e52582cc49f336508937ce58af2d39bd56fd17293c438a3c581230c6edc94a",
+      "balance_policy_version": "B_observed_middle_v1",
+      "total_credits": 17.0,
+      "failed_retake_credits": 3.0,
+      "withdrawn_retake_credits": 3.0,
+      "new_credits": 11.0,
+      "other_previous_credits": 0.0,
+      "failed_ratio": 0.17647058823529413,
+      "withdrawn_ratio": 0.17647058823529413,
+      "total_previous_ratio": 0.35294117647058826,
+      "failed_balance_penalty": 0.0,
+      "total_previous_balance_penalty": 0.06722689075630252,
+      "withdrawn_balance_penalty": 0.0,
+      "scope_applicable": true,
+      "component_active_flags": {
+        "failed": true,
+        "total_previous": true,
+        "withdrawn": true
+      },
+      "disabled_reasons": {
+        "scope": [],
+        "failed": [],
+        "total_previous": [],
+        "withdrawn": []
+      }
+    },
+    {
+      "name": "total_previous_upper_boundary",
+      "course_tuple": [
+        "F",
+        "N",
+        "W"
+      ],
+      "plan_id": "22e52582cc49f336508937ce58af2d39bd56fd17293c438a3c581230c6edc94a",
+      "balance_policy_version": "B_observed_middle_v1",
+      "total_credits": 14.0,
+      "failed_retake_credits": 2.0,
+      "withdrawn_retake_credits": 2.0,
+      "new_credits": 10.0,
+      "other_previous_credits": 0.0,
+      "failed_ratio": 0.14285714285714285,
+      "withdrawn_ratio": 0.14285714285714285,
+      "total_previous_ratio": 0.2857142857142857,
+      "failed_balance_penalty": 0.023809523809523808,
+      "total_previous_balance_penalty": 0.0,
+      "withdrawn_balance_penalty": 0.0,
+      "scope_applicable": true,
+      "component_active_flags": {
+        "failed": true,
+        "total_previous": true,
+        "withdrawn": true
+      },
+      "disabled_reasons": {
+        "scope": [],
+        "failed": [],
+        "total_previous": [],
+        "withdrawn": []
+      }
+    }
+  ],
+  "mixed_scope": [
+    {
+      "stage": "stage1",
+      "strategy": "balance_first",
+      "academic_course_names": [
+        "academic",
+        "outside",
+        "balanced"
+      ],
+      "ranked_course_names": [
+        "balanced",
+        "outside",
+        "academic"
+      ],
+      "outside_positions_preserved": true
+    },
+    {
+      "stage": "stage1",
+      "strategy": "pareto",
+      "academic_course_names": [
+        "academic",
+        "outside",
+        "balanced"
+      ],
+      "ranked_course_names": [
+        "balanced",
+        "outside",
+        "academic"
+      ],
+      "outside_positions_preserved": true
+    },
+    {
+      "stage": "final",
+      "strategy": "balance_first",
+      "academic_course_names": [
+        "academic",
+        "outside",
+        "balanced"
+      ],
+      "ranked_course_names": [
+        "balanced",
+        "outside",
+        "academic"
+      ],
+      "outside_positions_preserved": true
+    },
+    {
+      "stage": "final",
+      "strategy": "pareto",
+      "academic_course_names": [
+        "academic",
+        "outside",
+        "balanced"
+      ],
+      "ranked_course_names": [
+        "balanced",
+        "outside",
+        "academic"
+      ],
+      "outside_positions_preserved": true
+    }
+  ],
+  "complexity": "Existing exhaustive/pruned search is unchanged; Pareto uses quadratic pairwise dominance. Operational cost is deferred to Phase 6.",
+  "correctness_note": "Exact decimal credit scaling and sums remain independent of Decimal context; Stage 1 aggregation uses exact Fraction products before float conversion. These narrow arithmetic fixes preserve the approved search algorithm and architecture.",
+  "limitations": [
+    "Synthetic predictions do not establish GPA or failure improvements for students.",
+    "Saved aggregates lack historical eligible alternatives, their predictions, and all university policies.",
+    "Top K is optimal only under the chosen candidate order within Stage 1 shortlist, without global guarantee.",
+    "Strategies and their combination require independent review and approval; no automatic selection."
+  ]
+}

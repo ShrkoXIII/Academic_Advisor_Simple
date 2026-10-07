@@ -2,6 +2,33 @@
 import numpy as np
 import pandas as pd
 
+from src.features.feature_contract import prepare_model_matrix
+
+
+def score_course_rows(rows, grade_model, fail_model, category_levels, grade_scale,
+                      *, features=None, num_threads=4):
+    """Shared 33/47 prediction processing; callers supply the stage's features.
+
+    History and plan context are prepared upstream. Marks become GradeScale
+    points; failure probabilities remain an independent output.
+    """
+    rows = rows.copy()
+    matrix = prepare_model_matrix(rows, category_levels, model_features=features)
+    marks = np.asarray(grade_model.predict(matrix, num_threads=num_threads), dtype=float)
+    failures = np.asarray(fail_model.predict(matrix, num_threads=num_threads), dtype=float)
+    if marks.shape != (len(rows),) or failures.shape != (len(rows),):
+        raise ValueError("Model returned predictions with the wrong shape.")
+    if not np.isfinite(marks).all() or not np.isfinite(failures).all():
+        raise ValueError("Model returned non-finite predictions.")
+    rows["predicted_mark"] = np.clip(marks, 0, 100)
+    rows["expected_points"], rows["expected_grade"] = grade_scale.convert(
+        rows["predicted_mark"], rows["grade_version_id"],
+    )
+    rows["fail_probability"] = np.clip(failures, 0, 1)
+    if not np.isfinite(rows[["expected_points", "fail_probability"]].to_numpy()).all():
+        raise ValueError("Model returned non-finite predictions.")
+    return rows
+
 
 SUMMARY_COLUMNS = [
     "plan_id", "course_count", "total_credits", "expected_quality_points",

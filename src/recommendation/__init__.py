@@ -2,6 +2,7 @@
 
 from .artifacts import model_training_provenance
 from .engine import AcademicPlanRecommender, resolve_current_gpa_credits
+from .two_stage_engine import TwoStagePlanRecommender
 from .inputs import CANDIDATE_COURSE_COLUMNS, STUDENT_SNAPSHOT_COLUMNS
 from .inputs import (
     PreparedRecommendationInputs, normalize_candidate_payloads,
@@ -18,6 +19,7 @@ from .plan_scoring import (
 
 __all__ = [
     "AcademicPlanRecommender",
+    "TwoStagePlanRecommender",
     "FrozenHistoryManager",
     "HistorySnapshot",
     "apply_history_delta",

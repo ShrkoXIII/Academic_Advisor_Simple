@@ -34,6 +34,8 @@ Backend inputs + Frozen History
 → Top K
 ```
 
+
+
 ### نتيجة Audit قبل التنفيذ
 
 - توجد مودلات 33 مدربة فعلًا في `D:/AI/Real projects/Academic_Advisor_Simple/models/experiments/course_only_recommendation/`: `grade_regressor.txt` و`fail_risk_classifier.txt` و`category_levels.json` و`model_metadata.json`.
@@ -104,7 +106,9 @@ result = engine.recommend_from_payloads(
 
 ## 2. المدخلات والتاريخ والقيود
 
-### Frozen History
+
+
+### **Frozen History**
 
 - Payload التاريخ هو **Delta لفصل نهائي واحد**، ويُحدّث عبر مسار مستقل عن Recommendation. Backend يرسل الفصول النهائية غير المطبقة بترتيبها.
 - تُضاف المجاميع إلى نسخة من State الموجودة، دون إعادة بناء التاريخ القديم أو تطبيق أوزانه مرة أخرى. لا `backend_uniform_1` للتاريخ الكامل.
@@ -154,12 +158,14 @@ history_as_of_part < target_part
 
 التصنيف:
 
-| الحالة السابقة | Candidate group |
-| --- | --- |
-| `NEW` / `NEVER_TAKEN` | `NEW` |
-| `F` / `FE` / `FA` أو `FAILED` | `FAILED_RETAKE` |
-| `W` أو `WITHDRAWN` | `WITHDRAWN_RETAKE` |
-| `P` أو `PASSED`، Other، Unknown، Unresolved | `OTHER_PREVIOUS` |
+
+| الحالة السابقة                              | Candidate group    |
+| ------------------------------------------- | ------------------ |
+| `NEW` / `NEVER_TAKEN`                       | `NEW`              |
+| `F` / `FE` / `FA` أو `FAILED`               | `FAILED_RETAKE`    |
+| `W` أو `WITHDRAWN`                          | `WITHDRAWN_RETAKE` |
+| `P` أو `PASSED`، Other، Unknown، Unresolved | `OTHER_PREVIOUS`   |
+
 
 Missing/Unknown لا يصبح NEW أو Failed. لا يُستنتج سبب الإعادة من العلامة أو `attempt_number`. أكواد `D/Z/ST/T` الأخرى و`I/IP` غير المحسومة تبقى خارج Failed/Withdrawn، وفق Mapping المصدر الرسمي.
 
@@ -193,7 +199,11 @@ remaining = max(
 - مواد صفر ساعة اختيارية، تدخل في هوية الخطة وCounts وPlan/Peer context. لا تُدمج خطتان مختلفتان في اختيارها بوصفهما خطة واحدة.
 - عند غياب خطة تحقق القيود والهدف: `status="no_feasible_plan"`.
 
+
+
 ## 3. تنفيذ التوقعات وBalance والترتيب
+
+
 
 ### Features والتوقعات
 
@@ -261,11 +271,13 @@ disabled_reasons
 
 نطاقات `B_observed_middle_v1`:
 
-| المكوّن | النطاق |
-| --- | --- |
-| Failed | `1/6 … 4/17` |
-| Withdrawn | `0 … 3/17` |
-| Failed+Withdrawn | `1/6 … 2/7` |
+
+| المكوّن          | النطاق       |
+| ---------------- | ------------ |
+| Failed           | `1/6 … 4/17` |
+| Withdrawn        | `0 … 3/17`   |
+| Failed+Withdrawn | `1/6 … 2/7`  |
+
 
 ```python
 distance = max(lower - ratio, 0, ratio - upper)
@@ -309,6 +321,8 @@ Result Metadata تشمل بصمات التاريخ والمودلات وCategori
 
 ## 4. التحقق وبوابتا اعتماد الاستراتيجيات
 
+
+
 ### Synthetic tests
 
 - إثبات أن Balance يغير ترتيب خطط ذات **GPA أو احتمالات فشل مختلفة** في كل مرحلة؛ تطبيق Tie-only يفشل هذا الاختبار.
@@ -329,6 +343,8 @@ Result Metadata تشمل بصمات التاريخ والمودلات وCategori
 - Search: Exact upper target دون Lower fallback، حدود الفئات وOverflow وحدود الراسب والمنسحب، Fractional/Zero credits، Ties، ترتيب المدخلات، أقل من 50، وNo feasible plan.
 - Stage 2: دخول Shortlist فقط وتطابق الـ14 Context features والتوقعات والملخصات مع المسار الحالي عند تقييم الخطط نفسها.
 - Isolation: عدم اعتماد Serving على Experiments أو Trainers، وفحص بصمات الـArtifacts والبيانات والتاريخ الموجودة قبل وبعد التنفيذ.
+
+
 
 ### Historical-policy tests
 
@@ -435,6 +451,8 @@ memory_budget_per_request = UNRESOLVED
 
 ## Implementation Progress
 
+
+
 ### Phase 1 — Artifacts & Contracts
 
 Status: COMPLETE
@@ -500,3 +518,37 @@ Commit: Not created (user requested no automatic commit).
 - لم يُربط Engine أو Shortlist أو تشغيل مودلات المرحلتين، ولم ينفذ تقرير توليفات أو Benchmark أو اعتماد Ranking أو Recommendation حقيقية أو تدريب أو Backend/HTTP/Deployment. هذه المكونات تسلّمها Phase 5؛ حالات اعتماد المرحلتين وتوليفتهما في Manifest بقيت UNAPPROVED.
 
 Next: Phase 5 — ربط المرحلتين واختبارات Parity وOracle وتوليفات الاستراتيجيات والتقرير التاريخي والسياساتي. Safe to continue: YES لتنفيذ Phase 5 فقط؛ تفعيل Production Ranking يبقى مؤجلًا إلى بوابات الاعتماد.
+
+### Phase 5 — Two-stage Integration, Parity, Oracles & Policy Comparison
+
+Status: COMPLETE
+Date: 2026-10-07
+Commit: Not created (user requested no automatic commit).
+
+- رُبط `TwoStagePlanRecommender` بمكونات المراحل السابقة: Payload adapters → التقاط HistorySnapshot واحدة → استدعاء كل مودل 33 مرة واحدة لجميع Candidates المؤهلة → البحث الحالي والقيود الرسمية → استراتيجية Stage 1 صريحة → Shortlist لا تتجاوز 50 → الـ14 Plan/Peer features الحالية → مودلي 47 → استراتيجية Final مستقلة → Top K بين 1 و50. النتيجة النهائية تستخدم توقعات 47 وحدها، وتحفظ البصمات والنسخ والسياسات والأعداد وهوية Shortlist وإشارة Additive projection وعدم ضمان Global Top K.
+- `load_for_evaluation` يحمّل Assets المثبتة وأحدث History صحيحة مرة واحدة، مع اختيار صريح لكل استراتيجية ودون Default أو override للاعتماد. `load()` الإنتاجية ترفض التفعيل؛ بقيت الاستراتيجيتان وتوليفتهما وManifest الحالية UNAPPROVED. تحديث التاريخ مستقل ويفوض FrozenHistoryManager القائمة؛ Requests الجارية تحتفظ بالنسخة الملتقطة وتستخدم Requests اللاحقة النسخة المنشورة حديثًا.
+- استُخرج `score_course_rows` من Scoring القديم كـhelper مشترك للـ33 والـ47، مع رفض الشكل غير الصحيح والقيم غير المحدودة قبل Clip وGradeScale. بقي Context وتجميع وترتيب Local/Backtesting على سلوكهما الصحيح السابق؛ أثبتت Parity بالمودلات الرسمية نفسها على 3 خطط Synthetic/12 صفًا تطابق Matrix والميزات الـ14 والتوقعات وPoints/Grades والملخصات.
+- تصحيح ضروري ومحدود لعيب Phase 2 ظهر عند الربط: ضرب Decimal في Scale وجمع الساعات كانا يقرّبان عبر سياق precision، فيقبل البحث خطة 12 ساعة لهدف `12.00000000000000000000000000001` وقد يتجاوز حدود Requirements/Failed/Withdrawn. يستخدم `decimal_credit_units` و`sum_credit_values` الأرقام والوحدات الصحيحة دون تقريب السياق؛ خوارزمية البحث وترتيب استكشافها والقيود والمعمارية لم تتغير. اختبارات Red→Green تغطي الهدف والحدود الثلاثة وحساب المتبقي. تجميع Stage 1 يستخدم Fraction ثم تحويلًا رقميًا واحدًا لتفادي رفض `0.1+0.2` عند Points=4؛ وبصمة المدخلات تحفظ كل أرقام Decimal دون normalize() المقربة.
+- حُفظ تقرير المقارنة في `reports/two_stage_phase5/comparison.md` و`comparison.json` مع بصمات 7 مصادر كود ومدخلي الأدلة المجمعة. Oracle مستقل يقارن جميع Subsets الصغيرة وترتيب مرشحي Stage 1 وFinal وتوليفاتهما الأربع. في Fixture مصطنعة من 10 مواد/176 خطة، Shortlist مرشح Balance-first تتقاطع مع المرجع الأكاديمي بـ0/50 وPareto بـ13/50؛ تحتفظ الأولى بـ3/3 من Top 3 وفق كل مرشح Final على المجموعة الكاملة Synthetic، والثانية بـ1/3. هذا تقرير مفاضلات وليس اختيارًا أو اعتمادًا أو توقع تحسن فعلي للطلاب.
+- تقرير السياسة يتحقق من مقامات 3507 تركيبات مجمعة/95150 حالة وصفية، ويعرض عقوبات المكونات منفصلة لـ686 تركيبًا/49907 حالة بحمل 12–18 ودون Other، مع Semester وأهلية Synthetic صريحتين. هذه ليست عينة المرجع التاريخي 23535 حالة؛ الملفات المجمعة لا تحدد البدائل المؤهلة أو توقعاتها أو جميع السياسات التاريخية. تشمل الأدلة حساسية الحدود والصفر والنطاق المختلط وتعطيل المكونات.
+- Tests النهائية: Phase 5 المركزة **91 passed**؛ المجموعة الأوسع المرتبطة **529 passed, 6 subtests passed**؛ Full pytest **1054 passed, 1 failed, 6 subtests passed**. الفشل الوحيد **KNOWN BASELINE FAILURE**: `tests/test_train_models.py::test_tune_model_evaluates_every_candidate_fold_and_selects_mean_metric[grade-capacity_63-mae]` بسبب `capaciy_63`؛ **NEW REGRESSION: 0** و**UNRELATED EXISTING FAILURE: 0**، ولا Skip في الملخص. المراجعة المستقلة النهائية لا تحمل findings مفتوحة، وتحققت إضافيًا من 300 مجموع و40 Oracle للقيود تحت Decimal precision=2.
+- SHA-256: الملفات الـ**877** الموجودة تحت `models/` و`data/` بقيت دون تغيير أو حذف أو إضافة. نُفذ `graphify update .` باستخدام AST فقط: **2780 nodes, 6659 edges, 167 communities**؛ بعض أسماء Communities مشتقة من Hub دون LLM، ولم تُعد معالجة الوثائق دلاليًا.
+- لم يُنفذ Benchmark Phase 6 أو اعتماد Manifest Phase 7 أو تدريب أو تعديل Datasets/Models/Frozen bundles أو Recommendation لطلاب حقيقيين أو Backend/HTTP/FastAPI/PHP/Deployment. حدود الحمل والزمن والذاكرة الإنتاجية تبقى UNRESOLVED وفق الخطة.
+
+Next: Phase 6 — Benchmark Synthetic ونتائج الكلفة والمفاضلات للمراجعة والاعتماد المستقل. Safe to continue: YES لتنفيذ Phase 6 فقط؛ تفعيل Production يبقى مغلقًا حتى اعتماد المرحلتين وتوليفتهما ثم تثبيتها في Phase 7.
+
+### Phase 6 — Synthetic Benchmark & Independent Strategy Review Evidence
+
+Status: PARTIAL
+Date: 2026-10-07
+Commit: Not created (user requested no automatic commit).
+
+- أضيف `scripts/benchmark_two_stage.py` لقياس البحث، وترتيب Stage 1 وFinal على Shortlist ثابتة، والمسار الكامل للتوليفات الأربع في عمليات مستقلة. Payload والتاريخ مصطنعان؛ تُقرأ فقط Assets المودلات وCategories وGradeScale المثبتة. أضيفت عدادات اختيارية في البحث الحالي دون تغيير الخوارزمية أو ترتيب الاستكشاف أو فرض حد إنتاجي.
+- حُفظت 193 ملاحظة تحت `reports/two_stage_phase6/`: الجولة الأساسية 180 محاولة بمهلة عامل تشخيصية 15 ثانية، و8 قياسات مكملة للحالة الكثيفة 15 Candidate، و5 قياسات بحث لهدف 18 بالضبط بمهلة 90 ثانية. 153 ملاحظة مكتملة و40 censored؛ المهلة تشمل Setup وليست SLA، ولا يُختلق زمن/ذاكرة/عدد مكتمل للمهلة المنتهية.
+- البحث لهدف 18/all-3-credit: عند 25 Candidate أنتج 177100 خطة في 6.677 ثانية؛ عند 30 أنتج 593775 خطة في 25.535 ثانية؛ وعند 35 للضغط فقط أنتج 1623160 خطة في 68.661 ثانية. هذه قياسات Synthetic مع عدادات، وليست ضمانًا إنتاجيًا. الاقتراح هو دراسة تحسين بحث منفصلة وفق الخطة؛ لم تُستبدل الخوارزمية.
+- Re-check كشف عيب Fixture: `grade_version_id=1` غير موجود في GradeScale الرسمية (`1.111/2.111/3.111`)، فأصبحت Points صفرًا رغم توقع علامات نحو 65. عُلّمت مقارنات جودة/GPA وقياسات Inference/Ranking السابقة بأنها تحتاج إعادة قياس مصححة؛ قياسات البحث لا تستخدم GradeScale وتبقى صالحة. أضيف اختيار إصدار فعلي من Pass bands المحملة واختبارا Regression، دون تغيير GradeScale أو المودلات؛ التحقق من هذا التصحيح وإعادة القياسات لم يكتمل بعد.
+- آخر نتائج مؤكدة قبل تصحيح GradeVersion: اختبارات Phase 6 **24 passed**؛ المجموعة المركزة المرتبطة **158 passed**؛ المجموعة الأوسع **524 passed, 6 subtests passed**. Full pytest بدأ ثم فُقدت جلسة التنفيذ دون نتيجة نهائية قابلة للتحقق؛ لا يُدّعى نجاح Full suite أو التحقق من التصحيح الجديد. فشل Baseline القديم `capaciy_63`/`capacity_63` لم يُصلح ضمن المرحلة.
+- آخر فحص SHA-256: **877** ملفًا تحت `models/` و`data/`، بلا تغيير أو إضافة أو حذف. الفحص الختامي بعد التصحيح و`graphify update .` وإعادة الاختبارات والقياسات متبقية. العائق الحالي: التنفيذ المحلي يرفض إنشاء العمليات بـ`helper_unknown_error: setup refresh had errors`، وتفشل بيئة Node البديلة أيضًا.
+- بقي اعتماد Stage 1 وFinal والتوليفة وManifest **UNAPPROVED**، وحدود Candidates/SLA/Memory **UNRESOLVED**. لا تدريب أو Recommendation لطلاب حقيقيين أو تعديل Datasets/Frozen bundles أو اتصال Backend/FastAPI/PHP/Deployment أو تنفيذ Phase 7.
+
+Next: استعادة التنفيذ المحلي، ثم إكمال التحقق وإعادة القياسات المصححة داخل Phase 6 فقط. Safe to continue: NO إلى Phase 7؛ Phase 6 ليست COMPLETE واعتماد الاستراتيجيات لم يحدث.

@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 from src.data.cleaning_utils import clean_id
-from .plan_generation import enumerate_plan_indices
+from .plan_generation import enumerate_plan_indices, sum_credit_values
 
 
 _CANDIDATE_GROUPS = {"NEW", "FAILED_RETAKE", "WITHDRAWN_RETAKE", "OTHER_PREVIOUS"}
@@ -61,7 +61,9 @@ def normalize_requirement_policies(records):
         overflow = _credit_value(record.get("allowed_overflow_credits", 0), "allowed_overflow_credits")
         completed = _credit_value(record.get("completed_credits", 0), "completed_credits")
         reserved = _credit_value(record.get("reserved_credits", 0), "reserved_credits")
-        result[requirement_id] = max(Decimal("0"), maximum + overflow - completed - reserved)
+        result[requirement_id] = max(Decimal("0"), sum_credit_values(
+            (maximum, overflow, completed.copy_negate(), reserved.copy_negate()),
+        ))
     return result
 
 
@@ -94,12 +96,13 @@ class PlanConstraints:
             ))
 
 
-def enumerate_feasible_plan_indices(candidates, constraints):
+def enumerate_feasible_plan_indices(candidates, constraints, *, search_stats=None):
     """Yield every exact-credit subset satisfying requirement and official-repeat caps.
 
     The existing exhaustive Decimal search defines subset order and optional
     zero-credit selections. This wrapper filters complete subsets without
     removing candidates, scoring plans, or changing the search algorithm.
+    Optional counters also record complete plans accepted by the policy filters.
     """
     if not isinstance(constraints, PlanConstraints):
         raise ValueError("Supply normalized PlanConstraints.")
@@ -119,24 +122,29 @@ def enumerate_feasible_plan_indices(candidates, constraints):
     if uncovered:
         raise ValueError(f"Missing requirement policy for candidates: {sorted(uncovered)}.")
 
-    for plan in enumerate_plan_indices(candidates, target_credits=constraints.target_credits):
+    options = {} if search_stats is None else {"search_stats": search_stats}
+    if search_stats is not None:
+        search_stats["feasible_plan_count"] = 0
+    for plan in enumerate_plan_indices(candidates, target_credits=constraints.target_credits, **options):
         consumed = {}
         failed = withdrawn = Decimal("0")
         feasible = True
         for index in plan:
             requirement_id, cost = requirements[index], credits[index]
-            consumed[requirement_id] = consumed.get(requirement_id, Decimal("0")) + cost
+            consumed[requirement_id] = sum_credit_values((consumed.get(requirement_id, Decimal("0")), cost))
             if consumed[requirement_id] > constraints.requirement_policies[requirement_id]:
                 feasible = False
                 break
             if groups[index] == "FAILED_RETAKE":
-                failed += cost
+                failed = sum_credit_values((failed, cost))
             elif groups[index] == "WITHDRAWN_RETAKE":
-                withdrawn += cost
+                withdrawn = sum_credit_values((withdrawn, cost))
             if (failed > constraints.allowed_failed_repeat_credits
                     or (constraints.allowed_withdrawn_repeat_credits is not None
                         and withdrawn > constraints.allowed_withdrawn_repeat_credits)):
                 feasible = False
                 break
         if feasible:
+            if search_stats is not None:
+                search_stats["feasible_plan_count"] += 1
             yield plan
