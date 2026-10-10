@@ -1,0 +1,30 @@
+{
+  "raw": {
+    "path": "data/raw/v_add_student_degree_status.parquet",
+    "sha256": "8395641d4dfcfd4e731ead84a53d38b6593e7f5349abf75156f4a10a7a962371",
+    "physical_rows": 189158,
+    "window_rows": 92741,
+    "duplicate_status_keys_window": 0
+  },
+  "clean_v1": {
+    "path": "data/clean/student_status.parquet",
+    "sha256": "ee733fab2a0f4f3339f91efd3f152d0d666631f5e805f673da22c4adc79fb43b",
+    "physical_rows": 95622,
+    "window_rows": 82300,
+    "duplicate_status_keys_window": 0
+  },
+  "clean_v2": {
+    "path": "data/clean/student_status_v2.parquet",
+    "sha256": "b44cac1f2bb76cb98a891b09cc0e0a39eb63520ebdde1fcda9c1676641770895",
+    "physical_rows": 107939,
+    "window_rows": 87892,
+    "duplicate_status_keys_window": 0
+  },
+  "train_v2": {
+    "path": "data/features/temporal_train_features_v2.parquet",
+    "sha256": "026faac5933709c0903dac1b0ea2ca88be71d55c1bb6f805eb265d0f4cbe204f",
+    "physical_rows": 356816,
+    "window_rows": 356816,
+    "duplicate_status_keys_window": 281740
+  }
+}

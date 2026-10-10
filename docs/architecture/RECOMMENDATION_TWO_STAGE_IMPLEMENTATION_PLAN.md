@@ -1,7 +1,4 @@
-Status: APPROVED FOR IMPLEMENTATION
-Production Ranking Strategy: UNAPPROVED
-Balance Policy: B_observed_middle_v1
-Date: 2026-10-05
+شStatus: APPROVED FOR IMPLEMENTATION Production Ranking Strategy: UNAPPROVED Balance Policy: B_observed_middle_v1 Date: 2026-10-05
 
 # الخطة النهائية: 33 → 50 → 47 مع Balance كهدف فعلي
 
@@ -539,16 +536,35 @@ Next: Phase 6 — Benchmark Synthetic ونتائج الكلفة والمفاضل
 
 ### Phase 6 — Synthetic Benchmark & Independent Strategy Review Evidence
 
-Status: PARTIAL
+Status: COMPLETE
 Date: 2026-10-07
 Commit: Not created (user requested no automatic commit).
 
-- أضيف `scripts/benchmark_two_stage.py` لقياس البحث، وترتيب Stage 1 وFinal على Shortlist ثابتة، والمسار الكامل للتوليفات الأربع في عمليات مستقلة. Payload والتاريخ مصطنعان؛ تُقرأ فقط Assets المودلات وCategories وGradeScale المثبتة. أضيفت عدادات اختيارية في البحث الحالي دون تغيير الخوارزمية أو ترتيب الاستكشاف أو فرض حد إنتاجي.
-- حُفظت 193 ملاحظة تحت `reports/two_stage_phase6/`: الجولة الأساسية 180 محاولة بمهلة عامل تشخيصية 15 ثانية، و8 قياسات مكملة للحالة الكثيفة 15 Candidate، و5 قياسات بحث لهدف 18 بالضبط بمهلة 90 ثانية. 153 ملاحظة مكتملة و40 censored؛ المهلة تشمل Setup وليست SLA، ولا يُختلق زمن/ذاكرة/عدد مكتمل للمهلة المنتهية.
-- البحث لهدف 18/all-3-credit: عند 25 Candidate أنتج 177100 خطة في 6.677 ثانية؛ عند 30 أنتج 593775 خطة في 25.535 ثانية؛ وعند 35 للضغط فقط أنتج 1623160 خطة في 68.661 ثانية. هذه قياسات Synthetic مع عدادات، وليست ضمانًا إنتاجيًا. الاقتراح هو دراسة تحسين بحث منفصلة وفق الخطة؛ لم تُستبدل الخوارزمية.
-- Re-check كشف عيب Fixture: `grade_version_id=1` غير موجود في GradeScale الرسمية (`1.111/2.111/3.111`)، فأصبحت Points صفرًا رغم توقع علامات نحو 65. عُلّمت مقارنات جودة/GPA وقياسات Inference/Ranking السابقة بأنها تحتاج إعادة قياس مصححة؛ قياسات البحث لا تستخدم GradeScale وتبقى صالحة. أضيف اختيار إصدار فعلي من Pass bands المحملة واختبارا Regression، دون تغيير GradeScale أو المودلات؛ التحقق من هذا التصحيح وإعادة القياسات لم يكتمل بعد.
-- آخر نتائج مؤكدة قبل تصحيح GradeVersion: اختبارات Phase 6 **24 passed**؛ المجموعة المركزة المرتبطة **158 passed**؛ المجموعة الأوسع **524 passed, 6 subtests passed**. Full pytest بدأ ثم فُقدت جلسة التنفيذ دون نتيجة نهائية قابلة للتحقق؛ لا يُدّعى نجاح Full suite أو التحقق من التصحيح الجديد. فشل Baseline القديم `capaciy_63`/`capacity_63` لم يُصلح ضمن المرحلة.
-- آخر فحص SHA-256: **877** ملفًا تحت `models/` و`data/`، بلا تغيير أو إضافة أو حذف. الفحص الختامي بعد التصحيح و`graphify update .` وإعادة الاختبارات والقياسات متبقية. العائق الحالي: التنفيذ المحلي يرفض إنشاء العمليات بـ`helper_unknown_error: setup refresh had errors`، وتفشل بيئة Node البديلة أيضًا.
-- بقي اعتماد Stage 1 وFinal والتوليفة وManifest **UNAPPROVED**، وحدود Candidates/SLA/Memory **UNRESOLVED**. لا تدريب أو Recommendation لطلاب حقيقيين أو تعديل Datasets/Frozen bundles أو اتصال Backend/FastAPI/PHP/Deployment أو تنفيذ Phase 7.
+- **OLD / INVALIDATED RESULT:** جميع الملاحظات الـ168 التي استخدمت Inference/Ranking قبل تصحيح `grade_version_id=1` غير المدعومة أصبحت stale، بما فيها الزمن والذاكرة والـ40 censored. تقارير Phase 6 الأصلية الأربعة بقيت byte-identical، وحُفظت نسخ منفصلة تحت `reports/two_stage_phase6/corrected/old_invalidated/`. تقرير Phase 5 بتوقعاته المصطنعة مستبعد من استنتاجات الجودة الجديدة.
+- **CORRECTED RESULT:** أُعيدت الـ168 محاولة في عمليات مستقلة ومتسلسلة بنفس workloads والاختيارات والمهل الأصلية: **128 completed, 40 freshly censored, 0 errors**. أُبقيت 25 ملاحظة بحث فقط مع إثبات أن مسارها لا يحمّل GradeScale أو مودلات، ووسم provenance الأصلي؛ المحصلة 193 سجلًا، 153 مكتملًا و40 censored. عينة Benchmark تستخدم الإصدار المدعوم 1.111 لكنه `__UNKNOWN__` في Categories كلا المودلين؛ لا تُخلط بجودة 2.111/3.111 المعروفتين لدى المرحلتين.
+- أضيف تقييم Offline بالمودلات 33/47 المثبتة على **11 Fixture Synthetic، 1750 خطة و8210 صف Stage2 لكل إصدار** قبل فحص permutation الإضافي. الإصدار 2.111 أساسي و3.111 حساسية منفصلة؛ تطابقت prediction-only Stage1 values ومقاييس/توقعات Stage2 لهذه الحالات، مع اختلاف بصمة كامل صف Stage1 بسبب GradeVersion المدخلة. الـOracle الكاملة محدودة خارج Serving؛ لا تغير حد Stage2 الإنتاجي ≤50.
+- قياس Stage1 مستقل على تسع حالات >50 خطة، دون تضخيم easy/no-solution: ضد Final Pareto، Balance-first يحتفظ **25/27 Top3، 66/90 Top10**؛ Pareto يحتفظ **26/27، 85/90**. ضد Final Balance-first، Balance Stage1 يحتفظ **27/27، 90/90** وPareto **25/27، 86/90**. المرجع الأكاديمي Top3/10: Balance **44.44%/51.11%**، Pareto **96.30%/90%**. ليست المراجع المختلفة معيار جودة واحدًا.
+- مقارنة Final على نفس Academic Stage1 Top50 ونفس توقعات Stage2، مع المقاييس الستة منفصلة. في سبع حالات >50 داخل نطاق Balance بالكامل، Pareto مقابل Balance-first: Top3 GPA **+0.00003968** والفشل **−0.01628759 ساعة**؛ Top10 GPA **+0.00161218** والفشل **−0.05354007**؛ عقوبات Balance الثلاثة أسوأ مع Pareto. أمثلة الخطط والتوزيعات وTopK changes وخسائر Stage2-best والتوليفات الأربع موثقة في `reports/two_stage_phase6/corrected/RESULT.md` وJSON المرتبطة. determinism لكل Stage1/Stage2/Final PASS؛ مراجعة مستقلة أعادت بناء Oracles والتوليفات من المقاييس وطابقتها.
+- **RECOMMENDED فقط:** Stage1 `pareto v1` للاحتفاظ الأوسع بـTop10 والخيارات الأكاديمية، وFinal `pareto v1` لمفاضلات nondomination والفشل/GPA، والتوليفة `pareto → pareto`. اختيار الإنسان لـFinal Balance-first يدعم بديل `balance_first → balance_first` الأقوى في الاحتفاظ بمرجعه. التوليفة الموصى بها فقدت خطة global Top3 وثلاث خطط Top10 في `retake_strong`؛ لا ضمان Global TopK أو تحسن فعلي للطلاب.
+- Benchmark الكثيف 15 Candidate المكمل: Stage1 rank-only **1.869s Balance / 7.987s Pareto**؛ المسار الكامل **8.438–18.879s**. الكسور/الصفر عند 30 Candidate: **4.461–7.420s**؛ أعلى peak مكتملة **181.73 MiB**. مهلة العامل تشمل Setup وليست SLA؛ لا قياس مكتمل مختلق للمهلة المنتهية. البحث المحتفظ به عند 25/30/35 لهدف 18: **6.677/25.535/68.661s**. الاقتراح دراسة تحسين منفصلة؛ الخوارزمية والحدود لم تتغير.
+- الاختبارات الحالية: المركزة **65 passed**؛ المرتبطة **583 passed**؛ Full pytest **1119 passed, 1 failed, 6 subtests passed**. الفشل الوحيد **KNOWN BASELINE FAILURE** بسبب `capaciy_63`/`capacity_63` في `tests/test_train_models.py::test_tune_model_evaluates_every_candidate_fold_and_selects_mean_metric[grade-capacity_63-mae]`؛ **NEW REGRESSION: 0**، **UNRELATED EXISTING FAILURE: 0**، ولا Skip. أضيفت حماية استئناف القياس من تبدل الأصول/Production source/threads أو استبدال البصمة الأولية، وفحص source hashes عند الإكمال؛ مصدر الجولة المتصلة محفوظ بنسخة مطابقة قبل هذه الحماية.
+- فحص البصمات الختامي وتحديث Graphify قيد التوثيق في تقرير التحقق؛ بقي اعتماد Stage1 وFinal والتوليفة وManifest **UNAPPROVED** وحدود Candidates/SLA/Memory **UNRESOLVED**. لا Production source change أو تدريب أو تعديل Models/Data/Frozen bundles أو Recommendation حقيقية أو Backend/FastAPI/PHP/Deployment أو تنفيذ Phase 7. فحص Phase 7 السابق BLOCKED سجل تاريخي؛ طلب الرجوع الحالي أنهى الأدلة فقط، دون قرار اعتماد.
 
-Next: استعادة التنفيذ المحلي، ثم إكمال التحقق وإعادة القياسات المصححة داخل Phase 6 فقط. Safe to continue: NO إلى Phase 7؛ Phase 6 ليست COMPLETE واعتماد الاستراتيجيات لم يحدث.
+Next: مراجعة بشرية لتوصيتي المرحلتين والتوليفة. READY FOR HUMAN APPROVAL: YES بعد التحقق الختامي الموثق؛ لا انتقال تلقائي إلى Phase 7 ولا تفعيل دون قرارات الاعتماد المستقلة.
+
+### Phase 7 — Approved Policy Manifest, Revalidation & Documentation
+
+Status: COMPLETE
+Date: 2026-10-08
+Commit: Not created (user requested no automatic commit).
+
+- انتهى BLOCKED التاريخي بقرار HUMAN APPROVAL الصريح بعد مراجعة أدلة Phase 6 المصححة: Stage1 `pareto v1`، وFinal `pareto v1`، والتوليفة `pareto v1 -> pareto v1`. يحدد هذا السجل الحالة الحالية للاعتماد؛ عبارات UNAPPROVED في وصف الخطة الأصلي وسجلات المراحل السابقة تصف الحالة قبل هذا القرار ولا تتجاوز هذا الاعتماد المحدد.
+- ثبتت الاعتمادات الثلاثة في `models/shortlist_v2/manifest.json` مع عقد سياسة مستقل `schema_version=1`، واسم/إصدار كل مرحلة، والتوليفة المطابقة، وكسور Balance ونطاقها الثابتين، ومصدر القرار ومبرراته وقيوده وبصمات الأدلة المصححة. بقي `manifest_version=1` وعقود الأصول وPredictions وGradeScale وProvenance كما هي. لا ادعاء Global optimality أو تحسن نتائج الطلاب أو موافقة على أداء البحث الحالي.
+- أضيف `ranking_policy.py` كعقد تحقق مشترك وآمن لـProduction دون قراءة Reports أو Experiments أو Training. يرفض الاعتماد الجزئي والاسم/الإصدار والنطاق والتوليفة غير المطابقة؛ يبقى Manifest القديم غير المفعّل صالحًا للتقييم. `TwoStagePlanRecommender.load()` يحمل الاختيارات المعتمدة والأصول والتاريخ مرة واحدة؛ التحقق الفعلي حمل 33/47 Feature وHistory حتى 20251 دون Inference أو Recommendation حقيقية.
+- كل Request تمسك استراتيجيتيها الثابتتين وتتحقق منهما قبل Inference، ثم تستخدمهما طوال المسار. Metadata الإنتاجية `APPROVED / production_core` تسجل هوية السياسة وبصمتها؛ Constructor injection و`load_for_evaluation()` يبقيان `evaluation_only / UNAPPROVED` ولا يرثان اعتماد Manifest. التوقعات والترتيب يطابقان Evaluation لنفس الاختيار، بما فيه المودلات الفعلية وGradeVersion 2.111 على Payload/History اصطناعية.
+- الاختبارات النهائية: المركزة **160 passed**؛ Regression الأوسع **646 passed**؛ Full pytest **1144 passed, 1 failed, 6 subtests passed**. الفشل الوحيد **KNOWN BASELINE FAILURE**: `tests/test_train_models.py::test_tune_model_evaluates_every_candidate_fold_and_selects_mean_metric[grade-capacity_63-mae]` بسبب `capaciy_63`/`capacity_63`؛ **NEW REGRESSION: 0**، **UNRELATED EXISTING FAILURE: 0**، **SKIPPED: 0**. مراجعة مستقلة لم تجد مشكلة مهمة متبقية؛ ثغرة تبديل استراتيجية أثناء Request عولجت باختبار RED→GREEN وتثبيت المراجع طوالها.
+- SHA-256: **877** ملفًا تحت Models/Data، منها **876 byte-identical** والاستثناء المقصود الوحيد Manifest؛ لا إضافة أو حذف. بقيت **21** ملفًا من أدلة Phase 6 دون تغيير، وطابقت بصمات أدلة الاعتماد الملفات الفعلية. التغيرات الوحيدة في Production source ملفا Loader/Engine وإضافة عقد السياسة؛ لا تعديل Features أو Balance أو البحث أو خوارزمية Pareto. الأدلة في `reports/two_stage_phase7/`.
+- حُدث شرح Phase 7 الموجود، ونُفذ `graphify update .` باستخدام AST فقط: **3026 nodes, 7282 edges, 173 communities**؛ لا LLM extraction جديد للوثائق، وأسماء Communities المتغيرة مشتقة من Hub وفق أداة التحديث.
+- `backend_max_candidate_count` و`recommendation_latency_sla` و`memory_budget_per_request` تبقى **UNRESOLVED** داخل Manifest وMetadata. الاعتماد يخص سياسات Core فقط؛ تحسين الأداء وعقود التشغيل متابعة مستقلة. لم يبدأ FastAPI أو Backend/PHP أو Deployment أو Training، ولم تُستبدل خوارزمية البحث أو تُعدّل Models/Data/Frozen bundles أو أصول التجارب أو أدلة Phase 6.
+
+Next: انتهت بنود الخطة السبعة؛ لا انتقال تلقائي أو Phase إضافية. SAFE TO CONTINUE: YES لاستخدام Core المعتمد ضمن عقده الحالي؛ NO إلى التشغيل الخدمي/Deployment لأن عقود Candidates/SLA/Memory ما زالت UNRESOLVED وغير معتمدة.

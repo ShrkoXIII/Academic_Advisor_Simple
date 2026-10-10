@@ -1,0 +1,8 @@
+Re-extracting code files in . (no LLM needed)...
+[graphify watch] 94 file(s) not classified (no supported extension or shebang), skipped: .gitattributes, .gitignore, .graphify_version, 24_credit_course_source_audit.csv, activation.xml, alias_equality.csv (+88 more)
+  AST extraction: 8/8 uncached files (100%)
+[graphify watch] community set changed since labeling (4217 saved labels, 195 communities now; renamed 129 community(ies) by their hub). Run `graphify label` to refresh names with the LLM.
+[graphify] backed up curated graph (4 files) -> 2026-10-10/
+[graphify watch] Rebuilt: 3280 nodes, 8094 edges, 195 communities
+[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out
+Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.

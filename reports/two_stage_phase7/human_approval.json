@@ -1,0 +1,90 @@
+{
+  "ranking_approval": {
+    "combination": "APPROVED",
+    "final_ranking_strategy": "APPROVED",
+    "stage1_shortlist_strategy": "APPROVED"
+  },
+  "ranking_policy": {
+    "approved_combination": {
+      "final_ranking_strategy": {
+        "name": "pareto",
+        "version": "v1"
+      },
+      "stage1_shortlist_strategy": {
+        "name": "pareto",
+        "version": "v1"
+      }
+    },
+    "balance_policy": {
+      "failed_band": [
+        "1/6",
+        "4/17"
+      ],
+      "max_credits": 18,
+      "min_credits": 12,
+      "other_previous_selected": "disable_scope",
+      "scope_rule": "academic_reference_slots_v1",
+      "semesters": [
+        1,
+        2
+      ],
+      "total_previous_band": [
+        "1/6",
+        "2/7"
+      ],
+      "unavailable_component": "disabled_not_zero",
+      "version": "B_observed_middle_v1",
+      "withdrawn_band": [
+        "0",
+        "3/17"
+      ]
+    },
+    "final_ranking_strategy": {
+      "name": "pareto",
+      "version": "v1"
+    },
+    "human_approval": {
+      "authority": "human_user",
+      "basis": "corrected_phase6",
+      "date": "2026-10-08",
+      "evidence": {
+        "corrected_benchmark": {
+          "path": "reports/two_stage_phase6/corrected/benchmark.json",
+          "sha256": "fe0f3dd82567ad538311b45b846fbdfd9620cb30e96c4f05ac77c1c00a328d01"
+        },
+        "corrected_result": {
+          "path": "reports/two_stage_phase6/corrected/RESULT.md",
+          "sha256": "b2ea7a99b4eddb0a1f8cb02f77b9bfc7e778e1f644e487aa72a073857b2b3da7"
+        },
+        "primary_grade_version_2_111": {
+          "path": "reports/two_stage_phase6/corrected/corrected_ranking_evaluation.json",
+          "sha256": "70484a1871295f72126fc59eefa75fd392b3d295c7d62db6daae6f143b0fecf3"
+        },
+        "sensitivity_grade_version_3_111": {
+          "path": "reports/two_stage_phase6/corrected/grade_version_3_sensitivity.json",
+          "sha256": "398fe4ed0797f544c325f5a12bfd50ddbb1e3c76925a923ebbd2308d4c29101f"
+        }
+      },
+      "limitations": [
+        "This approval does NOT claim global optimality or improved student outcomes.",
+        "This approval does NOT approve production latency, candidate limits, memory limits, or the current exhaustive search performance.",
+        "Search/ranking performance optimization remains a separate follow-up task."
+      ],
+      "rationale": [
+        "Stage1 Pareto provides substantially stronger Top-10 retention for the selected Pareto Final objective and protects academically strong/failure-low alternatives better than Balance-first.",
+        "Final Pareto preserves Balance as an independent objective without the overly strict lexicographic behavior observed in Balance-first."
+      ],
+      "source": "Explicit HUMAN APPROVAL message in this Codex task; independently approves Stage1, Final and their combination."
+    },
+    "operational_contracts": {
+      "backend_max_candidate_count": "UNRESOLVED",
+      "memory_budget_per_request": "UNRESOLVED",
+      "recommendation_latency_sla": "UNRESOLVED"
+    },
+    "schema_version": 1,
+    "stage1_shortlist_strategy": {
+      "name": "pareto",
+      "version": "v1"
+    }
+  }
+}

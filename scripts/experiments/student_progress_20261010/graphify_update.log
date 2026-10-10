@@ -1,0 +1,55 @@
+Re-extracting code files in . (no LLM needed)...
+[graphify watch] 2375 file(s) not classified (no supported extension or shebang), skipped: .gitattributes, .gitignore, .graphify_version, .publish_as_of_20251.lock, 24_credit_course_source_audit.csv, academic.parquet (+2369 more)
+  AST extraction: 100/4354 uncached files (2%) [12 workers]
+  AST extraction: 200/4354 uncached files (4%) [12 workers]
+  AST extraction: 300/4354 uncached files (6%) [12 workers]
+  AST extraction: 400/4354 uncached files (9%) [12 workers]
+  AST extraction: 500/4354 uncached files (11%) [12 workers]
+  AST extraction: 600/4354 uncached files (13%) [12 workers]
+  AST extraction: 700/4354 uncached files (16%) [12 workers]
+  AST extraction: 800/4354 uncached files (18%) [12 workers]
+  AST extraction: 900/4354 uncached files (20%) [12 workers]
+  AST extraction: 1000/4354 uncached files (22%) [12 workers]
+  AST extraction: 1100/4354 uncached files (25%) [12 workers]
+  AST extraction: 1200/4354 uncached files (27%) [12 workers]
+  AST extraction: 1300/4354 uncached files (29%) [12 workers]
+  AST extraction: 1400/4354 uncached files (32%) [12 workers]
+  AST extraction: 1500/4354 uncached files (34%) [12 workers]
+  AST extraction: 1600/4354 uncached files (36%) [12 workers]
+  AST extraction: 1700/4354 uncached files (39%) [12 workers]
+  AST extraction: 1800/4354 uncached files (41%) [12 workers]
+  AST extraction: 1900/4354 uncached files (43%) [12 workers]
+  AST extraction: 2000/4354 uncached files (45%) [12 workers]
+  AST extraction: 2100/4354 uncached files (48%) [12 workers]
+  AST extraction: 2200/4354 uncached files (50%) [12 workers]
+  AST extraction: 2300/4354 uncached files (52%) [12 workers]
+  AST extraction: 2400/4354 uncached files (55%) [12 workers]
+  AST extraction: 2500/4354 uncached files (57%) [12 workers]
+  AST extraction: 2600/4354 uncached files (59%) [12 workers]
+  AST extraction: 2700/4354 uncached files (62%) [12 workers]
+  AST extraction: 2800/4354 uncached files (64%) [12 workers]
+  AST extraction: 2900/4354 uncached files (66%) [12 workers]
+  AST extraction: 3000/4354 uncached files (68%) [12 workers]
+  AST extraction: 3100/4354 uncached files (71%) [12 workers]
+  AST extraction: 3200/4354 uncached files (73%) [12 workers]
+  AST extraction: 3300/4354 uncached files (75%) [12 workers]
+  AST extraction: 3400/4354 uncached files (78%) [12 workers]
+  AST extraction: 3500/4354 uncached files (80%) [12 workers]
+  AST extraction: 3600/4354 uncached files (82%) [12 workers]
+  AST extraction: 3700/4354 uncached files (84%) [12 workers]
+  AST extraction: 3800/4354 uncached files (87%) [12 workers]
+  AST extraction: 3900/4354 uncached files (89%) [12 workers]
+  AST extraction: 4000/4354 uncached files (91%) [12 workers]
+  AST extraction: 4100/4354 uncached files (94%) [12 workers]
+  AST extraction: 4200/4354 uncached files (96%) [12 workers]
+  AST extraction: 4300/4354 uncached files (98%) [12 workers]
+  AST extraction: 4354/4354 uncached files (100%) [12 workers]
+  warning: 3 file(s) had syntax errors and may be partially extracted: reports/student_progress_validation/final_full_temp/test_promotion_rejects_stale_i0/src/modeling/train_models.py (first error at line 1, no symbols extracted), reports/student_progress_validation/pytest_temp/test_promotion_rejects_stale_i0/src/modeling/train_models.py (first error at line 1, no symbols extracted), reports/student_progress_validation/related_temp/test_promotion_rejects_stale_i0/src/modeling/train_models.py (first error at line 1, no symbols extracted)
+[graphify watch] community set changed since labeling (170 saved labels, 4217 communities now; renamed 109 community(ies) by their hub). Run `graphify label` to refresh names with the LLM.
+[graphify] backed up curated graph (4 files) -> 2026-10-10/
+Graph has 35740 nodes (above 5000 limit). Building aggregated community view...
+graph.html written (aggregated: 4217 community nodes, 3042 cross-community edges)
+Tip: run with --obsidian for full node-level detail.
+[graphify watch] Rebuilt: 35740 nodes, 50010 edges, 4217 communities
+[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out
+Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.

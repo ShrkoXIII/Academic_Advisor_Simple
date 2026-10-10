@@ -1,0 +1,862 @@
+{
+  "raw": [
+    {
+      "name": "student_status_id",
+      "type": "double"
+    },
+    {
+      "name": "student_id",
+      "type": "double"
+    },
+    {
+      "name": "part_id",
+      "type": "double"
+    },
+    {
+      "name": "degree_id",
+      "type": "double"
+    },
+    {
+      "name": "start_part_id",
+      "type": "double"
+    },
+    {
+      "name": "finish_part_id",
+      "type": "double"
+    },
+    {
+      "name": "grade_version_id",
+      "type": "double"
+    },
+    {
+      "name": "permanent_status_id",
+      "type": "double"
+    },
+    {
+      "name": "permanent_status_sl",
+      "type": "large_string"
+    },
+    {
+      "name": "study_mode",
+      "type": "large_string"
+    },
+    {
+      "name": "prev_gpa_points",
+      "type": "double"
+    },
+    {
+      "name": "prev_gpa_percent",
+      "type": "double"
+    },
+    {
+      "name": "gpa_percent",
+      "type": "double"
+    },
+    {
+      "name": "gpa_points",
+      "type": "double"
+    },
+    {
+      "name": "start_agpa_percent",
+      "type": "double"
+    },
+    {
+      "name": "start_agpa_points",
+      "type": "double"
+    },
+    {
+      "name": "start_total_in_courses",
+      "type": "double"
+    },
+    {
+      "name": "start_total_in_credits",
+      "type": "double"
+    },
+    {
+      "name": "end_total_in_courses",
+      "type": "double"
+    },
+    {
+      "name": "end_total_in_credits",
+      "type": "double"
+    },
+    {
+      "name": "end_agpa_percent",
+      "type": "double"
+    },
+    {
+      "name": "end_agpa_points",
+      "type": "double"
+    },
+    {
+      "name": "semester_reg_courses",
+      "type": "double"
+    },
+    {
+      "name": "semester_reg_credits",
+      "type": "double"
+    },
+    {
+      "name": "semester_pass_courses",
+      "type": "double"
+    },
+    {
+      "name": "semester_pass_credits",
+      "type": "double"
+    },
+    {
+      "name": "semester_fail_courses",
+      "type": "double"
+    },
+    {
+      "name": "semester_fail_credits",
+      "type": "double"
+    },
+    {
+      "name": "semester_in_courses",
+      "type": "double"
+    },
+    {
+      "name": "semester_in_credits",
+      "type": "double"
+    },
+    {
+      "name": "total_semesters",
+      "type": "double"
+    },
+    {
+      "name": "total_reg_courses",
+      "type": "double"
+    },
+    {
+      "name": "total_reg_credits",
+      "type": "double"
+    },
+    {
+      "name": "total_pass_courses",
+      "type": "double"
+    },
+    {
+      "name": "total_pass_credits",
+      "type": "double"
+    },
+    {
+      "name": "total_fail_courses",
+      "type": "double"
+    },
+    {
+      "name": "total_fail_credits",
+      "type": "double"
+    },
+    {
+      "name": "reg_total_semesters",
+      "type": "double"
+    },
+    {
+      "name": "finish_status",
+      "type": "large_string"
+    },
+    {
+      "name": "version_title_sl",
+      "type": "large_string"
+    },
+    {
+      "name": "degree_name_sl",
+      "type": "large_string"
+    },
+    {
+      "name": "degree_credits_count",
+      "type": "double"
+    },
+    {
+      "name": "start_level_id",
+      "type": "double"
+    },
+    {
+      "name": "start_level_name_short",
+      "type": "int64"
+    },
+    {
+      "name": "end_level_name_short",
+      "type": "int64"
+    },
+    {
+      "name": "start_level_name_pl",
+      "type": "large_string"
+    }
+  ],
+  "clean_v1": [
+    {
+      "name": "student_status_id",
+      "type": "string"
+    },
+    {
+      "name": "student_id",
+      "type": "string"
+    },
+    {
+      "name": "part_id",
+      "type": "int64"
+    },
+    {
+      "name": "degree_id",
+      "type": "string"
+    },
+    {
+      "name": "degree_name_sl",
+      "type": "string"
+    },
+    {
+      "name": "start_part_id",
+      "type": "int64"
+    },
+    {
+      "name": "finish_part_id",
+      "type": "int64"
+    },
+    {
+      "name": "grade_version_id",
+      "type": "string"
+    },
+    {
+      "name": "prev_gpa_points",
+      "type": "double"
+    },
+    {
+      "name": "last_enrolled_gpa",
+      "type": "double"
+    },
+    {
+      "name": "observed_gap_semesters",
+      "type": "int64"
+    },
+    {
+      "name": "gpa_points",
+      "type": "double"
+    },
+    {
+      "name": "start_agpa_points",
+      "type": "double"
+    },
+    {
+      "name": "start_total_in_courses",
+      "type": "int64"
+    },
+    {
+      "name": "start_total_in_credits",
+      "type": "double"
+    },
+    {
+      "name": "end_total_in_courses",
+      "type": "int64"
+    },
+    {
+      "name": "end_total_in_credits",
+      "type": "double"
+    },
+    {
+      "name": "end_agpa_points",
+      "type": "double"
+    },
+    {
+      "name": "semester_reg_courses",
+      "type": "int64"
+    },
+    {
+      "name": "semester_reg_credits",
+      "type": "double"
+    },
+    {
+      "name": "semester_pass_courses",
+      "type": "int64"
+    },
+    {
+      "name": "semester_pass_credits",
+      "type": "double"
+    },
+    {
+      "name": "semester_fail_courses",
+      "type": "int64"
+    },
+    {
+      "name": "semester_fail_credits",
+      "type": "double"
+    },
+    {
+      "name": "total_semesters",
+      "type": "int64"
+    },
+    {
+      "name": "total_reg_courses",
+      "type": "int64"
+    },
+    {
+      "name": "total_reg_credits",
+      "type": "double"
+    },
+    {
+      "name": "total_pass_courses",
+      "type": "int64"
+    },
+    {
+      "name": "total_pass_credits",
+      "type": "double"
+    },
+    {
+      "name": "total_fail_courses",
+      "type": "int64"
+    },
+    {
+      "name": "total_fail_credits",
+      "type": "double"
+    },
+    {
+      "name": "reg_total_semesters",
+      "type": "int64"
+    },
+    {
+      "name": "finish_status",
+      "type": "string"
+    },
+    {
+      "name": "degree_credits_count",
+      "type": "double"
+    },
+    {
+      "name": "start_level_name_short",
+      "type": "string"
+    },
+    {
+      "name": "end_level_name_short",
+      "type": "string"
+    }
+  ],
+  "clean_v2": [
+    {
+      "name": "student_status_id",
+      "type": "large_string"
+    },
+    {
+      "name": "student_id",
+      "type": "large_string"
+    },
+    {
+      "name": "part_id",
+      "type": "int64"
+    },
+    {
+      "name": "degree_id",
+      "type": "large_string"
+    },
+    {
+      "name": "degree_name_sl",
+      "type": "large_string"
+    },
+    {
+      "name": "start_part_id",
+      "type": "int64"
+    },
+    {
+      "name": "finish_part_id",
+      "type": "int64"
+    },
+    {
+      "name": "grade_version_id",
+      "type": "large_string"
+    },
+    {
+      "name": "prev_gpa_points",
+      "type": "double"
+    },
+    {
+      "name": "last_enrolled_gpa",
+      "type": "double"
+    },
+    {
+      "name": "observed_gap_semesters",
+      "type": "int64"
+    },
+    {
+      "name": "gpa_points",
+      "type": "double"
+    },
+    {
+      "name": "start_agpa_points",
+      "type": "double"
+    },
+    {
+      "name": "start_total_in_courses",
+      "type": "int64"
+    },
+    {
+      "name": "start_total_in_credits",
+      "type": "double"
+    },
+    {
+      "name": "end_total_in_courses",
+      "type": "int64"
+    },
+    {
+      "name": "end_total_in_credits",
+      "type": "double"
+    },
+    {
+      "name": "end_agpa_points",
+      "type": "double"
+    },
+    {
+      "name": "semester_reg_courses",
+      "type": "int64"
+    },
+    {
+      "name": "semester_reg_credits",
+      "type": "double"
+    },
+    {
+      "name": "semester_pass_courses",
+      "type": "int64"
+    },
+    {
+      "name": "semester_pass_credits",
+      "type": "double"
+    },
+    {
+      "name": "semester_fail_courses",
+      "type": "int64"
+    },
+    {
+      "name": "semester_fail_credits",
+      "type": "double"
+    },
+    {
+      "name": "total_semesters",
+      "type": "int64"
+    },
+    {
+      "name": "total_reg_courses",
+      "type": "int64"
+    },
+    {
+      "name": "total_reg_credits",
+      "type": "double"
+    },
+    {
+      "name": "total_pass_courses",
+      "type": "int64"
+    },
+    {
+      "name": "total_pass_credits",
+      "type": "double"
+    },
+    {
+      "name": "total_fail_courses",
+      "type": "int64"
+    },
+    {
+      "name": "total_fail_credits",
+      "type": "double"
+    },
+    {
+      "name": "reg_total_semesters",
+      "type": "int64"
+    },
+    {
+      "name": "finish_status",
+      "type": "large_string"
+    },
+    {
+      "name": "degree_credits_count",
+      "type": "double"
+    },
+    {
+      "name": "start_level_name_short",
+      "type": "large_string"
+    },
+    {
+      "name": "end_level_name_short",
+      "type": "large_string"
+    }
+  ],
+  "train_v2": [
+    {
+      "name": "student_course_id",
+      "type": "large_string"
+    },
+    {
+      "name": "student_id",
+      "type": "large_string"
+    },
+    {
+      "name": "course_id",
+      "type": "large_string"
+    },
+    {
+      "name": "part_id",
+      "type": "int64"
+    },
+    {
+      "name": "grade_id",
+      "type": "large_string"
+    },
+    {
+      "name": "final_mark",
+      "type": "int64"
+    },
+    {
+      "name": "points",
+      "type": "double"
+    },
+    {
+      "name": "course_name_sl",
+      "type": "large_string"
+    },
+    {
+      "name": "degree_id",
+      "type": "large_string"
+    },
+    {
+      "name": "degree_name_sl_course",
+      "type": "large_string"
+    },
+    {
+      "name": "faculty_id",
+      "type": "large_string"
+    },
+    {
+      "name": "course_credits",
+      "type": "double"
+    },
+    {
+      "name": "attempt_number",
+      "type": "int64"
+    },
+    {
+      "name": "course_outcome_status",
+      "type": "large_string"
+    },
+    {
+      "name": "student_status_id",
+      "type": "large_string"
+    },
+    {
+      "name": "degree_name_sl_status",
+      "type": "large_string"
+    },
+    {
+      "name": "start_part_id",
+      "type": "int64"
+    },
+    {
+      "name": "finish_part_id",
+      "type": "int64"
+    },
+    {
+      "name": "grade_version_id",
+      "type": "large_string"
+    },
+    {
+      "name": "prev_gpa_points",
+      "type": "double"
+    },
+    {
+      "name": "last_enrolled_gpa",
+      "type": "double"
+    },
+    {
+      "name": "observed_gap_semesters",
+      "type": "int64"
+    },
+    {
+      "name": "gpa_points",
+      "type": "double"
+    },
+    {
+      "name": "start_agpa_points",
+      "type": "double"
+    },
+    {
+      "name": "start_total_in_courses",
+      "type": "int64"
+    },
+    {
+      "name": "start_total_in_credits",
+      "type": "double"
+    },
+    {
+      "name": "end_total_in_courses",
+      "type": "int64"
+    },
+    {
+      "name": "end_total_in_credits",
+      "type": "double"
+    },
+    {
+      "name": "end_agpa_points",
+      "type": "double"
+    },
+    {
+      "name": "semester_reg_courses",
+      "type": "int64"
+    },
+    {
+      "name": "semester_reg_credits",
+      "type": "double"
+    },
+    {
+      "name": "semester_pass_courses",
+      "type": "int64"
+    },
+    {
+      "name": "semester_pass_credits",
+      "type": "double"
+    },
+    {
+      "name": "semester_fail_courses",
+      "type": "int64"
+    },
+    {
+      "name": "semester_fail_credits",
+      "type": "double"
+    },
+    {
+      "name": "total_semesters",
+      "type": "int64"
+    },
+    {
+      "name": "total_reg_courses",
+      "type": "int64"
+    },
+    {
+      "name": "total_reg_credits",
+      "type": "double"
+    },
+    {
+      "name": "total_pass_courses",
+      "type": "int64"
+    },
+    {
+      "name": "total_pass_credits",
+      "type": "double"
+    },
+    {
+      "name": "total_fail_courses",
+      "type": "int64"
+    },
+    {
+      "name": "total_fail_credits",
+      "type": "double"
+    },
+    {
+      "name": "reg_total_semesters",
+      "type": "int64"
+    },
+    {
+      "name": "finish_status",
+      "type": "large_string"
+    },
+    {
+      "name": "degree_credits_count",
+      "type": "double"
+    },
+    {
+      "name": "start_level_name_short",
+      "type": "large_string"
+    },
+    {
+      "name": "end_level_name_short",
+      "type": "large_string"
+    },
+    {
+      "name": "plan_degree_course_id",
+      "type": "large_string"
+    },
+    {
+      "name": "plan_course_type_id",
+      "type": "large_string"
+    },
+    {
+      "name": "plan_requirement_type_id",
+      "type": "int64"
+    },
+    {
+      "name": "plan_requirement_type_sl",
+      "type": "large_string"
+    },
+    {
+      "name": "plan_course_name_sl",
+      "type": "large_string"
+    },
+    {
+      "name": "plan_course_official_sl",
+      "type": "large_string"
+    },
+    {
+      "name": "plan_degree_name_sl",
+      "type": "large_string"
+    },
+    {
+      "name": "plan_year_order",
+      "type": "int64"
+    },
+    {
+      "name": "plan_semester_order",
+      "type": "int64"
+    },
+    {
+      "name": "plan_course_credits",
+      "type": "double"
+    },
+    {
+      "name": "plan_credits_count",
+      "type": "double"
+    },
+    {
+      "name": "plan_active",
+      "type": "large_string"
+    },
+    {
+      "name": "plan_match",
+      "type": "bool"
+    },
+    {
+      "name": "diploma_gpa",
+      "type": "double"
+    },
+    {
+      "name": "diploma_type_id",
+      "type": "double"
+    },
+    {
+      "name": "course_history_avg_mark",
+      "type": "double"
+    },
+    {
+      "name": "course_history_fail_rate",
+      "type": "double"
+    },
+    {
+      "name": "course_history_avg_attempt",
+      "type": "double"
+    },
+    {
+      "name": "course_history_retake_rate",
+      "type": "double"
+    },
+    {
+      "name": "course_history_effective_support",
+      "type": "double"
+    },
+    {
+      "name": "course_history_fallback_level",
+      "type": "int64"
+    },
+    {
+      "name": "course_history_missing",
+      "type": "int64"
+    },
+    {
+      "name": "plan_course_count",
+      "type": "int64"
+    },
+    {
+      "name": "plan_total_credits",
+      "type": "double"
+    },
+    {
+      "name": "plan_credit_weighted_fail_rate",
+      "type": "double"
+    },
+    {
+      "name": "plan_credit_weighted_avg_mark",
+      "type": "double"
+    },
+    {
+      "name": "plan_credit_weighted_avg_attempt",
+      "type": "double"
+    },
+    {
+      "name": "plan_difficulty_credit_load",
+      "type": "double"
+    },
+    {
+      "name": "peer_course_count",
+      "type": "int64"
+    },
+    {
+      "name": "peer_total_credits",
+      "type": "double"
+    },
+    {
+      "name": "peer_credit_weighted_fail_rate",
+      "type": "double"
+    },
+    {
+      "name": "peer_credit_weighted_avg_mark",
+      "type": "double"
+    },
+    {
+      "name": "peer_credit_weighted_avg_attempt",
+      "type": "double"
+    },
+    {
+      "name": "peer_difficulty_credit_load",
+      "type": "double"
+    },
+    {
+      "name": "peer_max_fail_rate",
+      "type": "double"
+    },
+    {
+      "name": "peer_difficulty_missing",
+      "type": "int64"
+    },
+    {
+      "name": "gpa_prev_1",
+      "type": "double"
+    },
+    {
+      "name": "gpa_prev_2",
+      "type": "double"
+    },
+    {
+      "name": "gpa_trend_delta",
+      "type": "double"
+    },
+    {
+      "name": "gpa_trend_missing",
+      "type": "int64"
+    },
+    {
+      "name": "prior_total_reg_courses",
+      "type": "int64"
+    },
+    {
+      "name": "prior_total_reg_credits",
+      "type": "double"
+    },
+    {
+      "name": "prior_total_fail_courses",
+      "type": "int64"
+    },
+    {
+      "name": "prior_total_fail_credits",
+      "type": "double"
+    },
+    {
+      "name": "prior_fail_credit_ratio",
+      "type": "double"
+    },
+    {
+      "name": "prior_registered_semesters",
+      "type": "int64"
+    },
+    {
+      "name": "part_semester",
+      "type": "int64"
+    },
+    {
+      "name": "is_fail",
+      "type": "int64"
+    }
+  ]
+}

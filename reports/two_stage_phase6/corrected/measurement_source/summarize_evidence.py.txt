@@ -1,0 +1,136 @@
+"""Reproduce derived review tables from measured evidence, without inference.
+
+Run from repository root with the project Python. This is an evidence source
+snapshot, not a serving module or an additional implementation plan.
+"""
+from hashlib import sha256
+import json
+from pathlib import Path
+from statistics import mean
+
+import pandas as pd
+
+from scripts.evaluate_corrected_phase6 import tradeoff_examples
+
+
+ROOT = Path.cwd()
+OUTPUT = ROOT / "reports/two_stage_phase6/corrected"
+STRATEGIES = ("balance_first", "pareto")
+METRICS = ("projected_cumulative_gpa", "expected_failed_credits", "expected_plan_gpa",
+           "failed_balance_penalty", "withdrawn_balance_penalty", "total_previous_balance_penalty")
+ACTIVE = {"retake_weak", "retake_strong", "alternating", "low_gpa", "high_gpa", "load_12", "fractional_zero"}
+
+
+def read(name):
+    return json.loads((OUTPUT / name).read_text(encoding="utf8"))
+
+
+def recall(cases, first, final, k):
+    rows = [case["stage1"][first]["stage2_oracles"][final][f"top{k}"] for case in cases]
+    denominator = sum(row["denominator"] for row in rows)
+    hits = sum(row["retained_count"] for row in rows)
+    return {"hits": hits, "denominator": denominator, "pooled": hits / denominator,
+            "macro": mean(row["recall_at_50"] for row in rows),
+            "lost_count": denominator - hits}
+
+
+def final_comparison(cases):
+    output = {}
+    for strategy in STRATEGIES:
+        output[strategy] = {}
+        for k in (3, 10):
+            rows = [case["fixed_final_pool"]["strategies"][strategy][f"top{k}"] for case in cases]
+            output[strategy][f"top{k}"] = {
+                "mean_delta_vs_academic": {metric: mean(values) if values else None
+                    for metric in METRICS for values in [[row["mean_change_vs_academic"][metric]
+                    for row in rows if row["mean_change_vs_academic"][metric] is not None]]},
+                "mean_absolute_metric": {metric: mean(values) if values else None
+                    for metric in METRICS for values in [[row["distribution"][metric]["mean"]
+                    for row in rows if row["distribution"][metric]["mean"] is not None]]},
+                "changed_case_count_vs_academic": sum(row["plan_ids"] !=
+                    case["fixed_final_pool"]["academic_reference_plan_ids"][:k]
+                    for row, case in zip(rows, cases)),
+                "set_overlap_vs_academic": sum(row["academic_overlap"] for row in rows),
+                "denominator": sum(row["plan_count"] for row in rows)}
+    output["pareto_minus_balance_first"] = {f"top{k}": {
+        metric: output["pareto"][f"top{k}"]["mean_absolute_metric"][metric] -
+                output["balance_first"][f"top{k}"]["mean_absolute_metric"][metric]
+        if output["pareto"][f"top{k}"]["mean_absolute_metric"][metric] is not None else None
+        for metric in METRICS} for k in (3, 10)}
+    output["between_strategies"] = {f"top{k}": {
+        "changed_order_case_count": sum(case["fixed_final_pool"]["strategies"]["balance_first"][f"top{k}"]["plan_ids"] !=
+            case["fixed_final_pool"]["strategies"]["pareto"][f"top{k}"]["plan_ids"] for case in cases),
+        "set_overlap": sum(len(set(case["fixed_final_pool"]["strategies"]["balance_first"][f"top{k}"]["plan_ids"]) &
+            set(case["fixed_final_pool"]["strategies"]["pareto"][f"top{k}"]["plan_ids"])) for case in cases),
+        "denominator": sum(min(k, case["fixed_final_pool"]["size"]) for case in cases)} for k in (3, 10)}
+    return output
+
+
+def aggregate(report):
+    large = [case for case in report["cases"] if case["feasible_plan_count"] > 50]
+    active = [case for case in large if case["name"] in ACTIVE]
+    first = {}
+    for name in STRATEGIES:
+        first[name] = {
+            "all_gt50_recall": {oracle: {f"top{k}": recall(large, name, oracle, k)
+                for k in (3, 10)} for oracle in ("academic_diagnostic", *STRATEGIES)},
+            "fully_in_scope_gt50_recall": {oracle: {f"top{k}": recall(active, name, oracle, k)
+                for k in (3, 10)} for oracle in ("academic_diagnostic", *STRATEGIES)},
+            "mean_academic_shortlist_overlap_over_50": mean(case["stage1"][name]["academic_shortlist_overlap"] for case in large),
+            "fully_in_scope_shortlist_mean_metrics": {stage: {metric: mean(
+                case["stage1"][name][stage][metric]["mean"] for case in active)
+                for metric in METRICS} for stage in ("stage1_distribution", "stage2_distribution")}}
+    combinations = []
+    for first_name in STRATEGIES:
+        for final_name in STRATEGIES:
+            rows = [next(row for row in case["combinations"] if row["stage1_strategy"] == first_name
+                and row["final_strategy"] == final_name) for case in large]
+            actual = {}
+            for k in (3, 10):
+                targets = [case["stage1"][first_name]["stage2_oracles"][final_name][f"top{k}"]["oracle_plan_ids"] for case in large]
+                hits = sum(len(set(row[f"top{k}"]["plan_ids"]) & set(oracle)) for row, oracle in zip(rows, targets))
+                denominator = sum(len(oracle) for oracle in targets)
+                actual[f"top{k}"] = {"hits": hits, "denominator": denominator, "overlap": hits / denominator,
+                    "shortlist_coverage": recall(large, first_name, final_name, k)}
+            combinations.append({"stage1": first_name, "final": final_name, "actual_output_vs_complete_final_oracle": actual})
+    return {"all_gt50_cases": [case["name"] for case in large], "fully_in_scope_gt50_cases": [case["name"] for case in active],
+        "stage1": first, "fixed_final_fully_in_scope_gt50": final_comparison(active),
+        "fixed_final_all_nonempty": final_comparison([case for case in report["cases"] if case["feasible_plan_count"]]),
+        "combinations": combinations,
+        "per_fixture": [{"name": case["name"], "feasible_plans": case["feasible_plan_count"],
+            "shortlist_overlap": case["stage1_shortlist_overlap"],
+            "stage1": {name: {"academic_shortlist_overlap": case["stage1"][name]["academic_shortlist_overlap"],
+                "recall": case["stage1"][name]["stage2_oracles"]} for name in STRATEGIES}} for case in report["cases"]]}
+
+
+primary, sensitivity = read("corrected_ranking_evaluation.json"), read("grade_version_3_sensitivity.json")
+by_name = {case["name"]: case for case in sensitivity["cases"]}
+checks = {case["name"]: {
+    "stage2_complete_metrics_equal": case["complete_stage2_metrics_sha256"] == by_name[case["name"]]["complete_stage2_metrics_sha256"],
+    "stage2_course_prediction_hash_equal": case["stage2_course_predictions_sha256"] == by_name[case["name"]]["stage2_course_predictions_sha256"],
+    "stage1_prediction_values_equal": case["stage1_predictions"] == by_name[case["name"]]["stage1_predictions"],
+    "stage1_full_scored_row_hash_equal": case["stage1_course_predictions_sha256"] == by_name[case["name"]]["stage1_course_predictions_sha256"]}
+    for case in primary["cases"]}
+examples = {}
+for case in primary["cases"]:
+    if case["name"] not in {"retake_weak", "alternating"}:
+        continue
+    fixed = set(case["fixed_final_pool"]["plan_ids"])
+    examples[case["name"]] = tradeoff_examples(pd.DataFrame([
+        row for row in case["complete_stage2_metrics"] if row["plan_id"] in fixed]))
+sources = {name: sha256((OUTPUT / name).read_bytes()).hexdigest() for name in
+    ("benchmark.json", "corrected_ranking_evaluation.json", "grade_version_3_sensitivity.json")}
+result = {"phase": 6, "scope": "Derived review evidence; no additional model inference or approval.",
+    "source_sha256": sources,
+    "derivation_source_sha256": sha256((OUTPUT / "measurement_source/summarize_evidence.py.txt").read_bytes()).hexdigest(),
+    "aggregation": "Equal-case means. Nine >50 cases for recall; seven fully in-scope >50 cases for Final headline metrics. Disabled values remain missing.",
+    "primary_grade_version": 2.111, "sensitivity_grade_version": 3.111,
+    "primary": aggregate(primary), "sensitivity": aggregate(sensitivity),
+    "version_checks": checks, "fixed_pool_tradeoff_examples": examples,
+    "recommendations": {"status": "RECOMMENDED", "stage1_shortlist_strategy": {"name": "pareto", "version": "v1"},
+        "final_ranking_strategy": {"name": "pareto", "version": "v1"}, "combination": "pareto -> pareto",
+        "basis": "Stage1: broad Top10 retention and coverage of recommended Final oracle. Final: nondomination and reduced failure/GPA cost, accepting worse Balance penalties.",
+        "alternative_if_human_prioritizes_strict_balance": "balance_first -> balance_first",
+        "human_approval_recorded": False}, "production_ranking_strategy": "UNAPPROVED"}
+(OUTPUT / "review_metrics.json").write_text(json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False) + "\n", encoding="utf8")
+print("Saved review_metrics.json from measured evidence; no inference; recommendations remain unapproved.")

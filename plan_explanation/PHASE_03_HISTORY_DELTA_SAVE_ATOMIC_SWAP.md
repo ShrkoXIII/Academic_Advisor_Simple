@@ -1,147 +1,114 @@
-# `Phase 3 — History Delta والحفظ immutable والتحويل الذري`
+# `Phase 3 — History Delta, Immutable Save & Atomic Swap`
 
-**الحالة:** `NOT IMPLEMENTED YET`.
+**الحالة:** `COMPLETE` — تنفيذ `2026-10-06`؛ شرح محدث بتاريخ `2026-10-08`.
 
-## 1. الفكرة العامة
+## 1. الفكرة العامة — Overview
 
-ستضيف هذه المرحلة مجاميع فصل نهائي واحد إلى نسخة من `Frozen History` الموجودة، ثم تتحقق منها وتحفظها قبل تبديل المرجع النشط. الهدف إبقاء التاريخ القديم وأوزانه ثابتة ومنع إضافة الفصل مرتين. الموجود حاليًا أدوات تاريخ مجمد سابقة، وليس مسار `Delta` المطلوب.
+تضيف المرحلة مجاميع فصل نهائي واحد إلى نسخة من `Frozen History`، ثم تتحقق منها وتنشر حزمة جديدة قبل تبديل المرجع النشط. الهدف حفظ التاريخ القديم وأوزانه، ومنع إضافة الفصل مرتين أو خلط تاريخين في طلب واحد. المسار مستقل عن طلب التوصية؛ يفوض إليه المحرك الحالي عبر `update_history_from_payload()`.
 
 ## 2. قبل → بعد
 
-```text
-Before
-  ↓
-CourseHistoryState + immutable history_v2 bundles
-  ↓
-Phase 3: NOT IMPLEMENTED YET
-  ↓
-After المخطط: Clone → Apply Delta → Validate → Publish → Atomic swap
-```
-
-| `Before` الفعلي | `After` المخطط |
+| `Before` | `After` |
 |---|---|
-| حالات تاريخ محفوظة عند `20243` و`20251`. | إصدار جديد يضيف فصلًا نهائيًا واحدًا دون إعادة بناء القديم. |
-| حفظ وتحميل لحزم تاريخ موجودان. | منع التكرار والتعارض وحفظ مرحلي وتبديل ذري للمرجع. |
+| حفظ وتحميل حزم تاريخ موجودان، دون إدارة `Delta` أو نسخة نشطة. | `FrozenHistoryManager` يدير التحميل والالتقاط والتحديث والنشر والتبديل. |
+| تحديث `CourseHistoryState` القديم يستقبل صفوف نتائج خام. | `apply_history_delta()` يستهلك مجاميع نهائية ويضيفها بوزن `1` دون إعادة وزن الماضي. |
+| لا سجل لتكرار دفعة التحديث. | بصمة `Delta` وسلسلة مصدر وسجل `applied_deltas` يميزون التكرار من التعارض. |
 
-## 3. الملفات المنتجة أو المعدلة
+## 3. الملفات المنتجة أو المعدلة — Files
 
-### ملفات جديدة
-
-لا ملفات تنفيذ جديدة لهذه المرحلة. `src/recommendation/history_update.py` مكون **متوقع في الخطة وغير موجود**.
-
-### ملفات معدلة
-
-لا تعديل منسوب لهذه المرحلة. `src/features/temporal_features.py` و`src/features/frozen_history.py` مكونات سابقة ستستفيد المرحلة من عقودها؛ وجودها لا يثبت تنفيذ التحديث الجديد.
-
-### `Artifacts` ناتجة
-
-لا `History state` أو `Metadata` جديدة للمرحلة. حزمتا `data/artifacts/history_v2/as_of_20243/` و`as_of_20251/` موجودتان مسبقًا.
-
-## 4. أهم الملفات بالتفصيل المختصر
-
-| المكون الموجود سابقًا | الفكرة | يدخل إليه | يخرج منه |
-|---|---|---|---|
-| `src/features/temporal_features.py` | مفاتيح ومجاميع تاريخ المقررات. | صفوف نتائج أو صفوف تريد ميزات تاريخ. | `CourseHistoryState` وميزات التاريخ. |
-| `src/features/frozen_history.py` | حفظ وتحميل تاريخ مجمد مع التحقق. | حالة وتاريخ قطع وبيانات وصفية. | حزمة ثابتة أو حالة محملة متحقق منها. |
-
-| `Function / Class` الموجود | ماذا يفعل؟ |
+| الملف | النوع والدور |
 |---|---|
-| `build_history_keys()` | يبني مفاتيح مستويات التجميع الحالية للمقررات والفئات. |
-| `CourseHistoryState` | يحتفظ بمجاميع التاريخ ويطبقها على صفوف الميزات. |
-| `CourseHistoryState.update()` | يحدث الحالة من صفوف نتائج خام؛ ليس محول مجاميع `Delta`. |
-| `CourseHistoryState.apply()` | يستخرج ميزات التاريخ من الحالة دون استخدام نتائج الفصل المستهدف. |
-| `save_frozen_history()` | يحفظ حزمة جديدة دون استبدال حزمة موجودة. |
-| `load_frozen_history()` | يحمل حزمة التاريخ المطلوبة ويتحقق من توافقها. |
-| `validate_history_selection()` | يفحص سبق التاريخ للفصل المستهدف وسياسة السماح بتاريخ أقدم. |
+| [history_update.py](../src/recommendation/history_update.py) | جديد في المرحلة: تطبيع المجاميع، تطبيقها، `HistorySnapshot` وإدارة النسخة النشطة. |
+| [frozen_history.py](../src/features/frozen_history.py) | معدل: إضافة `save_frozen_history_atomic()` مع إعادة استخدام الحفظ والتحميل والتحقق السابقين. |
+| [temporal_features.py](../src/features/temporal_features.py) | مكون مشترك موجود: `CourseHistoryState` ومفاتيح المستويات وميزات التاريخ السبع. |
+| [recommendation/__init__.py](../src/recommendation/__init__.py) | تصدير واجهات إدارة التاريخ. |
+| [test_history_update.py](../tests/test_history_update.py) | جديد: التكرار والتعارض والدقة وفشل النشر وثبات الطلب الجاري. |
+| [two_stage_engine.py](../src/recommendation/two_stage_engine.py) | ربط لاحق في `Phase 5`: يفوض التحديث ويلتقط نسخة واحدة لكل طلب. |
 
-`apply_history_delta()` مثال اسم مقترح في الخطة، **غير منفذ**؛ لا توجد توابع جديدة لهذه المرحلة يمكن توثيقها فعليًا.
+حزم التشغيل تحت [data/artifacts/history_v2/](../data/artifacts/history_v2/). حزمتا `as_of_20243/` و`as_of_20251/` كانتا موجودتين قبل هذه المرحلة؛ وجودهما لا يثبت نشر `Delta` جديدة. اختبارات المرحلة كتبت حزمًا مؤقتة، ولم تعِد كتابة الحزم الفعلية.
 
-## 5. مخطط سير البيانات
+## 4. أهم الدوال والكلاسات — Important Functions
 
-المخطط التالي مطلوب مستقبلًا؛ الأسهم لا تعني وجود مسار تشغيل:
+| المكون | المسؤولية |
+|---|---|
+| `HistoryDelta` و`normalize_history_delta()` | التحقق من `history_payload={delta_part, finalized: true, aggregates: [...]}`، وتطبيع القيم وترتيب الصفوف وبصمتها. |
+| `validate_history_state()` | فحص توافق الحالة والمجاميع وثبات إعدادات التاريخ المطلوبة. |
+| `apply_history_delta()` | استنساخ الحالة وإضافة المجاميع عبر مفاتيح التاريخ الحالية؛ لا يرسل المجاميع إلى `CourseHistoryState.update()`. |
+| `HistorySnapshot.apply()` | تطبيق ميزات التاريخ على صفوف الطلب من النسخة الملتقطة. |
+| `HistorySnapshot.metadata_for_target()` | إعادة بيانات مصدر منفصلة مع عمر التاريخ وإشارة `history_is_stale`. |
+| `FrozenHistoryManager.load()` | اختيار أحدث حزمة `V2` مكتملة وصحيحة من نوع التاريخ الأساسي، وتسجيل الحزم المتجاوزة في `skipped_bundles`؛ لا إعادة بناء ولا رجوع إلى `V1`. |
+| `FrozenHistoryManager.capture()` | التقاط مرجع واحد تحت قفل قصير مع شرط `history_as_of_part < target_part`؛ يقبل تاريخًا أقدم. |
+| `FrozenHistoryManager.update_history_from_payload()` | تسلسل التحديثات والتحقق من التكرار والترتيب، ثم النشر والتبديل. |
+| `save_frozen_history_atomic()` | حفظ مرحلي، إعادة تحميل وفحص البصمات وتطابق الحالة، حجز نشر حصري، ثم نقل إلى حزمة جديدة دون استبدال الموجود. |
+
+المجاميع تحمل مفاتيح التاريخ و`course_credits` الكاملة و`count/fail_count/retake_count/mark_sum/attempt_sum`. تُرفض القيم غير المحدودة والمجاميع غير المتسقة والتكرار أو تعارض المفاتيح. تستخدم الإضافة مستويات المفاتيح الخمسة مع المستوى العام السادس؛ تبقى `smoothing_k=20` و`min_support=20` وقاعدة القيم المفقودة كما هي.
+
+## 5. مخطط سير البيانات — Data Flow
 
 ```mermaid
 flowchart TD
-    A["Existing weighted CourseHistoryState"] --> C["Clone"]
-    B["Finalized single-part history_payload Delta"] --> H["Canonical delta SHA-256"]
-    H --> I["Idempotency / conflict / order checks"]
-    I --> C --> D["Apply aggregates: new delta weight=1"]
-    D --> V["Validate + save staging + reload"]
-    V --> P["Publish immutable history bundle"]
-    P --> S["Atomic active reference swap"]
-    S --> R["Next request captures one state + metadata"]
+    A["Finalized single-semester history_payload"] --> N["normalize_history_delta - canonical hash"]
+    N --> I{"Applied delta and order checks"}
+    I -->|"Same part and hash"| R["already_applied - no rollback"]
+    I -->|"Conflict or unrecorded older part"| E["Reject - active snapshot unchanged"]
+    I -->|"New valid delta"| C["Clone active state - add aggregates at weight 1"]
+    O["Existing weighted history"] --> C
+    C --> V["Validate - save staging - reload and verify"]
+    V --> P["Exclusively publish new immutable bundle"]
+    P --> S["Swap active HistorySnapshot reference"]
+    S --> Q["Subsequent requests capture new snapshot"]
+    O -.-> W["In-flight requests retain their captured snapshot"]
 ```
 
-1. يطبع فصل `Delta` وبصمته ويتحقق من التسلسل والتكرار.
-2. يستنسخ الحالة دون تغيير التاريخ السابق.
-3. يضيف المجاميع الجديدة دون إعادة تطبيق الوزن القديم.
-4. يتحقق ويحفظ ويعيد التحميل قبل النشر.
-5. يبدل المرجع، مع بقاء النسخة السابقة عند الفشل.
-6. تلتقط التوصية مرجعًا واحدًا طوال مرحلتيها.
+الفشل قبل نجاح النشر يبقي النسخة النشطة السابقة. بعد نشر حزمة صحيحة، يسجل فشل تنظيف الملفات المؤقتة في `cleanup_warnings` ولا يمنع التبديل إليها. القفل القصير لالتقاط المرجع لا يبقى ممسوكًا أثناء عمليات الملفات أو التوقع.
 
 ## 6. `Input → Processing → Output`
 
-```text
-INPUT المخطط: Existing CourseHistoryState + one finalized history_payload Delta
-  ↓
-PROCESSING المخطط: Clone → Apply aggregates → Validate → Staging → Reload → Swap
-  ↓
-OUTPUT المخطط: immutable bundle + provenance Metadata + active state reference
+| المدخل | المعالجة | المخرج |
+|---|---|---|
+| حالة تاريخ موجودة + مجاميع فصل نهائي واحد | تطبيع وبصمة → تكرار/تعارض/ترتيب → نسخ وإضافة → تحقق وحفظ مرحلي وإعادة تحميل → نشر وتبديل | حالة جديدة وحزمة ثابتة و`status=applied` وبيانات المصدر. |
+| فصل وبصمة موجودان في السجل | التعرف على التكرار دون تغيير الحالة | `status=already_applied`، حتى بعد فصل أحدث وإعادة التحميل. |
+| فصل موجود ببصمة أخرى | رفض التعارض | خطأ `CONFLICT` دون تغيير النسخة النشطة. |
 
-المخرج الفعلي لهذه Phase حاليًا: لا يوجد
+سلسلة المصدر تحفظ `previous_as_of_part/previous_history_sha256/delta_part/delta_sha256/new_history_sha256/created_at/feature_engineering_version` وسجل `applied_deltas`. الطلب العادي لا يحمل التاريخ الكامل ولا يشغل هذا التحديث تلقائيًا.
+
+## 7. التحقق والاختبارات — Validation & Tests
+
+المصدر: سجل `Phase 3` في [الخطة](../docs/architecture/RECOMMENDATION_TWO_STAGE_IMPLEMENTATION_PLAN.md)، و[test_history_update.py](../tests/test_history_update.py). هذه نتائج التنفيذ التاريخية، ولم تُشغّل مجددًا في مهمة التوثيق:
+
+```text
+Focused: 61 passed
+Related: 352 passed, 6 subtests passed
+Full: 866 passed, 1 failed, 6 subtests passed
+Known baseline failure: capacity_63 / capaciy_63
+New regression: 0; unrelated existing failure: 0; no skips recorded
 ```
 
-## 7. كيف تم اختبار المرحلة؟
-
-لا ملف اختبار مخصص لتحديث `Delta` موجود. الخطة تطلب:
-
-| مجال الاختبار المخطط | ماذا يجب أن يثبت؟ |
+| مجال الاختبار | الدليل المثبت ضمن الحالات المختبرة |
 |---|---|
-| إضافة المجاميع | حفظ القديم الموزون وإضافة وزن `1` للفصل الجديد فقط. |
-| التكرار والتعارض | نفس الفصل والبصمة يعيدان `already_applied`، والبصمة المختلفة تعطي `CONFLICT`. |
-| الحفظ والتزامن | فشل الحفظ يبقي السابق، والطلب الجاري لا يخلط نسختي تاريخ. |
-| سلامة الزمن | قبول تاريخ نهائي أقدم ومنع الحالي والمستقبلي. |
+| المجاميع والأوزان | مقارنة بمرجع مستقل من نتائج مصطنعة، مع تاريخ قديم بوزن `0.25` وإضافة بوزن `1` وساعات كسرية وصفرية. |
+| التكرار وإعادة التحميل | نفس البصمة لا تضيف الفصل مرتين ولا ترجع التاريخ إلى نسخة أقدم؛ البصمة المختلفة ترفض. |
+| فشل الحفظ والتحقق والنشر | بقاء الحالة السابقة وعدم استبدال حزمة قائمة، حتى إن كانت غير مكتملة. |
+| التزامن | الطلب الجاري يبقى على نسخته بينما تلتقط الطلبات اللاحقة النسخة المنشورة. |
+| الزمن والتحميل | قبول تاريخ نهائي أقدم، ورفض التداخل مع الفصل المستهدف، وتجاوز الحزم التالفة مع توضيح السبب. |
 
-```text
-Test result not recorded.
-```
-
-اختبارات التاريخ القديمة لا تثبت هذه المسؤوليات الجديدة.
+سجل التنفيذ ثبات `877` ملفًا تحت `models/` و`data/` وقت المرحلة؛ هذه نتيجة تاريخية ولا تعني أن التحديثات التشغيلية المستقبلية لا تكتب حزمًا جديدة.
 
 ## 8. أهم ما أثبتته المرحلة
 
-- لم تثبت المرحلة نتائج تنفيذية لأنها لم تبدأ.
-- حالة التاريخ وأدوات الحفظ السابقة موجودة لتبني عليها.
-- وجود حزمة `20251` لا يثبت إضافة فصل بواسطة `Delta` أو تبديل مرجع نشط.
+المسار المنفذ يحفظ المصدر القديم، ويمنع التكرار المسجل، ويربط الحالة المحملة ببصمتها وقطعها الزمني. اختبارات الربط في `Phase 5` تستخدم واجهة الالتقاط نفسها خلال مرحلتي التوصية.
 
-## 9. ما الذي لم تنفذه هذه `Phase`؟
+## 9. حدود المسؤولية
 
-```text
-NOT DONE IN THIS PHASE
-```
+لا توقعات أو ترتيب خطط داخل مدير التاريخ، ولا تدريب أو إعادة بناء تلقائي. `finalized=true` عقد وارد من المصدر؛ لا اتصال بخدمة خارجية لإثبات أن نتائج الفصل نهائية. واجهة التحديث عقد داخل العملية، وليست بروتوكول `HTTP` معتمدًا.
 
-- جميع مسؤوليات `Delta` والتكرار والتعارض والنشر والتبديل الجديدة.
-- توقعات أو ترتيب خطط أو `Balance`.
-- إعادة تدريب أو تغيير الأوزان القديمة أو إعادة بناء التاريخ الكامل.
-- طبقة نقل `HTTP/API`.
+## 10. المشاكل والقيود المعروفة — Known Limitations
 
-## 10. المشاكل أو القيود المعروفة
+- إدارة المرجع النشط محلية لكل `FrozenHistoryManager`. الحارس يمنع استبدال حزمة بين الكتاب المتعاونين، لكنه لا يزامن الحالة النشطة بين عمليات أو خوادم مستقلة.
+- لا استرداد تلقائي لقفل نشر متروك بعد توقف مفاجئ؛ الاختبارات المحلية لا تثبت تنسيقًا موزعًا أو جميع حالات تعطل النظام.
+- التاريخ الأقدم مقبول مع بيانات توضح قدمه؛ القبول لا يثبت أن أحدث نتائج الطالب وصلت بالفعل.
+- فشل `capacity_63/capaciy_63` وحدود التشغيل المفتوحة ما زالت ضمن [حالة المشروع](README.md). نجاح التحديث لا يزيل مشكلة `GradeScale` في مسار التوصية.
 
-- لا مسار جديد لإدارة النسخة النشطة أو التقاطها عند بداية الطلب.
-- يجب الحفاظ على `smoothing_k=20` و`min_support=20` ومفاتيح المستويات الستة وفق الخطة.
-- السماح الافتراضي بالتاريخ الأقدم في المحرك الجديد لم ينفذ؛ المحرك المحلي الحالي يطلب `allow_older_history=True` للسماح به.
-- أمثلة فصول الخطة ليست حزمًا منشورة فعلًا.
+## 11. التسليم لبقية النظام — Handoff
 
-## 11. ماذا تستلم المرحلة التالية؟
-
-```text
-HANDOFF TO NEXT PHASE
-
-المخرج المخطط، غير المتاح بعد
-  ↓
-state + history SHA-256 + as_of_part + Delta lineage
-  ↓
-البند 4 يضيف مقاييس الترتيب بصورة مستقلة
-  ↓
-البند 5 يلتقط التاريخ ويطبق ميزاته قبل توقع Stage 1
-```
+يسلم المدير `HistorySnapshot` وقطعها وبصمتها وبيانات المصدر إلى [Phase 5](PHASE_05_TWO_STAGE_INTEGRATION_VALIDATION.md)، فتطبق ميزات التاريخ السبع قبل `Stage 1`. تعمل [Phase 4](PHASE_04_BALANCE_METRICS_STRATEGIES.md) على مقاييس الخطط بصورة مستقلة، ولا تستدعي تحديث التاريخ.

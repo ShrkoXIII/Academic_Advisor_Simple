@@ -115,6 +115,32 @@ def test_stage_one_predicts_n_rows_once_before_plan_constraints(tmp_path):
                for plan in result["recommendations"])
 
 
+@pytest.mark.parametrize("version", [999, None, "invalid-version"])
+@pytest.mark.parametrize("size", [0, 8])
+def test_invalid_grade_version_is_rejected_before_any_inference(tmp_path, version, size):
+    engine = evaluation_engine(engine_api().TwoStagePlanRecommender, tmp_path)
+    student, request = ready_payloads(size=size)
+    student["snapshot"]["grade_version_id"] = version
+    with pytest.raises(ValueError) as exc:
+        recommend(engine, student, request)
+    assert "grade_version_id" in str(exc.value)
+    assert repr(version) in str(exc.value)
+    for pair in (engine.artifacts.stage1, engine.artifacts.stage2):
+        assert pair.grade_model.matrices == []
+        assert pair.fail_model.matrices == []
+
+
+def test_missing_grade_version_field_is_rejected_before_any_inference(tmp_path):
+    engine = evaluation_engine(engine_api().TwoStagePlanRecommender, tmp_path)
+    student, request = ready_payloads()
+    student["snapshot"].pop("grade_version_id")
+    with pytest.raises(ValueError, match="grade_version_id.*None"):
+        recommend(engine, student, request)
+    for pair in (engine.artifacts.stage1, engine.artifacts.stage2):
+        assert pair.grade_model.matrices == []
+        assert pair.fail_model.matrices == []
+
+
 def test_only_explicitly_rejected_candidates_are_removed_before_stage_one(tmp_path):
     engine = evaluation_engine(engine_api().TwoStagePlanRecommender, tmp_path)
     student, request = ready_payloads()

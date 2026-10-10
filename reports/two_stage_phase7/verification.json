@@ -1,0 +1,87 @@
+{
+  "phase": 7,
+  "status": "PASS",
+  "date": "2026-10-08",
+  "approval": "pareto v1 -> pareto v1",
+  "activation": {
+    "activation": "PASS",
+    "usage": "production_core",
+    "production_ranking_strategy": "pareto v1 -> pareto v1",
+    "ranking_policy_sha256": "e917acabb61973d4971a8705b2ad7691156773bf80fe0a0d293b507b377c7d23",
+    "operational_contracts": {
+      "backend_max_candidate_count": "UNRESOLVED",
+      "memory_budget_per_request": "UNRESOLVED",
+      "recommendation_latency_sla": "UNRESOLVED"
+    },
+    "model_feature_counts": {
+      "stage1": 33,
+      "stage2": 47
+    },
+    "history_as_of_part": 20251,
+    "inference_executed": false,
+    "real_student_recommendation_executed": false
+  },
+  "tests": {
+    "focused": {
+      "tests": 160,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "evidence_sha256": "e6c67d8ecbc15ee9c6f7d84760d36ba6384eae0017769628718108a56523a0ab"
+    },
+    "related": {
+      "tests": 646,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "evidence_sha256": "c6153848be9eb147cc7c8d2d9a4e37356bf2e6247b0a6e88b1566fbd53d29533"
+    },
+    "full": {
+      "tests": 1151,
+      "errors": 0,
+      "failures": 1,
+      "skipped": 0,
+      "evidence_sha256": "c2df8101ea444bb200e9f30b5485d27cea246943a3d50de4311b94f0a2ac6abe"
+    }
+  },
+  "full_pytest_summary": {
+    "passed": 1144,
+    "failed": 1,
+    "subtests_passed": 6,
+    "skipped": 0
+  },
+  "new_regressions": 0,
+  "unrelated_existing_failures": 0,
+  "known_baseline_failure": "tests/test_train_models.py::test_tune_model_evaluates_every_candidate_fold_and_selects_mean_metric[grade-capacity_63-mae]",
+  "protection_final": "PASS",
+  "unchanged_models_data_files": 876,
+  "only_intended_artifact_change": "models/shortlist_v2/manifest.json",
+  "phase6_evidence_files_unchanged": 21,
+  "plan_progress_only_updated": true,
+  "graphify": {
+    "nodes": 3026,
+    "edges": 7282,
+    "communities": 173,
+    "mode": "AST only; no LLM documentation extraction"
+  },
+  "review": {
+    "status": "PASS",
+    "reviewer": "phase7_final_review",
+    "fixed_finding": "P2: pin and validate the same immutable strategy references throughout each request",
+    "test": "test_one_request_pins_both_approved_choices_despite_mid_request_replacement",
+    "red_green_confirmed": true
+  },
+  "operational_contracts": {
+    "backend_max_candidate_count": "UNRESOLVED",
+    "memory_budget_per_request": "UNRESOLVED",
+    "recommendation_latency_sla": "UNRESOLVED"
+  },
+  "scope_exclusions": [
+    "no real-student recommendation",
+    "no model training",
+    "no Backend/FastAPI/PHP/deployment",
+    "no search or ranking algorithm replacement"
+  ],
+  "manifest_sha256": "0ddd92ed723de510a9b19b01bdab8e05db9344758b31c4db5200f5da1addadf4",
+  "ranking_policy_sha256": "e917acabb61973d4971a8705b2ad7691156773bf80fe0a0d293b507b377c7d23"
+}

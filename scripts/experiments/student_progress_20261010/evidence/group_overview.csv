@@ -1,0 +1,16 @@
+dataset,group_by,observed_groups,included_groups,excluded_below_100,smallest_observed_group,smallest_included_group,largest_included_group
+clean_v1,degree_id,43,38,5,7,117,17241
+clean_v1,progress_quartile,4,4,0,20370,20370,20785
+clean_v1,year,5,5,0,14382,14382,17875
+clean_v2,degree_id,43,38,5,11,120,18380
+clean_v2,progress_quartile,4,4,0,21673,21673,22480
+clean_v2,year,5,5,0,14941,14941,19066
+raw,degree_id,44,39,5,13,120,18544
+raw,progress_quartile,5,4,1,11,22907,23540
+raw,year,5,5,0,15817,15817,19623
+train_v2_course,degree_id,43,41,2,23,271,76474
+train_v2_course,progress_quartile,4,4,0,88334,88334,91351
+train_v2_course,year,5,5,0,60963,60963,77014
+train_v2_status,degree_id,43,38,5,7,117,15172
+train_v2_status,progress_quartile,4,4,0,18466,18466,19133
+train_v2_status,year,5,5,0,12772,12772,16500

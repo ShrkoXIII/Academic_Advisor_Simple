@@ -1,10 +1,10 @@
 # `Phase 2 — Payload Adapters, Matrix Helper, Classification & Constraints`
 
-**الحالة:** `COMPLETE` — بحسب سجل التنفيذ بتاريخ `2026-10-06` ومراجعة الكود والاختبارات الحالية.
+**الحالة:** `COMPLETE` — تنفيذ `2026-10-06`؛ شرح محدث بتاريخ `2026-10-08`. اكتمال المحولات لا يعني أن كل حالات المدخلات التشغيلية آمنة.
 
 ## 1. الفكرة العامة
 
-أضافت المرحلة مدخلات جاهزة من `Backend` دون قراءة كتالوج محلي أو إعادة حساب التاريخ الشخصي. صنفت الحالة الرسمية السابقة وجهزت قيود الساعات والفئات، وعممت تجهيز المصفوفة مع بقاء الافتراضي `47`. اكتملت مسؤوليات التجهيز والتحقق؛ ربطها بمحرك `Two-Stage` يأتي في مرحلة لاحقة.
+أضافت المرحلة مدخلات جاهزة من `Backend` دون قراءة كتالوج محلي أو إعادة حساب التاريخ الشخصي. صنفت الحالة الرسمية السابقة وجهزت قيود الساعات والفئات، وعممت تجهيز المصفوفة مع بقاء الافتراضي `47`. ربطتها `Phase 5` بمحرك `Two-Stage` الموجود حاليًا؛ تشرح هذه الصفحة مسؤولية التجهيز وحدودها.
 
 ## 2. قبل → بعد
 
@@ -89,6 +89,8 @@ After: Backend-ready inputs + official status + constraints + Matrix subset
 
 تُحفظ قيم `prior_fail_credit_ratio` و`observed_gap_semesters` و`attempt_number` الجاهزة. `current_gpa_credits` إلزامي هنا. تُحذف فقط المواد المرفوضة صراحة بواسطة `is_requestable/allow_register`؛ حدود الخطة لا تحذف مرشحًا قبل التوقع. `allowed_fail_credits` و`allowed_pass_position_type` بيانات وصفية فقط.
 
+`attempt_number` هو العد الزمني للمحاولة على `(student_id, course_id)` عبر الاختصاصات قبل فلاتر الحالة والدخول في المعدل، وليس عدد مرات الرسوب. غياب علم الأهلية لا يُعد رفضًا صريحًا. لا يبني المحول ميزات تاريخ المقررات أو ميزات الخطة من بيانات يحقنها الطلب.
+
 ### `src/recommendation/course_status.py`
 
 **الفكرة:** فصل حالة المادة الرسمية عن هدف مودل الفشل `final_mark < 50`.
@@ -105,6 +107,8 @@ After: Backend-ready inputs + official status + constraints + Matrix subset
 
 
 `NEW/NEVER_TAKEN → NEW`، و`F/FE/FA → FAILED_RETAKE`، و`W → WITHDRAWN_RETAKE`؛ الحالات الأخرى تصبح `OTHER_PREVIOUS` ولا تُحذف تلقائيًا.
+
+القيم المفقودة أو غير المعروفة لا تتحول إلى `NEW` أو `FAILED_RETAKE`. الحالتان المتعارضتان تُرفضان حتى لو انتهتا إلى مجموعة مرشح واحدة؛ التصنيف الدلالي أدق من مجموعة الترتيب.
 
 ### `src/recommendation/constraints.py`
 
@@ -124,6 +128,10 @@ After: Backend-ready inputs + official status + constraints + Matrix subset
 
 
 لا يغير الغلاف `enumerate_plan_indices()` أو يقلم المرشحين مسبقًا. إعادة الراسب والمنسحب تستهلك كامل ساعات المادة من رصيد الفئة؛ احتمال الفشل المتوقع لا يستهلك حد الإعادة الرسمي.
+
+`target_credits` الصريح يحدد الهدف؛ وإلا يصبح الحد الأعلى في `min_credits/max_credits` هدفًا دقيقًا. النطاق `12–18` يعني `18` دون رجوع إلى حمل أقل عند غياب الحل. حد إعادة الراسب مطلوب، وحد المنسحب اختياري مستقل؛ كلاهما حد أقصى لا حصة إلزامية. سياسة الفئة مطلوبة لكل مرشح مؤهل حتى لو كانت ساعاته صفرًا؛ غياب تعديلات `overflow/completed/reserved` يعني صفرًا، بينما `null` الصريح يُرفض.
+
+**تطور لاحق في Phase 5:** كشف الربط تقريبًا مرتبطًا بسياق `Decimal` في جمع وتحجيم الساعات. يستخدم الكود الحالي `decimal_credit_units()` و`sum_credit_values()` في `plan_generation.py` للحفاظ على الدقة حتى تحت `precision` منخفضة. أُصلح ذلك أثناء التنفيذ؛ نتائج اختبارات `Phase 2` أدناه تظل لقطة ما قبل هذا التصحيح.
 
 ### `src/features/feature_contract.py`
 
@@ -183,18 +191,18 @@ After: Backend-ready inputs + official status + constraints + Matrix subset
 
 ```mermaid
 flowchart TD
-    R["request_payload"] --> NR["normalize_request_payload"]
-    S["student_payload.snapshot"] --> NS["normalize_student_payload"]
-    NR --> NS
-    C["student_payload.candidates"] --> NC["normalize_candidate_payloads"]
-    NS --> NC
-    NC --> CS["classify_candidate_status"]
-    CS --> P["PreparedRecommendationInputs"]
+    R["request_payload: identity, credits, requirement policies"] --> NR["normalize_request_payload"]
+    S["student_payload: snapshot + candidates"] --> NS["normalize_student_payload"]
+    NR --> NS --> NC["normalize_candidate_payloads + classify_candidate_status"]
+    NC --> P["Validate requirement coverage - PreparedRecommendationInputs"]
     NR --> P
-    P --> E["enumerate_feasible_plan_indices: callable helper"]
-    E --> F["Feasible plan index tuples"]
-    X["Feature rows: prepared later"] --> M["prepare_model_matrix model_features=33 or 47"]
-    M --> Y["Ordered model matrix"]
+    P --> E["Engine: captured history + candidate feature rows"]
+    E --> M["prepare_model_matrix: ordered 33"]
+    M --> S1["Stage 1 scores"]
+    S1 --> F["enumerate_feasible_plan_indices: exact credits and caps"]
+    P -.-> F
+    F --> X["Shortlist + 14 context features"]
+    X --> M2["prepare_model_matrix: ordered 47 for Stage 2"]
 ```
 
 
@@ -203,8 +211,8 @@ flowchart TD
 2. يتحقق من `Snapshot` ويشتق الاتجاه والفصل.
 3. يتحقق من المرشحين ويصنف الحالة الرسمية السابقة.
 4. يجمع البيانات في `PreparedRecommendationInputs`.
-5. يمكن استدعاء غلاف القيود على خطط كاملة؛ المحول لا يستدعيه تلقائيًا.
-6. يستطيع المساعد تجهيز مصفوفة عند توفير صفوف الميزات؛ الربط إلى التاريخ والمودلات لاحق.
+5. يستدعي `build_stage1_shortlist()` غلاف القيود بعد توقع المرشحين؛ المحول نفسه لا يولد الخطط.
+6. يجهز المساعد المصفوفة عندما يوفر المحرك ميزات التاريخ أو سياق الخطة. الأسهم إلى المحرك تصف الربط المنفذ في `Phase 5`، لا عملًا داخل المحول الخالص.
 
 
 
@@ -217,7 +225,7 @@ PROCESSING: Normalize identity/values/status/policies → validate coverage
   ↓
 OUTPUT: PreparedRecommendationInputs
   ↓
-اختياري حاليًا: enumerate_feasible_plan_indices() → tuples
+داخل المحرك بعد Stage 1: enumerate_feasible_plan_indices() → feasible index tuples
 
 مسار مساعد منفصل:
 Feature rows + Categories + model_features → prepare_model_matrix() → Matrix
@@ -257,10 +265,10 @@ No skipped tests recorded in the summary.
 
 
 
-## 9. ما الذي لم تنفذه هذه `Phase`؟
+## 9. حدود مسؤولية المرحلة الأصلية
 
 ```text
-NOT DONE IN THIS PHASE
+OUTSIDE PHASE 2 SCOPE — integration completed in later phases
 ```
 
 - `History Delta` والتبديل الذري.
@@ -269,15 +277,19 @@ NOT DONE IN THIS PHASE
 - ربط `Stage 2` وإنتاج `Top K` أو `Benchmark`.
 - اتفاق نقل منشور مع `Backend` أو `API`.
 
+نفذت المراحل `3–7` التاريخ والترتيب والربط والقياس والاعتماد؛ لا تعني هذه القائمة أنها غائبة الآن. بقي اتفاق النقل الخدمي خارج نطاق `Core`.
+
 
 
 ## 10. المشاكل أو القيود المعروفة
 
-لم يثبت اختلاف وظيفي عن نطاق المرحلة. `Next` القديم في سجل الأولى تاريخي؛ سجل الثانية الأحدث يثبت الإتمام ويحدد الثالثة تالية.
+المراجعة الحالية تميز بين اكتمال تنفيذ المحول وصحة جميع الطلبات. سجل الثانية تاريخي؛ أحدث حالة التنفيذ والاعتماد في `Phase 7`.
 
 - عقد `Payload` داخلي؛ اكتمال اتفاق `Backend` الحقيقي غير مثبت بهذه الملفات.
 - المصدران المعدلان `feature_contract.py` و`course_only_core.py` ضمن أدلة التدريب الأصلية المؤرشفة؛ توقيع التجربة السابق يظل مرفوضًا بعد تغيير المصدر. لم يُضعف فحصه أو تُكتب أدلة تدريب جديدة؛ نسخ الأولى المنشورة تستمر بالتحميل مستقلًا.
-- الفشل القديم `capaciy_63/capacity_63` ما زال قائمًا؛ `Production Ranking` يبقى `UNAPPROVED`.
+- `grade_version_id` يمر بتطبيع الهوية دون التحقق من دعمه في `GradeScale`. الإصدار غير المدعوم قد يصل إلى `convert()` ويولد `0/F` دون رفض؛ تحويل الفئة المجهولة إلى `__UNKNOWN__` في مصفوفة المودل لا يحل مشكلة مقياس النقاط.
+- الفشل القديم `capaciy_63/capacity_63` ما زال قائمًا. اعتماد `pareto → pareto` الحالي جاء في `Phase 7`، ولا يعالج هذا الفشل أو فجوة إصدار العلامات.
+- لا حد معتمد لعدد المرشحين ولا `SLA` أو ميزانية ذاكرة. راجع [القيود المشتركة](README.md).
 
 
 
@@ -292,6 +304,7 @@ PreparedRecommendationInputs + PlanConstraints + Matrix subset helper
   ↓
 البند 3 يبني مسار History Delta مستقلًا
   ↓
-البند 5 سيربط المدخلات والتاريخ والمصفوفة بمحرك المرحلتين
+البند 5 ربط المدخلات والتاريخ والمصفوفة بمحرك المرحلتين
 ```
 
+راجع [Phase 3](PHASE_03_HISTORY_DELTA_SAVE_ATOMIC_SWAP.md) للتحديث المستقل، و[Phase 5](PHASE_05_TWO_STAGE_INTEGRATION_VALIDATION.md) لاستهلاك المحولات والمصفوفة والقيود في الطلب الحالي.

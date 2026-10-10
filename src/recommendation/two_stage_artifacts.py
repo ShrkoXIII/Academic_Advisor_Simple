@@ -1,4 +1,4 @@
-"""Pinned artifact contracts for the future two-stage engine, without activation.
+"""Pinned artifact and approval contracts for the two-stage engine.
 
 This module loads model assets only. Ranking approval and engine orchestration
 remain separate; successful artifact loading does not approve a ranking policy.
@@ -15,16 +15,13 @@ from src.features.frozen_history import file_sha256
 from src.features.temporal_features import PLAN_CONTEXT_COLUMNS
 from src.grade_scale import GradeScale
 from src import paths
+from .ranking_policy import UNAPPROVED_RANKING, validate_ranking_policy
 
 
 MANIFEST_VERSION = 1
 PREDICTION_CONTRACT = {
     "grade": {"clip": [0, 100], "expected_points_method": "predicted_mark_to_grade_scale"},
     "fail": {"clip": [0, 1]}, "reject_non_finite": True, "reject_wrong_shape": True,
-}
-UNAPPROVED_RANKING = {
-    "stage1_shortlist_strategy": "UNAPPROVED",
-    "final_ranking_strategy": "UNAPPROVED", "combination": "UNAPPROVED",
 }
 
 
@@ -214,8 +211,7 @@ def validate_artifact_manifest(manifest):
         raise ValueError("Incompatible two-stage manifest version.")
     if manifest["prediction_contract"] != PREDICTION_CONTRACT:
         raise ValueError("Prediction processing contract mismatch.")
-    if manifest["ranking_approval"] != UNAPPROVED_RANKING:
-        raise ValueError("Phase 1 does not authorize production ranking activation.")
+    validate_ranking_policy(manifest)
     for stage in ("stage1", "stage2"):
         entry = manifest["stages"][stage]
         validate_archived_provenance(stage, entry["provenance"])

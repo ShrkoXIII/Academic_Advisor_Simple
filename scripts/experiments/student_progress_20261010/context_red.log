@@ -1,0 +1,82 @@
+...FFFFFF                                                                [100%]
+================================== FAILURES ===================================
+_____________ test_tuning_selection_accepts_only_matching_context _____________
+
+    def test_tuning_selection_accepts_only_matching_context():
+>       from scripts.experiments.student_progress_20261010.safeguards import authenticate_selection
+E       ImportError: cannot import name 'authenticate_selection' from 'scripts.experiments.student_progress_20261010.safeguards' (D:\AI\Real projects\Academic_Advisor_Simple\scripts\experiments\student_progress_20261010\safeguards.py)
+
+scripts\experiments\student_progress_20261010\test_safeguards.py:43: ImportError
+_______ test_signed_tuning_selection_cannot_be_transplanted[run-run-b] ________
+
+key = 'run', replacement = 'run-b'
+
+    @pytest.mark.parametrize('key,replacement',[
+        ('run','run-b'),('year',2024),('spec',{'name':'33_grade'}),
+        ('fit_rows','fit-b'),('validation_rows','validation-b'),
+    ])
+    def test_signed_tuning_selection_cannot_be_transplanted(key,replacement):
+>       from scripts.experiments.student_progress_20261010.safeguards import authenticate_selection
+E       ImportError: cannot import name 'authenticate_selection' from 'scripts.experiments.student_progress_20261010.safeguards' (D:\AI\Real projects\Academic_Advisor_Simple\scripts\experiments\student_progress_20261010\safeguards.py)
+
+scripts\experiments\student_progress_20261010\test_safeguards.py:55: ImportError
+_______ test_signed_tuning_selection_cannot_be_transplanted[year-2024] ________
+
+key = 'year', replacement = 2024
+
+    @pytest.mark.parametrize('key,replacement',[
+        ('run','run-b'),('year',2024),('spec',{'name':'33_grade'}),
+        ('fit_rows','fit-b'),('validation_rows','validation-b'),
+    ])
+    def test_signed_tuning_selection_cannot_be_transplanted(key,replacement):
+>       from scripts.experiments.student_progress_20261010.safeguards import authenticate_selection
+E       ImportError: cannot import name 'authenticate_selection' from 'scripts.experiments.student_progress_20261010.safeguards' (D:\AI\Real projects\Academic_Advisor_Simple\scripts\experiments\student_progress_20261010\safeguards.py)
+
+scripts\experiments\student_progress_20261010\test_safeguards.py:55: ImportError
+___ test_signed_tuning_selection_cannot_be_transplanted[spec-replacement2] ____
+
+key = 'spec', replacement = {'name': '33_grade'}
+
+    @pytest.mark.parametrize('key,replacement',[
+        ('run','run-b'),('year',2024),('spec',{'name':'33_grade'}),
+        ('fit_rows','fit-b'),('validation_rows','validation-b'),
+    ])
+    def test_signed_tuning_selection_cannot_be_transplanted(key,replacement):
+>       from scripts.experiments.student_progress_20261010.safeguards import authenticate_selection
+E       ImportError: cannot import name 'authenticate_selection' from 'scripts.experiments.student_progress_20261010.safeguards' (D:\AI\Real projects\Academic_Advisor_Simple\scripts\experiments\student_progress_20261010\safeguards.py)
+
+scripts\experiments\student_progress_20261010\test_safeguards.py:55: ImportError
+_____ test_signed_tuning_selection_cannot_be_transplanted[fit_rows-fit-b] _____
+
+key = 'fit_rows', replacement = 'fit-b'
+
+    @pytest.mark.parametrize('key,replacement',[
+        ('run','run-b'),('year',2024),('spec',{'name':'33_grade'}),
+        ('fit_rows','fit-b'),('validation_rows','validation-b'),
+    ])
+    def test_signed_tuning_selection_cannot_be_transplanted(key,replacement):
+>       from scripts.experiments.student_progress_20261010.safeguards import authenticate_selection
+E       ImportError: cannot import name 'authenticate_selection' from 'scripts.experiments.student_progress_20261010.safeguards' (D:\AI\Real projects\Academic_Advisor_Simple\scripts\experiments\student_progress_20261010\safeguards.py)
+
+scripts\experiments\student_progress_20261010\test_safeguards.py:55: ImportError
+_ test_signed_tuning_selection_cannot_be_transplanted[validation_rows-validation-b] _
+
+key = 'validation_rows', replacement = 'validation-b'
+
+    @pytest.mark.parametrize('key,replacement',[
+        ('run','run-b'),('year',2024),('spec',{'name':'33_grade'}),
+        ('fit_rows','fit-b'),('validation_rows','validation-b'),
+    ])
+    def test_signed_tuning_selection_cannot_be_transplanted(key,replacement):
+>       from scripts.experiments.student_progress_20261010.safeguards import authenticate_selection
+E       ImportError: cannot import name 'authenticate_selection' from 'scripts.experiments.student_progress_20261010.safeguards' (D:\AI\Real projects\Academic_Advisor_Simple\scripts\experiments\student_progress_20261010\safeguards.py)
+
+scripts\experiments\student_progress_20261010\test_safeguards.py:55: ImportError
+=========================== short test summary info ===========================
+FAILED scripts/experiments/student_progress_20261010/test_safeguards.py::test_tuning_selection_accepts_only_matching_context
+FAILED scripts/experiments/student_progress_20261010/test_safeguards.py::test_signed_tuning_selection_cannot_be_transplanted[run-run-b]
+FAILED scripts/experiments/student_progress_20261010/test_safeguards.py::test_signed_tuning_selection_cannot_be_transplanted[year-2024]
+FAILED scripts/experiments/student_progress_20261010/test_safeguards.py::test_signed_tuning_selection_cannot_be_transplanted[spec-replacement2]
+FAILED scripts/experiments/student_progress_20261010/test_safeguards.py::test_signed_tuning_selection_cannot_be_transplanted[fit_rows-fit-b]
+FAILED scripts/experiments/student_progress_20261010/test_safeguards.py::test_signed_tuning_selection_cannot_be_transplanted[validation_rows-validation-b]
+6 failed, 3 passed in 2.69s

@@ -1,0 +1,93 @@
+........................................................................ [  6%]
+........................................................................ [ 12%]
+........................................................................ [ 18%]
+........................................................................ [ 24%]
+........................................................................ [ 30%]
+.................................................................. [ 36%]
+........................................................................ [ 42%]
+........................................................................ [ 48%]
+........................................................................ [ 54%]
+........................................................................ [ 61%]
+......................................................................F. [ 67%]
+........................................................................ [ 73%]
+........................................................................ [ 79%]
+........................................................................ [ 85%]
+........................................................................ [ 91%]
+........................................................................ [ 97%]
+........................                                                 [100%]
+================================== FAILURES ===================================
+_ test_tune_model_evaluates_every_candidate_fold_and_selects_mean_metric[grade-capacity_63-mae] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000224482F3B10>
+temporal_frame =     gpa_prev_1  gpa_prev_2  gpa_trend_delta  ...  part_id  final_mark  is_fail
+80           0           0             ...      65        0
+50           7           7                7  ...    20233          75        0
+
+[8 rows x 50 columns]
+task = 'grade', winner = 'capacity_63', primary = 'mae'
+
+    @pytest.mark.parametrize(
+        ("task", "winner", "primary"),
+        [("grade", "capacity_63", "mae"), ("fail", "regularized_47", "log_loss")],
+    )
+    def test_tune_model_evaluates_every_candidate_fold_and_selects_mean_metric(
+        monkeypatch, temporal_frame, task, winner, primary
+    ):
+        folds = train_models.prepare_folds(temporal_frame)
+        calls = []
+        # The best first fold does not win the mean; grade's best last fold also loses.
+        errors = {31: [1.0, 9.0], 63: [4.0, 4.0], 47: [8.0, 2.0]}
+        correct_probabilities = {31: [0.95, 0.2], 63: [0.6, 0.6], 47: [0.75, 0.75]}
+    
+        def fake_train_one(fit_X, fit_y, fit_weight, parameters, valid_X, valid_y):
+            fold_number = next(i for i, fold in enumerate(folds) if fold["fit_X"] is fit_X)
+            fold = folds[fold_number]
+            leaves = parameters["num_leaves"]
+            calls.append((leaves, fold["name"]))
+            assert valid_X is fold["valid_X"]
+            assert fit_y is fold[f"fit_{task}"]
+            assert valid_y is fold[f"valid_{task}"]
+            assert fit_weight is fold["fit_weight"]
+            assert parameters["objective"] == ("regression" if task == "grade" else "binary")
+            assert parameters["metric"] == ("l1" if task == "grade" else "binary_logloss")
+    
+            class FakeModel:
+                best_iteration = 10 + 2 * fold_number
+    
+                def predict(self, matrix, num_iteration):
+                    assert matrix is valid_X
+                    assert num_iteration == self.best_iteration
+                    if task == "grade":
+                        return valid_y + errors[leaves][fold_number]
+                    correct = correct_probabilities[leaves][fold_number]
+                    return np.where(valid_y == 1, correct, 1 - correct)
+    
+            return FakeModel()
+    
+        monkeypatch.setattr(train_models, "train_one", fake_train_one)
+        best, reports = train_models.tune_model(folds, task)
+        assert Counter(calls) == Counter(
+            (leaves, name)
+            for leaves in [31, 63, 47]
+            for name in ["train_through_2022_validate_2023", "train_through_2023_validate_2024"]
+        )
+        assert len(calls) == 6
+        assert len(reports) == 3
+>       assert best["candidate"]["name"] == winner
+E       AssertionError: assert 'capaciy_63' == 'capacity_63'
+E         
+E         - capacity_63
+E         ?       -
+E         + capaciy_63
+
+tests\test_train_models.py:186: AssertionError
+---------------------------- Captured stdout call -----------------------------
+grade | balanced_31 | train_through_2022_validate_2023 | best_iteration=10 | score=1.000000
+grade | balanced_31 | train_through_2023_validate_2024 | best_iteration=12 | score=9.000000
+grade | capaciy_63 | train_through_2022_validate_2023 | best_iteration=10 | score=4.000000
+grade | capaciy_63 | train_through_2023_validate_2024 | best_iteration=12 | score=4.000000
+grade | regularized_47 | train_through_2022_validate_2023 | best_iteration=10 | score=8.000000
+grade | regularized_47 | train_through_2023_validate_2024 | best_iteration=12 | score=2.000000
+=========================== short test summary info ===========================
+FAILED tests/test_train_models.py::test_tune_model_evaluates_every_candidate_fold_and_selects_mean_metric[grade-capacity_63-mae]
+1 failed, 1169 passed, 6 subtests passed in 462.55s (0:07:42)

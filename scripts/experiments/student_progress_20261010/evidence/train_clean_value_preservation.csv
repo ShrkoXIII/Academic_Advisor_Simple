@@ -1,0 +1,5 @@
+dataset,identity,valid,mismatch,mismatch_pct,difference_mean,difference_min,difference_max
+train_v2_course,start_total_in_credits train = clean V2,356816,0,0.0,0.0,0.0,0.0
+train_v2_course,start_total_in_courses train = clean V2,356816,0,0.0,0.0,0.0,0.0
+train_v2_course,total_reg_credits train = clean V2,356816,0,0.0,0.0,0.0,0.0
+train_v2_course,total_reg_courses train = clean V2,356816,0,0.0,0.0,0.0,0.0

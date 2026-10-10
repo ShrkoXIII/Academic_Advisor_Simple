@@ -248,3 +248,10 @@ def test_inference_fixture_rejects_a_scale_without_supported_versions(tmp_path):
     artifacts.grade_scale.pass_bands["grade_version_id"] = float("nan")
     with pytest.raises(ValueError, match="supported GradeScale version"):
         module.measure_case(15, "easy", "full", artifacts=artifacts, history_root=tmp_path)
+
+
+def test_corrected_report_does_not_embed_fabricated_phase5_quality_snapshot():
+    module = benchmark_module()
+    report = module.build_report([], timeout_seconds=15, threads=1)
+    assert "phase5_tradeoff_evidence" not in report
+    assert report["legacy_phase5_evidence"]["usage"] == "NOT USED for corrected quality conclusions"

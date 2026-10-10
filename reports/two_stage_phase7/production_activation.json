@@ -1,0 +1,18 @@
+{
+  "activation": "PASS",
+  "usage": "production_core",
+  "production_ranking_strategy": "pareto v1 -> pareto v1",
+  "ranking_policy_sha256": "e917acabb61973d4971a8705b2ad7691156773bf80fe0a0d293b507b377c7d23",
+  "operational_contracts": {
+    "backend_max_candidate_count": "UNRESOLVED",
+    "memory_budget_per_request": "UNRESOLVED",
+    "recommendation_latency_sla": "UNRESOLVED"
+  },
+  "model_feature_counts": {
+    "stage1": 33,
+    "stage2": 47
+  },
+  "history_as_of_part": 20251,
+  "inference_executed": false,
+  "real_student_recommendation_executed": false
+}

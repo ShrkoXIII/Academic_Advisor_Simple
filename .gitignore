@@ -6,3 +6,20 @@ __pycache__/
 /data/
 xml/
 json/
+
+# Graphify rebuildable caches and query history; keep graph definitions and reports versioned.
+/graphify-out/cache/ast/
+/graphify-out/cache/.gfy-replace-bak-*.tmp
+/graphify-out/cache/*.tmp
+/graphify-out/memory/query_*
+
+# Generated model files and per-model metadata stay local for these completed ablation runs.
+/models/experiments/attempt_number_removal_20261008/
+/models/experiments/student_progress_20261010/
+
+# Local pytest and coverage outputs.
+.pytest_cache/
+.coverage
+.coverage.*
+/htmlcov/
+pytestdebug.log

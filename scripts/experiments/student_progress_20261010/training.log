@@ -1,0 +1,229 @@
+SELECT 2023 47_grade regularized_47 348 rounds
+FIT 2023 47_grade A: 205369 rows, 47 features
+DONE 2023 47_grade A: {'course_points_mae': 0.549555924896772, 'course_points_rmse': 0.7927498308975116, 'plan_gpa_mae': 0.40844453779171935, 'plan_gpa_rmse': 0.5822731453039647, 'plan_gpa_bias': 0.09697590953919413, 'plans': 16500, 'grade_mae': 9.32066980520727, 'grade_rmse': 12.487987467686514, 'grade_bias': 0.4164530544490119, 'projected_cumulative_gpa_mae_vs_end': 0.3689133873134405, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 47_grade B: 205369 rows, 45 features
+DONE 2023 47_grade B: {'course_points_mae': 0.5501369880800894, 'course_points_rmse': 0.7938602832838019, 'plan_gpa_mae': 0.4089018082446562, 'plan_gpa_rmse': 0.5835426100602837, 'plan_gpa_bias': 0.09981118978316803, 'plans': 16500, 'grade_mae': 9.346006762473198, 'grade_rmse': 12.524794989836835, 'grade_bias': 0.454059674138504, 'projected_cumulative_gpa_mae_vs_end': 0.36862256839017066, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 47_grade C: 205369 rows, 44 features
+DONE 2023 47_grade C: {'course_points_mae': 0.549455293842678, 'course_points_rmse': 0.7915875873245258, 'plan_gpa_mae': 0.4079731838889614, 'plan_gpa_rmse': 0.5807453430463312, 'plan_gpa_bias': 0.08873652523771561, 'plans': 16500, 'grade_mae': 9.320749358249863, 'grade_rmse': 12.480113271664205, 'grade_bias': 0.23278957851719084, 'projected_cumulative_gpa_mae_vs_end': 0.36884090135798686, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 47_grade D: 205369 rows, 44 features
+DONE 2023 47_grade D: {'course_points_mae': 0.551987301010206, 'course_points_rmse': 0.7956023670430742, 'plan_gpa_mae': 0.4101016994813299, 'plan_gpa_rmse': 0.5844613209416685, 'plan_gpa_bias': 0.09243260381527574, 'plans': 16500, 'grade_mae': 9.352709676969376, 'grade_rmse': 12.52492301838532, 'grade_bias': 0.33180185252551053, 'projected_cumulative_gpa_mae_vs_end': 0.37016051279935, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 47_grade E: 205369 rows, 43 features
+DONE 2023 47_grade E: {'course_points_mae': 0.5498643103851247, 'course_points_rmse': 0.7914686544331474, 'plan_gpa_mae': 0.4076936816885933, 'plan_gpa_rmse': 0.5792417576925479, 'plan_gpa_bias': 0.09488826334679211, 'plans': 16500, 'grade_mae': 9.331373333007356, 'grade_rmse': 12.493548799978129, 'grade_bias': 0.3503348302749322, 'projected_cumulative_gpa_mae_vs_end': 0.36858161887558866, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 47_grade F1: 205369 rows, 46 features
+DONE 2023 47_grade F1: {'course_points_mae': 0.5493514166255486, 'course_points_rmse': 0.7901499675378348, 'plan_gpa_mae': 0.40877903652023145, 'plan_gpa_rmse': 0.581727647557356, 'plan_gpa_bias': 0.09748471535928137, 'plans': 16500, 'grade_mae': 9.326147038664725, 'grade_rmse': 12.479765751484948, 'grade_bias': 0.3547883329502866, 'projected_cumulative_gpa_mae_vs_end': 0.36878779322830335, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 47_grade F2: 205369 rows, 46 features
+DONE 2023 47_grade F2: {'course_points_mae': 0.5494585400057133, 'course_points_rmse': 0.7915419643194722, 'plan_gpa_mae': 0.4075475642012218, 'plan_gpa_rmse': 0.5807863132506671, 'plan_gpa_bias': 0.09540134455916342, 'plans': 16500, 'grade_mae': 9.319171463215348, 'grade_rmse': 12.482141932626709, 'grade_bias': 0.3937675471589298, 'projected_cumulative_gpa_mae_vs_end': 0.36887638580702764, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 47_grade F3: 205369 rows, 46 features
+DONE 2023 47_grade F3: {'course_points_mae': 0.5485755836601137, 'course_points_rmse': 0.7899162741422517, 'plan_gpa_mae': 0.40573732757749165, 'plan_gpa_rmse': 0.5776349334410525, 'plan_gpa_bias': 0.09372182315946471, 'plans': 16500, 'grade_mae': 9.314825023101054, 'grade_rmse': 12.476043856308314, 'grade_bias': 0.3532193170456908, 'projected_cumulative_gpa_mae_vs_end': 0.36811576875426616, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 47_grade F4: 205369 rows, 46 features
+DONE 2023 47_grade F4: {'course_points_mae': 0.5488255382138313, 'course_points_rmse': 0.7918756179557004, 'plan_gpa_mae': 0.4082510117908521, 'plan_gpa_rmse': 0.5822984940012674, 'plan_gpa_bias': 0.10020365167421776, 'plans': 16500, 'grade_mae': 9.323084988969109, 'grade_rmse': 12.50049714886701, 'grade_bias': 0.45914355995671985, 'projected_cumulative_gpa_mae_vs_end': 0.3685319612281517, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+SELECT 2023 47_fail regularized_47 116 rounds
+FIT 2023 47_fail A: 205369 rows, 47 features
+DONE 2023 47_fail A: {'pr_auc': 0.2818390618209519, 'roc_auc': 0.8114107067871824, 'log_loss': 0.2472039693277759, 'brier': 0.07197829652251654}
+FIT 2023 47_fail B: 205369 rows, 45 features
+DONE 2023 47_fail B: {'pr_auc': 0.27959635726291976, 'roc_auc': 0.8115420967163702, 'log_loss': 0.2473165613853468, 'brier': 0.07205194006917694}
+FIT 2023 47_fail C: 205369 rows, 44 features
+DONE 2023 47_fail C: {'pr_auc': 0.2790404144819215, 'roc_auc': 0.8115576134187928, 'log_loss': 0.24712976752650556, 'brier': 0.07200163536873266}
+FIT 2023 47_fail D: 205369 rows, 44 features
+DONE 2023 47_fail D: {'pr_auc': 0.2787830231752568, 'roc_auc': 0.8110500019410888, 'log_loss': 0.24740011347787078, 'brier': 0.07205870084976451}
+FIT 2023 47_fail E: 205369 rows, 43 features
+DONE 2023 47_fail E: {'pr_auc': 0.28067587827852525, 'roc_auc': 0.8108324679174632, 'log_loss': 0.24736334426085843, 'brier': 0.07201905957845758}
+FIT 2023 47_fail F1: 205369 rows, 46 features
+DONE 2023 47_fail F1: {'pr_auc': 0.2824889712160034, 'roc_auc': 0.8128312189709428, 'log_loss': 0.24669779305508424, 'brier': 0.07190722009729801}
+FIT 2023 47_fail F2: 205369 rows, 46 features
+DONE 2023 47_fail F2: {'pr_auc': 0.28181324986296624, 'roc_auc': 0.8127113376940257, 'log_loss': 0.24659568481836772, 'brier': 0.07191468751572584}
+FIT 2023 47_fail F3: 205369 rows, 46 features
+DONE 2023 47_fail F3: {'pr_auc': 0.2823759837623813, 'roc_auc': 0.8128693999962172, 'log_loss': 0.24669482491245615, 'brier': 0.07191199855295051}
+FIT 2023 47_fail F4: 205369 rows, 46 features
+DONE 2023 47_fail F4: {'pr_auc': 0.2790318316127325, 'roc_auc': 0.8113465790198846, 'log_loss': 0.2474300840671757, 'brier': 0.07206694664422147}
+SELECT 2023 33_grade regularized_47 195 rounds
+FIT 2023 33_grade A: 205369 rows, 33 features
+DONE 2023 33_grade A: {'course_points_mae': 0.547822473835926, 'course_points_rmse': 0.7895884732888696, 'plan_gpa_mae': 0.40746442045211023, 'plan_gpa_rmse': 0.58100206346356, 'plan_gpa_bias': 0.09844909748059096, 'plans': 16500, 'grade_mae': 9.270708003862163, 'grade_rmse': 12.424442255658986, 'grade_bias': 0.42177590675515486, 'projected_cumulative_gpa_mae_vs_end': 0.3693817297276017, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 33_grade B: 205369 rows, 31 features
+DONE 2023 33_grade B: {'course_points_mae': 0.5484327524865609, 'course_points_rmse': 0.7908834698894647, 'plan_gpa_mae': 0.4069460929414703, 'plan_gpa_rmse': 0.5814035857428907, 'plan_gpa_bias': 0.09988707115730047, 'plans': 16500, 'grade_mae': 9.297838509718773, 'grade_rmse': 12.459305776194455, 'grade_bias': 0.46456553415297663, 'projected_cumulative_gpa_mae_vs_end': 0.3696782060028713, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 33_grade C: 205369 rows, 30 features
+DONE 2023 33_grade C: {'course_points_mae': 0.548533383540655, 'course_points_rmse': 0.7904518689751006, 'plan_gpa_mae': 0.4096220832163997, 'plan_gpa_rmse': 0.5847140722233929, 'plan_gpa_bias': 0.10085761710423753, 'plans': 16500, 'grade_mae': 9.292901160078527, 'grade_rmse': 12.439211609052371, 'grade_bias': 0.43403143807263583, 'projected_cumulative_gpa_mae_vs_end': 0.36956688754970113, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 33_grade D: 205369 rows, 30 features
+DONE 2023 33_grade D: {'course_points_mae': 0.548179551769808, 'course_points_rmse': 0.7911235453578214, 'plan_gpa_mae': 0.40903854419099045, 'plan_gpa_rmse': 0.5844327074738251, 'plan_gpa_bias': 0.09861186078600936, 'plans': 16500, 'grade_mae': 9.28214321313927, 'grade_rmse': 12.433437636120452, 'grade_bias': 0.43231987279581197, 'projected_cumulative_gpa_mae_vs_end': 0.369617026781232, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 33_grade E: 205369 rows, 29 features
+DONE 2023 33_grade E: {'course_points_mae': 0.5490819850936194, 'course_points_rmse': 0.7917234155355972, 'plan_gpa_mae': 0.4098990776355767, 'plan_gpa_rmse': 0.5844770411901599, 'plan_gpa_bias': 0.0986476529178495, 'plans': 16500, 'grade_mae': 9.295774312562568, 'grade_rmse': 12.449427405627446, 'grade_bias': 0.44279271158875705, 'projected_cumulative_gpa_mae_vs_end': 0.370289600041617, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 33_grade F1: 205369 rows, 32 features
+DONE 2023 33_grade F1: {'course_points_mae': 0.5476114732386319, 'course_points_rmse': 0.7900780692398736, 'plan_gpa_mae': 0.4072828210791903, 'plan_gpa_rmse': 0.5807131190291881, 'plan_gpa_bias': 0.09488730283657631, 'plans': 16500, 'grade_mae': 9.26942890765313, 'grade_rmse': 12.416050188925968, 'grade_bias': 0.39051019172652857, 'projected_cumulative_gpa_mae_vs_end': 0.36945722034919026, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 33_grade F2: 205369 rows, 32 features
+DONE 2023 33_grade F2: {'course_points_mae': 0.5474881190432909, 'course_points_rmse': 0.7889679508413181, 'plan_gpa_mae': 0.4067883859484654, 'plan_gpa_rmse': 0.5800059125709136, 'plan_gpa_bias': 0.09813050376136336, 'plans': 16500, 'grade_mae': 9.283453281358048, 'grade_rmse': 12.439130560844532, 'grade_bias': 0.4309224022851391, 'projected_cumulative_gpa_mae_vs_end': 0.368887976280793, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 33_grade F3: 205369 rows, 32 features
+DONE 2023 33_grade F3: {'course_points_mae': 0.5470920871529852, 'course_points_rmse': 0.7890903460031357, 'plan_gpa_mae': 0.4065468756262405, 'plan_gpa_rmse': 0.5805978339115981, 'plan_gpa_bias': 0.09465759963761995, 'plans': 16500, 'grade_mae': 9.263750310224326, 'grade_rmse': 12.417306166030588, 'grade_bias': 0.3886215899449208, 'projected_cumulative_gpa_mae_vs_end': 0.3692707603250626, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 33_grade F4: 205369 rows, 32 features
+DONE 2023 33_grade F4: {'course_points_mae': 0.5480951515308905, 'course_points_rmse': 0.7891741603087601, 'plan_gpa_mae': 0.40728844543238746, 'plan_gpa_rmse': 0.5801932964097869, 'plan_gpa_bias': 0.09451766249463588, 'plans': 16500, 'grade_mae': 9.287113027472794, 'grade_rmse': 12.43083677511647, 'grade_bias': 0.33987847084648565, 'projected_cumulative_gpa_mae_vs_end': 0.369005503145044, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+SELECT 2023 33_fail regularized_47 148 rounds
+FIT 2023 33_fail A: 205369 rows, 33 features
+DONE 2023 33_fail A: {'pr_auc': 0.2815186570543008, 'roc_auc': 0.8122947665083885, 'log_loss': 0.247285984394524, 'brier': 0.07201522763748892}
+FIT 2023 33_fail B: 205369 rows, 31 features
+DONE 2023 33_fail B: {'pr_auc': 0.28155420687519905, 'roc_auc': 0.8125476535632246, 'log_loss': 0.24695507443987114, 'brier': 0.07199294021397985}
+FIT 2023 33_fail C: 205369 rows, 30 features
+DONE 2023 33_fail C: {'pr_auc': 0.2776768453482404, 'roc_auc': 0.8108194800545346, 'log_loss': 0.24771562765638472, 'brier': 0.07217515163121953}
+FIT 2023 33_fail D: 205369 rows, 30 features
+DONE 2023 33_fail D: {'pr_auc': 0.27857286806969156, 'roc_auc': 0.8111899141525344, 'log_loss': 0.24755686888772127, 'brier': 0.0721619802631753}
+FIT 2023 33_fail E: 205369 rows, 29 features
+DONE 2023 33_fail E: {'pr_auc': 0.2792054263222668, 'roc_auc': 0.8107317584114315, 'log_loss': 0.24758026533992797, 'brier': 0.07210185940852336}
+FIT 2023 33_fail F1: 205369 rows, 32 features
+DONE 2023 33_fail F1: {'pr_auc': 0.27714997643894074, 'roc_auc': 0.8109640338199271, 'log_loss': 0.24779374095393036, 'brier': 0.07222065823617277}
+FIT 2023 33_fail F2: 205369 rows, 32 features
+DONE 2023 33_fail F2: {'pr_auc': 0.27549282576971146, 'roc_auc': 0.8108594290936675, 'log_loss': 0.24793003140709416, 'brier': 0.07229124588842874}
+FIT 2023 33_fail F3: 205369 rows, 32 features
+DONE 2023 33_fail F3: {'pr_auc': 0.27852623729476617, 'roc_auc': 0.8118440813504332, 'log_loss': 0.24735961705120965, 'brier': 0.07212021878599534}
+FIT 2023 33_fail F4: 205369 rows, 32 features
+DONE 2023 33_fail F4: {'pr_auc': 0.2781199532494275, 'roc_auc': 0.810721493993738, 'log_loss': 0.2478436795312512, 'brier': 0.07221551504054832}
+SELECT 2023 47_points regularized_47 89 rounds
+FIT 2023 47_points A: 205369 rows, 47 features
+DONE 2023 47_points A: {'course_points_mae': 0.5590772422484939, 'course_points_rmse': 0.7762842608990723, 'plan_gpa_mae': 0.4053171725625003, 'plan_gpa_rmse': 0.5658814676959647, 'plan_gpa_bias': 0.0638171845315343, 'plans': 16500, 'projected_cumulative_gpa_mae_vs_end': 0.37100494051713867, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 47_points B: 205369 rows, 45 features
+DONE 2023 47_points B: {'course_points_mae': 0.5600226599610076, 'course_points_rmse': 0.7760609987593253, 'plan_gpa_mae': 0.4055705340163773, 'plan_gpa_rmse': 0.5653837367767297, 'plan_gpa_bias': 0.059738838660629734, 'plans': 16500, 'projected_cumulative_gpa_mae_vs_end': 0.37111567414531355, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 47_points C: 205369 rows, 44 features
+DONE 2023 47_points C: {'course_points_mae': 0.5606007394992149, 'course_points_rmse': 0.7760841563617049, 'plan_gpa_mae': 0.40603108134085525, 'plan_gpa_rmse': 0.5651127826618173, 'plan_gpa_bias': 0.05662846632411424, 'plans': 16500, 'projected_cumulative_gpa_mae_vs_end': 0.3710045926564172, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 47_points D: 205369 rows, 44 features
+DONE 2023 47_points D: {'course_points_mae': 0.5607513100202427, 'course_points_rmse': 0.7764859606318463, 'plan_gpa_mae': 0.4057170688251874, 'plan_gpa_rmse': 0.5648634658930909, 'plan_gpa_bias': 0.05684285521934373, 'plans': 16500, 'projected_cumulative_gpa_mae_vs_end': 0.37115877274389814, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 47_points E: 205369 rows, 43 features
+DONE 2023 47_points E: {'course_points_mae': 0.5598527596536564, 'course_points_rmse': 0.7759332592811422, 'plan_gpa_mae': 0.4060844581938312, 'plan_gpa_rmse': 0.5660608386955835, 'plan_gpa_bias': 0.05872285236791157, 'plans': 16500, 'projected_cumulative_gpa_mae_vs_end': 0.3709969866213526, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 47_points F1: 205369 rows, 46 features
+DONE 2023 47_points F1: {'course_points_mae': 0.5602270076050319, 'course_points_rmse': 0.776069948706102, 'plan_gpa_mae': 0.4053923789496685, 'plan_gpa_rmse': 0.564914217721767, 'plan_gpa_bias': 0.05673828902712242, 'plans': 16500, 'projected_cumulative_gpa_mae_vs_end': 0.3710785139187612, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 47_points F2: 205369 rows, 46 features
+DONE 2023 47_points F2: {'course_points_mae': 0.5596662049204075, 'course_points_rmse': 0.7756312011054585, 'plan_gpa_mae': 0.4055571206218062, 'plan_gpa_rmse': 0.5654897232668179, 'plan_gpa_bias': 0.06032661681674926, 'plans': 16500, 'projected_cumulative_gpa_mae_vs_end': 0.3709672183970194, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 47_points F3: 205369 rows, 46 features
+DONE 2023 47_points F3: {'course_points_mae': 0.5606934869079568, 'course_points_rmse': 0.7761186535151735, 'plan_gpa_mae': 0.4060538819684699, 'plan_gpa_rmse': 0.5653977520781528, 'plan_gpa_bias': 0.056717963277205866, 'plans': 16500, 'projected_cumulative_gpa_mae_vs_end': 0.3710665302060296, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 47_points F4: 205369 rows, 46 features
+DONE 2023 47_points F4: {'course_points_mae': 0.5602120383391384, 'course_points_rmse': 0.7759955690086432, 'plan_gpa_mae': 0.40564217199715735, 'plan_gpa_rmse': 0.5654749921366383, 'plan_gpa_bias': 0.059235018901901915, 'plans': 16500, 'projected_cumulative_gpa_mae_vs_end': 0.37099683475679057, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+SELECT 2023 57_degree_history_grade regularized_47 208 rounds
+FIT 2023 57_degree_history_grade A: 205369 rows, 57 features
+DONE 2023 57_degree_history_grade A: {'course_points_mae': 0.5469427636533617, 'course_points_rmse': 0.7892661915316441, 'plan_gpa_mae': 0.40741073015988294, 'plan_gpa_rmse': 0.5800746985647255, 'plan_gpa_bias': 0.10656444831987853, 'plans': 16500, 'grade_mae': 9.28225380349227, 'grade_rmse': 12.462905882407952, 'grade_bias': 0.5710996519963938, 'projected_cumulative_gpa_mae_vs_end': 0.3686422629688011, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 57_degree_history_grade B: 205369 rows, 55 features
+DONE 2023 57_degree_history_grade B: {'course_points_mae': 0.5485074142363726, 'course_points_rmse': 0.7904857486737581, 'plan_gpa_mae': 0.4077576102896621, 'plan_gpa_rmse': 0.5808807135021643, 'plan_gpa_bias': 0.10662337249471313, 'plans': 16500, 'grade_mae': 9.320508377805417, 'grade_rmse': 12.491580291232031, 'grade_bias': 0.5492467279924247, 'projected_cumulative_gpa_mae_vs_end': 0.36884225906989493, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 57_degree_history_grade C: 205369 rows, 54 features
+DONE 2023 57_degree_history_grade C: {'course_points_mae': 0.5480334744332199, 'course_points_rmse': 0.7916839508723936, 'plan_gpa_mae': 0.4087781314896702, 'plan_gpa_rmse': 0.5829575291324601, 'plan_gpa_bias': 0.111236494026474, 'plans': 16500, 'grade_mae': 9.315315542977626, 'grade_rmse': 12.501226217073455, 'grade_bias': 0.6880181499779888, 'projected_cumulative_gpa_mae_vs_end': 0.36880760747705194, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 57_degree_history_grade D: 205369 rows, 54 features
+DONE 2023 57_degree_history_grade D: {'course_points_mae': 0.5469622406315735, 'course_points_rmse': 0.7891294261735643, 'plan_gpa_mae': 0.40725830184586803, 'plan_gpa_rmse': 0.5808830393951043, 'plan_gpa_bias': 0.10326042391716873, 'plans': 16500, 'grade_mae': 9.292157223027138, 'grade_rmse': 12.465409936487436, 'grade_bias': 0.5541201432561982, 'projected_cumulative_gpa_mae_vs_end': 0.36905278345567266, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 57_degree_history_grade E: 205369 rows, 53 features
+DONE 2023 57_degree_history_grade E: {'course_points_mae': 0.5493124626691251, 'course_points_rmse': 0.7909414435027076, 'plan_gpa_mae': 0.40832517090549014, 'plan_gpa_rmse': 0.5811663301296943, 'plan_gpa_bias': 0.10558687290800424, 'plans': 16500, 'grade_mae': 9.316945595291571, 'grade_rmse': 12.48101526282504, 'grade_bias': 0.527780064362601, 'projected_cumulative_gpa_mae_vs_end': 0.3681539020954331, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 57_degree_history_grade F1: 205369 rows, 56 features
+DONE 2023 57_degree_history_grade F1: {'course_points_mae': 0.5488190458877606, 'course_points_rmse': 0.7910994385055928, 'plan_gpa_mae': 0.4086424656123542, 'plan_gpa_rmse': 0.5811749876952259, 'plan_gpa_bias': 0.10263232038205608, 'plans': 16500, 'grade_mae': 9.307778221788032, 'grade_rmse': 12.479305449747038, 'grade_bias': 0.5384717556952412, 'projected_cumulative_gpa_mae_vs_end': 0.3688908755470875, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 57_degree_history_grade F2: 205369 rows, 56 features
+DONE 2023 57_degree_history_grade F2: {'course_points_mae': 0.5491047082348663, 'course_points_rmse': 0.790205427469335, 'plan_gpa_mae': 0.4079537409507049, 'plan_gpa_rmse': 0.5789798961610965, 'plan_gpa_bias': 0.10084187059126383, 'plans': 16500, 'grade_mae': 9.316103431460636, 'grade_rmse': 12.475402767305212, 'grade_bias': 0.4980063055287607, 'projected_cumulative_gpa_mae_vs_end': 0.36891089261293325, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 57_degree_history_grade F3: 205369 rows, 56 features
+DONE 2023 57_degree_history_grade F3: {'course_points_mae': 0.548101643856961, 'course_points_rmse': 0.7911132872126169, 'plan_gpa_mae': 0.40881704823181064, 'plan_gpa_rmse': 0.5823636489133318, 'plan_gpa_bias': 0.10916443286937495, 'plans': 16500, 'grade_mae': 9.311867740274932, 'grade_rmse': 12.493235097646775, 'grade_bias': 0.6621038233421965, 'projected_cumulative_gpa_mae_vs_end': 0.36854964214688496, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+FIT 2023 57_degree_history_grade F4: 205369 rows, 56 features
+DONE 2023 57_degree_history_grade F4: {'course_points_mae': 0.5487541226270548, 'course_points_rmse': 0.7907526288612008, 'plan_gpa_mae': 0.40759245005369565, 'plan_gpa_rmse': 0.5798148577483132, 'plan_gpa_bias': 0.09824368865494897, 'plans': 16500, 'grade_mae': 9.310636330474615, 'grade_rmse': 12.480995980507789, 'grade_bias': 0.46123984484502684, 'projected_cumulative_gpa_mae_vs_end': 0.36932206650622856, 'additive_observed_gpa_mae_vs_end': 0.2848837836142271, 'projected_comparable_plans': 16500}
+SELECT 2024 47_grade capaciy_63 122 rounds
+FIT 2024 47_grade A: 282383 rows, 47 features
+DONE 2024 47_grade A: {'course_points_mae': 0.5516571950613304, 'course_points_rmse': 0.7750188898909321, 'plan_gpa_mae': 0.42603260256888176, 'plan_gpa_rmse': 0.6038856174870355, 'plan_gpa_bias': 0.016144363992170094, 'plans': 15413, 'grade_mae': 9.782603092702862, 'grade_rmse': 13.111612430644094, 'grade_bias': -1.2130328632067806, 'projected_cumulative_gpa_mae_vs_end': 0.3532063173187719, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 47_grade B: 282383 rows, 45 features
+DONE 2024 47_grade B: {'course_points_mae': 0.5534776241720742, 'course_points_rmse': 0.7765039376855881, 'plan_gpa_mae': 0.4273304588400242, 'plan_gpa_rmse': 0.6050532976953362, 'plan_gpa_bias': 0.015097506310187296, 'plans': 15413, 'grade_mae': 9.802048057807438, 'grade_rmse': 13.128350518605245, 'grade_bias': -1.233345961305982, 'projected_cumulative_gpa_mae_vs_end': 0.3536704837033764, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 47_grade C: 282383 rows, 44 features
+DONE 2024 47_grade C: {'course_points_mae': 0.5531283167412304, 'course_points_rmse': 0.7765082631188266, 'plan_gpa_mae': 0.4267962465069635, 'plan_gpa_rmse': 0.604742822600075, 'plan_gpa_bias': 0.01710149164526728, 'plans': 15413, 'grade_mae': 9.799742804925616, 'grade_rmse': 13.12104886640353, 'grade_bias': -1.220017215577773, 'projected_cumulative_gpa_mae_vs_end': 0.35351760271869287, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 47_grade D: 282383 rows, 44 features
+DONE 2024 47_grade D: {'course_points_mae': 0.55215764513052, 'course_points_rmse': 0.7753552229720686, 'plan_gpa_mae': 0.42629261589155887, 'plan_gpa_rmse': 0.6038807935021898, 'plan_gpa_bias': 0.016716414105085106, 'plans': 15413, 'grade_mae': 9.78275896662565, 'grade_rmse': 13.102531749774943, 'grade_bias': -1.2174401507003585, 'projected_cumulative_gpa_mae_vs_end': 0.3532988602708621, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 47_grade E: 282383 rows, 43 features
+DONE 2024 47_grade E: {'course_points_mae': 0.5524028320771701, 'course_points_rmse': 0.7755712440765191, 'plan_gpa_mae': 0.4258142902524018, 'plan_gpa_rmse': 0.6040797776260488, 'plan_gpa_bias': 0.018495822569462556, 'plans': 15413, 'grade_mae': 9.78348667979731, 'grade_rmse': 13.112148570197943, 'grade_bias': -1.1809467649928915, 'projected_cumulative_gpa_mae_vs_end': 0.3533607745137169, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 47_grade F1: 282383 rows, 46 features
+DONE 2024 47_grade F1: {'course_points_mae': 0.5524061908024667, 'course_points_rmse': 0.7756064297854093, 'plan_gpa_mae': 0.42599837895485915, 'plan_gpa_rmse': 0.6045625365480435, 'plan_gpa_bias': 0.01720024192191001, 'plans': 15413, 'grade_mae': 9.781494748024274, 'grade_rmse': 13.108623341512626, 'grade_bias': -1.2025309833666327, 'projected_cumulative_gpa_mae_vs_end': 0.35295730185929913, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 47_grade F2: 282383 rows, 46 features
+DONE 2024 47_grade F2: {'course_points_mae': 0.5528058791127591, 'course_points_rmse': 0.7757347087750368, 'plan_gpa_mae': 0.4265394824805803, 'plan_gpa_rmse': 0.60393454348166, 'plan_gpa_bias': 0.014729926828180372, 'plans': 15413, 'grade_mae': 9.788059119263833, 'grade_rmse': 13.104346206215338, 'grade_bias': -1.2459961384982128, 'projected_cumulative_gpa_mae_vs_end': 0.35318371619399663, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 47_grade F3: 282383 rows, 46 features
+DONE 2024 47_grade F3: {'course_points_mae': 0.55179490279849, 'course_points_rmse': 0.7752198407284415, 'plan_gpa_mae': 0.42598476736492263, 'plan_gpa_rmse': 0.6039692367563289, 'plan_gpa_bias': 0.019393411923683965, 'plans': 15413, 'grade_mae': 9.767682611479398, 'grade_rmse': 13.0931237642227, 'grade_bias': -1.1450352168661613, 'projected_cumulative_gpa_mae_vs_end': 0.352940843268479, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 47_grade F4: 282383 rows, 46 features
+DONE 2024 47_grade F4: {'course_points_mae': 0.5525606921661091, 'course_points_rmse': 0.775630246897793, 'plan_gpa_mae': 0.42569748063997137, 'plan_gpa_rmse': 0.6038730486982073, 'plan_gpa_bias': 0.01639422713244593, 'plans': 15413, 'grade_mae': 9.779358741074, 'grade_rmse': 13.107749481234812, 'grade_bias': -1.2119505811305518, 'projected_cumulative_gpa_mae_vs_end': 0.3529417338162281, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+SELECT 2024 47_fail regularized_47 88 rounds
+FIT 2024 47_fail A: 282383 rows, 47 features
+DONE 2024 47_fail A: {'pr_auc': 0.20653585907828162, 'roc_auc': 0.796651727084452, 'log_loss': 0.20823443402032957, 'brier': 0.05730665208489438}
+FIT 2024 47_fail B: 282383 rows, 45 features
+DONE 2024 47_fail B: {'pr_auc': 0.2071660274510574, 'roc_auc': 0.7969958618996565, 'log_loss': 0.20810526487491166, 'brier': 0.05728060100188147}
+FIT 2024 47_fail C: 282383 rows, 44 features
+DONE 2024 47_fail C: {'pr_auc': 0.20133269039869645, 'roc_auc': 0.7949754769919785, 'log_loss': 0.20892043620525183, 'brier': 0.057495590127772805}
+FIT 2024 47_fail D: 282383 rows, 44 features
+DONE 2024 47_fail D: {'pr_auc': 0.2036017912930926, 'roc_auc': 0.7955979746656668, 'log_loss': 0.20871160355522075, 'brier': 0.057444909819164586}
+FIT 2024 47_fail E: 282383 rows, 43 features
+DONE 2024 47_fail E: {'pr_auc': 0.2037077144753497, 'roc_auc': 0.7954406999279268, 'log_loss': 0.20863475652776234, 'brier': 0.0574013750733585}
+FIT 2024 47_fail F1: 282383 rows, 46 features
+DONE 2024 47_fail F1: {'pr_auc': 0.20362491521659518, 'roc_auc': 0.7968553158464375, 'log_loss': 0.208413439714531, 'brier': 0.05741919867355046}
+FIT 2024 47_fail F2: 282383 rows, 46 features
+DONE 2024 47_fail F2: {'pr_auc': 0.204173891758555, 'roc_auc': 0.7964920981879149, 'log_loss': 0.2084238631086508, 'brier': 0.05738802322924158}
+FIT 2024 47_fail F3: 282383 rows, 46 features
+DONE 2024 47_fail F3: {'pr_auc': 0.2045943617015758, 'roc_auc': 0.7965934656678237, 'log_loss': 0.20840220956638827, 'brier': 0.057382811505012565}
+FIT 2024 47_fail F4: 282383 rows, 46 features
+DONE 2024 47_fail F4: {'pr_auc': 0.2030601889605931, 'roc_auc': 0.7964540872073125, 'log_loss': 0.20851431504468104, 'brier': 0.05743713380304757}
+SELECT 2024 33_grade capaciy_63 137 rounds
+FIT 2024 33_grade A: 282383 rows, 33 features
+DONE 2024 33_grade A: {'course_points_mae': 0.551754598094931, 'course_points_rmse': 0.7756800439514688, 'plan_gpa_mae': 0.4258163132370379, 'plan_gpa_rmse': 0.6045479804291264, 'plan_gpa_bias': 0.020672793526682644, 'plans': 15413, 'grade_mae': 9.774093834754673, 'grade_rmse': 13.11030208483717, 'grade_bias': -1.0851576709930222, 'projected_cumulative_gpa_mae_vs_end': 0.35265930722354316, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 33_grade B: 282383 rows, 31 features
+DONE 2024 33_grade B: {'course_points_mae': 0.5514825413459084, 'course_points_rmse': 0.7751044764010769, 'plan_gpa_mae': 0.42521006933694466, 'plan_gpa_rmse': 0.6031326033005135, 'plan_gpa_bias': 0.019217924686826284, 'plans': 15413, 'grade_mae': 9.770182058217635, 'grade_rmse': 13.095957654003229, 'grade_bias': -1.1098775262593896, 'projected_cumulative_gpa_mae_vs_end': 0.35231749697289383, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 33_grade C: 282383 rows, 30 features
+DONE 2024 33_grade C: {'course_points_mae': 0.5514019319387906, 'course_points_rmse': 0.7761632341247638, 'plan_gpa_mae': 0.42528528077887734, 'plan_gpa_rmse': 0.6045116656657166, 'plan_gpa_bias': 0.02132131604477625, 'plans': 15413, 'grade_mae': 9.774554548447654, 'grade_rmse': 13.117768493033463, 'grade_bias': -1.0821596215411067, 'projected_cumulative_gpa_mae_vs_end': 0.35258736724490464, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 33_grade D: 282383 rows, 30 features
+DONE 2024 33_grade D: {'course_points_mae': 0.5512743003775207, 'course_points_rmse': 0.7752312137464779, 'plan_gpa_mae': 0.42510835830432875, 'plan_gpa_rmse': 0.6037080417492965, 'plan_gpa_bias': 0.020231172558681027, 'plans': 15413, 'grade_mae': 9.774361776265096, 'grade_rmse': 13.11420534744985, 'grade_bias': -1.1098391104581304, 'projected_cumulative_gpa_mae_vs_end': 0.35211125583853664, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 33_grade E: 282383 rows, 29 features
+DONE 2024 33_grade E: {'course_points_mae': 0.5517411631937447, 'course_points_rmse': 0.7760609938894943, 'plan_gpa_mae': 0.4249446243648382, 'plan_gpa_rmse': 0.6039449388508994, 'plan_gpa_bias': 0.019759305324087244, 'plans': 15413, 'grade_mae': 9.779739439063661, 'grade_rmse': 13.111444081706162, 'grade_bias': -1.1391192174556382, 'projected_cumulative_gpa_mae_vs_end': 0.35224889636846257, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 33_grade F1: 282383 rows, 32 features
+DONE 2024 33_grade F1: {'course_points_mae': 0.5510223959802776, 'course_points_rmse': 0.7748612343009856, 'plan_gpa_mae': 0.4240654330730528, 'plan_gpa_rmse': 0.6017787049119163, 'plan_gpa_bias': 0.02034735273741557, 'plans': 15413, 'grade_mae': 9.775136904449345, 'grade_rmse': 13.106058343172522, 'grade_bias': -1.1154304745398387, 'projected_cumulative_gpa_mae_vs_end': 0.3518384443133238, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 33_grade F2: 282383 rows, 32 features
+DONE 2024 33_grade F2: {'course_points_mae': 0.5516303252589577, 'course_points_rmse': 0.7756058884789007, 'plan_gpa_mae': 0.42569528015986574, 'plan_gpa_rmse': 0.6038448816454717, 'plan_gpa_bias': 0.018768782090198655, 'plans': 15413, 'grade_mae': 9.77792951321039, 'grade_rmse': 13.109293174047062, 'grade_bias': -1.1434760404437319, 'projected_cumulative_gpa_mae_vs_end': 0.35248123589064906, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 33_grade F3: 282383 rows, 32 features
+DONE 2024 33_grade F3: {'course_points_mae': 0.5504211841521905, 'course_points_rmse': 0.7739921984489536, 'plan_gpa_mae': 0.4246908441065306, 'plan_gpa_rmse': 0.6019193830262874, 'plan_gpa_bias': 0.020770362955940043, 'plans': 15413, 'grade_mae': 9.76080756427153, 'grade_rmse': 13.088339664579259, 'grade_bias': -1.1043685606255313, 'projected_cumulative_gpa_mae_vs_end': 0.3520656095476393, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 33_grade F4: 282383 rows, 32 features
+DONE 2024 33_grade F4: {'course_points_mae': 0.5524263431542461, 'course_points_rmse': 0.7765661134723174, 'plan_gpa_mae': 0.42598047448351967, 'plan_gpa_rmse': 0.6046076110436084, 'plan_gpa_bias': 0.019213441942734603, 'plans': 15413, 'grade_mae': 9.793976450653895, 'grade_rmse': 13.124575021682059, 'grade_bias': -1.1230038382386525, 'projected_cumulative_gpa_mae_vs_end': 0.3525708284744278, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+SELECT 2024 33_fail regularized_47 95 rounds
+FIT 2024 33_fail A: 282383 rows, 33 features
+DONE 2024 33_fail A: {'pr_auc': 0.20265837493606859, 'roc_auc': 0.7961660304103724, 'log_loss': 0.20855434397148134, 'brier': 0.05744551360109083}
+FIT 2024 33_fail B: 282383 rows, 31 features
+DONE 2024 33_fail B: {'pr_auc': 0.20606626402515077, 'roc_auc': 0.7960788156135727, 'log_loss': 0.20841906471268762, 'brier': 0.05734929578135249}
+FIT 2024 33_fail C: 282383 rows, 30 features
+DONE 2024 33_fail C: {'pr_auc': 0.20435892320680513, 'roc_auc': 0.7958331409724346, 'log_loss': 0.20855140578981468, 'brier': 0.05740967398072745}
+FIT 2024 33_fail D: 282383 rows, 30 features
+DONE 2024 33_fail D: {'pr_auc': 0.20291662874045044, 'roc_auc': 0.7962867478204313, 'log_loss': 0.2086434270392112, 'brier': 0.05749224932296976}
+FIT 2024 33_fail E: 282383 rows, 29 features
+DONE 2024 33_fail E: {'pr_auc': 0.2025264821558583, 'roc_auc': 0.795339481316088, 'log_loss': 0.20878992854778328, 'brier': 0.057482593887945375}
+FIT 2024 33_fail F1: 282383 rows, 32 features
+DONE 2024 33_fail F1: {'pr_auc': 0.2042606027001696, 'roc_auc': 0.7967002901841508, 'log_loss': 0.20839156956093366, 'brier': 0.05740452937794094}
+FIT 2024 33_fail F2: 282383 rows, 32 features
+DONE 2024 33_fail F2: {'pr_auc': 0.20414100535383875, 'roc_auc': 0.7963630368684678, 'log_loss': 0.20851887137009384, 'brier': 0.057421869784209316}
+FIT 2024 33_fail F3: 282383 rows, 32 features
+DONE 2024 33_fail F3: {'pr_auc': 0.20293505804940942, 'roc_auc': 0.7963282411462846, 'log_loss': 0.20867944790160384, 'brier': 0.057499500348280275}
+FIT 2024 33_fail F4: 282383 rows, 32 features
+DONE 2024 33_fail F4: {'pr_auc': 0.20313995307499932, 'roc_auc': 0.7963288249426386, 'log_loss': 0.2086381575008543, 'brier': 0.05747976013715805}
+SELECT 2024 47_points capaciy_63 75 rounds
+FIT 2024 47_points A: 282383 rows, 47 features
+DONE 2024 47_points A: {'course_points_mae': 0.5666413981852874, 'course_points_rmse': 0.7750373457138642, 'plan_gpa_mae': 0.43061568814914974, 'plan_gpa_rmse': 0.60059902585977, 'plan_gpa_bias': -0.021617572774038647, 'plans': 15413, 'projected_cumulative_gpa_mae_vs_end': 0.3572368038460426, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 47_points B: 282383 rows, 45 features
+DONE 2024 47_points B: {'course_points_mae': 0.5665733678590036, 'course_points_rmse': 0.7747487846620957, 'plan_gpa_mae': 0.4307529792431758, 'plan_gpa_rmse': 0.6003484685999663, 'plan_gpa_bias': -0.021840994428839307, 'plans': 15413, 'projected_cumulative_gpa_mae_vs_end': 0.35678806667693846, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 47_points C: 282383 rows, 44 features
+DONE 2024 47_points C: {'course_points_mae': 0.5676367582766167, 'course_points_rmse': 0.7759363125041838, 'plan_gpa_mae': 0.43194411793950915, 'plan_gpa_rmse': 0.6020603327327961, 'plan_gpa_bias': -0.021870628295497158, 'plans': 15413, 'projected_cumulative_gpa_mae_vs_end': 0.3573904558706215, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 47_points D: 282383 rows, 44 features
+DONE 2024 47_points D: {'course_points_mae': 0.5666962924121898, 'course_points_rmse': 0.7748784977210467, 'plan_gpa_mae': 0.43100234204020266, 'plan_gpa_rmse': 0.6007707843870924, 'plan_gpa_bias': -0.02283011331713643, 'plans': 15413, 'projected_cumulative_gpa_mae_vs_end': 0.35731076690599745, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 47_points E: 282383 rows, 43 features
+DONE 2024 47_points E: {'course_points_mae': 0.5670685435990108, 'course_points_rmse': 0.7755032235297614, 'plan_gpa_mae': 0.4316894026895334, 'plan_gpa_rmse': 0.60162010415027, 'plan_gpa_bias': -0.021734803576640326, 'plans': 15413, 'projected_cumulative_gpa_mae_vs_end': 0.3575631168135531, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 47_points F1: 282383 rows, 46 features
+DONE 2024 47_points F1: {'course_points_mae': 0.5664252988489118, 'course_points_rmse': 0.7746956597971106, 'plan_gpa_mae': 0.43097512051220593, 'plan_gpa_rmse': 0.6012859829038002, 'plan_gpa_bias': -0.02108647306075338, 'plans': 15413, 'projected_cumulative_gpa_mae_vs_end': 0.3571670087238081, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 47_points F2: 282383 rows, 46 features
+DONE 2024 47_points F2: {'course_points_mae': 0.5652478244525498, 'course_points_rmse': 0.7737026663520572, 'plan_gpa_mae': 0.42977218212901286, 'plan_gpa_rmse': 0.6000180487242126, 'plan_gpa_bias': -0.019456318266953387, 'plans': 15413, 'projected_cumulative_gpa_mae_vs_end': 0.3568960023261904, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 47_points F3: 282383 rows, 46 features
+DONE 2024 47_points F3: {'course_points_mae': 0.5665584515469221, 'course_points_rmse': 0.7749445086113997, 'plan_gpa_mae': 0.4310813399321285, 'plan_gpa_rmse': 0.6013132208386837, 'plan_gpa_bias': -0.020945958286109925, 'plans': 15413, 'projected_cumulative_gpa_mae_vs_end': 0.357217198145507, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 47_points F4: 282383 rows, 46 features
+DONE 2024 47_points F4: {'course_points_mae': 0.5664384881314165, 'course_points_rmse': 0.7747209466110131, 'plan_gpa_mae': 0.430841977651429, 'plan_gpa_rmse': 0.6012821224401598, 'plan_gpa_bias': -0.0204787274422918, 'plans': 15413, 'projected_cumulative_gpa_mae_vs_end': 0.35709891550331657, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+SELECT 2024 57_degree_history_grade regularized_47 136 rounds
+FIT 2024 57_degree_history_grade A: 282383 rows, 57 features
+DONE 2024 57_degree_history_grade A: {'course_points_mae': 0.5519964263162844, 'course_points_rmse': 0.7739092014036597, 'plan_gpa_mae': 0.42395423253347564, 'plan_gpa_rmse': 0.6006575885611595, 'plan_gpa_bias': 0.003243635537875216, 'plans': 15413, 'grade_mae': 9.76920708893948, 'grade_rmse': 13.088264829080918, 'grade_bias': -1.4807304567035315, 'projected_cumulative_gpa_mae_vs_end': 0.3544065737691868, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 57_degree_history_grade B: 282383 rows, 55 features
+DONE 2024 57_degree_history_grade B: {'course_points_mae': 0.5518486424032352, 'course_points_rmse': 0.772315885510723, 'plan_gpa_mae': 0.42378375180766426, 'plan_gpa_rmse': 0.5987957725244906, 'plan_gpa_bias': 0.002566228948453052, 'plans': 15413, 'grade_mae': 9.767781640018686, 'grade_rmse': 13.068831839739007, 'grade_bias': -1.4744690020250812, 'projected_cumulative_gpa_mae_vs_end': 0.35404678121940825, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 57_degree_history_grade C: 282383 rows, 54 features
+DONE 2024 57_degree_history_grade C: {'course_points_mae': 0.5523994733518734, 'course_points_rmse': 0.7734685712955929, 'plan_gpa_mae': 0.4241004171538674, 'plan_gpa_rmse': 0.5998466400719318, 'plan_gpa_bias': 0.002071649255104347, 'plans': 15413, 'grade_mae': 9.770172864960767, 'grade_rmse': 13.080910834160836, 'grade_bias': -1.4814812767431587, 'projected_cumulative_gpa_mae_vs_end': 0.35443634016332876, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 57_degree_history_grade D: 282383 rows, 54 features
+DONE 2024 57_degree_history_grade D: {'course_points_mae': 0.5512407131245549, 'course_points_rmse': 0.7728392071623714, 'plan_gpa_mae': 0.4233871424672854, 'plan_gpa_rmse': 0.5993464818489526, 'plan_gpa_bias': 0.0030780462387740904, 'plans': 15413, 'grade_mae': 9.75129428710868, 'grade_rmse': 13.070366833507, 'grade_bias': -1.4438503171193344, 'projected_cumulative_gpa_mae_vs_end': 0.35436106088866637, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 57_degree_history_grade E: 282383 rows, 53 features
+DONE 2024 57_degree_history_grade E: {'course_points_mae': 0.5531719801700858, 'course_points_rmse': 0.7748709871238447, 'plan_gpa_mae': 0.42517488731245495, 'plan_gpa_rmse': 0.601869425688655, 'plan_gpa_bias': -0.0013795548589374557, 'plans': 15413, 'grade_mae': 9.787740391808889, 'grade_rmse': 13.106646862144416, 'grade_bias': -1.5390872162783793, 'projected_cumulative_gpa_mae_vs_end': 0.35518364765854527, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 57_degree_history_grade F1: 282383 rows, 56 features
+DONE 2024 57_degree_history_grade F1: {'course_points_mae': 0.5531048056641543, 'course_points_rmse': 0.7741272530466528, 'plan_gpa_mae': 0.4249308904531683, 'plan_gpa_rmse': 0.6002063598805318, 'plan_gpa_bias': -0.00013247714681630451, 'plans': 15413, 'grade_mae': 9.779048063866949, 'grade_rmse': 13.087358184516596, 'grade_bias': -1.516187483721908, 'projected_cumulative_gpa_mae_vs_end': 0.3549840980638784, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 57_degree_history_grade F2: 282383 rows, 56 features
+DONE 2024 57_degree_history_grade F2: {'course_points_mae': 0.5520199373933605, 'course_points_rmse': 0.7737003132398583, 'plan_gpa_mae': 0.4235851134813595, 'plan_gpa_rmse': 0.5993557943239833, 'plan_gpa_bias': 0.0029411243116033233, 'plans': 15413, 'grade_mae': 9.760757276830939, 'grade_rmse': 13.072441982126154, 'grade_bias': -1.4592396162435284, 'projected_cumulative_gpa_mae_vs_end': 0.3542611754865633, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 57_degree_history_grade F3: 282383 rows, 56 features
+DONE 2024 57_degree_history_grade F3: {'course_points_mae': 0.5512440718498516, 'course_points_rmse': 0.7727289206562427, 'plan_gpa_mae': 0.4226131663765274, 'plan_gpa_rmse': 0.5987974157819821, 'plan_gpa_bias': 0.0026222786432372816, 'plans': 15413, 'grade_mae': 9.752248492972601, 'grade_rmse': 13.060887834090984, 'grade_bias': -1.4725202267211424, 'projected_cumulative_gpa_mae_vs_end': 0.3541572851427449, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+FIT 2024 57_degree_history_grade F4: 282383 rows, 56 features
+DONE 2024 57_degree_history_grade F4: {'course_points_mae': 0.5517378044684481, 'course_points_rmse': 0.773704654346895, 'plan_gpa_mae': 0.4234394387111845, 'plan_gpa_rmse': 0.599963635860173, 'plan_gpa_bias': 0.006272791692515479, 'plans': 15413, 'grade_mae': 9.759104360022569, 'grade_rmse': 13.070072952960423, 'grade_bias': -1.4066802862259753, 'projected_cumulative_gpa_mae_vs_end': 0.3544152522030798, 'additive_observed_gpa_mae_vs_end': 0.2584169471778583, 'projected_comparable_plans': 15413}
+Isolation: {'protected_files': 1159, 'changed': [], 'added': [], 'removed': [], 'production_modified': False}

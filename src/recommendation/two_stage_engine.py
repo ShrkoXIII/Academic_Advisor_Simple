@@ -1,7 +1,7 @@
-"""Payload-driven 33 -> at most 50 -> 47 core, explicitly evaluation-only.
+"""Payload-driven 33 -> at most 50 -> 47 core with manifest-gated activation.
 
-Production activation remains closed until both strategies and their combination
-are approved in the later manifest phase. No Backend transport or local joins.
+Production loads approved policies; evaluation choices remain explicit. No
+Backend transport or local joins. Operational service limits remain unresolved.
 """
 from collections.abc import Mapping
 from copy import deepcopy
@@ -23,6 +23,7 @@ from .inputs import prepare_recommendation_payloads
 from .plan_generation import build_plan_rows
 from .plan_scoring import COURSE_OUTPUT_COLUMNS, SUMMARY_COLUMNS, score_course_rows, summarize_scored_plans
 from .ranking import RankingStrategy, rank_evaluation_plans
+from .ranking_policy import UNAPPROVED_RANKING, validate_ranking_policy
 from .shortlist import SHORTLIST_LIMIT, build_stage1_shortlist
 from .two_stage_artifacts import TwoStageArtifacts, load_two_stage_artifacts, stage_feature_contract
 
@@ -80,7 +81,8 @@ class TwoStagePlanRecommender:
     """One loaded model bundle and one history manager; requests pin one snapshot.
 
     Explicit constructor injection is for evaluation/test assets. Ordinary callers
-    use load_for_evaluation; load deliberately refuses production activation.
+    use load for manifest-approved policy activation, or load_for_evaluation for
+    explicit unapproved evaluation choices.
     """
 
     def __init__(self, artifacts, history_manager, *, stage1_shortlist_strategy,
@@ -96,12 +98,45 @@ class TwoStagePlanRecommender:
         self.stage1_shortlist_strategy, self.final_ranking_strategy = stage1_shortlist_strategy, final_ranking_strategy
         self.num_threads = int(num_threads)
         self._manifest = deepcopy(artifacts.manifest)
+        self._approved_policy = None
 
     @classmethod
     def load(cls, *, project_root=paths.PROJECT_ROOT, history_root=None, num_threads=4):
-        """Refuse activation under the current unapproved manifest contract."""
-        load_two_stage_artifacts(project_root=project_root)
-        raise ValueError("Production ranking requires approval of Stage 1, Final and their combination; use explicit evaluation only.")
+        """Load verified assets and history once, using only manifest-approved choices."""
+        artifacts = load_two_stage_artifacts(project_root=project_root)
+        policy = validate_ranking_policy(artifacts.manifest, require_approved=True)
+        manager = FrozenHistoryManager.load(root=history_root)
+        engine = cls(artifacts, manager,
+                     stage1_shortlist_strategy=RankingStrategy(stage="stage1", name=policy["stage1_shortlist_strategy"]["name"]),
+                     final_ranking_strategy=RankingStrategy(stage="final", name=policy["final_ranking_strategy"]["name"]),
+                     num_threads=num_threads)
+        engine._approved_policy = policy
+        return engine
+
+    def _ranking_metadata(self, stage1_strategy, final_strategy):
+        """Keep evaluation unapproved; enforce and label the activated policy snapshot."""
+        metadata = {"usage": "evaluation_only", "ranking_approval": deepcopy(UNAPPROVED_RANKING),
+                    "production_ranking_strategy": "UNAPPROVED"}
+        policy = self._approved_policy
+        names = []
+        for key, stage, strategy in (("stage1_shortlist_strategy", "stage1", stage1_strategy),
+                                     ("final_ranking_strategy", "final", final_strategy)):
+            if policy is not None and (not isinstance(strategy, RankingStrategy) or strategy.stage != stage):
+                raise ValueError("Active strategy no longer matches the approved stage identity.")
+            entry = strategy.metadata()
+            if policy is not None:
+                if {"name": strategy.name, "version": strategy.version} != policy[key]:
+                    raise ValueError("Active strategy no longer matches the approved manifest policy.")
+                entry.update(approval_status="APPROVED", usage="production_core")
+                names.append(f"{strategy.name} {strategy.version}")
+            metadata[key] = entry
+        if policy is not None:
+            canonical = json.dumps(policy, sort_keys=True, ensure_ascii=False, allow_nan=False, separators=(",", ":"))
+            metadata.update(usage="production_core", ranking_approval=deepcopy(self._manifest["ranking_approval"]),
+                            production_ranking_strategy=" -> ".join(names), ranking_policy=deepcopy(policy),
+                            ranking_policy_sha256=sha256(canonical.encode("utf8")).hexdigest(),
+                            operational_contracts=deepcopy(policy["operational_contracts"]))
+        return metadata
 
     @classmethod
     def load_for_evaluation(cls, *, stage1_shortlist_strategy, final_ranking_strategy,
@@ -140,6 +175,10 @@ class TwoStagePlanRecommender:
         if isinstance(top_k, (bool, np.bool_)) or not isinstance(top_k, (int, np.integer)) or not 1 <= top_k <= SHORTLIST_LIMIT:
             raise ValueError("top_k must be an integer in 1..50.")
         top_k = int(top_k)
+        stage1_strategy, final_strategy = self.stage1_shortlist_strategy, self.final_ranking_strategy
+        ranking_metadata = self._ranking_metadata(stage1_strategy, final_strategy)
+        if isinstance(student_payload, Mapping) and isinstance(student_payload.get("snapshot"), Mapping):
+            self.artifacts.grade_scale.validate_versions([student_payload["snapshot"].get("grade_version_id")])
         prepared = prepare_recommendation_payloads(student_payload=student_payload, request_payload=request_payload)
         snapshot, constraints = prepared.snapshot, prepared.constraints
         target = snapshot["part_id"]
@@ -159,7 +198,7 @@ class TwoStagePlanRecommender:
                 num_threads=self.num_threads,
             )
             selection = build_stage1_shortlist(
-                scored_candidates, constraints, stage1_shortlist_strategy=self.stage1_shortlist_strategy,
+                scored_candidates, constraints, stage1_shortlist_strategy=stage1_strategy,
                 current_gpa=snapshot["start_agpa_points"], current_gpa_credits=snapshot["current_gpa_credits"],
                 part_semester=snapshot["part_semester"],
             )
@@ -178,13 +217,13 @@ class TwoStagePlanRecommender:
                                         on="plan_id", validate="one_to_one")
                 repeats = scored.candidate_group.ne("NEW").groupby(scored.plan_id).any()
                 summary["projected_gpa_requires_repeat_policy"] |= summary.plan_id.map(repeats)
-                ranked = rank_evaluation_plans(summary, strategy=self.final_ranking_strategy)
+                ranked = rank_evaluation_plans(summary, strategy=final_strategy)
                 for rank, record in enumerate(ranked.head(top_k).to_dict("records"), 1):
                     record["rank"] = rank
                     record["courses"] = scored.loc[scored.plan_id.eq(record["plan_id"]), COURSE_OUTPUT_COLUMNS].to_dict("records")
                     recommendations.append(_json_value(record))
         metadata = {
-            "usage": "evaluation_only", "dataset_version": "V2",
+            **ranking_metadata, "dataset_version": "V2",
             "feature_engineering_version": FEATURE_ENGINEERING_VERSION,
             "student_id": snapshot["student_id"], "degree_id": snapshot["degree_id"], "part_id": target,
             "input_fingerprint_version": "normalized_payload_v1", "input_sha256": input_sha256,
@@ -197,10 +236,6 @@ class TwoStagePlanRecommender:
             **self._manifest["grade_scale"], "grade_model_target": "final_mark",
             "expected_points_method": "predicted_mark_to_grade_scale",
             "balance_policy_version": B_OBSERVED_MIDDLE_V1.version,
-            "stage1_shortlist_strategy": self.stage1_shortlist_strategy.metadata(),
-            "final_ranking_strategy": self.final_ranking_strategy.metadata(),
-            "ranking_approval": deepcopy(self._manifest["ranking_approval"]),
-            "production_ranking_strategy": "UNAPPROVED",
             "received_candidate_count": len(student_payload["candidates"]), "candidate_count": len(base),
             "stage1_row_count": len(base), "feasible_plan_count": feasible_count,
             "shortlist_count": len(shortlist_ids), "shortlist_limit": SHORTLIST_LIMIT,

@@ -1,148 +1,141 @@
-# `Phase 6 — تنفيذ Benchmark وعرض نتائج المرحلتين والمفاضلات لاعتماد الاستراتيجيات بصورة مستقلة.`
+# `Phase 6 — Corrected Benchmark & Independent Strategy Evidence`
 
-**الحالة:** `NOT IMPLEMENTED YET`.
+**الحالة:** `COMPLETE` — الأدلة المصححة بتاريخ `2026-10-07`؛ شرح محدث بتاريخ `2026-10-08`. هذه صفحة نتائج مسجلة، وليست تشغيل `Benchmark` جديدًا.
 
-## 1. الفكرة العامة
+## 1. الفكرة العامة — Overview
 
-ستقيس هذه المرحلة كلفة البحث والترتيب والمسار الكامل على حالات مصطنعة متنوعة، ثم تعرض مفاضلات كل استراتيجية وتوليفات المرحلتين للاعتماد. يوجد `Benchmark` محلي أقدم يعتمد كتالوجًا وبيانات المشروع؛ لا يحقق برنامج القياس الجديد ولا يثبت أداء `Two-Stage`.
+قاست المرحلة كلفة البحث والترتيب والمسار الكامل، وفصلت تقييم جودة اختصار `Stage 1` عن مفاضلات `Final`، ثم قارنت التوليفات الأربع. مرجعها الحالي هو [التقرير المصحح](../reports/two_stage_phase6/corrected/RESULT.md). انتهت المرحلة بتوصيات `RECOMMENDED`؛ حصل الاعتماد البشري لاحقًا في `Phase 7`، ولم يُعد كتابة التقرير ليبدو معتمدًا في تاريخ أقدم.
 
 ## 2. قبل → بعد
 
-```text
-Before
-  ↓
-Local benchmark لمحرك AcademicPlanRecommender
-  ↓
-Phase 6: NOT IMPLEMENTED YET
-  ↓
-After المخطط: Synthetic two-stage measurements + independent approval evidence
-```
-
-| `Before` الفعلي | `After` المخطط |
+| `Before` | `After` |
 |---|---|
-| أداة قديمة بأحجام `15/20/25` وقراءة ملفات محلية. | حالات مصطنعة سهلة وصعبة بأحجام `15/20/25/30` و`35` للضغط فقط. |
-| قياس المسار المحلي السابق. | فصل قياس البحث عن الترتيب وعن المسار الكامل للمرحلتين. |
+| أداة قياس محلية قديمة وتقرير `Phase 5` بتوقعات مصطنعة. | قياسات منفصلة وحالات `Synthetic` ومقارنة بالمودلات المثبتة ومرجع كامل محدود خارج التشغيل. |
+| القياس الأول استعمل `grade_version_id=1` غير المدعومة، فأعادت العلامات نقاطًا صفرية. | إبطال كل الملاحظات المتأثرة وإعادة القياس بعينة تحويل صالحة، وتقييم جودة مستقل بإصدار معروف للمودلات. |
+| لا دليل كافٍ للاختيار بين الاستراتيجيات. | استدعاء مستقل لكل استراتيجية وتوليفة، مع خسائر الاختصار ومفاضلات التوازن والأداء موثقة. |
 
-## 3. الملفات المنتجة أو المعدلة
+## 3. الملفات المنتجة أو المستخدمة — Files
 
-### ملفات جديدة
-
-لا أداة أو تقرير جديد لهذه المرحلة. الخطة لا تثبت أسماء ملفات نهائية لبرنامج القياس وتقرير المقارنة.
-
-### ملفات معدلة
-
-لا تعديل منسوب لها. `src/recommendation/benchmark.py` أداة سابقة، وليس تنفيذًا للبند السادس.
-
-### `Artifacts` ناتجة
-
-لا `Report` أداء أو مفاضلات أو اعتماد مستقل جديد. النتائج السابقة، إن وجدت، لا تنسب لهذا المسار غير الموجود.
-
-## 4. أهم الملفات بالتفصيل المختصر
-
-### `src/recommendation/benchmark.py` — موجود مسبقًا
-
-**الفكرة:** قياس محلي لمحرك `AcademicPlanRecommender` مع قراءة كتالوج وصفوف المشروع.
-
-**يدخل إليه:** الحجم والمخرج والخيوط وقطع التاريخ وملفات `V2` المحلية.
-
-**يخرج منه:** ملفات مدخلات ونتائج محلية و`benchmark.json` عند تشغيل الأداة السابقة؛ لم تُشغّل هنا.
-
-| `Function / Class` الموجود | ماذا يفعل؟ |
+| الملف أو المجموعة | الدور |
 |---|---|
-| `peak_memory_mib()` | يقرأ ذروة ذاكرة العملية حسب منصة التشغيل. |
-| `benchmark()` | يجهز حالة من الكتالوج ويشغل المحرك المحلي ويسجل قياسه. |
-| `main()` | يقرأ معاملات التشغيل ويشغل الأحجام المحلية المحددة. |
+| [benchmark_two_stage.py](../scripts/benchmark_two_stage.py) | حالات مصطنعة وقياس البحث و`Stage 1` و`Final` والمسار الكامل في عمال منفصلين، مع مهلات وتسجيل الموارد. |
+| [rerun_corrected_phase6.py](../scripts/rerun_corrected_phase6.py) | تصنيف الأدلة القديمة وأرشفتها، وإعادة الملاحظات المتأثرة والتحقق من مصدر الاستئناف وتجميع التقرير المصحح. |
+| [evaluate_corrected_phase6.py](../scripts/evaluate_corrected_phase6.py) | تقييم جودة الاختصار بالمودلات الفعلية ومرجع `Stage 2` كامل محدود ومقارنة `Final` على مجموعة ثابتة. |
+| [test_two_stage_benchmark.py](../tests/test_two_stage_benchmark.py) | عقود القياس والحالات والمهلات والمخرجات. |
+| [test_corrected_phase6_rerun.py](../tests/test_corrected_phase6_rerun.py) و[test_corrected_phase6_evaluation.py](../tests/test_corrected_phase6_evaluation.py) | صلاحية الاستبدال ومصدر القياس والاستئناف ومرجع الجودة وفحوص الثبات. |
+| [corrected/benchmark.json](../reports/two_stage_phase6/corrected/benchmark.json) و[benchmark.md](../reports/two_stage_phase6/corrected/benchmark.md) | القياسات المصححة مع فصل البحث المحتفظ به. |
+| [corrected_ranking_evaluation.json](../reports/two_stage_phase6/corrected/corrected_ranking_evaluation.json) | الجودة الأساسية بإصدار `2.111`. |
+| [grade_version_3_sensitivity.json](../reports/two_stage_phase6/corrected/grade_version_3_sensitivity.json) | حساسية منفصلة بإصدار `3.111`. |
+| [review_metrics.json](../reports/two_stage_phase6/corrected/review_metrics.json) و[verification.json](../reports/two_stage_phase6/corrected/verification.json) | مقاييس المراجعة والتحقق النهائي. |
+| [measurement_source/](../reports/two_stage_phase6/corrected/measurement_source/) و[old_invalidated/README.md](../reports/two_stage_phase6/corrected/old_invalidated/README.md) | مصدر الجولة المقاسة وأرشيف الأدلة المبطلة؛ يحفظان السجل دون مزج نتائجه. |
 
-لا توابع جديدة لمقارنة استراتيجيات `Two-Stage` أو لاعتمادها يمكن توثيقها فعليًا.
+`src/recommendation/benchmark.py` أداة محلية أقدم لمسار `AcademicPlanRecommender`، وليست أداة هذه المرحلة. لا تعتمد النواة وقت التشغيل على هذه السكربتات أو التقارير، ولم تُنشر مودلات جديدة.
 
-## 5. مخطط سير البيانات
+## 4. أهم الدوال — Important Functions
 
-المسار مخطط وغير منفذ:
+| المكون | المسؤولية |
+|---|---|
+| `synthetic_case()` و`synthetic_history_manager()` | مدخلات وتاريخ اصطناعيان لقياس لا يستهلك سجلات طلاب حقيقيين. |
+| `supported_synthetic_grade_version()` | اختيار إصدار تدعمه حزم نجاح `GradeScale` لعينة القياس؛ لا يضيف فحصًا إلى طلبات الإنتاج. |
+| `measure_case()` و`run_worker()` | قياس المسار المحدد في عملية مستقلة بمهلة، مع فصل إعداد الحالة عن وقت العملية المقاس. |
+| `censored_result()` | تسجيل تجاوز المهلة دون اختلاق زمن مكتمل أو ذاكرة أو عدد خطط مكتمل. |
+| `classify_old_evidence()` و`assemble_corrected_results()` | فصل البحث غير المتأثر عن النتائج الواجب استبدالها، ورفض مزج قياسات غير متطابقة. |
+| `run_corrected_benchmarks()` | إدارة الإعادة وحماية بصمات الأصول والمصدر والخيوط وسياق الاستئناف. |
+| `evaluate_fixture()` و`recall_evidence()` | مرجع كامل محدود لكل حالة وقياس احتفاظ المختصر بـ`Top K` حسب هويات الخطط. |
+| `compare_fixed_final()` | مقارنة المرشحين النهائيين على معرفات `Top50` أكاديمية واحدة وتوقعات `Stage 2` نفسها. |
+| `summarize_evidence()` | جمع المقاييس مع فصل الحالات داخل النطاق والحالات السهلة أو التي لا حل لها. |
+
+## 5. مخطط سير البيانات — Data Flow
 
 ```mermaid
 flowchart TD
-    A["Synthetic scenarios: 15,20,25,30; 35 stress"] --> B["Search measurement"]
-    A --> C["Strategy ranking cost"]
-    A --> D["Full two-stage measurement"]
-    B --> E["Timing + memory + search counts"]
-    C --> E
-    D --> E
-    P["Stage 1 / Final / combination comparisons"] --> F["Tradeoff report"]
-    E --> F --> G["Independent review and approvals"]
+    OLD["Original Phase 6 observations"] --> CLASS["Classify validity and preserve archive"]
+    CLASS --> KEEP["25 unaffected search records retained"]
+    CLASS --> RERUN["168 inference/ranking attempts rerun with supported 1.111"]
+    RERUN --> TIMES["128 completed + 40 freshly censored"]
+    KEEP --> REPORT["Corrected benchmark evidence"]
+    TIMES --> REPORT
+    FIX["11 synthetic quality cases + pinned 33/47 models"] --> Q["2.111 primary - 3.111 separate sensitivity"]
+    Q --> ORACLE["Bounded full Stage 2 oracle - Stage 1 recall"]
+    Q --> FINAL["Same fixed50 pool - independent Final comparison"]
+    ORACLE --> TRADE["Four combinations, trade-offs and lost plans"]
+    FINAL --> TRADE
+    REPORT --> REC["Independent recommendations for human review"]
+    TRADE --> REC
+    REC --> NEXT["Phase 7: explicit human decisions persisted"]
 ```
 
-1. يبني حالات مصطنعة متنوعة، منها الكسور والصفر والتعادل وغياب الحل.
-2. يقيس البحث والترتيب والمسار الكامل منفصلين.
-3. يسجل الوقت والذاكرة وأعداد البحث والخطط والاختصار.
-4. يعرض جودة الاختصار وتغير `Top K` والمقاييس الأكاديمية ومكونات التوازن.
-5. يعرض كل استراتيجية وتوليفتهما للمراجعة دون اختيار تلقائي.
+فرع الجودة تقييم `Offline` محدود؛ تشغيل `Stage 2` على كل خطط هذه العينات لا يغير حد التشغيل `≤50`.
 
 ## 6. `Input → Processing → Output`
 
-```text
-INPUT المخطط: synthetic scenarios + integrated core + candidate strategies
-  ↓
-PROCESSING المخطط: separate timing/memory → independent comparisons → review
-  ↓
-OUTPUT المخطط: Benchmark report + tradeoff evidence + explicit approval decisions
+حالات مصطنعة + أصول مثبتة + اختياران مستقلان → قياس منفصل + مرجع محدود + مقارنة مجموعة نهائية ثابتة → تقارير وقت وذاكرة وعدد حالات بحث وخطط، واحتفاظ `Top K`، وتوزيعات المقاييس، وخسائر ومفاضلات وتوصيات.
 
-المخرج الفعلي لهذه Phase حاليًا: لا يوجد
-```
+تستخدم عينة القياس المصححة `1.111`: الإصدار مدعوم في `GradeScale` لكنه `__UNKNOWN__` لدى فئات المودلين. تستخدم الجودة `2.111` والحساسية `3.111`، وهما مدعومان ومعروفان لدى المرحلتين؛ لا تدمج نتائج هذه العينات بوصفها حملًا واحدًا.
 
-المقاييس المطلوبة: `candidate_count` و`visited_search_states` و`feasible_plan_count` و`elapsed_time` و`peak_memory` و`shortlist_count`.
+## 7. التحقق والاختبارات — Validation & Tests
 
-## 7. كيف تم اختبار المرحلة؟
-
-لا تشغيل `Benchmark` جديد أو نتيجة اختبارات مخصصة مسجلة.
-
-| مجال التحقق المخطط | ماذا يجب أن يثبت؟ |
+| الدليل | النتيجة المثبتة |
 |---|---|
-| تنوع الحالات | القياس لا يعتمد حالة واحدة أو قائمة تاريخية غير مثبتة الأهلية. |
-| فصل الكلفة | معرفة مساهمة البحث والترتيب والمسار الكامل في الزمن. |
-| المفاضلات | تقييم الاختصار والنهائي مستقلين ثم مقارنة توليفاتهما. |
-| قرار البحث | اقتراح إبقاء البحث أو تحسين منفصل بناء على قياس فعلي. |
+| القديم المتأثر | `168` ملاحظة استدلال/ترتيب أُبطلت، بما فيها أوقاتها وذاكرتها والـ`40` التي تجاوزت المهلة؛ ليست أرقامًا صالحة للحالة الحالية. |
+| الإعادة المصححة | `168` محاولة جديدة: `128 completed, 40 freshly censored, 0 errors`. |
+| البحث المحتفظ به | `25` ملاحظة لا تحمل مودلات أو `GradeScale`؛ بقيت بتاريخها ومصدرها الأصليين. |
+| التقرير المجمع | `193` سجلًا: `153` مكتملًا و`40` متجاوزًا للمهلة، وليس `193` قياسًا جديدًا. |
+| الجودة لكل إصدار | `11` حالة، `1750` خطة ممكنة و`8210` صف `Stage 2` قبل فحوص التبديل الإضافية. أكبر حالة `441` خطة؛ الحد التشخيصي `1000`. |
+| الثبات | نجحت فحوص تبديل المرشحين وترتيب المختصر ومقاييس `Stage 2` وترتيبي `Final` في الإصدارين. |
+
+الاختبارات النهائية المسجلة في [الخطة](../docs/architecture/RECOMMENDATION_TWO_STAGE_IMPLEMENTATION_PLAN.md) و[التقرير المصحح](../reports/two_stage_phase6/corrected/RESULT.md):
 
 ```text
-Test result not recorded.
-Benchmark result not recorded for the planned two-stage path.
+Focused: 65 passed
+Related: 583 passed
+Full: 1119 passed, 1 failed, 6 subtests passed
+Known baseline failure: capacity_63 / capaciy_63
+New regression: 0; unrelated existing failure: 0; no skips recorded
 ```
+
+لا إعادة قياس أو اختبارات جديدة في تحديث هذه الوثائق. تقرير `Phase 5` ذو التوقعات المصطنعة محفوظ تاريخيًا ومستبعد من استنتاجات الجودة المصححة.
 
 ## 8. أهم ما أثبتته المرحلة
 
-- لم تثبت أداء أو مفاضلات أو اختيارًا إنتاجيًا بعد.
-- الأداة السابقة تقيس مسارًا مختلفًا عن البرنامج المطلوب.
-- لا دليل حالي يسمح بتثبيت حد مرشحين أو زمن أو ذاكرة إنتاجي.
+### جودة الاختصار والنهائي
 
-## 9. ما الذي لم تنفذه هذه `Phase`؟
+في تسع حالات تحتوي أكثر من `50` خطة، مقارنة المختصر بمرجع `Final Pareto` الكامل:
 
-```text
-NOT DONE IN THIS PHASE
-```
+| اختيار `Stage 1` | احتفاظ `Top 3` | احتفاظ `Top 10` |
+|---|---:|---:|
+| `balance_first v1` | `25/27` | `66/90` |
+| `pareto v1` | `26/27` | `85/90` |
 
-- برنامج القياس الجديد وتقرير المقارنة والاعتماد.
-- تعديل خوارزمية البحث أو فرض `max_candidates`.
-- تعيين `SLA` أو حد ذاكرة افتراضي.
-- تدريب أو توصية على طلاب حقيقيين أو نشر خدمة.
+عند اختيار مرجع `Final Balance-first` تصبح النتائج `27/27, 90/90` لـ`balance_first` و`25/27, 86/90` لـ`pareto`. هذه أهداف مختلفة، ولا تصح مقارنة نسبها كأنها معيار جودة واحد.
 
-## 10. المشاكل أو القيود المعروفة
+على مجموعة `Final` ثابتة في سبع حالات داخل نطاق التوازن، حققت `Pareto` مقابل `Balance-first` فرق تراكمي متوقع `+0.00003968` وساعات فشل `−0.01628759` عند `Top 3`، و`+0.00161218` و`−0.05354007` عند `Top 10`. كانت عقوبات التوازن الثلاثة أسوأ مع `Pareto`؛ لا تفوق شامل عبر جميع الأهداف.
 
-```text
-backend_max_candidate_count = UNRESOLVED
-recommendation_latency_sla = UNRESOLVED
-memory_budget_per_request = UNRESOLVED
-production_ranking_strategy = UNAPPROVED
-```
+أوصى التقرير بـ`pareto → pareto` للاحتفاظ الأوسع بخيارات `Top 10` ومفاضلات المعدل والفشل، مع بديل `balance_first → balance_first` إذا اختيرت أولوية التوازن الصارمة. التوليفة الموصى بها فقدت خطة من `Global Top 3` وثلاثًا من `Top 10` في `retake_strong`، وخمس مراتب `Top 10` عبر الحالات التسع إجمالًا. تغير مجموعة الخطط قد يغير جبهات `Pareto`؛ يقيس التقرير الاحتفاظ والنتائج المعادة منفصلين.
 
-تصنيفات الوقت في الخطة تشخيصية فقط: أقل من ثانية، `1–3`، `3–5`، وأكثر من `5` ثوانٍ؛ ليست بوابة نجاح إنتاجية أو نتيجة مقاسة الآن.
+### الكلفة المسجلة
 
-## 11. ماذا تستلم المرحلة التالية؟
+| الحالة | القياس |
+|---|---|
+| `15` مرشحًا كثيفًا، قياس تكميلي لترتيب `Stage 1` | `1.869s` للتوازن مقابل `7.987s` لـ`Pareto`. |
+| المسار الكامل لنفس الحالة | `8.438–18.879s` عبر التوليفات؛ `Pareto/Pareto=18.366s`. |
+| `30` مرشحًا مع الكسور والصفر | `4.461–7.420s` للمسار الكامل. |
+| أعلى ذروة عملية مكتملة في القياس المصحح | `181.73 MiB`. |
+| البحث المحتفظ به: `25/30/35` مرشحًا، هدف `18` | `6.677/25.535/68.661s`؛ `35` اختبار ضغط. |
 
-```text
-HANDOFF TO NEXT PHASE
+البيئة المسجلة: `Windows / Python 3.11.5 / pandas 3.0.5` وخيط مودل واحد، وعينة واحدة لكل ملاحظة. مهلة العامل تشمل الإعداد وليست `SLA`؛ الأوقات المكتملة أوقات العمليات المقاسة، وذروة العملية تشمل الإعداد والاستيراد والذاكرة الأصلية. لا تُنسب قياسات مكتملة للملاحظات المتجاوزة للمهلة.
 
-المخرج المخطط، غير المتاح بعد
-  ↓
-Benchmark + independent strategy/combination approval records
-  ↓
-البند 7 يثبت فقط السياسات والإصدارات والمعاملات المعتمدة في Manifest
-```
+## 9. حدود مسؤولية المرحلة
+
+أنتجت أدلة وتوصيات ولم تمنح موافقة أو تستبدل خوارزمية البحث أو تفرض حدًا جديدًا. نسخ مصدر الجولة المقاسة محفوظة؛ أضيفت لاحقًا حماية استئناف ترفض نقطة تحقق قديمة تفتقر إلى سياق البصمات الجديد بدل خلط جولتين.
+
+## 10. المشاكل والقيود المعروفة — Known Limitations
+
+- إصلاح إصدار عينة `Benchmark` لا يضيف رفضًا للإصدار غير المدعوم في `GradeScale.convert()` أو مدخلات المحرك؛ العيب التشغيلي باقٍ.
+- `backend_max_candidate_count / recommendation_latency_sla / memory_budget_per_request = UNRESOLVED`. المهل والفئات التشخيصية لا تعتمد أداء البحث الحالي.
+- الأدلة تستخدم معرفات وتاريخًا مصطنعين؛ لا تثبت جودة توصيات لطلاب حقيقيين أو `Global Top-K`.
+- الفشل المعروف ونقل أصول `Stage 2` عبر `Git` باقيان ضمن [القيود العامة](README.md). اعتماد `Phase 7` لا يمحو هذه القيود.
+
+## 11. التسليم لبقية النظام — Handoff
+
+سلمت المرحلة أدلة مصححة وتوصية مستقلة لكل استراتيجية وتوليفة للمراجعة البشرية. ثبتت [Phase 7](PHASE_07_MANIFEST_POLICIES_REVALIDATION.md) قرار `2026-10-08` وبصمات الأدلة في `Manifest`. تبقى الأدلة التاريخية `RECOMMENDED/UNAPPROVED` في وقتها، بينما الحالة الحالية للسياسات الثلاث `APPROVED` ضمن `Core` فقط.

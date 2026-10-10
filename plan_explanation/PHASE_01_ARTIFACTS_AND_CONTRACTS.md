@@ -1,10 +1,12 @@
 # `Phase 1 — Artifacts & Contracts`
 
-**الحالة:** `COMPLETE` — سجل التنفيذ بتاريخ `2026-10-05`، مع مراجعة الملفات الحالية بتاريخ `2026-10-06`.
+**الحالة:** `COMPLETE` — تنفيذ `2026-10-05`؛ شرح محدث وفق الكود و`Manifest` بتاريخ `2026-10-08`. الاكتمال يخص التنفيذ ولا يعني اعتماد استقرار النواة.
 
 ## 1. الفكرة العامة
 
 أخذت هذه المرحلة مودلات `Stage 1` الموجودة أصلًا، ونسختها إلى مساحة مستقلة عن التجارب، وثبتت عقود `33/47 features` داخل `Manifest` و`Loader` صارم. تحقق التنفيذ من تطابق النسخ دون إعادة تدريب. أصبحت أصول المرحلتين جاهزة للتحميل، دون تنفيذ التوصية نفسها.
+
+ربطت [Phase 5](PHASE_05_TWO_STAGE_INTEGRATION_VALIDATION.md) هذه الأصول بالمحرك، ثم أضافت [Phase 7](PHASE_07_MANIFEST_POLICIES_REVALIDATION.md) عقد السياسة المعتمدة إلى `Manifest` والتحقق منه. الوصف أدناه يفصل مسؤولية النشر الأصلية عن حالة التحميل الحالية.
 
 ## 2. قبل → بعد
 
@@ -90,7 +92,7 @@ After: نسخ مستقلة + Manifest للمرحلتين + Loader صارم
 | `verify_artifact_hash()` | يرفض ملفًا مفقودًا أو مختلف البصمة قبل تفسير محتواه. |
 | `validate_stage_metadata()` | يتحقق من عقد التدريب والأهداف والاختيارات و`Cutoff` المسجل. |
 | `validate_archived_provenance()` | يطلب أدلة المصدر الأصلية المكتملة دون إعادة فتح مصادر التدريب. |
-| `validate_artifact_manifest()` | يثبت النسخ والعقود والمسارات والأهداف وحالة الاعتماد غير المفعلة. |
+| `validate_artifact_manifest()` | يثبت النسخ والعقود والمسارات والأهداف، ويفوض تحقق الاعتماد الحالي إلى `validate_ranking_policy()`. |
 | `load_model_pair()` | يفحص أسماء وعدد وترتيب الميزات والفئات وهدف مودلات `LightGBM` الفعلية. |
 | `load_manifest_assets()` | يتحقق من الأصول الأربعة و`GradeScale` وشرط سبق التدريب للفصل المستهدف إن مرر. |
 | `load_two_stage_artifacts()` | يقرأ `Manifest` ويعيد الأصول المتحقق منها دون توليد أو مسار بديل. |
@@ -123,14 +125,19 @@ After: نسخ مستقلة + Manifest للمرحلتين + Loader صارم
 
 ```mermaid
 flowchart TD
-    A["33-feature experiment artifacts"] --> B["verify_training_sources"]
-    V["Official V2 assets + GradeScale"] --> C["build_promotion_manifest"]
-    B --> C --> D["Staging: copy exact bytes"]
-    D --> E["load_manifest_assets + verify sources"]
-    E --> F["models/shortlist_v2"]
-    F --> G["load_two_stage_artifacts"]
-    V --> G
-    G --> H["TwoStageArtifacts"]
+    subgraph Promotion["Historical one-time promotion"]
+        A["33-feature experiment artifacts + original evidence"] --> B["verify_training_sources"]
+        B --> C["build_promotion_manifest"]
+        C --> D["Copy staging - reload and verify - publish"]
+    end
+    D --> F["Pinned Stage 1 files + Manifest"]
+    V["Official Stage 2 assets + GradeScale"] --> C
+    subgraph Loading["Current runtime loading"]
+        F --> G["load_two_stage_artifacts"]
+        V --> G
+        G --> P["Verify hashes, contracts, provenance and policy"]
+        P --> H["TwoStageArtifacts: 33/47 model pairs + scale + manifest"]
+    end
 ```
 
 1. يتحقق النشر من مصدر الأصول الأصلية.
@@ -170,11 +177,11 @@ Full pytest: 680 passed, 1 failed, 6 subtests passed in 68.37s
 Known baseline failure: grade-capacity_63-mae
 ```
 
-المصدر الدائم: قسم تقدم الأولى في [الخطة](../docs/architecture/RECOMMENDATION_TWO_STAGE_IMPLEMENTATION_PLAN.md). سجل `Full pytest` المحلي المتحقق منه: `%TEMP%/recommendation_phase1_miy7l3z5/full_pytest_final.log`. قائمة أوامر اختبارات `Related regression` التفصيلية غير مسجلة في قسم التقدم.
+المصدر الدائم: قسم تقدم الأولى في [الخطة](../docs/architecture/RECOMMENDATION_TWO_STAGE_IMPLEMENTATION_PLAN.md). أشار التوثيق القديم إلى سجل مؤقت باسم `full_pytest_final.log`؛ لا يعتمد هذا المرجع الحالي على بقاء الملف المؤقت. قائمة أوامر اختبارات `Related regression` التفصيلية غير مسجلة في قسم التقدم.
 
 فحص فعلي منفصل للمودلات الأصلية والمنسوخة على `32` صفًا مصطنعًا سجل فرقًا أقصى `0.0` لكل من `Grade/Fail` في `real_artifact_synthetic_parity.json`. وفحص السلامة وقتها سجل `873 → 877` ملفًا مع أربع إضافات نشر فقط و`changed=[]` و`removed=[]`.
 
-خلال التوثيق فُحصت بصمات الأصول المثبتة الثمانية فقط دون تشغيل توقعات: اختلافات `[]`، وعقدا `33/47` و`Cutoff=20243` موجودان في `Manifest`.
+تسجل لقطة التوثيق القديمة فحص بصمات الأصول الثمانية باختلافات `[]`. هذه نتيجة تاريخية وليست فحصًا جديدًا ضمن تحديث الوثائق. في `Manifest` الحالي عقدا `33/47` و`training_as_of_part=20243`؛ تحميل المحرك يتحقق أيضًا من أن القطع يسبق الفصل المستهدف. أحدث تحقق شامل موثق في [Phase 7](PHASE_07_MANIFEST_POLICIES_REVALIDATION.md).
 
 ## 8. أهم ما أثبتته المرحلة
 
@@ -184,10 +191,10 @@ Known baseline failure: grade-capacity_63-mae
 - رفضت الاختبارات الأصول غير المتوافقة وأدلة المصدر الناقصة.
 - لم يجر تدريب جديد أو تعديل أصول `Stage 2` أو تاريخ موجود.
 
-## 9. ما الذي لم تنفذه هذه `Phase`؟
+## 9. حدود مسؤولية المرحلة الأصلية
 
 ```text
-NOT DONE IN THIS PHASE
+OUTSIDE PHASE 1 SCOPE — implemented later where applicable
 ```
 
 - `Payload adapters` وتعميم `Matrix helper` والتصنيف والقيود.
@@ -196,17 +203,18 @@ NOT DONE IN THIS PHASE
 - `Balance ranking` و`Stage 2` المتكاملة و`Top K`.
 - `Benchmark` أو اعتماد استراتيجيات أو `API`.
 
-`prediction_contract` يصف المعالجة المستقبلية؛ تحميله لا ينفذها. كما أن `TwoStageArtifacts` لا يحتوي تاريخًا؛ تحميل التاريخ مسؤولية الربط اللاحق.
+المكونات المذكورة أعلاه نفذتها المراحل التالية، باستثناء `API` الخدمية الخارجة عن الخطة. يصف `prediction_contract` المعالجة الحالية في `score_course_rows()`، لكن تحميل الأصول لا يشغلها. `TwoStageArtifacts` لا يحتوي تاريخًا؛ يحمله `TwoStagePlanRecommender.load()` عبر `FrozenHistoryManager`.
 
 ## 10. المشاكل أو القيود المعروفة
 
 - `KNOWN BASELINE FAILURE`: المصدر يستخدم `capaciy_63` والاختبار يتوقع `capacity_63`؛ لم يصلح ضمن الأولى.
-- `Production Ranking: UNAPPROVED`، وكذلك الاستراتيجيتان وتوليفتهما.
+- بقي الاعتماد `UNAPPROVED` وقت `Phase 1`؛ الحالة الحالية `APPROVED` لـ`pareto v1 → pareto v1` وفق `Phase 7`. تحميل الأصول وحده لا يفعّل سياسة محرك.
 - `Stage 2` قد تختلف بايتاته بعد تحويل نهايات الأسطر في `Git checkout`؛ يلزم نقل الأصول المثبتة دون تطبيع. حماية `-text` الجديدة تخص نسخ `Stage 1` الثلاثة.
 - `GradeScale` لا يحمل إصدارًا أصليًا مستقلًا؛ استُخدم `sha256:<digest>` بوصفه إصدار المحتوى.
+- تثبيت بصمة `GradeScale` لا يثبت صلاحية `grade_version_id` الواردة في كل طلب. التحويل الحالي لا يرفض الإصدار غير المدعوم، وقد يعيد `0/F` بصمت؛ هذه مشكلة مفتوحة ظهرت في تدقيق ما بعد `Phase 7`.
 - بعد تغييرات البند الثاني في مصادر موقعة، تبقى أدلة النشر الأصلية محفوظة؛ لا تعاد كتابة `Metadata` التجارب لمطابقة المصدر الجديد، ولا يُعاد النشر خلال التوثيق.
 
-## 11. ماذا تستلم المرحلة التالية؟
+## 11. التسليم لبقية النظام — Handoff
 
 ```text
 HANDOFF TO NEXT PHASE
@@ -217,3 +225,5 @@ stage_feature_contract() + TwoStageArtifacts + pinned Manifest
   ↓
 البند 2 يستخدم العقد لتجهيز Matrix ومدخلات جاهزة وتصنيف وقيود
 ```
+
+تستخدم [Phase 5](PHASE_05_TWO_STAGE_INTEGRATION_VALIDATION.md) زوجي المودلات أثناء الطلب، وتضيف [Phase 7](PHASE_07_MANIFEST_POLICIES_REVALIDATION.md) تحقق السياسة دون إعادة تدريب أو إعادة نشر. راجع [الخريطة العامة](FILE_MAP.md) للمسارات الفعلية و[الحالة الحالية](README.md) للقيود المشتركة.

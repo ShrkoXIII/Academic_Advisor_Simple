@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "D:\AI\Real projects\Academic_Advisor_Simple\scripts\experiments\student_progress_20261010\workflow.py", line 430, in <module>
+    run(args.resume,args.output_name)
+  File "D:\AI\Real projects\Academic_Advisor_Simple\scripts\experiments\student_progress_20261010\workflow.py", line 318, in run
+    validate_signature(json.loads(setup_path.read_text())['signature'],signature)
+  File "D:\AI\Real projects\Academic_Advisor_Simple\scripts\experiments\student_progress_20261010\workflow.py", line 68, in validate_signature
+    raise ValueError('Experimental cache signature mismatch')
+ValueError: Experimental cache signature mismatch

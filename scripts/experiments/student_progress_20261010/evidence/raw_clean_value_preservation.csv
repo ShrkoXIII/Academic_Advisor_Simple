@@ -1,0 +1,9 @@
+dataset,identity,valid,mismatch,mismatch_pct,difference_mean,difference_min,difference_max
+clean_v1,start_total_in_credits clean = raw,82300,0,0.0,0.0,0.0,0.0
+clean_v1,start_total_in_courses clean = raw,82300,0,0.0,0.0,0.0,0.0
+clean_v1,total_reg_credits clean = raw,82300,0,0.0,0.0,0.0,0.0
+clean_v1,total_reg_courses clean = raw,82300,0,0.0,0.0,0.0,0.0
+clean_v2,start_total_in_credits clean = raw,87892,0,0.0,0.0,0.0,0.0
+clean_v2,start_total_in_courses clean = raw,87892,0,0.0,0.0,0.0,0.0
+clean_v2,total_reg_credits clean = raw,87892,0,0.0,0.0,0.0,0.0
+clean_v2,total_reg_courses clean = raw,87892,0,0.0,0.0,0.0,0.0

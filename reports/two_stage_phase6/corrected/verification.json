@@ -1,0 +1,50 @@
+{
+  "phase": 6,
+  "verified_at": "2026-10-07T11:47:49.584883+00:00",
+  "protected_artifact_count": 877,
+  "production_source_count": 83,
+  "changed": 0,
+  "added": 0,
+  "removed": 0,
+  "manifest_sha256": "d34bd605b7d1e36ee0b646b00aad3e434c74bb80feb69ef18d0ebb3cbaa9e124",
+  "original_report_files_unchanged": 4,
+  "legacy_phase5_quality_excluded_and_hash_unchanged": true,
+  "measurement_source_snapshots_match_recorded_hashes": true,
+  "current_quality_sources_match_recorded_hashes": true,
+  "review_sources_match_recorded_hashes": true,
+  "stage1_final_combination_approval": "UNAPPROVED",
+  "tests": {
+    "focused": {
+      "passed": 65,
+      "failed": 0,
+      "seconds": 25.57
+    },
+    "related": {
+      "passed": 583,
+      "failed": 0,
+      "seconds": 138.31
+    },
+    "full_pytest": {
+      "passed": 1119,
+      "failed": 1,
+      "subtests_passed": 6,
+      "skipped": 0,
+      "seconds": 153.91,
+      "exit_code": 1
+    },
+    "new_regressions": 0,
+    "known_baseline_failures": 1,
+    "unrelated_existing_failures": 0,
+    "known_failure": "tests/test_train_models.py::test_tune_model_evaluates_every_candidate_fold_and_selects_mean_metric[grade-capacity_63-mae]",
+    "reason": "capaciy_63 versus capacity_63"
+  },
+  "graphify": {
+    "command": "graphify update .",
+    "ast_only": true,
+    "nodes": 2954,
+    "edges": 7122,
+    "communities": 167
+  },
+  "phase7_started_in_this_task": false,
+  "commit_created": false
+}
