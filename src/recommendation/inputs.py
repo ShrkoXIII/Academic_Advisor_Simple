@@ -302,6 +302,8 @@ def normalize_candidate_payloads(records, snapshot):
     if not isinstance(records, list) or any(not isinstance(row, Mapping) for row in records):
         raise ValueError("candidates must be a list of mappings.")
     columns = [*CANDIDATE_COURSE_COLUMNS, "course_name", "previous_course_status", "candidate_group"]
+    if any("requirement_group_id" in row for row in records):
+        columns.append("requirement_group_id")
     normalized = []
     for record in records:
         _validate_payload_identity(record, snapshot["student_id"], snapshot["degree_id"],
@@ -322,6 +324,8 @@ def normalize_candidate_payloads(records, snapshot):
         for key in ("plan_year_order", "plan_semester_order", "plan_credits_count"):
             row[key] = float(_payload_number(row[key], key, nullable=True, nonnegative=True))
         row["previous_course_status"], row["candidate_group"] = classify_candidate_status(record)
+        if "requirement_group_id" in columns:
+            row["requirement_group_id"] = _payload_id(record.get("requirement_group_id"), "requirement_group_id")
         normalized.append(row)
     rows = pd.DataFrame(normalized, columns=columns)
     if rows.course_id.duplicated().any():
@@ -348,7 +352,10 @@ def normalize_request_payload(request):
                                  "allowed_withdrawn_repeat_credits", nonnegative=True)
                  if "allowed_withdrawn_repeat_credits" in request else None)
     policies = normalize_requirement_policies(request.get("requirement_policies"))
-    constraints = PlanConstraints(exact, policies, failed, withdrawn)
+    group_policies = request.get("requirement_group_policies")
+    constraints = PlanConstraints(exact, policies, failed, withdrawn,
+                                  requirement_group_policies=group_policies,
+                                  max_new_courses=request.get("max_new_courses"))
     metadata = {key: request[key] for key in ("allowed_fail_credits", "allowed_pass_position_type") if key in request}
     return identity, constraints, metadata
 

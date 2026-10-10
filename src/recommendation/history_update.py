@@ -78,9 +78,9 @@ class HistoryDelta:
         return frame
 
 
-def normalize_history_delta(payload):
+def normalize_history_delta(payload, *, require_finalized=True):
     """Validate one finalized semester and hash normalized rows in stable order."""
-    if not isinstance(payload, Mapping) or payload.get("finalized") is not True:
+    if not isinstance(payload, Mapping) or (require_finalized and payload.get("finalized") is not True):
         raise ValueError("History Delta must explicitly attest finalized=True.")
     part = _part(payload.get("delta_part"))
     if part < 20221:
@@ -249,6 +249,7 @@ class FrozenHistoryManager:
         self.skipped_bundles = tuple(skipped_bundles)
         self._active = snapshot
         self._update_lock, self._active_lock = Lock(), Lock()
+        self._snapshots = {snapshot.as_of_part: snapshot}
 
     @classmethod
     def load(cls, *, root=None):
@@ -273,13 +274,47 @@ class FrozenHistoryManager:
             return cls(HistorySnapshot(state, metadata), root=root, skipped_bundles=skipped)
         raise FileNotFoundError(f"No complete valid V2 Frozen History found in {root}.")
 
-    def capture(self, *, target_part):
+    def capture(self, *, target_part, history_as_of_part=None, allow_older_history=None):
         """Pin one snapshot, accepting stale finalized history and forbidding overlap."""
         target = _part(target_part)
         with self._active_lock:
             snapshot = self._active
-        validate_history_selection(target, snapshot.as_of_part, allow_older_history=True)
+        if history_as_of_part is not None:
+            cutoff = _part(history_as_of_part)
+            with self._active_lock:
+                snapshot = self._snapshots.get(cutoff)
+            if snapshot is None:
+                state, _, metadata = load_frozen_history(cutoff, root=self.root, dataset_version="V2")
+                validate_history_state(state)
+                _validate_update_metadata(metadata)
+                snapshot = HistorySnapshot(state, metadata)
+                with self._active_lock:
+                    snapshot = self._snapshots.setdefault(cutoff, snapshot)
+        older = history_as_of_part is None if allow_older_history is None else allow_older_history
+        if not isinstance(older, bool):
+            raise ValueError("allow_older_history must be a boolean.")
+        validate_history_selection(target, snapshot.as_of_part, allow_older_history=older)
         return snapshot
+
+    def preview_delta(self, *, history_payload):
+        """Inspect normalized aggregates and lineage without writing or activating."""
+        delta = normalize_history_delta(history_payload, require_finalized=False)
+        with self._active_lock:
+            snapshot = self._active
+        metadata = snapshot.metadata
+        existing = metadata.get("applied_deltas", {}).get(str(delta.delta_part))
+        if existing is not None:
+            if existing != delta.delta_sha256:
+                raise ValueError("CONFLICT: same semester has a different Delta hash.")
+            status = "already_applied"
+        elif delta.delta_part <= snapshot.as_of_part:
+            raise ValueError("History Delta is out-of-order and not previously recorded.")
+        else:
+            status = "new_delta"
+        return {"status": status, "delta_part": delta.delta_part, "delta_sha256": delta.delta_sha256,
+                "history_as_of_part": snapshot.as_of_part, "row_count": len(delta.rows),
+                "finalization_verified": history_payload.get("finalized") is True,
+                "base_history_sha256": metadata["artifact_sha256"]["course_history_state.pkl"]}
 
     def update_history_from_payload(self, *, history_payload):
         """Validate → clone → add → stage → verify → publish → atomic swap."""

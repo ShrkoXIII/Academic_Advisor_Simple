@@ -75,6 +75,8 @@ class PlanConstraints:
     requirement_policies: dict[str, Decimal]
     allowed_failed_repeat_credits: Decimal
     allowed_withdrawn_repeat_credits: Decimal | None = None
+    requirement_group_policies: dict[str, Decimal] | None = None
+    max_new_courses: int | None = None
 
     def __post_init__(self):
         object.__setattr__(self, "target_credits", _credit_value(self.target_credits, "target_credits", positive=True))
@@ -94,6 +96,20 @@ class PlanConstraints:
             object.__setattr__(self, "allowed_withdrawn_repeat_credits", _credit_value(
                 self.allowed_withdrawn_repeat_credits, "allowed_withdrawn_repeat_credits",
             ))
+        if self.requirement_group_policies is not None:
+            if not isinstance(self.requirement_group_policies, Mapping):
+                raise ValueError("Requirement group policies must map IDs to remaining credits.")
+            groups = {}
+            for key, value in self.requirement_group_policies.items():
+                normalized = _requirement_id(key)
+                if normalized in groups:
+                    raise ValueError("Duplicate requirement group policy.")
+                groups[normalized] = _credit_value(value, "remaining group credits")
+            object.__setattr__(self, "requirement_group_policies", groups)
+        if self.max_new_courses is not None:
+            if (isinstance(self.max_new_courses, (bool, np.bool_))
+                    or not isinstance(self.max_new_courses, (int, np.integer)) or self.max_new_courses < 0):
+                raise ValueError("max_new_courses must be a nonnegative integer.")
 
 
 def enumerate_feasible_plan_indices(candidates, constraints, *, search_stats=None):
@@ -121,16 +137,35 @@ def enumerate_feasible_plan_indices(candidates, constraints, *, search_stats=Non
     uncovered = set(requirements) - set(constraints.requirement_policies)
     if uncovered:
         raise ValueError(f"Missing requirement policy for candidates: {sorted(uncovered)}.")
+    group_ids = None
+    if constraints.requirement_group_policies is not None:
+        if "requirement_group_id" not in candidates:
+            raise ValueError("Missing candidate requirement_group_id.")
+        group_ids = [_requirement_id(value) for value in candidates.requirement_group_id]
+        if set(group_ids) - constraints.requirement_group_policies.keys():
+            raise ValueError("Missing requirement group policies for candidates.")
 
     options = {} if search_stats is None else {"search_stats": search_stats}
     if search_stats is not None:
         search_stats["feasible_plan_count"] = 0
     for plan in enumerate_plan_indices(candidates, target_credits=constraints.target_credits, **options):
         consumed = {}
+        group_consumed = {}
+        new_count = 0
         failed = withdrawn = Decimal("0")
         feasible = True
         for index in plan:
             requirement_id, cost = requirements[index], credits[index]
+            if group_ids is not None:
+                group_id = group_ids[index]
+                group_consumed[group_id] = sum_credit_values((group_consumed.get(group_id, Decimal(0)), cost))
+                if group_consumed[group_id] > constraints.requirement_group_policies[group_id]:
+                    feasible = False
+                    break
+            new_count += groups[index] == "NEW"
+            if constraints.max_new_courses is not None and new_count > constraints.max_new_courses:
+                feasible = False
+                break
             consumed[requirement_id] = sum_credit_values((consumed.get(requirement_id, Decimal("0")), cost))
             if consumed[requirement_id] > constraints.requirement_policies[requirement_id]:
                 feasible = False

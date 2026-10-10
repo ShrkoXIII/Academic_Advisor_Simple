@@ -281,23 +281,27 @@ def build_temporal_course_history( ## make sure their is no leackage then calcul
     )
 
 
-def add_student_history_features(temporal_train, temporal_test, student_status=None):
-    # Production passes status history BEFORE the course/outcome filters.
-    if student_status is None:
-        student_status = pd.concat([temporal_train, temporal_test], ignore_index=True)
+def compute_student_gpa_history(student_status):
+    """Pure enrolled-GPA shifts shared by full status and partial API summaries.
+
+    Missing earlier history stays unknown. A supplied last_enrolled_gpa retains
+    cleaning's existing initial-history fallback; absent values use the shifts.
+    """
+    required = {"student_status_id", "student_id", "part_id", "semester_reg_courses", "gpa_points"}
+    if not required.issubset(student_status.columns):
+        raise ValueError("Incomplete student GPA history columns.")
     semester = student_status.drop_duplicates("student_status_id").sort_values(
         ["student_id", "part_id", "student_status_id"],
         kind="stable",
-    )
+    ).copy()
     registered = semester["semester_reg_courses"].gt(0)
     computed_previous = (
         semester["gpa_points"].where(registered)
         .groupby(semester["student_id"], sort=False).ffill()
         .groupby(semester["student_id"], sort=False).shift(1)
     )
-    semester["gpa_prev_1"] = semester["last_enrolled_gpa"].combine_first(
-        computed_previous
-    )
+    semester["gpa_prev_1"] = (semester["last_enrolled_gpa"].combine_first(computed_previous)
+                              if "last_enrolled_gpa" in semester else computed_previous)
     semester["gpa_prev_2"] = (
         semester["gpa_prev_1"].where(registered)
         .groupby(semester["student_id"], sort=False).ffill()
@@ -309,6 +313,19 @@ def add_student_history_features(temporal_train, temporal_test, student_status=N
     semester["gpa_trend_missing"] = semester["gpa_trend_delta"].isna().astype(
         "int64"
     )
+    return semester[["student_status_id", "gpa_prev_1", "gpa_prev_2", "gpa_trend_delta", "gpa_trend_missing"]]
+
+
+def add_student_history_features(temporal_train, temporal_test, student_status=None):
+    # Production passes status history BEFORE the course/outcome filters.
+    if student_status is None:
+        student_status = pd.concat([temporal_train, temporal_test], ignore_index=True)
+    semester = student_status.drop_duplicates("student_status_id").sort_values(
+        ["student_id", "part_id", "student_status_id"], kind="stable",
+    ).copy()
+    gpa = compute_student_gpa_history(semester)
+    for column in ("gpa_prev_1", "gpa_prev_2", "gpa_trend_delta", "gpa_trend_missing"):
+        semester[column] = gpa[column]
 
     # Source total_* values already describe the START of the semester.
     # Subtracting semester_fail_* here would expose the target's outcomes.

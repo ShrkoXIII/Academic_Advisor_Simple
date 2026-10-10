@@ -72,6 +72,10 @@ def _input_fingerprint(prepared, top_k):
             "allowed_withdrawn_repeat_credits": constraints.allowed_withdrawn_repeat_credits,
         }, "request_metadata": prepared.request_metadata,
     }
+    if constraints.requirement_group_policies is not None:
+        document["constraints"]["requirement_group_policies"] = constraints.requirement_group_policies
+    if constraints.max_new_courses is not None:
+        document["constraints"]["max_new_courses"] = constraints.max_new_courses
     canonical = json.dumps(_json_value(document), sort_keys=True, ensure_ascii=False,
                            allow_nan=False, separators=(",", ":"))
     return sha256(canonical.encode("utf-8")).hexdigest()
@@ -104,8 +108,14 @@ class TwoStagePlanRecommender:
     def load(cls, *, project_root=paths.PROJECT_ROOT, history_root=None, num_threads=4):
         """Load verified assets and history once, using only manifest-approved choices."""
         artifacts = load_two_stage_artifacts(project_root=project_root)
-        policy = validate_ranking_policy(artifacts.manifest, require_approved=True)
+        validate_ranking_policy(artifacts.manifest, require_approved=True)
         manager = FrozenHistoryManager.load(root=history_root)
+        return cls.from_loaded_artifacts(artifacts, manager, num_threads=num_threads)
+
+    @classmethod
+    def from_loaded_artifacts(cls, artifacts, manager, *, num_threads=4):
+        """Bind independently loaded dependencies using the same approval gate."""
+        policy = validate_ranking_policy(artifacts.manifest, require_approved=True)
         engine = cls(artifacts, manager,
                      stage1_shortlist_strategy=RankingStrategy(stage="stage1", name=policy["stage1_shortlist_strategy"]["name"]),
                      final_ranking_strategy=RankingStrategy(stage="final", name=policy["final_ranking_strategy"]["name"]),
@@ -170,7 +180,8 @@ class TwoStagePlanRecommender:
                                  pair.category_levels, self.artifacts.grade_scale,
                                  num_threads=self.num_threads)
 
-    def recommend_from_payloads(self, *, student_payload, request_payload, top_k=3):
+    def recommend_from_payloads(self, *, student_payload, request_payload, top_k=3,
+                               history_as_of_part=None, allow_older_history=None):
         """Return Stage 2 Top K inside the explicit Stage 1 shortlist, never global."""
         if isinstance(top_k, (bool, np.bool_)) or not isinstance(top_k, (int, np.integer)) or not 1 <= top_k <= SHORTLIST_LIMIT:
             raise ValueError("top_k must be an integer in 1..50.")
@@ -185,7 +196,11 @@ class TwoStagePlanRecommender:
         if any(entry["training_as_of_part"] >= target for entry in self._manifest["stages"].values()):
             raise ValueError("Model training cutoff must precede the target semester.")
         input_sha256 = _input_fingerprint(prepared, top_k)
-        history = self.history_manager.capture(target_part=target)
+        if history_as_of_part is None and allow_older_history is None:
+            history = self.history_manager.capture(target_part=target)
+        else:
+            history = self.history_manager.capture(target_part=target, history_as_of_part=history_as_of_part,
+                                                   allow_older_history=allow_older_history)
         history_metadata = history.metadata_for_target(target)
         base = self._prepare_candidates(prepared, history)
         shortlist_ids, feasible_count, stage2_count = [], 0, 0
@@ -251,5 +266,9 @@ class TwoStagePlanRecommender:
             "current_gpa_credits_source": "snapshot.current_gpa_credits",
             "projected_gpa_method": "standard_additive_without_repeat_replacement",
         }
+        if constraints.requirement_group_policies is not None:
+            metadata["requirement_group_remaining_credits"] = constraints.requirement_group_policies
+        if constraints.max_new_courses is not None:
+            metadata["max_new_courses"] = constraints.max_new_courses
         return {"status": "ok" if recommendations else "no_feasible_plan",
                 "metadata": _json_value(metadata), "recommendations": recommendations}

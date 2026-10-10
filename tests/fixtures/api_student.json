@@ -1,0 +1,98 @@
+{
+  "success": true,
+  "data": {
+    "studentDegreeInfo": {
+      "STUDENT_STATUS_ID": "target-status-synthetic",
+      "STUDENT_ID": "student-synthetic",
+      "FACULTY_ID": "4.111",
+      "DEGREE_ID": "13.111",
+      "GRADE_VERSION_ID": "3.111",
+      "STATUS_SEMESTER_ID": "20251",
+      "REGULAR_SEMESTERS": "7",
+      "TOTAL_SEMESTERS": "9",
+      "START_TOTAL_IN_CREDITS": "108",
+      "TOTAL_FAIL_COURSES": "1",
+      "TOTAL_FAIL_CREDITS": "3",
+      "START_TOTAL_IN_COURSES": "41",
+      "TOTAL_REG_CREDITS": 129,
+      "START_AGPA_POINTS": "2.79",
+      "SEMESTER_REG_CREDITS": "18",
+      "DEGREE_CREDITS_COUNT": "178",
+      "START_SEMESTER_ID": "20221"
+    },
+    "studentSummaryInfo": [
+      {
+        "STUDENT_STATUS_ID": "prior-status-0",
+        "STUDENT_ID": "student-synthetic",
+        "DEGREE_ID": "13.111",
+        "PART_ID": "20221",
+        "GPA_POINTS": "2.39",
+        "SEMESTER_REG_CREDITS": "18",
+        "SEMESTER_REG_COURSES": "7"
+      },
+      {
+        "STUDENT_STATUS_ID": "prior-status-1",
+        "STUDENT_ID": "student-synthetic",
+        "DEGREE_ID": "13.111",
+        "PART_ID": "20222",
+        "GPA_POINTS": "2.46",
+        "SEMESTER_REG_CREDITS": "18",
+        "SEMESTER_REG_COURSES": "7"
+      },
+      {
+        "STUDENT_STATUS_ID": "prior-status-2",
+        "STUDENT_ID": "student-synthetic",
+        "DEGREE_ID": "13.111",
+        "PART_ID": "20231",
+        "GPA_POINTS": "2.43",
+        "SEMESTER_REG_CREDITS": "15",
+        "SEMESTER_REG_COURSES": "5"
+      },
+      {
+        "STUDENT_STATUS_ID": "prior-status-3",
+        "STUDENT_ID": "student-synthetic",
+        "DEGREE_ID": "13.111",
+        "PART_ID": "20232",
+        "GPA_POINTS": "3.11",
+        "SEMESTER_REG_CREDITS": "18",
+        "SEMESTER_REG_COURSES": "7"
+      },
+      {
+        "STUDENT_STATUS_ID": "prior-status-4",
+        "STUDENT_ID": "student-synthetic",
+        "DEGREE_ID": "13.111",
+        "PART_ID": "20233",
+        "GPA_POINTS": "3.25",
+        "SEMESTER_REG_CREDITS": "5",
+        "SEMESTER_REG_COURSES": "2"
+      },
+      {
+        "STUDENT_STATUS_ID": "prior-status-5",
+        "STUDENT_ID": "student-synthetic",
+        "DEGREE_ID": "13.111",
+        "PART_ID": "20241",
+        "GPA_POINTS": "2.86",
+        "SEMESTER_REG_CREDITS": "16",
+        "SEMESTER_REG_COURSES": "7"
+      },
+      {
+        "STUDENT_STATUS_ID": "prior-status-6",
+        "STUDENT_ID": "student-synthetic",
+        "DEGREE_ID": "13.111",
+        "PART_ID": "20242",
+        "GPA_POINTS": "2.72",
+        "SEMESTER_REG_CREDITS": "15",
+        "SEMESTER_REG_COURSES": "5"
+      },
+      {
+        "STUDENT_STATUS_ID": "prior-status-7",
+        "STUDENT_ID": "student-synthetic",
+        "DEGREE_ID": "13.111",
+        "PART_ID": "20243",
+        "GPA_POINTS": "3.13",
+        "SEMESTER_REG_CREDITS": "6",
+        "SEMESTER_REG_COURSES": "2"
+      }
+    ]
+  }
+}
