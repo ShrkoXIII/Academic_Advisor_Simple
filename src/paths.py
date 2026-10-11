@@ -66,6 +66,7 @@ TEMPORAL_TEST_FEATURES_PATH = FEATURE_DIR / "temporal_test_features.parquet"
 COURSE_HISTORY_STATE_PATH = ARTIFACT_DIR / "course_history_state.pkl"
 FROZEN_HISTORY_DIR = ARTIFACT_DIR / "history"
 FROZEN_HISTORY_DIR_V2 = ARTIFACT_DIR / "history_v2"
+FROZEN_HISTORY_INCREMENTAL_DIR = ARTIFACT_DIR / "history_incremental"
 
 
 def academic_part(value):

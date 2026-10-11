@@ -91,7 +91,7 @@ PARAMETER_CANDIDATES = [
         "lambda_l2": 1.00,
     },
     {
-        "name": "capaciy_63",
+        "name": "capacity_63",
         "num_leaves": 63,
         "min_data_in_leaf": 100,
         "feature_fraction": 0.85,

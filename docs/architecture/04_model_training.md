@@ -102,7 +102,7 @@ flowchart LR
 
 ## Version / release debt
 
-**اختلاف اسم مرشح مهم:** [train_models.py](../../src/modeling/train_models.py) يعرّف `capaciy_63` في `PARAMETER_CANDIDATES`، لكن [artifacts.py](../../src/recommendation/artifacts.py) يقبل `capacity_63` فقط، وmetadata الموجودة تسجل الأخيرة. [test_train_models.py](../../tests/test_train_models.py) يتوقع `capacity_63`. لم يُشغّل الاختبار هنا؛ الاختلاف مثبت نصيًا، وليس إعلان نتيجة test suite. عند إعادة التدريب واختيار هذا المرشح يمكن أن تصبح metadata الناتجة غير مقبولة لدى loader.
+**اتساق اسم المرشح:** [train_models.py](../../src/modeling/train_models.py) يعرّف `capacity_63` في `PARAMETER_CANDIDATES`، وهو الاسم نفسه في metadata الرسمية و[artifacts.py](../../src/recommendation/artifacts.py) و[test_train_models.py](../../tests/test_train_models.py). صُحح الخطأ السابق `capaciy_63` دون تغيير أي إعداد عددي أو تدريب. تبقى تسميات التجارب القديمة محفوظة لإثبات مصدرها؛ تغير بصمة المصدر يُبطل إعادة استخدام cache المرتبط بالبصمة القديمة وفق الحراس الحاليين. [تقرير الإصلاح والاختبارات](../../reports/capacity_63_name_fix.md).
 
 حفظ trainer يكتب الملفات الرسمية تباعًا. لا manifest ذري baseline يجمعها عند النشر، بينما loader يتحقق من schema والأسماء ويحفظ hashes في provenance. Two-Stage manifest يثبت hashes لكنه ليس release orchestration للمودلات الأساسية. لذلك artifact-ready المحلي لا يكفي لادعاء deployment/retraining آمنين من زر API.
 

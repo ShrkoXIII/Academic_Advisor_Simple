@@ -4,6 +4,8 @@ Implementation Status: PLAN SAVED; PRODUCTION IMPLEMENTATION NOT STARTED
 
 # توثيق Baseline قبل تنفيذ Recommendation Two-stage
 
+متابعة 2026-10-10: صُحح فشل تسمية `capaciy_63/capacity_63` بطلب المستخدم؛ [تقرير الإصلاح والتحقق الحالي](../../reports/capacity_63_name_fix.md). حالة validation والأعداد التالية تسجل تشغيل baseline الأصلي في 2026-10-05 ولا تُستبدل بنتائج المتابعة.
+
 ## نطاق هذه اللقطة
 
 حُفظت الخطة المعتمدة في `D:/AI/Real projects/Academic_Advisor_Simple/docs/architecture/RECOMMENDATION_TWO_STAGE_IMPLEMENTATION_PLAN.md`، مع تقييم واعتماد `stage1_shortlist_strategy` و`final_ranking_strategy` بصورة مستقلة. Production Ranking ما زالت UNAPPROVED.

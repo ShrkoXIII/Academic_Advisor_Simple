@@ -141,7 +141,7 @@ Holdout:
 - إعدادات Grade الرسمية num_leaves=63/min_leaf=100،learning_rate=.04،feature_fraction=.85،bagging=.90،L1=.20،L2=2.00؛ Fail 31/80،.04،.90،.90،.10،1.00. باقي parameters كاملة في `setup.json`.
 - **المقارنة النهائية تثبت 114 شجرة Grade و112 Fail لجميع A/B/C**، وهي أعداد الإنتاج المختارة مسبقًا على pre-2025. لم نجعل B أوC يغيران الميزانية أو يعيدان اختيار hyperparameters. قدمنا CV بميزانية ثابتة كتشخيص مضبوط.
 - وللحفاظ على استراتيجية Validation الأصلية أيضًا، نفذنا 12 fit إضافية بإعدادات candidate الرسمي المثبت، max=900 وpatience=75، وفصول المشروع نفسها؛ الأعداد المثلى متاحة في `original_validation_protocol.json`. هذه تشخيصية؛ لم تغيّر أعداد fit النهائي أو تؤدي إلى تجربة جديدة.
-- أعاد A المدرب محليًا توقعات الـartifacts الرسمية بالضبط: maximum absolute difference **0.0** للـGrade والـFail. عدم تطابق اسم `capaciy_63` في المصدر مع `capacity_63` في metadata لم يؤثر على القيم؛ نقرأ الإعدادات الفعلية من metadata، ولا نصلح الاسم هنا.
+- أعاد A المدرب محليًا توقعات الـartifacts الرسمية بالضبط: maximum absolute difference **0.0** للـGrade والـFail. وقت التجربة كان اسم المرشح في المصدر `capaciy_63` وفي metadata الرسمية `capacity_63`؛ قرأنا الإعدادات العددية الفعلية من metadata. الاسم الحالي `capacity_63`، وتبقى تسميات النتائج القديمة وبصماتها محفوظة.
 
 لا تستخدم B عدد المحاولات النهائي للمادة؛ تستخدم **فقط الرقم الموجود عند الصف** وتحوله مباشرة، فلا تضيف اعتمادًا على نتائج مستقبلية. بقي Frozen History وCourseHistoryState وكل course/plan/peer history columns ثابتة. لا نزعم أن Dataset خالٍ من جميع مشكلات اختيار العينة السابقة، أو أن Holdout لم يُعرض في تجارب المشروع الماضية؛ هذه تجربة ثابتة دون tuning على Holdout وليست blind prospective test جديدًا.
 
@@ -286,7 +286,7 @@ Boolean قد يقلل متطلبات نقل عدد المحاولات،لكن **
 
 - protected files: **{isolation['protected_files']}**؛changed={isolation['changed']}؛added={isolation['added']}؛ production artifacts modified={isolation['official_artifacts_modified']}.
 - الاختبارات المركزة: {validation['focused']}. الاختبارات الكاملة: {validation['full']}.
-- الفشل المتبقي السابق: `tests/test_train_models.py` يتوقع `capacity_63` بينما المصدر الحالي يعطي `capaciy_63`. لم يُصلح ضمن هذه المهمة. اختبار اتجاه الاعتماد نجح بعد وضع أداة Recommendation في scripts، دون تخفيف الاختبار.
+- نتائج التحقق المحفوظة تخص وقت التجربة: كان `tests/test_train_models.py` يتوقع `capacity_63` والمصدر يعطي `capaciy_63`. صُححت التسمية لاحقًا؛ التحقق الجديد في `reports/capacity_63_name_fix.md` لا يستبدل نتائج التشغيل القديم. اختبار اتجاه الاعتماد نجح بعد وضع أداة Recommendation في scripts، دون تخفيف الاختبار.
 - output/model SHA‑256 وordered row fingerprints ومعلومات environment في manifests. ملفات predictions والcases محلية وتتضمن سجلات؛ لم تُرسل ولم تُعمل commits لها.
 - إضافة كود فقط: `src/experiments/attempt_number_*.py`؛أداة orchestration/recommendation في `scripts/experiments/attempt_number_*.py`؛اختبارات وتجربةplan وتقرير. لا تعديل source إنتاجي أوfeature contract أوrecommendation contract.
 

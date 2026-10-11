@@ -20,9 +20,9 @@
 | PHP end-to-end مع الجامعة | **PARTIAL** | توثيق المسؤوليات والعقد مكتمل؛ الاتصال والهوية والصلاحيات الجامعية ينفذها PHP خارج هذا المشروع |
 | توصية المدخلات الحقيقية المقدمة | **BLOCKED** | بيانات الدبلوم، مقام GPA الرسمي، العدادات الموثقة، الحالات السابقة، الاستثناءات وتفسير سياسات الجامعة غير مكتملة؛ لم تُشغّل توصية حقيقية |
 | الأصول والتدريب وعقود الميزات والترتيب | **PASS** | protected hash مطابق، 33/47 ثابتة، Pareto/Pareto مع approval gate، بلا تدريب أو تعديل artifacts |
-| خلو كامل الاختبارات من الفشل | **BLOCKED** | فشل baseline المعروف `capaciy_63` مقابل `capacity_63`؛ ليس regression من API |
+| خلو كامل الاختبارات من الفشل عند تسليم API | **BLOCKED في التشغيل الأصلي؛ FIXED لاحقًا** | فشل baseline المعروف `capaciy_63` مقابل `capacity_63`؛ ليس regression من API. صُحح بطلب متابعة صريح؛ [نتيجة التشغيل الجديد](capacity_63_name_fix.md) |
 
-`PASS` يعني أن السلوك المنفذ اجتاز اختباراته، وليس اعتماد تشغيل الجامعة. `PARTIAL` يحدد الربط أو الإثبات الجامعي المتبقي. `BLOCKED` أعلاه متعلق بمتطلبات الطلب الحقيقي وبفشل baseline؛ لم تُترك وظيفة Python مطلوبة بلا تنفيذ بسبب تلك العوائق.
+`PASS` يعني أن السلوك المنفذ اجتاز اختباراته، وليس اعتماد تشغيل الجامعة. `PARTIAL` يحدد الربط أو الإثبات الجامعي المتبقي. عائق baseline في التشغيل الأصلي صُحح لاحقًا؛ يبقى `BLOCKED` متعلقًا بمتطلبات الطلب الحقيقي، ولم تُترك وظيفة Python مطلوبة بلا تنفيذ بسبب تلك العوائق.
 
 ## Before / After ومسار البيانات
 
@@ -94,7 +94,7 @@ flowchart LR
 
 فشل baseline الثابت:
 
-`tests/test_train_models.py::test_tune_model_evaluates_every_candidate_fold_and_selects_mean_metric[grade-capacity_63-mae]` يطلب `capacity_63`، بينما source يعرّف `capaciy_63`. لم يُغير source التدريب أو اختباراته؛ المجموعة الكاملة لا توصف green.
+في التشغيل الأصلي، كان `tests/test_train_models.py::test_tune_model_evaluates_every_candidate_fold_and_selects_mean_metric[grade-capacity_63-mae]` يطلب `capacity_63`، بينما source يعرّف `capaciy_63`. لم تُغير مهمة API مصدر التدريب أو اختباراته؛ نتيجتها الأصلية أعلاه لا توصف green. أصلحت متابعة المستخدم التسمية لاحقًا؛ [التقرير والاختبارات الجديدة](capacity_63_name_fix.md) منفصلان عن أرقام تسليم API.
 
 الفشل الثاني قبل التعديل كان `test_worker_subprocess_serializes_completed_search` داخل sandbox. نجح عند تشغيل الاختبارات خارج sandbox. لا توجد مشكلة benchmark جديدة من API، ولم يُغير runner الخاص به.
 

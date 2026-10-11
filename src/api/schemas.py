@@ -39,8 +39,21 @@ class RegistrationPolicy(Envelope):
     load_profile: Literal["study", "graduation"]
 
 
+class TotalRegCreditsSource(Envelope):
+    """PHP attestation for official registered credits and their temporal meaning."""
+    source: StrictStr
+    target_part: StrictInt | StrictStr
+    as_of_part: StrictInt | StrictStr
+    timing: Literal["beginning_of_semester", "end_of_semester"]
+    rules_reference: StrictStr
+    semester_complete: StrictBool = False
+    additive_credit_accounting: StrictBool = False
+    semester_gpa_counted_credits: Decimal | None = None
+
+
 class IntegrationContext(Envelope):
     student_values: dict[StrictStr, SourcedValue] = Field(default_factory=dict)
+    total_reg_credits_source: TotalRegCreditsSource | None = None
     previous_course_statuses: dict[StrictStr, SourcedValue] = Field(default_factory=dict)
     registration_policy: RegistrationPolicy | None = None
 
@@ -85,3 +98,26 @@ class HistoryDeltaRequest(Envelope):
     part_id: StrictInt | StrictStr
     rows: list[dict]
     finalization: Finalization | None = None
+
+
+class HistoryModeRequest(Envelope):
+    mode: Literal["disabled", "manual", "auto_on_finalization"]
+
+
+class HistoryInitializeRequest(Envelope):
+    expected_source_hash: StrictStr
+    approval_reference: StrictStr
+    confirmation: StrictBool
+    cumulative_history_confirmed: StrictBool
+
+
+class HistoryCommitRequest(HistoryDeltaRequest):
+    preview_token: StrictStr
+    confirmation: StrictBool
+
+
+class HistoryActivationRequest(Envelope):
+    history_as_of_part: StrictInt | StrictStr
+    expected_history_sha256: StrictStr
+    confirmation: StrictBool
+    rollback: StrictBool = False

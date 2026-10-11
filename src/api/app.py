@@ -11,6 +11,7 @@ from fastapi.routing import APIRoute
 from starlette.concurrency import run_in_threadpool
 
 from .schemas import StudentValidationRequest, CoursesValidationRequest, RecommendationRequest, HistoryDeltaRequest
+from .schemas import HistoryModeRequest, HistoryInitializeRequest, HistoryCommitRequest, HistoryActivationRequest
 from .service import ApiService
 from .settings import ApiSettings
 from .validation import ApiError, json_safe
@@ -53,8 +54,8 @@ def create_app(*, settings=None, service=None):
     app.router.route_class = DecimalRoute
     app.state.api_service = api
 
-    def authenticate(value, *, admin=False):
-        expected = api.settings.admin_key if admin else api.settings.service_key
+    def authenticate(value, *, admin=False, finalization=False):
+        expected = api.settings.finalization_key if finalization else api.settings.admin_key if admin else api.settings.service_key
         if not expected:
             raise ApiError("AUTH_UNCONFIGURED", "Service authentication is unavailable.", status_code=503)
         if value is None:
@@ -67,6 +68,9 @@ def create_app(*, settings=None, service=None):
 
     def admin_auth(x_api_key: str | None = Header(default=None)):
         authenticate(x_api_key, admin=True)
+
+    def finalization_auth(x_api_key: str | None = Header(default=None)):
+        authenticate(x_api_key, finalization=True)
 
     @app.exception_handler(ApiError)
     async def api_error(request, error):
@@ -106,5 +110,33 @@ def create_app(*, settings=None, service=None):
     @app.post("/api/v1/history/deltas/validate", dependencies=[Depends(admin_auth)])
     async def validate_delta(body: HistoryDeltaRequest):
         return diagnostic(await run_in_threadpool(api.validate_delta, body.model_dump()))
+
+    @app.get("/api/v1/admin/history/status", dependencies=[Depends(admin_auth)])
+    async def history_status():
+        return json_safe(await run_in_threadpool(api.history_status))
+
+    @app.put("/api/v1/admin/history/mode", dependencies=[Depends(admin_auth)])
+    async def history_mode(body: HistoryModeRequest):
+        return json_safe(await run_in_threadpool(api.set_history_mode, body.model_dump()))
+
+    @app.post("/api/v1/admin/history/initialize", dependencies=[Depends(admin_auth)])
+    async def initialize_history(body: HistoryInitializeRequest):
+        return json_safe(await run_in_threadpool(api.initialize_history, body.model_dump()))
+
+    @app.post("/api/v1/admin/history/preview", dependencies=[Depends(admin_auth)])
+    async def preview_history(body: HistoryDeltaRequest):
+        return json_safe(await run_in_threadpool(api.preview_history, body.model_dump()))
+
+    @app.post("/api/v1/admin/history/commit", dependencies=[Depends(admin_auth)])
+    async def commit_history(body: HistoryCommitRequest):
+        return json_safe(await run_in_threadpool(api.commit_history, body.model_dump()))
+
+    @app.post("/api/v1/admin/history/activate", dependencies=[Depends(admin_auth)])
+    async def activate_history(body: HistoryActivationRequest):
+        return json_safe(await run_in_threadpool(api.activate_history, body.model_dump()))
+
+    @app.post("/api/v1/admin/history/finalization-events", dependencies=[Depends(finalization_auth)])
+    async def finalization_event(body: HistoryDeltaRequest):
+        return json_safe(await run_in_threadpool(api.finalize_history, body.model_dump()))
 
     return app

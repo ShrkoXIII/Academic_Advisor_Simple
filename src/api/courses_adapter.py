@@ -146,10 +146,17 @@ def _course(raw, index, expected, context, policy, catalog, candidates, seen, gr
             if isinstance(error, ApiError):
                 raise
             raise ApiError("INVALID_STATUS", "Previous course status is unsupported.", field=field) from None
-    if raw.get("FINISH_STATUS") is not None:
-        previous = part(raw.get("LAST_REGISTER_SEMESTER_ID"), field + ".LAST_REGISTER_SEMESTER_ID")
+    if raw.get("LAST_REGISTER_SEMESTER_ID") is not None:
+        previous = part(raw["LAST_REGISTER_SEMESTER_ID"], field + ".LAST_REGISTER_SEMESTER_ID")
         if previous >= expected["part_id"]:
             raise ApiError("FUTURE_SOURCE", "Prior course status must precede the target.", field=field)
+        if attempts == 0:
+            raise ApiError("CONFLICTING_STATUS", "Zero previous attempts cannot include a prior registration semester.", field=field)
+    if attempts == 0:
+        if raw.get("FINISH_STATUS") is not None or (supplied is not None and status != "NEW"):
+            raise ApiError("CONFLICTING_STATUS", "Zero previous attempts cannot include a previous outcome.", field=field)
+        status = "NEW"
+    elif raw.get("FINISH_STATUS") is not None:
         try:
             actual = normalize_previous_status(raw["FINISH_STATUS"], official=True)
         except ValueError:

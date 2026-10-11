@@ -58,7 +58,7 @@
 | [test_corrected_phase6_rerun.py](../tests/test_corrected_phase6_rerun.py) و[test_corrected_phase6_evaluation.py](../tests/test_corrected_phase6_evaluation.py) | إبطال واستبدال الأدلة، المصدر والاستئناف، مرجع الجودة والثبات. |
 | [test_two_stage_activation.py](../tests/test_two_stage_activation.py) | اعتماد `Manifest` والتفعيل والتوافق وثبات الاختيارات ورفض التغيير غير المعتمد. |
 | [test_recommendation_v2.py](../tests/test_recommendation_v2.py)، [test_projected_recommendation.py](../tests/test_projected_recommendation.py)، [test_frozen_history_v2.py](../tests/test_frozen_history_v2.py) | فحوص مرتبطة للمحرك المحلي والإسقاط وتاريخ `V2`. |
-| [test_train_models.py](../tests/test_train_models.py) | الفشل المعروف: توقع `capacity_63` مقابل `capaciy_63` في [train_models.py](../src/modeling/train_models.py). |
+| [test_train_models.py](../tests/test_train_models.py) | يثبت اختيار `capacity_63` عبر كل folds؛ صُحح الاسم في [train_models.py](../src/modeling/train_models.py) واجتاز الاختبار؛ [التحقق](../reports/capacity_63_name_fix.md). |
 
 وجود ملف اختبار لا يعني أن كل حالات التشغيل مغطاة. نتائج كل مرحلة التاريخية وحدودها موضحة في صفحاتها و[README](README.md).
 

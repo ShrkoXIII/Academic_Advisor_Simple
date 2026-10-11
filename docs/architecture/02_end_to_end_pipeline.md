@@ -111,7 +111,7 @@ T1 مثبت بـ`prepare_recommendation_payloads` في [inputs.py](../../src/rec
 | المسار | الحالة |
 | --- | --- |
 | قاعدة الجامعة → raw Parquet عبر ETL آلي | exports موجودة؛ extraction job أو connector غير مثبت. |
-| إعادة تدريب المصدر الحالي → artifacts يقبلها serving دائمًا | غير مضمون: `capaciy_63` في trainer مقابل `capacity_63` في loader؛ [تفصيل](04_model_training.md). |
+| إعادة تدريب المصدر الحالي → artifacts يقبلها serving دائمًا | صُححت تسمية `capacity_63` لتطابق loader؛ القبول يظل مشروطًا ببقية عقد artifacts وسياسة الإصدار، ولا يعني تشغيل تدريب أو نشر جديد؛ [تفصيل](04_model_training.md). |
 | baseline → requirement/repeat constraints الحديثة | غير موصول: baseline يستدعي `enumerate_plan_indices`، لا `enumerate_feasible_plan_indices`. |
 | الطلب → latest valid history تلقائيًا | موجود في `FrozenHistoryManager` الجزئي؛ baseline يطلب cutoff صريحًا. لا نخلط سياستي الاختيار. |
 | PHP → FastAPI → engine → الطالب | Planned Integration؛ لا endpoints أو transport contract منشور. |

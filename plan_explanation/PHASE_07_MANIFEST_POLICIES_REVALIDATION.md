@@ -2,6 +2,8 @@
 
 **الحالة:** `COMPLETE` — تنفيذ واعتماد بشري بتاريخ `2026-10-08`. الحالة العامة **`READY_FOR_STABILIZATION_REVIEW`**.
 
+متابعة 2026-10-11: [إعداد API والتاريخ التراكمي](../docs/API_CONFIGURATION_AND_CUMULATIVE_HISTORY.md) يحتفظان ببوابة manifest وبـ`pareto v1 → pareto v1` وTop 3؛ لم تتغير أصول الاعتماد أو ترتيب الميزات أو المودلات. cutoff التاريخ الجديد يجب أن يسبق الهدف، والهدف يجب أن يلي تدريب المودلات.
+
 القرار الحالي: `Stage 1 = pareto v1`، و`Final = pareto v1`، والتوليفة `pareto v1 → pareto v1`. المصدر هو [Manifest](../models/shortlist_v2/manifest.json) وسجل `Phase 7` في [الخطة](../docs/architecture/RECOMMENDATION_TWO_STAGE_IMPLEMENTATION_PLAN.md)، ودليل التحقق في [تقرير المرحلة](../reports/two_stage_phase7/RESULT.md). يبقى تقرير `Phase 6` المصحح سجل الأدلة السابق للاعتماد؛ لم يتحول `RECOMMENDED` فيه إلى موافقة تاريخية.
 
 ## 1. الفكرة العامة — Overview
@@ -124,7 +126,7 @@ New regression: 0; unrelated existing failure: 0; skipped: 0
 | المسألة المفتوحة | أثرها على الاعتماد |
 |---|---|
 | `GradeScale.convert()` مع إصدار غير مدعوم | يمكن أن يعيد `0/F` دون رفض الطلب؛ اعتماد السياسة والتحقق من بصمة المقياس لا يثبتان سلامة كل مدخل. |
-| `capacity_63/capaciy_63` | فشل معروف باقٍ؛ `Full pytest` ليست خضراء. |
+| تسمية مرشح الـ63 | **FIXED** لاحقًا؛ [الاختبارات الحالية](../reports/capacity_63_name_fix.md). أعداد تشغيل المرحلة أعلاه تبقى كما سُجلت. |
 | نهايات أسطر أصول `Stage 2` عند الاستعادة من `Git` | قد تختلف البصمات عن البايتات المحلية المثبتة ويرفض التحميل. |
 | `backend_max_candidate_count` | `UNRESOLVED`؛ لا حد مواد معتمد. |
 | `recommendation_latency_sla` | `UNRESOLVED`؛ لا اعتماد لزمن الاستجابة أو كلفة البحث الحالية. |

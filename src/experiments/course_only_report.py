@@ -104,7 +104,8 @@ def build_report(metadata, primary, batch, verified):
                   f"Experimental Grade winner: **{grade['selected_candidate']['candidate']['name']}**, "
                   f"{grade['final_boost_rounds']} rounds; Fail winner: **{fail['selected_candidate']['candidate']['name']}**, "
                   f"{fail['final_boost_rounds']} rounds. الزمن الكلي للتدريب والتقييم: {metadata['training_seconds']:.2f} seconds. "
-                  "الاسم `capaciy_63` في كود التدريب الحالي يحمل typo؛ قيمه العددية هي config الـ63 الرسمية. حافظنا على الكود الرسمي.", "",
+                  "الاسم الحالي للمرشح الرسمي هو `capacity_63`. قد تسجل metadata التجربة القديمة `capaciy_63`؛ "
+                  "نحتفظ بالتسمية المسجلة لإثبات مصدر النتائج، وتصحيح الاسم لم يغير الإعدادات العددية.", "",
                   "القائمة مشتقة برمجيًا من BASE_FEATURES مع الحفاظ على ترتيبها. الحارس يثبت 47−14=33 "
                   "ويثبت أن الفرق الوحيد هو مجموعة الـ14 المطلوبة. لا يحتاج بناء مصفوفة inference إلى أي plan/peer columns.", "",
                   "```text", *COURSE_ONLY_FEATURES, "```", "", "Removed:", "", "```text", *sorted(REMOVED_CONTEXT_FEATURES), "```", "",
@@ -210,7 +211,8 @@ def build_report(metadata, primary, batch, verified):
                   "Dependency test يسمح فقط لثلاث ملفات workflow تجريبية جديدة بقراءة src/recommendation، "
                   "مثل استثناء XML evaluator الحالي. لم نخف الاستيراد ولم نغير اعتماد Features أو Modeling على التجارب.", "",
                   "Validation: انظر `validation_summary.json` وlogs في مجلد نتائج التجربة. "
-                  "الفشل السابق في اختبار trainer بسبب capacity_63محفوظ ومذكور منفصلًا؛ لم نعدل config الرسمي لحل typo.", "",
+                  "نتائج التحقق المحفوظة تخص تشغيل التجربة السابق، بما فيها فشل تسمية `capaciy_63` مقابل `capacity_63`. "
+                  "صُححت التسمية لاحقًا؛ تفاصيل التحقق الجديد في `reports/capacity_63_name_fix.md`، دون إعادة احتساب نتائج التجربة.", "",
                   "Provenance: training_signature يسجل SHA-256 لملفي features، المصدر التدريبي الرسمي، "
                   "العقد الرسمي، كود التدريب/المصفوفة التجريبي، والـbaseline الرسمي وفئاته. "
                   "مدخل JSON له بصمة في import_report.json لكل حالة. إعادة التحميل --skip-training ترفض تغير signature أو model headers/hashes. "

@@ -50,12 +50,12 @@ PHP يوثق المستخدم ويثبت صلاحياته على الطالب و
 
 | المفتاح | الدلالة |
 |---|---|
-| `current_gpa_credits` | المقام الرسمي للساعات الداخلة في معدل البداية؛ مطلوب، ويمكن أن يكون صفرًا رسميًا |
+| `current_gpa_credits` | override موثّق عند غياب `TOTAL_REG_CREDITS` رسمي موثوق لبداية الفصل؛ لا يلزم supplement مكرر عند ثبوت المصدر الأصلي، والصفر يحتاج إثباتًا رسميًا |
 | `prior_total_reg_courses`، `prior_total_reg_credits` | إجمالي التسجيل قبل فصل الهدف، وفق دلالة cleaning الحالية |
 | `prior_total_fail_courses`، `prior_total_fail_credits` | مجاميع الرسوب عند بداية الفصل |
 | `prior_registered_semesters` | عداد الفصل السابق الرسمي، وليس عدد صفوف summary |
 
-كل قيمة `{value: ..., source: "official_source_name", as_of_part: 20243}`. المصدر غير فارغ والفصل قبل الهدف. لا يقبل Adapter حقول ميزات مشتقة اعتباطية. القيم الأصلية المكافئة، مثل `CURRENT_GPA_CREDITS` و`TOTAL_FAIL_*` و`PRIOR_TOTAL_*`، يجب أن تطابق القيم الإضافية. قيم `TOTAL_REG_*` غير المؤكدة زمنيًا لا تُستبدل تلقائيًا بالمجاميع السابقة؛ تُظهر تشخيص `registration_totals_require_timing_contract`.
+كل قيمة `{value: ..., source: "official_source_name", as_of_part: 20243}`. المصدر غير فارغ والفصل قبل الهدف. لا يقبل Adapter حقول ميزات مشتقة اعتباطية. القيم الأصلية المكافئة، مثل `CURRENT_GPA_CREDITS` و`TOTAL_FAIL_*` و`PRIOR_TOTAL_*`، يجب أن تطابق القيم الإضافية. `integration_context.total_reg_credits_source` يثبت timing وcutoff وقواعد `TOTAL_REG_CREDITS`: قيمة البداية الرسمية تُستخدم مباشرةً؛ نهاية الفصل لا تُطرح منها ساعات الهدف إلا بإثبات الاكتمال والجمع الإضافي والساعات الداخلة في GPA. `START_TOTAL_IN_CREDITS` ساعات إكمال وليست مقام المعدل. [العقد والحماية الزمنية](../../docs/API_CONFIGURATION_AND_CUMULATIVE_HISTORY.md).
 
 لا يستخدم `129` أو `108` أو مجموع `111` مقامًا تلقائيًا. Fixtures النجاح تعطي `108` من مصدر **اصطناعي صريح** لاختبار الربط؛ ليست اعتمادًا للمثال الحقيقي. معلومات الدبلوم والمقام والعدادات وسياسات التسجيل في fixture هي بيانات اختبار.
 
@@ -71,7 +71,7 @@ PHP يوثق المستخدم ويثبت صلاحياته على الطالب و
 
 الحقول `IS_REQUESTABLE` و`ALLOW_REGISTER` تحتاج Y/N صريحًا. الصفوف غير المؤهلة لا تدخل المرشحين، لكن هويتها وتعارض نسخ المادة يُفحصان أولًا. التكرار المطابق يزيل نسخة واحدة فقط؛ المتعارض يُرفض حتى إذا كانت نسخة غير مؤهلة. `STATUS_REASON_CODE=EXCEPTION` يحتاج course ID في التفويض الصريح. لا يستنتج `FAILED` أو `WITHDRAWN` من عدد المحاولات.
 
-الحالة السابقة تأتي من `FINISH_STATUS` مع `LAST_REGISTER_SEMESTER_ID` قبل الهدف، أو `integration_context.previous_course_statuses[course_id]` بقيمة ومصدر و`as_of_part`. تُراجع المصادر معًا إن حضرا. New مع محاولة سابقة أو حالة معادة دون محاولة سابقة تعارض.
+`ATTEMPTS_COUNT=0` مع `FINISH_STATUS=null` يعطي `NEW`؛ العداد الموجب يحتاج `FINISH_STATUS` السابق المعروف أو `integration_context.previous_course_statuses[course_id]` بمصدر وcutoff موثّق. لا يصنّف العداد وحده رسوبًا أو انسحابًا. يُراجع `LAST_REGISTER_SEMESTER_ID` عند وجوده ليكون قبل الهدف؛ وتُراجع المصادر معًا إن حضرا. عداد صفر مع نتيجة سابقة، أو New مع محاولة سابقة، تعارض يُرفض.
 
 `integration_context.registration_policy` مطلوب للاستدلال؛ يمثل تأكيد PHP للسياسات الجامعية:
 
@@ -138,9 +138,11 @@ Pydantic errors لا تعيد input أو arbitrary dictionary keys. JSON decimal
 }
 ```
 
-`finalization` اختياري للمعاينة. بدونه الفحص `unavailable`، ومعه `admin_attested`؛ إثبات التثبيت الفعلي مسؤولية الإدارة الجامعية، وليس نتيجة نجاح المجاميع. بدون تاريخ محمل يظل فحص schema والمجاميع والبصمة متاحًا، بينما lineage/replay/order غير متاحة والنتيجة partial. مع تاريخ محمل يُعرض base hash وcutoff وnew_delta/already_applied؛ المختلف لنفس الفصل أو out-of-order يُرفض 409. الفحص بالنسبة إلى snapshot المدير المحمّل؛ تغييرات خارج العملية تحتاج إعادة تحميل الخدمة.
+`finalization` اختياري للمعاينة. بدونه الفحص `unavailable`، ومعه `admin_attested`؛ إثبات التثبيت الفعلي مسؤولية الإدارة الجامعية، وليس نتيجة نجاح المجاميع. بدون تاريخ محمل يظل فحص schema والمجاميع والبصمة متاحًا، بينما lineage/replay/order غير متاحة والنتيجة partial. مع تاريخ محمل يُعرض base hash وcutoff وnew_delta/already_applied؛ المختلف لنفس الفصل أو out-of-order يُرفض 409. المدير القديم يبقى كما هو؛ مدير التاريخ التراكمي يقرأ pointer الدائم ويثبت snapshot واحدة في الطلب.
 
 هذا المسار لا يكتب ملفًا ولا ينشر ولا يفعل تاريخًا. Core القديم الذي يحتاج `finalized=True` للتحديث بقي كما هو. المجاميع الحالية تحتوي marks/counts/attempts فقط؛ لا تقدير `points_sum`. loader الرسمي يرفض أي bundle يتطلب عقد نقاط/ميزات إضافية لا يوفرها المسار الحالي.
+
+إدارة التحديث التراكمي أصبحت منفصلة تحت `/api/v1/admin/history/`؛ mode دائم افتراضي `manual`، وpreview/commit/activation مستقلة، وحدث التثبيت له مفتاح منفصل. baseline معتمد تراكمياً عبر 20251 يُنقل إلى root مستقل، ثم تضاف مجاميع الفصول بلا إعادة بناء أو تغيير الحزم القديمة. [إعداد البيئة وعقد PHP والتسلسل والـrollback](../../docs/API_CONFIGURATION_AND_CUMULATIVE_HISTORY.md).
 
 ## خريطة الميزات الحالية
 
@@ -182,4 +184,4 @@ ADVISOR_PERFORMANCE_TEST_MAX_CANDIDATES=17
 graphify update .
 ```
 
-في بيئة sandbox الحالية يلزم تشغيل اختبارات HTTP خارج sandbox لأن asyncio socketpair المحلي يتوقف داخله. Fixtures داخل `tests/fixtures/` منقحة؛ النجاح يعتمد على مصادر وسياسات اصطناعية معلنة. نجاحها لا يثبت بيانات المثال الحقيقي أو أداء الإنتاج. راجع [تقرير PASS/PARTIAL/BLOCKED](../../reports/backend_api_integration.md) للنتائج الفعلية وفشل baseline وبصمات الأصول.
+قيود تشغيل HTTP داخل sandbox موثقة في [تقرير المرحلة السابقة](../../reports/backend_api_integration.md). Fixtures داخل `tests/fixtures/` منقحة؛ النجاح يعتمد على مصادر وسياسات اصطناعية معلنة. نجاحها لا يثبت بيانات المثال الحقيقي أو أداء الإنتاج. راجع [تقرير الإعدادات والتاريخ التراكمي](../../reports/api_cumulative_history.md) لنتائج PASS/PARTIAL/BLOCKED النهائية وبصمات الأصول؛ فشل تسمية `capacity_63` السابق أُصلح قبل هذه المهمة.

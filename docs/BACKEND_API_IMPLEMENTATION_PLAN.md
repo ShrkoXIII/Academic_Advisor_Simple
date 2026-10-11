@@ -31,3 +31,5 @@
 واجهات التنفيذ: `POST /api/v1/inputs/student/validate`، `POST /api/v1/inputs/courses/validate`، `POST /api/v1/recommendations`، `POST /api/v1/history/deltas/validate`، `GET /health`.
 
 Fixtures من المثالين عبر allowlist وتنقيح هوية الطالب، مع مصادر اصطناعية واضحة لمسار النجاح. مقارنة baseline إلزامية؛ لا يُنسب فشل `capaciy_63` مقابل `capacity_63` إلى API.
+
+متابعة 2026-10-10: طلب المستخدم إصلاح تسمية المرشح صراحةً بعد تنفيذ API؛ صُححت إلى `capacity_63` دون تدريب أو تغيير الإعدادات العددية. [تقرير الإصلاح والتحقق](../reports/capacity_63_name_fix.md). نتائج baseline الأصلية محفوظة في تقرير API.

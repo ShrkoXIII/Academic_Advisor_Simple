@@ -6,7 +6,9 @@ import pandas as pd
 
 from src.data.academic_calendar import count_regular_semesters_between, is_regular_semester
 from src.features.temporal_features import compute_student_gpa_history, add_student_history_features
+from src.features.frozen_history import previous_academic_part
 from src.recommendation.inputs import BACKEND_SNAPSHOT_COLUMNS
+from src.recommendation.plan_generation import sum_credit_values
 
 from .validation import ApiError, ValidationResult, binding, check_record_identity, identifier, number, part, response_data, sourced
 
@@ -62,18 +64,37 @@ def adapt_student(request, *, settings, grade_scale=None):
                     raise ApiError("INVALID_NUMBER", "Diploma value exceeds supported range.", field=key)
             except ApiError as error:
                 result.add(error)
-        values = (request.get("integration_context") or {}).get("student_values", {})
+        context = request.get("integration_context") or {}
+        values = context.get("student_values", {})
         if set(values) - SOURCED_FIELDS:
             raise ApiError("UNSUPPORTED_SUPPLEMENT", "Only documented student supplement fields are accepted.")
+        official_credits, official_provenance = None, None
+        try:
+            official_credits, official_provenance = _official_gpa_credits(
+                info, context.get("total_reg_credits_source"), expected)
+        except ApiError as error:
+            result.add(error)
+        if official_credits is not None:
+            snapshot["current_gpa_credits"] = snapshot["prior_total_reg_credits"] = float(official_credits)
         for key in SOURCED_FIELDS:
             try:
                 if key not in values:
-                    if key == "current_gpa_credits":
-                        raise ApiError("MISSING_FIELD", "Official GPA-bearing credits with provenance are required.", field=key)
+                    if key in {"current_gpa_credits", "prior_total_reg_credits"} and official_credits is not None:
+                        continue
+                    if key == "current_gpa_credits" and context.get("total_reg_credits_source") is None:
+                        raise ApiError("GPA_DENOMINATOR_TEMPORALLY_AMBIGUOUS",
+                                       "Establish TOTAL_REG_CREDITS timing and university counting rules, or supply a sourced beginning-of-semester GPA-credit override.",
+                                       field=key)
                     result.unavailable_fields.append(key)
                     continue
                 value = sourced(values[key], expected["part_id"], key)
+                if (key in {"current_gpa_credits", "prior_total_reg_credits"}
+                        and part(values[key]["as_of_part"], key + ".as_of_part") != previous_academic_part(expected["part_id"])):
+                    raise ApiError("GPA_DENOMINATOR_TEMPORALLY_AMBIGUOUS", "GPA-credit snapshots must describe the immediately preceding academic semester, not older cumulative totals.", field=key)
                 numeric_value = number(value, key, integer=key in COUNTS)
+                if (key in {"current_gpa_credits", "prior_total_reg_credits"} and official_credits is not None
+                        and numeric_value != official_credits):
+                    raise ApiError("CONFLICTING_STUDENT_SOURCE", "The supplement conflicts with established official beginning-of-semester registered credits.", field=key)
                 snapshot[key] = float(numeric_value)
                 if not math.isfinite(snapshot[key]):
                     raise ApiError("INVALID_NUMBER", "Supplement value exceeds supported range.", field=key)
@@ -88,6 +109,10 @@ def adapt_student(request, *, settings, grade_scale=None):
                     result.summary["registration_totals_require_timing_contract"] = True
             except ApiError as error:
                 result.add(error)
+        result.summary["gpa_credit_provenance"] = {
+            "denominator": official_provenance or ("sourced_override" if snapshot["current_gpa_credits"] is not None else "unavailable"),
+            "prior_total_reg_credits": official_provenance or ("sourced_supplement" if snapshot["prior_total_reg_credits"] is not None else "unavailable"),
+        }
         _history(histories, info, expected, snapshot, result)
         denominator = snapshot["prior_total_reg_credits"]
         failed = snapshot["prior_total_fail_credits"]
@@ -108,6 +133,42 @@ def adapt_student(request, *, settings, grade_scale=None):
     except ApiError as error:
         result.add(error)
     return result
+
+
+def _official_gpa_credits(info, evidence, expected):
+    """Validate trusted PHP timing/rule attestation; never infer it from totals.
+
+    University inclusion rules are attested by the authenticated PHP service.
+    Python checks consistency, temporal bounds and additive reconciliation only.
+    """
+    if evidence is None:
+        return None, None
+    field = "current_gpa_credits"
+    if (not isinstance(evidence, Mapping)
+            or not isinstance(evidence.get("source"), str) or not evidence["source"].strip()
+            or not isinstance(evidence.get("rules_reference"), str) or not evidence["rules_reference"].strip()):
+        raise ApiError("MISSING_PROVENANCE", "Official credit timing requires a source and university inclusion/exclusion rules reference.", field=field)
+    if part(evidence.get("target_part"), "total_reg_credits_source.target_part") != expected["part_id"]:
+        raise ApiError("IDENTITY_MISMATCH", "Official registered-credit semantics target another semester.", field=field)
+    cutoff = part(evidence.get("as_of_part"), "total_reg_credits_source.as_of_part")
+    total = number(info.get("TOTAL_REG_CREDITS"), "TOTAL_REG_CREDITS")
+    timing = evidence.get("timing")
+    if timing == "beginning_of_semester":
+        if cutoff != previous_academic_part(expected["part_id"]):
+            raise ApiError("GPA_DENOMINATOR_TEMPORALLY_AMBIGUOUS", "Beginning-of-semester registered credits must be attested through the immediately preceding academic semester.", field=field)
+        return total, "php_attested_total_reg_credits_beginning"
+    if timing != "end_of_semester":
+        raise ApiError("GPA_DENOMINATOR_TEMPORALLY_AMBIGUOUS", "Official registered-credit timing must be beginning_of_semester or end_of_semester.", field=field)
+    if cutoff != expected["part_id"]:
+        raise ApiError("GPA_DENOMINATOR_TEMPORALLY_AMBIGUOUS", "Post-semester registered credits must describe the finalized target semester.", field=field)
+    if (evidence.get("semester_complete") is not True or evidence.get("additive_credit_accounting") is not True
+            or evidence.get("semester_gpa_counted_credits") is None):
+        raise ApiError("GPA_DENOMINATOR_DERIVATION_UNPROVEN", "Post-semester totals require confirmed completeness, additive university accounting and the official target-semester GPA-counted credit increment.", field=field)
+    increment = number(evidence["semester_gpa_counted_credits"], "total_reg_credits_source.semester_gpa_counted_credits")
+    registered = number(info.get("SEMESTER_REG_CREDITS"), "SEMESTER_REG_CREDITS")
+    if increment > registered or increment > total:
+        raise ApiError("CONFLICTING_STUDENT_SOURCE", "Official target-semester GPA-counted credits exceed registered credits or the cumulative count.", field=field)
+    return sum_credit_values((total, increment.copy_negate())), "php_attested_total_reg_credits_derived"
 
 
 def _history(histories, info, expected, snapshot, result):
