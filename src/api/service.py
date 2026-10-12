@@ -1,6 +1,5 @@
 """Independent validation dependencies and lazy, manifest-gated inference."""
 from collections import defaultdict
-from decimal import Decimal
 from threading import Lock
 
 from src import paths
@@ -12,11 +11,11 @@ from src.recommendation.ranking_policy import validate_ranking_policy
 from src.recommendation.two_stage_artifacts import load_two_stage_artifacts
 from src.recommendation.two_stage_engine import TwoStagePlanRecommender
 
-from .courses_adapter import adapt_courses
-from .history_adapter import adapt_history_delta
+from .adapters.courses import adapt_courses
+from .adapters.history import adapt_history_delta
 from .settings import ApiSettings
-from .student_adapter import adapt_student
-from .validation import ApiError, identifier, number, part
+from .adapters.student import adapt_student
+from .validators.common import ApiError, identifier, number, part
 
 
 PUBLIC_METADATA = {"dataset_version", "feature_engineering_version", "input_fingerprint_version", "input_sha256",
@@ -210,12 +209,25 @@ class ApiService:
         return self._history_operation("finalize", history_payload=payload, approval_reference=reference, trusted_event=True)
 
     def recommend(self, request):
+        """Validate and prepare PHP inputs, run inference, then expose safe output."""
+        student, courses = self._validate_recommendation_inputs(request)
+        cutoff, target, mode, candidates = self._prepare_recommendation_context(request, student, courses)
+        engine_request = self._build_engine_request(request, courses, candidates, target)
+        output = self._run_recommendation(student, candidates, engine_request, request, cutoff, mode)
+        return self._recommendation_response(output, student, courses, target, cutoff, mode)
+
+    def _validate_recommendation_inputs(self, request):
+        """Collect both diagnostics before rejecting invalid inputs."""
         student, courses = self.validate_student(request), self.validate_courses(request)
         errors = [*student.errors, *courses.errors]
         if errors:
             status = max(student.http_status, courses.http_status)
             raise ApiError("INVALID_INPUTS", "Recommendation inputs need correction.", status_code=status,
                            details={"student": student.public(), "courses": courses.public()})
+        return student, courses
+
+    def _prepare_recommendation_context(self, request, student, courses):
+        """Check temporal selection, dependencies and model cutoffs in serving order."""
         self._refresh_history_manager()
         cutoff, target = part(request.get("history_as_of_part"), "history_as_of_part"), part(request.get("part_id"))
         mode = request.get("mode", "normal")
@@ -242,6 +254,10 @@ class ApiService:
             self.history_manager.capture(target_part=target, history_as_of_part=cutoff, allow_older_history=mode == "backtesting")
         except (ValueError, OSError):
             raise ApiError("HISTORY_UNAVAILABLE", "The exact requested history snapshot is unavailable or incompatible.", status_code=503) from None
+        return cutoff, target, mode, candidates
+
+    def _build_engine_request(self, request, courses, candidates, target):
+        """Intersect confirmed credit bounds and prepare exact plan constraints."""
         rules = courses.normalized["registration_rules"]
         exact = request.get("target_credits")
         if exact is not None:
@@ -271,6 +287,10 @@ class ApiService:
                           "max_new_courses": rules["MAX_NEW_COURSES"]}
         if engine_request["allowed_withdrawn_repeat_credits"] is None:
             engine_request.pop("allowed_withdrawn_repeat_credits")
+        return engine_request
+
+    def _run_recommendation(self, student, candidates, engine_request, request, cutoff, mode):
+        """Protect the existing engine call with the serving-worker lock."""
         if not self._inference_lock.acquire(blocking=False):
             raise ApiError("INFERENCE_BUSY", "Recommendation worker is busy.", status_code=503)
         try:
@@ -281,6 +301,10 @@ class ApiService:
             raise ApiError("INCOMPATIBLE_INPUTS", "Prepared inputs do not satisfy the inference contract.") from None
         finally:
             self._inference_lock.release()
+        return output
+
+    def _recommendation_response(self, output, student, courses, target, cutoff, mode):
+        """Expose the original metadata allowlist and input diagnostics."""
         metadata = {key: value for key, value in output["metadata"].items() if key in PUBLIC_METADATA}
         metadata.update(mode=mode, history_as_of_part=cutoff, part_id=target,
                         input_validation={"student": student.status, "courses": courses.status},

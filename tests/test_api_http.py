@@ -212,3 +212,29 @@ def test_empty_candidates_return_no_feasible_plan_with_actual_core(tmp_path):
     response = api.recommend(request)
     assert response["status"] == "no_feasible_plan"
     assert not artifacts.stage1.grade_model.matrices
+
+
+@pytest.mark.parametrize("case", ["success", "invalid_identity", "unready", "unauthorized", "decimal", "busy"])
+def test_recommend_alias_preserves_response_and_engine_inputs(tmp_path, case):
+    """Both routes use the same authentication, diagnostics and inference path."""
+    c, api, engine, request = client(tmp_path, ready=case != "unready")
+    key = "admin" if case == "unauthorized" else "service"
+    if case == "invalid_identity":
+        request["source_contexts"]["student"]["student_id"] = "other"
+    if case == "decimal":
+        request.pop("target_credits")
+        request.update(min_credits="12.0000000000000000000000000001", max_credits="12")
+    if case == "busy":
+        api._inference_lock.acquire()
+    try:
+        original = post(c, "/api/v1/recommendations", request, key=key)
+        calls = list(engine.calls) if engine is not None else []
+        if engine is not None:
+            engine.calls.clear()
+        alias = post(c, "/recommend", request, key=key)
+        assert alias.status_code == original.status_code
+        assert alias.json() == original.json()
+        assert (engine.calls if engine is not None else []) == calls
+    finally:
+        if case == "busy":
+            api._inference_lock.release()

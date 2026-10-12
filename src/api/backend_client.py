@@ -7,7 +7,7 @@ import socket
 import ssl
 from urllib.parse import urlencode, urlsplit
 
-from .validation import ApiError, identifier, part
+from .validators.common import ApiError, identifier, part
 
 
 class _PinnedHTTPSConnection(http.client.HTTPSConnection):

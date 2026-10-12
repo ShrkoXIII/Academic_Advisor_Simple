@@ -1,187 +1,397 @@
-# دمج Academic Advisor Backend API
+# طبقة API في Academic Advisor
 
-طبقة `src/api/` تستقبل ردود الجامعة وتتحقق منها وتحولها إلى `{snapshot, candidates}` وقيود المحرك الحالي. لا تعيد تدريب المودلات ولا تضيف أعمدة إلى عقد الميزات. `pareto v1 → pareto v1` هو اختيار API، وتبقى بوابة اعتماد الـmanifest الأصلية إلزامية. `top_k=3` افتراضيًا؛ الحد المتوافق مع shortlist هو 50.
+هذه الطبقة تحوّل ردود الجامعة إلى المدخلات التي يفهمها محرك التوصية. نقطة الوصول إلى المحرك هي هذا الاستدعاء داخل `ApiService`:
 
-## التشغيل المحلي
-
-من جذر المشروع، باستخدام البيئة الافتراضية:
-
-```powershell
-.\.venv\Scripts\python.exe -m pip install -e '.[api,api-test]'
-# اضبط ADVISOR_API_KEY وADVISOR_ADMIN_API_KEY في بيئة الخدمة، بقيمتين منفصلتين.
-.\.venv\Scripts\python.exe -m uvicorn src.api.app:create_app --factory --host 127.0.0.1 --port 8000
+```python
+service.engine.recommend_from_payloads(
+    student_payload={"snapshot": student.normalized, "candidates": candidates},
+    request_payload=engine_request,
+    top_k=request.get("top_k", 3),
+    history_as_of_part=cutoff,
+    allow_older_history=mode == "backtesting",
+)
 ```
 
-`src.api` و`src.api.service` يعملان دون FastAPI/Pydantic. استيراد `src.api.app` يحتاج extra `api`، لكنه لا يحمل الأصول. `create_app()` يُنشئ خدمة، و`lifespan` يحمل catalog وGradeScale وFrozen History والمودلات بصورة مستقلة. جميع المسارات تأتي من `src.paths`، دون paths خاصة في HTTP.
+`snapshot` هو وضع الطالب عند بداية فصل الهدف، و`candidates` هي المواد المؤهلة بعد التحقق، و`engine_request` يحمل الهوية والساعات وقيود التسجيل. تبني طبقة API هذه المدخلات ثم تعيد نتيجة المحرك ببيانات وصفية عامة محددة في `PUBLIC_METADATA`.
 
-التشغيل متعدد workers والميزانية وSLA وحد مواد الإنتاج لم تُعتمد. يوجد طلب inference واحد داخل كل process؛ طلب متزامن يُرفض بـ`503 INFERENCE_BUSY`. هذا لا يحدد مهلة إنتاج ولا يعالج الكلفة الأسية للبحث.
+المسار الأساسي هو `PHP-push`: يجلب PHP رد الطالب ورد المواد ويرسلهما معًا. `BackendClient` أداة `Python-pull` اختيارية ومستقلة؛ تشغيل API لا يستدعيها تلقائيًا. إعادة التنظيم تحافظ على حسابات المحرك وميزات `33/47` واختيار `pareto v1 → pareto v1` وبوابة اعتماد `manifest`.
 
-## مسؤولية PHP وربط البيانات
+## Project Structure
 
-PHP يوثق المستخدم ويثبت صلاحياته على الطالب والاختصاص، ثم يجلب Student API وCourses API باستخدام الهوية والفصل المطلوبين. يُرفق سياق **كل عملية جلب** بصورة مستقلة. الخدمة Python تقارن السياقين بالطلب وبأي هوية في الردود؛ مفتاح الخدمة يوثق PHP، ولا يحل محل صلاحيات المستخدم الجامعية.
+```text
+src/api/
+├── app.py                   # HTTP، المصادقة، startup، ومعالجة الأخطاء
+├── service.py               # ترتيب التحقق والتجهيز واستدعاء المحرك
+├── schemas.py               # شكل طلبات HTTP وأنواع حقولها
+├── settings.py              # الإعدادات من البيئة والتحقق منها
+├── backend_client.py        # جلب اختياري لردي الجامعة من Python
+├── adapters/
+│   ├── __init__.py
+│   ├── student.py           # تحويل بيانات الطالب إلى snapshot
+│   ├── courses.py           # تحويل المواد والسياسات إلى candidates وقيود
+│   └── history.py           # تجهيز نتيجة التحقق من History Delta
+├── validators/
+│   ├── __init__.py
+│   ├── common.py            # الهوية والأرقام والمصدر والتشخيص الآمن
+│   ├── student.py           # فحوص رد الطالب وتاريخه ومصدر ساعات GPA
+│   ├── courses.py           # فحوص المواد والكتالوج والسياسات
+│   └── history.py           # فحوص Delta وتثبيت الفصل والتاريخ
+├── student_adapter.py       # توافق مع مسار الاستيراد السابق
+├── courses_adapter.py       # توافق مع مسار الاستيراد السابق
+├── history_adapter.py       # توافق مع مسار الاستيراد السابق
+├── validation.py            # توافق مع مسار الاستيراد السابق
+├── README.md
+└── REFACTOR_REPORT.md        # أدلة المقارنة والاختبارات لهذه المهمة
+```
 
-كل POST غير إداري يحتاج `X-API-Key: <ADVISOR_API_KEY>`. Delta يحتاج مفتاح `ADVISOR_ADMIN_API_KEY` المنفصل؛ مفتاح الخدمة لا يسمح به. `GET /health` متاح دون مفتاح ولا يعرض أسرارًا أو paths. الطلب عبر شبكة الخدمة يحتاج إعداد TLS وضبط السجلات لدى مشغّل PHP/proxy؛ هذه الطبقة لا تنشر خدمة خارجية.
+`adapters` تبني البيانات الداخلية، و`validators` تفحص المدخلات والأدلة التي تعتمد عليها. الملفات السابقة تعيد تصدير الأسماء اللازمة، لذلك تبقى الاستيرادات القديمة صالحة. يمكن استيراد `src.api` و`ApiService` دون FastAPI أو Pydantic؛ يحتاج `app.py` حزمة `api` الاختيارية.
 
-المفاتيح المشتركة للطلبات:
+حسابات الطالب المشتركة تبقى في [temporal_features.py](../features/temporal_features.py)، وحساب الفجوات في [academic_calendar.py](../data/academic_calendar.py). عقد `snapshot` والتحقق النهائي منه في [inputs.py](../recommendation/inputs.py)، والمحرك في [two_stage_engine.py](../recommendation/two_stage_engine.py). مسارات الأصول مركزية في [src/paths.py](../paths.py).
+
+## Student API Data Flow
+
+لفهم مدخل المحرك، نتتبع كيف يصل `student.normalized` إليه:
+
+1. `ApiService.recommend(request)` يستدعي `_validate_recommendation_inputs()`. هذه الخطوة تنفذ `validate_student()` و`validate_courses()`، وتجمع الأخطاء قبل بدء inference.
+2. `validate_student()` يستدعي `adapters.student.adapt_student()`. تعيد الدالة `ValidationResult`؛ يحتوي `normalized` على اللقطة الداخلية، و`errors/checks/unavailable_fields/summary` على التشخيص.
+3. `extract_student_info(request, result)` يستخرج `studentDegreeInfo` و`studentSummaryInfo` ويتحقق من غلاف الرد والهوية وسياق جلب الطالب. يستخدم `binding()` و`response_data()` و`check_record_identity()`.
+4. `build_student_snapshot()` يبدأ حقول `BACKEND_SNAPSHOT_COLUMNS` بقيمة `None`، ويضيف الهوية المتحقق منها. ثم يرتب الخطوات التالية: `map_student_fields()` → `add_sourced_student_values()` → `add_history_features()` → `validate_grade_version()` → `add_snapshot_features()`.
+5. `map_student_fields()` يحول الحقول المباشرة وحقول الدبلوم. `add_sourced_student_values()` يضيف المجاميع الموثقة ويفحص التعارض مع المصادر الأصلية.
+6. `add_history_features()` يستخدم `normalize_student_history()` لفحص صفوف التاريخ، و`validate_history_target()` لفحص سجل الهدف. ثم يعيد استخدام الحسابات الأصلية للـGPA والعداد والفجوات.
+7. `_prepare_recommendation_context()` يفحص cutoff وmode وجاهزية التبعيات واكتمال التاريخ اللازم وحد التدريب، ويثبت التاريخ المطلوب. `_build_engine_request()` يبني هدف الساعات وقيود التصنيفات والمجموعات.
+8. `_run_recommendation()` يأخذ قفل inference ثم ينفذ `service.engine.recommend_from_payloads()`. `_recommendation_response()` يعيد `status/recommendations` والبيانات الوصفية المسموحة.
+
+كل قيمة تمر أولًا عبر تحقق نوعها وهوية مصدرها. فصل الهدف ونتائجه لا يدخلان تاريخ الطالب. لا تستخدم الطبقة `GPA_POINTS` أو `END_AGPA_POINTS` أو `SEMESTER_FAIL_CREDITS` من سجل الهدف لبناء ميزات الماضي.
+
+### كيف يُحسب تاريخ الطالب؟
+
+تحتاج صفوف `studentSummaryInfo` إلى `STUDENT_STATUS_ID, STUDENT_ID, DEGREE_ID, PART_ID, GPA_POINTS, SEMESTER_REG_COURSES`. تفحص هوية **كل** الصفوف قبل التعامل مع نقص schema، وترفض الفصل الحالي أو المستقبل وتكرار مفاتيح الفصل أو status.
+
+عند التاريخ الجزئي، يستخدم `add_history_features()` الدالة `compute_student_gpa_history()`: ترتيب زمني، واستخدام GPA للفصول المسجلة، و`ffill` ثم `shift(1)` للحصول على المعدل السابق. `LAST_ENROLLED_GPA` التاريخي إن توفر يؤثر عبر المعدل السابق للسجل التاريخي في `gpa_prev_2` للهدف؛ `gpa_prev_1` للهدف يأتي من GPA التسجيل السابق لأن قيمة الهدف نفسها مجهولة. الفصول غير المسجلة تبقى في الجدول، والمعدل المجهول يبقى `None`.
+
+إذا كانت جميع الصفوف التاريخية تحتوي أيضًا `LAST_ENROLLED_GPA, TOTAL_REG_COURSES, TOTAL_REG_CREDITS, TOTAL_FAIL_COURSES, TOTAL_FAIL_CREDITS, REG_TOTAL_SEMESTERS`، تستخدم الدالة `add_student_history_features()`. تعيد هذه الدالة استخدام حساب GPA نفسه، وتأخذ `prior_registered_semesters` من العداد الرسمي للسجل السابق؛ لا تستبدله بعدد صفوف الرد. إذا توفر supplement مختلف لهذا العداد، يُرفض التعارض.
+
+`observed_gap_semesters` يعتمد على آخر فصل فيه مواد مسجلة، ثم `count_regular_semesters_between()`؛ يضاف فصل الهدف إذا كان منتظمًا والطالب غير مسجل فيه. يحتاج الحساب معرفة التسجيل الحالي: `SEMESTER_REG_COURSES` أو ساعات موجبة تثبت وجود تسجيل. ساعات صفر وحدها لا تثبت غياب التسجيل، لأن المواد قد تكون صفرية الساعات.
+
+### مصدر ساعات GPA
+
+تبقى `_official_gpa_credits()` في `validators/student.py`، ويُعاد تصديرها من مسار التوافق السابق. تحقق الشهادة واستخراج القيمة الدقيقة جزء واحد: لا يمكن حساب قيمة موثوقة قبل إثبات توقيت المصدر وقواعده.
+
+- `beginning_of_semester`: يجب أن يطابق `target_part` فصل الهدف، وأن يساوي `as_of_part` الفصل السابق مباشرة. عندها يوفر `TOTAL_REG_CREDITS` الرسمي كلا الحقلين `current_gpa_credits` و`prior_total_reg_credits`.
+- `end_of_semester`: يجب أن يكون `as_of_part` هو فصل الهدف، مع `semester_complete=true` و`additive_credit_accounting=true` و`semester_gpa_counted_credits` موثق. عندها فقط تُطرح الساعات المحتسبة للفصل من الإجمالي باستخدام `sum_credit_values()`.
+- عند غياب الشهادة الرسمية، يمكن استخدام `integration_context.student_values` بمصدر وcutoff موثقين. `current_gpa_credits` و`prior_total_reg_credits` يحتاجان الفصل السابق مباشرة. أي supplement يتعارض مع القيمة الرسمية يُرفض.
+
+`START_TOTAL_IN_CREDITS` ساعات إكمال سابقة، و`SEMESTER_REG_CREDITS` ساعات التسجيل الحالي؛ لا يصبح أي منهما مقام GPA تلقائيًا. شهادة PHP تثبت قواعد الجامعة وتوقيت المصدر؛ اتساق الأرقام وحده لا يثبت هذه القواعد. [تفاصيل عقد المقام والتاريخ](../../docs/API_CONFIGURATION_AND_CUMULATIVE_HISTORY.md).
+
+## Student Feature Mapping
+
+هذه جميع الحقول الـ21 في `BACKEND_SNAPSHOT_COLUMNS` الفعلي. الجدول يبين مصدرها في مسار API، وليس مجرد تفسير لأسمائها.
+
+| Feature | API Source | Transformation | Function |
+|---|---|---|---|
+| `student_id` | الطلب و`source_contexts.student` و`studentDegreeInfo.STUDENT_ID` | مطابقة الهوية وحفظها كسلسلة | `extract_student_info()` |
+| `degree_id` | الطلب والسياق و`studentDegreeInfo.DEGREE_ID` | مطابقة هوية الاختصاص | `extract_student_info()` |
+| `faculty_id` | `studentDegreeInfo.FACULTY_ID` | سلسلة ID غير فارغة | `map_student_fields()` |
+| `grade_version_id` | `studentDegreeInfo.GRADE_VERSION_ID` | سلسلة ID مع تحقق الدعم من GradeScale | `map_student_fields()`، `validate_grade_version()` |
+| `gpa_prev_1` | `studentSummaryInfo.GPA_POINTS/SEMESTER_REG_COURSES` | GPA آخر تسجيل سابق؛ سجل الهدف له GPA مجهول | `add_history_features()` → `compute_student_gpa_history()` مباشرة أو عبر `add_student_history_features()` |
+| `gpa_prev_2` | تاريخ GPA؛ و`LAST_ENROLLED_GPA` التاريخي إن توفر | registered shift إضافي عبر `gpa_prev_1` التاريخي؛ القيمة الرسمية التاريخية تُستخدم إذا كانت موجودة | `add_history_features()` → `compute_student_gpa_history()` مباشرة أو عبر `add_student_history_features()` |
+| `start_agpa_points` | `studentDegreeInfo.START_AGPA_POINTS` | GPA البداية بين 0 و4 | `map_student_fields()` |
+| `start_total_in_courses` | `studentDegreeInfo.START_TOTAL_IN_COURSES` | عدد صحيح غير سالب إلى قيمة رقمية | `map_student_fields()` |
+| `start_total_in_credits` | `studentDegreeInfo.START_TOTAL_IN_CREDITS` | ساعات الإكمال السابقة إلى قيمة رقمية | `map_student_fields()` |
+| `prior_total_reg_courses` | `integration_context.student_values.prior_total_reg_courses` | مجموع بداية الفصل بمصدر وcutoff موثقين | `add_sourced_student_values()` |
+| `prior_total_reg_credits` | `TOTAL_REG_CREDITS` مع `total_reg_credits_source`، أو `student_values.prior_total_reg_credits` | قيمة البداية مباشرة أو اشتقاق موثق أو supplement؛ رفض التعارض | `_official_gpa_credits()`، `add_sourced_student_values()` |
+| `prior_total_fail_courses` | `student_values.prior_total_fail_courses` | عدد صحيح؛ يراجع `TOTAL_FAIL_COURSES` الأصلي عند وجوده | `add_sourced_student_values()` |
+| `prior_total_fail_credits` | `student_values.prior_total_fail_credits` | ساعات؛ يراجع `TOTAL_FAIL_CREDITS` الأصلي عند وجوده | `add_sourced_student_values()` |
+| `prior_fail_credit_ratio` | `prior_total_fail_credits` و`prior_total_reg_credits` في snapshot | fail credits / reg credits؛ `None` عند مقام صفر/مجهول أو رسوب مجهول | `build_student_snapshot()` |
+| `prior_registered_semesters` | `student_values.prior_registered_semesters`، أو `REG_TOTAL_SEMESTERS` السابق عند schema كاملة | supplement موثق أو shift للعداد السابق؛ رفض التعارض | `add_sourced_student_values()`، `add_history_features()` → `add_student_history_features()` |
+| `observed_gap_semesters` | آخر تسجيل تاريخي والتسجيل الحالي من `studentDegreeInfo` | عدد الفصول المنتظمة الفاصلة، مع إضافة الهدف المنتظم إذا كان غير مسجل | `add_history_features()` → `count_regular_semesters_between()`، `is_regular_semester()` |
+| `diploma_gpa` | `studentDegreeInfo.diploma_gpa/DIPLOMA_GPA` افتراضيًا | aliases من `settings.diploma_gpa_aliases`؛ قيمة رقمية finite | `map_student_fields()` |
+| `diploma_type_id` | `studentDegreeInfo.diploma_type_id/DIPLOMA_TYPE_ID` افتراضيًا | aliases من `settings.diploma_type_aliases`؛ سلسلة، ورفض التعارض | `map_student_fields()` |
+| `degree_credits_count` | `studentDegreeInfo.DEGREE_CREDITS_COUNT` | ساعات الاختصاص إلى قيمة رقمية | `map_student_fields()` |
+| `part_id` | الطلب والسياق وهوية فصل `studentDegreeInfo` | مطابقة الفصل وتطبيعه وفق `part()` | `extract_student_info()` |
+| `current_gpa_credits` | `TOTAL_REG_CREDITS` الموثق، أو `student_values.current_gpa_credits` | مقام GPA الرسمي عند البداية؛ ليس ميزة مودل | `_official_gpa_credits()`، `add_sourced_student_values()` |
+
+يضيف `add_snapshot_features()` ثلاثة حقول مشتقة: `part_semester = part_id % 10`، و`gpa_trend_delta = gpa_prev_1 - gpa_prev_2`، و`gpa_trend_missing = 1` إذا كان الاتجاه مجهولًا. يعيد `normalize_student_payload()` في Core حساب هذه الحقول أيضًا عند تجهيز المدخلات؛ لا يثق بقيمة اتجاه مُرسلة من الخارج.
+
+كل supplement شكله `{value, source, as_of_part}`، ومصدره غير فارغ وفصله قبل الهدف. يسمح Adapter فقط بالحقول الستة الموثقة في `SOURCED_FIELDS`. المجهول يبقى `None`؛ نقص الدبلوم أو مقام GPA خطأ، ونقص schema التاريخ أو gap اللازم يمنع التوصية. بعض histories والمجاميع nullable وفق عقد Core، وتظهر ضمن `unavailable_student_fields`.
+
+بعد اللقطة: تضيف المواد خصائصها من الرد والكتالوج، وتضيف Frozen History الميزات السبع `course_history_*`. يستخدم Stage 1 الميزات الـ33، ويختار حتى 50 خطة. يحسب `compute_plan_context_features()` ميزات `plan_*` الست و`peer_*` الثماني للـshortlist، ثم يستخدم Stage 2 الميزات الـ47. هوية المجموعة وcaps و`current_gpa_credits` لا تدخل مصفوفة المودل.
+
+## One Request Example
+
+هذا طلب **اصطناعي كامل** لتوضيح التحويل. جميع IDs والقيم والسياسات أدناه أمثلة تعليمية؛ لا تمثل بيانات طالب أو إعدادات الجامعة. يفترض اختبار المواد كتالوجًا اصطناعيًا مطابقًا للمادة ونوعها `3`؛ لا يضيف الطلب هذه المادة إلى كتالوج الخدمة الفعلي.
 
 ```json
 {
-  "student_id": "student-synthetic",
-  "degree_id": "13.111",
+  "student_id": "student-example",
+  "degree_id": "degree-example",
   "part_id": 20251,
+  "history_as_of_part": 20243,
+  "target_credits": 3,
+  "top_k": 3,
+  "mode": "normal",
   "source_contexts": {
-    "student": {"student_id": "student-synthetic", "degree_id": "13.111", "part_id": 20251},
-    "courses": {"student_id": "student-synthetic", "degree_id": "13.111", "part_id": 20251}
+    "student": {"student_id": "student-example", "degree_id": "degree-example", "part_id": 20251},
+    "courses": {"student_id": "student-example", "degree_id": "degree-example", "part_id": 20251}
+  },
+  "student_api_response": {
+    "success": true,
+    "data": {
+      "studentDegreeInfo": {
+        "STUDENT_STATUS_ID": "status-target",
+        "STUDENT_ID": "student-example", "DEGREE_ID": "degree-example",
+        "STATUS_SEMESTER_ID": "20251", "FACULTY_ID": "faculty-example",
+        "GRADE_VERSION_ID": "3.111", "START_AGPA_POINTS": "2.8",
+        "START_TOTAL_IN_COURSES": "24", "START_TOTAL_IN_CREDITS": "72",
+        "TOTAL_REG_CREDITS": "75", "TOTAL_FAIL_COURSES": "1",
+        "TOTAL_FAIL_CREDITS": "3", "SEMESTER_REG_COURSES": "6",
+        "SEMESTER_REG_CREDITS": "18", "DEGREE_CREDITS_COUNT": "180",
+        "diploma_gpa": "92", "diploma_type_id": "diploma-example"
+      },
+      "studentSummaryInfo": [
+        {"STUDENT_STATUS_ID": "status-prior-1", "STUDENT_ID": "student-example", "DEGREE_ID": "degree-example",
+         "PART_ID": "20242", "GPA_POINTS": "2.6", "SEMESTER_REG_COURSES": "5"},
+        {"STUDENT_STATUS_ID": "status-prior-2", "STUDENT_ID": "student-example", "DEGREE_ID": "degree-example",
+         "PART_ID": "20243", "GPA_POINTS": "3.1", "SEMESTER_REG_COURSES": "2"}
+      ]
+    }
+  },
+  "courses_api_response": {
+    "success": true,
+    "data": {
+      "registserRule": {
+        "LOAD_TYPE": "CREDIT",
+        "MIN_CREDITS": "3", "MAX_CREDITS": "18",
+        "MIN_STUDY_CREDITS": "3", "MAX_STUDY_CREDITS": "18",
+        "GRAD_MIN_LIMIT": "3", "GRAD_MAX_LOAD": "18",
+        "MAX_NEW_COURSES": "2"
+      },
+      "allowRegisterAllOptional": "N",
+      "availableCourses": [
+        {
+          "COURSE_ID": "course-example", "COURSE_NAME_SL": "Synthetic course",
+          "COURSE_CREDITS": "3", "REQUIREMENT_TYPE_ID": "R",
+          "REQUIREMENT_ID": "group-example", "CREDITS_COUNT": "12",
+          "REQUIREMENT_PASSED_CREDITS": "3", "IS_REQUESTABLE": "Y",
+          "ALLOW_REGISTER": "Y", "STATUS_REASON_CODE": "REQUESTABLE",
+          "YEAR_ORDER": "1", "SEMESTER_ORDER": "1",
+          "ATTEMPTS_COUNT": "0", "FINISH_STATUS": null,
+          "LAST_REGISTER_SEMESTER_ID": null
+        }
+      ]
+    }
+  },
+  "integration_context": {
+    "total_reg_credits_source": {
+      "source": "synthetic_official_gpa_ledger", "target_part": 20251,
+      "as_of_part": 20243, "timing": "beginning_of_semester",
+      "rules_reference": "synthetic_rules_v1"
+    },
+    "student_values": {
+      "prior_total_reg_courses": {"value": 25, "source": "synthetic_ledger", "as_of_part": 20243},
+      "prior_total_fail_courses": {"value": 1, "source": "synthetic_ledger", "as_of_part": 20243},
+      "prior_total_fail_credits": {"value": 3, "source": "synthetic_ledger", "as_of_part": 20243},
+      "prior_registered_semesters": {"value": 4, "source": "synthetic_ledger", "as_of_part": 20243}
+    },
+    "registration_policy": {
+      "source": "synthetic_registration_policy", "part_id": 20251,
+      "requirement_group_modes": {"group-example": "strict_remaining"},
+      "allowed_failed_repeat_credits": 0, "allowed_withdrawn_repeat_credits": 0,
+      "attempts_scope_confirmed": true, "load_profile": "study"
+    }
   }
 }
 ```
 
-كل ID سلسلة، بما فيها لاحقة مثل `.111`؛ semester يقبل سلسلة أو عددًا صحيحًا. يتطلب تحقق الطالب سياق `student` ورد `student_api_response`، وتحقق المواد سياق `courses` ورد `courses_api_response`؛ التوصية تتطلب الاثنين. لا يُقبل سياق واحد كدليل على جلب الرد الآخر.
-
-شكل Student: `{success: true, data: {studentDegreeInfo: {...}, studentSummaryInfo: [...]}}`. تطابق هوية `studentDegreeInfo` إلزامي، وتُراجع أيضًا أي هوية في غلاف الرد أو root data. كل سجل تاريخي يطابق الطالب والاختصاص، وفصله أقدم من الهدف؛ aliases الفصل داخل السجل يجب أن تتفق. فحص الهوية يشمل كل السجلات حتى عند نقص schema في سجل سابق.
-
-شكل Courses: `{success: true, data: {registserRule: {...}, availableCourses: [...], allowRegisterAllOptional: "Y"|"N"}}`. يحافظ العقد على تهجئة `registserRule` الفعلية. تفحص أي هوية في root data أو أي مادة قبل التصفية. المثال الأصلي لا يحمل هذه الهوية: مستوى التحقق `php_attested`، وليس إثباتًا من محتوى Courses وحده. لا يمكن Python أن يثبت صحة السياق الذي يشهد به PHP دون مصدر جامعي إضافي.
-
-## المدخلات الناقصة ومصادرها
-
-`studentDegreeInfo` يوفر IDs، `START_AGPA_POINTS`، `START_TOTAL_IN_COURSES`، `START_TOTAL_IN_CREDITS`، `DEGREE_CREDITS_COUNT`. الدبلوم مطلوب عبر `diploma_gpa`/`DIPLOMA_GPA` و`diploma_type_id`/`DIPLOMA_TYPE_ID`؛ aliases قابلة للضبط.
-
-القيم الإضافية في `integration_context.student_values`:
-
-| المفتاح | الدلالة |
-|---|---|
-| `current_gpa_credits` | override موثّق عند غياب `TOTAL_REG_CREDITS` رسمي موثوق لبداية الفصل؛ لا يلزم supplement مكرر عند ثبوت المصدر الأصلي، والصفر يحتاج إثباتًا رسميًا |
-| `prior_total_reg_courses`، `prior_total_reg_credits` | إجمالي التسجيل قبل فصل الهدف، وفق دلالة cleaning الحالية |
-| `prior_total_fail_courses`، `prior_total_fail_credits` | مجاميع الرسوب عند بداية الفصل |
-| `prior_registered_semesters` | عداد الفصل السابق الرسمي، وليس عدد صفوف summary |
-
-كل قيمة `{value: ..., source: "official_source_name", as_of_part: 20243}`. المصدر غير فارغ والفصل قبل الهدف. لا يقبل Adapter حقول ميزات مشتقة اعتباطية. القيم الأصلية المكافئة، مثل `CURRENT_GPA_CREDITS` و`TOTAL_FAIL_*` و`PRIOR_TOTAL_*`، يجب أن تطابق القيم الإضافية. `integration_context.total_reg_credits_source` يثبت timing وcutoff وقواعد `TOTAL_REG_CREDITS`: قيمة البداية الرسمية تُستخدم مباشرةً؛ نهاية الفصل لا تُطرح منها ساعات الهدف إلا بإثبات الاكتمال والجمع الإضافي والساعات الداخلة في GPA. `START_TOTAL_IN_CREDITS` ساعات إكمال وليست مقام المعدل. [العقد والحماية الزمنية](../../docs/API_CONFIGURATION_AND_CUMULATIVE_HISTORY.md).
-
-لا يستخدم `129` أو `108` أو مجموع `111` مقامًا تلقائيًا. Fixtures النجاح تعطي `108` من مصدر **اصطناعي صريح** لاختبار الربط؛ ليست اعتمادًا للمثال الحقيقي. معلومات الدبلوم والمقام والعدادات وسياسات التسجيل في fixture هي بيانات اختبار.
-
-`studentSummaryInfo` يحتاج `STUDENT_STATUS_ID, STUDENT_ID, DEGREE_ID, PART_ID, GPA_POINTS, SEMESTER_REG_COURSES`. نتائج الطالب في **فصل الهدف** لا تدخل الحساب. الفصول غير المسجلة تحفظ في الجدول، وGPA السابق يأتي من registered shifts الأصلي. `observed_gap_semesters` يعيد استخدام calendar الأصلي، ويحتاج معرفة التسجيل الحالي وآخر تسجيل سابق. ساعاته الموجبة تثبت وجود تسجيل؛ الصفر لا يثبت عدد المواد بسبب مواد zero-credit.
-
-عند وجود جميع أعمدة الدالة الأصلية `last_enrolled_gpa, total_reg_courses, total_reg_credits, total_fail_courses, total_fail_credits, reg_total_semesters`، تستخدم `add_student_history_features()`، ويُراجع العداد المشتق مقابل المصدر الإضافي. عند عدم وجودها تستخدم فقط `compute_student_gpa_history()` المشترك النقي. لا يجري تمرير schema جزئية إلى الدالة الكاملة.
-
-المجهول لا يصير صفرًا. يقبل المحرك الحالي null في تاريخ GPA والعدادات حيث يسمح عقد snapshot بذلك. نقص الدبلوم/المقام يُرفض، ونقص schema أو gaps اللازمة يحجب التوصية. واجهات التحقق تعرض `unavailable_fields` و`partial`، ولا تعيد snapshot أو المدخلات الخام.
-
-## المواد والسياسات
-
-الأرقام finite وغير سالبة؛ `ATTEMPTS_COUNT` عدد صحيح والمحاولة الحالية +1. على PHP تأكيد أنه عداد جميع التسجيلات السابقة للمادة عبر الاختصاصات، قبل تصفية finish status وGPA inclusion، وليس عداد الرسوب. يتطلب الكتالوج هوية degree+course، ويثبت credits وrequirement type/year/semester/credits_count. `plan_course_type_id` يأتي من `course_type_id` بالكتالوج؛ لا يُستنتج من requirement type.
-
-الحقول `IS_REQUESTABLE` و`ALLOW_REGISTER` تحتاج Y/N صريحًا. الصفوف غير المؤهلة لا تدخل المرشحين، لكن هويتها وتعارض نسخ المادة يُفحصان أولًا. التكرار المطابق يزيل نسخة واحدة فقط؛ المتعارض يُرفض حتى إذا كانت نسخة غير مؤهلة. `STATUS_REASON_CODE=EXCEPTION` يحتاج course ID في التفويض الصريح. لا يستنتج `FAILED` أو `WITHDRAWN` من عدد المحاولات.
-
-`ATTEMPTS_COUNT=0` مع `FINISH_STATUS=null` يعطي `NEW`؛ العداد الموجب يحتاج `FINISH_STATUS` السابق المعروف أو `integration_context.previous_course_statuses[course_id]` بمصدر وcutoff موثّق. لا يصنّف العداد وحده رسوبًا أو انسحابًا. يُراجع `LAST_REGISTER_SEMESTER_ID` عند وجوده ليكون قبل الهدف؛ وتُراجع المصادر معًا إن حضرا. عداد صفر مع نتيجة سابقة، أو New مع محاولة سابقة، تعارض يُرفض.
-
-`integration_context.registration_policy` مطلوب للاستدلال؛ يمثل تأكيد PHP للسياسات الجامعية:
+الطالب هنا مسجل حاليًا وله سجلان سابقان. نتيجة `adapt_student()` الداخلية بعد التحويل هي:
 
 ```json
 {
-  "source": "official_registration_policy",
-  "part_id": 20251,
-  "requirement_group_modes": {"4.111": "strict_remaining", "5.111": "strict_remaining", "6.111": "strict_remaining"},
-  "group_overflow_credits": {},
-  "allow_register_all_optional_confirmed": true,
-  "approved_exception_course_ids": [],
-  "allowed_failed_repeat_credits": 6,
-  "allowed_withdrawn_repeat_credits": 3,
-  "attempts_scope_confirmed": true,
-  "load_profile": "study"
+  "student_id": "student-example", "degree_id": "degree-example",
+  "faculty_id": "faculty-example", "grade_version_id": "3.111",
+  "gpa_prev_1": 3.1, "gpa_prev_2": 2.6,
+  "start_agpa_points": 2.8, "start_total_in_courses": 24.0,
+  "start_total_in_credits": 72.0, "prior_total_reg_courses": 25.0,
+  "prior_total_reg_credits": 75.0, "prior_total_fail_courses": 1.0,
+  "prior_total_fail_credits": 3.0, "prior_fail_credit_ratio": 0.04,
+  "prior_registered_semesters": 4.0, "observed_gap_semesters": 0,
+  "diploma_gpa": 92.0, "diploma_type_id": "diploma-example",
+  "degree_credits_count": 180.0, "part_id": 20251,
+  "current_gpa_credits": 75.0, "part_semester": 1,
+  "gpa_trend_delta": 0.5, "gpa_trend_missing": 0
 }
 ```
 
-هذه قيم توضيحية وليست سياسات افتراضية. كل مجموعة مرشحة تحتاج mode مؤكدًا:
+`75` جاءت من الإجمالي الرسمي الموثق؛ `72` بقيت ساعات إكمال. `3 / 75 = 0.04`، و`3.1 - 2.6 = 0.5`. العداد `4` جاء من المصدر الإضافي، رغم وجود صفين فقط في المثال.
 
-| mode | القيد |
-|---|---|
-| `strict_remaining` | `CREDITS_COUNT - REQUIREMENT_PASSED_CREDITS`؛ passed أكبر من maximum تعارض |
-| `approved_overflow` | `max(0, maximum + approved overflow - passed)`؛ مقدار overflow صريح |
-| `unbounded` | تأكيد عدم وجود cap لهذه المجموعة؛ يمثله المحرك بمجموع ساعات مرشحيها دون تكرار |
+تحول `adapt_courses()` المادة إلى مرشح `NEW` بمحاولة `1`؛ `course_credits` تصبح `Decimal("3")`، ونوع المادة يأتي من الكتالوج. هوية المجموعة الداخلية هي JSON `["degree-example","group-example"]`، والساعات المتبقية `12 - 3 = 9`.
 
-الهوية الداخلية للمجموعة canonical JSON `[degree_id, REQUIREMENT_ID]`. لا تدخل هوية المجموعة أو caps في مصفوفة المودل. تصنيفات `plan_requirement_type_id` تبقى نفسها، وcap التصنيف الداخلي يساوي كل ساعات مرشحيه؛ caps الأعمال الفعلية مستقلة حسب المجموعة. لذلك ثلاث مواد من ساعتين لا تمر عند بقاء أربع ساعات.
+يصبح طلب المحرك:
 
-`allowRegisterAllOptional` محفوظ؛ Y يحتاج تأكيد تفسيره، ولا يعطل caps. `MAX_NEW_COURSES` قيد اختياري عند وجوده، وغيابه يعني عدم إدخال cap جديد. `allowed_withdrawn_repeat_credits` يمكن إغفاله وفق العقد القديم؛ failed cap صريح إلزامي. `load_profile` يختار study أو graduation حسب تأكيد الجامعة، وتُراجع جميع أزواج min/max.
-
-## التوصية والتاريخ
-
-التوصية تضيف `history_as_of_part` المطلوب، و`target_credits` أو `min_credits` مع `max_credits`، و`top_k` الاختياري، و`mode` الاختياري. Exact وRange متنافيان. يُحسب تقاطع المطلوب مع مجال التسجيل المؤكد، ويستخدم الحد الأعلى الفعلي هدفًا دقيقًا؛ `12..18` يعني 18 دون نزول إلى 17 عند غياب خطة.
-
-`mode=normal` افتراضي: cutoff يساوي `previous_academic_part(part_id)`. `mode=backtesting` يحتاج أيضًا `ADVISOR_ENABLE_BACKTESTING=true`. الأقدم فقط مسموح؛ الهدف والمستقبل ممنوعان. target يجب أن يلي cutoff التدريب في كل stage. الحزمة المحددة يجب أن تكون موجودة ومتوافقة، دون fallback إلى أحدث حزمة. caching يحفظ snapshot الحزمة المطلوبة، وتبقى مثبتة أثناء الطلب.
-
-الإضافات اختيارية في Core؛ الاستدعاء القديم دون `history_as_of_part` و`allow_older_history` يحتفظ بسلوكه السابق. HTTP يمررهما صراحة دائمًا. الرد يسجل mode وcutoff، وحالة `input_validation` و`unavailable_student_fields` عندما يدعم العقد null، وmetadata عامة فقط؛ لا IDs شخصية ولا paths ولا raw data. plan IDs وcourse IDs وأسماء المواد ومقاييس التوصية بيانات مخرجات أكاديمية مطلوبة.
-
-## التحقق وhealth والأخطاء
-
-كل تحقق يعطي `validation_status: valid|partial|invalid`، و`validation_completed`، و`checks`، و`unavailable_fields`، وأخطاء محددة وملخصًا عدديًا. التحقق من الطالب والمواد مستقل عن مودلات inference وFrozen History؛ غياب catalog أو GradeScale يجعل فحصهما `unavailable` ويمنع وصف النتيجة بأنها كاملة.
-
-`/health` يعرض بصورة منفصلة `api_health`, `model_readiness`, `history_readiness`, `catalog_readiness`, `grade_scale_readiness`, `recommendation_readiness`. صحة HTTP لا تثبت وجود الحزمة المطلوبة لفصل معين أو صلاحية مدخلات طالب معين.
-
-| HTTP | أمثلة |
-|---|---|
-| 200 | توصية أو no_feasible_plan، أو تشخيص valid/partial مع `validation_completed=false` للجزئي |
-| 401 / 403 | مفتاح مفقود / غير مخول، أو استخدام مفتاح الخدمة في Delta |
-| 422 | `MISSING_SOURCE_CONTEXT`, `IDENTITY_MISMATCH`, `MISSING_FIELD`, `FUTURE_SOURCE`, `INVALID_HISTORY_CUTOFF`, `PERFORMANCE_TEST_LIMIT` |
-| 409 | تكرار متعارض أو `DELTA_CONFLICT` |
-| 503 | `DEPENDENCY_UNAVAILABLE`, `HISTORY_UNAVAILABLE`, `AUTH_UNCONFIGURED`, `INFERENCE_BUSY` |
-| 500 | `INTERNAL_ERROR` برسالة عامة؛ الاستثناء الأصلي لا يصعد إلى سجل ASGI |
-
-Pydantic errors لا تعيد input أو arbitrary dictionary keys. JSON decimals تحفظ عند parsing قبل Pydantic؛ لا تتحول الساعات عبر float. NaN/Infinity ممنوعة.
-
-## History Delta
-
-```json
-{
-  "part_id": 20251,
-  "rows": [{"degree_id": "D", "course_id": "C00", "faculty_id": "F", "plan_requirement_type_id": "R", "course_credits": 3,
-            "count": 20, "fail_count": 0, "retake_count": 0, "mark_sum": 1800, "attempt_sum": 20}],
-  "finalization": {"finalized_part_id": 20251, "approval_reference": "official_finalization_reference"}
+```python
+engine_request = {
+    "student_id": "student-example",
+    "degree_id": "degree-example",
+    "part_id": 20251,
+    "target_credits": Decimal("3"),
+    "allowed_failed_repeat_credits": Decimal("0"),
+    "allowed_withdrawn_repeat_credits": Decimal("0"),
+    "requirement_policies": [
+        {"plan_requirement_type_id": "R", "max_credits": Decimal("3")}
+    ],
+    "requirement_group_policies": {
+        '["degree-example","group-example"]': Decimal("9")
+    },
+    "max_new_courses": 2,
 }
 ```
 
-`finalization` اختياري للمعاينة. بدونه الفحص `unavailable`، ومعه `admin_attested`؛ إثبات التثبيت الفعلي مسؤولية الإدارة الجامعية، وليس نتيجة نجاح المجاميع. بدون تاريخ محمل يظل فحص schema والمجاميع والبصمة متاحًا، بينما lineage/replay/order غير متاحة والنتيجة partial. مع تاريخ محمل يُعرض base hash وcutoff وnew_delta/already_applied؛ المختلف لنفس الفصل أو out-of-order يُرفض 409. المدير القديم يبقى كما هو؛ مدير التاريخ التراكمي يقرأ pointer الدائم ويثبت snapshot واحدة في الطلب.
+تصل اللقطة والمرشح وهذا الطلب إلى الاستدعاء الموضح في بداية الملف، مع `history_as_of_part=20243` و`allow_older_history=False`. عُرضت هنا نتيجة adapters؛ نجاح توصية HTTP يتطلب أيضًا الكتالوج الفعلي وGradeScale والأصول المعتمدة وحزمة التاريخ المحددة. الرد الخارجي للتوصية يحتوي `status` و`metadata` و`recommendations`؛ واجهات التحقق لا تعيد اللقطة أو الرد الخام.
 
-هذا المسار لا يكتب ملفًا ولا ينشر ولا يفعل تاريخًا. Core القديم الذي يحتاج `finalized=True` للتحديث بقي كما هو. المجاميع الحالية تحتوي marks/counts/attempts فقط؛ لا تقدير `points_sum`. loader الرسمي يرفض أي bundle يتطلب عقد نقاط/ميزات إضافية لا يوفرها المسار الحالي.
+## How to Run
 
-إدارة التحديث التراكمي أصبحت منفصلة تحت `/api/v1/admin/history/`؛ mode دائم افتراضي `manual`، وpreview/commit/activation مستقلة، وحدث التثبيت له مفتاح منفصل. baseline معتمد تراكمياً عبر 20251 يُنقل إلى root مستقل، ثم تضاف مجاميع الفصول بلا إعادة بناء أو تغيير الحزم القديمة. [إعداد البيئة وعقد PHP والتسلسل والـrollback](../../docs/API_CONFIGURATION_AND_CUMULATIVE_HISTORY.md).
+نفذ من جذر المشروع باستخدام البيئة الافتراضية:
 
-## خريطة الميزات الحالية
-
-| الميزات | المصدر والحساب |
-|---|---|
-| `gpa_prev_1`, `gpa_prev_2`, `gpa_trend_delta`, `gpa_trend_missing` | helper registered GPA shifts الأصلي، مع null حقيقي عند تاريخ ناقص |
-| `start_agpa_points`, `start_total_in_courses`, `start_total_in_credits` | حقول START الفعلية |
-| `prior_total_reg_courses`, `prior_total_reg_credits`, `prior_total_fail_courses`, `prior_total_fail_credits` | مصادر beginning-of-semester موثقة؛ لا تصحيح افتراضي لفرق مجاميع API |
-| `prior_fail_credit_ratio` | fail credits / reg credits؛ مقام صفر أو مجهول يعطي null |
-| `prior_registered_semesters` | المصدر الرسمي أو counter السابق من schema كاملة، دون عد صفوف مفترض |
-| `observed_gap_semesters` | calendar الأصلي وآخر فصل مسجل والتسجيل الحالي |
-| `diploma_gpa`, `diploma_type_id` | الدبلوم الحقيقي عبر aliases موثقة |
-| `degree_credits_count` | degree information |
-| `course_credits`, `attempt_number` | API finite credits وprevious attempts +1 |
-| `plan_course_type_id`, `plan_requirement_type_id`, `plan_year_order`, `plan_semester_order`, `plan_credits_count` | properties مراجعَة مع كتالوج الاختصاص؛ course type من catalog وحده |
-| `grade_version_id`, `part_semester` | الطالب مع تحقق GradeScale؛ semester من الهدف |
-| `course_history_avg_mark`, `course_history_fail_rate`, `course_history_avg_attempt`, `course_history_retake_rate`, `course_history_effective_support`, `course_history_fallback_level`, `course_history_missing` | Frozen History واحدة، apply الأصلي (7 ميزات) |
-| `plan_course_count`, `plan_total_credits`, `plan_credit_weighted_fail_rate`, `plan_credit_weighted_avg_mark`, `plan_credit_weighted_avg_attempt`, `plan_difficulty_credit_load` | حسابات السياق الأصلية للخطط المدرجة في shortlist |
-| `peer_course_count`, `peer_total_credits`, `peer_credit_weighted_fail_rate`, `peer_credit_weighted_avg_mark`, `peer_credit_weighted_avg_attempt`, `peer_difficulty_credit_load`, `peer_max_fail_rate`, `peer_difficulty_missing` | السياق الأصلي دون المادة الحالية (8 ميزات peer) |
-
-المجموع 47. Stage 1 يستخدم 33 بدون 14 plan/peer، وStage 2 يستخدم47 بعد shortlist فقط. `current_gpa_credits` وgroup identity وcaps ليست ميزات مودل.
-
-## إعداد اختبار الأداء
-
-```text
-ADVISOR_PERFORMANCE_TEST_MODE=true
-ADVISOR_PERFORMANCE_TEST_MAX_CANDIDATES=17
+```powershell
+.\.venv\Scripts\python.exe -m pip install -e '.[api,api-test]'
+$env:ADVISOR_API_KEY = '<service-key>'
+$env:ADVISOR_ADMIN_API_KEY = '<different-admin-key>'
+$env:ADVISOR_FINALIZATION_API_KEY = '<different-finalization-key>'
+.\.venv\Scripts\python.exe -m uvicorn src.api.app:create_app --factory --host 127.0.0.1 --port 8000
 ```
 
-17 مثال قابل للتغيير، وليس default. تفعيل الوضع دون cap موجب صريح خطأ إعداد. خارج الوضع لا يطبق cap حتى إن كانت قيمة البيئة موجودة. التجاوز يرفض التوصية **كاملة**؛ واجهات التحقق تحلل كل المواد. حدود الأداء الحقيقية `UNRESOLVED`.
+قيم المفاتيح أعلاه placeholders؛ اضبط أسرار الخدمة خارج Git وبقيم مختلفة. `create_app()` ينشئ التطبيق، و`lifespan` يحمل الكتالوج وGradeScale والتاريخ والمودلات بصورة مستقلة عبر `ApiService.initialize()`. فشل تحميل تبعية يبقي `/health` والتشخيص متاحين، ويمنع inference غير الجاهز.
 
-الإعدادات الأخرى: `ADVISOR_ENABLE_BACKTESTING` افتراضي false، `ADVISOR_DIPLOMA_GPA_ALIASES` و`ADVISOR_DIPLOMA_TYPE_ALIASES` قوائم CSV. لا تحفظ الأسرار أو ملفات طلبات الطلاب في Git أو logs.
+### PHP-push: المسار الأساسي
 
-## التحقق
+PHP يوثق المستخدم ويتحقق من صلاحياته على الطالب والاختصاص، ويجلب الردين للفصل المطلوب، ثم يرسل JSON بنفس شكل المثال مع `source_contexts.student` و`source_contexts.courses` مستقلين. مفتاح الخدمة يوثق الجهة المرسلة؛ صلاحيات المستخدم الجامعية مسؤولية PHP.
+
+احفظ JSON المثال في ملف محلي خارج Git، ثم أرسل الطلب:
+
+```powershell
+$requestJsonPath = '<absolute-path-to-request.json>'
+Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:8000/recommend' `
+  -Headers @{ 'X-API-Key' = $env:ADVISOR_API_KEY } `
+  -ContentType 'application/json' -Body (Get-Content -LiteralPath $requestJsonPath -Raw)
+Invoke-RestMethod -Method Get -Uri 'http://127.0.0.1:8000/health'
+```
+
+`POST /recommend` alias للمسار السابق `POST /api/v1/recommendations`؛ لهما handler والمصادقة وschema والنتيجة نفسها. IDs الاصطناعية في المثال تحتاج dependencies اصطناعية مطابقة كما في الاختبارات؛ تشغيل الأمر على خدمة بكتالوج فعلي لا يثبت صلاحية تلك IDs.
+
+### Python-pull: جلب اختياري مستقل
+
+لأداة جلب محلية فقط، اضبط URLs من إعداد الجامعة الفعلي:
+
+```powershell
+$env:ADVISOR_ENABLE_DIRECT_FETCH = 'true'
+$env:ADVISOR_STUDENT_API_URL = '<actual-https-student-api-url>'
+$env:ADVISOR_COURSES_API_URL = '<actual-https-courses-api-url>'
+$env:ADVISOR_COURSES_QUERY_PARAMETERS = '<actual-json-query-parameter-mapping>'
+$env:ADVISOR_API_TIMEOUT_SECONDS = '10'
+$env:ADVISOR_BACKEND_TOKEN = '<optional-backend-bearer-token>'
+```
+
+خريطة المعاملات JSON تربط المفاتيح `student_id/degree_id/part_id` بأسماء معاملات Courses الحقيقية. لا توجد قيمة افتراضية للـURLs أو أسماء Courses. يمكن أن تكون الخريطة `{}` إذا كان ذلك عقد endpoint الفعلي. Student GET يستخدم `studentId` و`semesterId` كما في `BackendClient.fetch_inputs()`.
+
+```python
+from src.api.backend_client import BackendClient
+from src.api.settings import ApiSettings
+
+inputs = BackendClient(ApiSettings.from_env()).fetch_inputs(
+    student_id="student-example", degree_id="degree-example", part_id=20251
+)
+```
+
+هذا مثال استدعاء للأداة؛ لا تشغله على الجامعة بمعرفات المثال. يعيد العميل الردين وسياقي الجلب فقط، ولا يستكمل الدبلوم أو مصادر ساعات GPA أو سياسة التسجيل أو cutoff التوصية. تضيف الأداة المستدعية هذه البيانات الموثقة قبل إرسال الطلب المعتاد. لا يتغير مسار `/recommend` عند تفعيل الجلب، ولا يقبل الطلب URL.
+
+URLs تتطلب HTTPS وعنوانًا عامًا. خيار `ADVISOR_ALLOW_LOCAL_BACKEND_HTTP=true` يسمح بـloopback للاختبار. العميل يفحص DNS ويثبت العنوان للاتصال مع TLS، ويرفض redirects وproxy من البيئة؛ حد الرد `8 MiB`. لا تطبع الردود أو tokens.
+
+### الإعدادات الأخرى
+
+| الإعداد | القيمة الافتراضية أو وظيفته |
+|---|---|
+| `ADVISOR_ENABLE_DIRECT_FETCH` | `false`؛ PHP-push لا يحتاج URLs |
+| `ADVISOR_API_TIMEOUT_SECONDS` | `10` ثوانٍ للـsocket؛ لا يمثل SLA إنتاج |
+| `ADVISOR_ALLOW_LOCAL_BACKEND_HTTP` | `false` |
+| `ADVISOR_ENABLE_BACKTESTING` | `false`؛ backtesting يحتاج تفعيل البيئة وmode الطلب معًا |
+| `ADVISOR_DIPLOMA_GPA_ALIASES` | `diploma_gpa,DIPLOMA_GPA` |
+| `ADVISOR_DIPLOMA_TYPE_ALIASES` | `diploma_type_id,DIPLOMA_TYPE_ID` |
+| `ADVISOR_PERFORMANCE_TEST_MODE` | `false` |
+| `ADVISOR_PERFORMANCE_TEST_MAX_CANDIDATES` | بلا حد افتراضي؛ مطلوب عدد موجب عند تفعيل وضع اختبار الأداء |
+| `ADVISOR_HISTORY_INCREMENTAL_ROOT` | `src.paths.FROZEN_HISTORY_INCREMENTAL_DIR` |
+| `ADVISOR_HISTORY_BASELINE_SOURCE_ROOT` | `src.paths.FROZEN_HISTORY_DIR_V2` |
+| `ADVISOR_HISTORY_UPDATE_MODE` | `manual` عند bootstrap؛ الإعداد الدائم له الأولوية لاحقًا |
+
+في وضع اختبار الأداء، تجاوز عدد المرشحين المحدد يرفض التوصية كاملة؛ لا يقص المواد ولا يختصر التحقق. خارج هذا الوضع لا يُطبق هذا cap. حدود الأداء الفعلية وSLA والتشغيل متعدد workers تبقى `UNRESOLVED`. يوجد قفل inference واحد لكل process؛ الطلب المتزامن يُرفض بـ`503 INFERENCE_BUSY`.
+
+## المواد والتوصية
+
+`adapt_courses()` يفحص هوية جميع الصفوف والتكرار قبل تصفية غير المؤهلين. `IS_REQUESTABLE` و`ALLOW_REGISTER` يحتاجان `Y/N` صريحًا. التكرار المطابق يُزال، والمتعارض يُرفض حتى لو كانت إحدى النسخ غير مؤهلة. خصائص المادة تُراجع مع كتالوج degree+course، و`plan_course_type_id` يأتي من `course_type_id` وحده.
+
+`attempt_number = ATTEMPTS_COUNT + 1`؛ نطاق العداد يجب أن يطابق عقد التدريب ويؤكده PHP عبر `attempts_scope_confirmed`. صفر محاولات مع نتيجة سابقة فارغة يعطي `NEW`. العداد الموجب يحتاج `FINISH_STATUS` السابق أو مصدرًا مستقلًا في `previous_course_statuses`؛ لا يستنتج الرسوب أو الانسحاب من العداد. عند وجود `LAST_REGISTER_SEMESTER_ID` يجب أن يسبق الهدف. حالات المصادر المتعارضة تُرفض.
+
+`STATUS_REASON_CODE=EXCEPTION` يحتاج course ID في `approved_exception_course_ids`. `allowRegisterAllOptional=Y` يحتاج تأكيد تفسيره، ولا يلغي caps. `registration_policy` له مصدر وفصل مؤكدان و`load_profile=study|graduation` وfailed-repeat cap صريح. withdrawn cap اختياري وفق العقد الحالي، وغياب `MAX_NEW_COURSES` لا يصنع حدًا جديدًا.
+
+| `requirement_group_modes` | قيد المجموعة |
+|---|---|
+| `strict_remaining` | `CREDITS_COUNT - REQUIREMENT_PASSED_CREDITS`؛ تجاوز passed للحد خطأ |
+| `approved_overflow` | `max(0, maximum + approved overflow - passed)`؛ overflow صريح |
+| `unbounded` | عدم وجود cap مؤكد؛ تمثيله الداخلي مجموع ساعات المرشحين بعد إزالة التكرار |
+
+هوية المجموعة canonical JSON من `degree_id` و`REQUIREMENT_ID`. caps مجموعات المتطلبات مستقلة عن تصنيف المادة؛ cap التصنيف الداخلي يساوي مجموع ساعات مرشحيه.
+
+`target_credits` أو `min_credits/max_credits` خياران متنافيان. يُحسب تقاطع المجال المطلوب مع قواعد التسجيل، ثم يصبح الحد الأعلى هدفًا دقيقًا: `12..18` يعني 18، دون النزول إلى 17 عند غياب خطة. `top_k` افتراضيًا 3 وفي المجال 1..50؛ النتيجة Top K داخل shortlist وليست ضمانًا على كل الخطط عالميًا.
+
+`mode=normal` يحتاج `history_as_of_part` للفصل السابق مباشرة. `backtesting` الصريح والمفعّل يسمح بتاريخ أقدم، ويمنع الهدف والمستقبل. يجب أن يأتي الهدف بعد تدريب **كل** stage، وأن توجد حزمة cutoff المطلوبة وتكون متوافقة. لا fallback إلى أحدث حزمة أو أصول V1، وتثبت snapshot التاريخ أثناء الطلب.
+
+## المسارات والتشخيص
+
+واجهتا التحقق اختياريتان للتشخيص؛ التوصية تنفذ التحقق داخليًا ولا تتطلب استدعاءهما أولًا.
+
+| المسار | المفتاح | الوظيفة |
+|---|---|---|
+| `GET /health` | دون مفتاح | صحة HTTP وجاهزية المودلات والتاريخ والكتالوج وGradeScale والتوصية |
+| `POST /recommend` | `ADVISOR_API_KEY` | التوصية نفسها عبر alias |
+| `POST /api/v1/recommendations` | `ADVISOR_API_KEY` | مسار التوصية السابق |
+| `POST /api/v1/inputs/student/validate` | `ADVISOR_API_KEY` | تشخيص الطالب دون inference |
+| `POST /api/v1/inputs/courses/validate` | `ADVISOR_API_KEY` | تشخيص المواد دون inference |
+| `POST /api/v1/history/deltas/validate` | `ADVISOR_ADMIN_API_KEY` | تحقق Delta للقراءة فقط |
+| `GET /api/v1/admin/history/status` | `ADVISOR_ADMIN_API_KEY` | حالة المخزن والتاريخ النشط |
+| `PUT /api/v1/admin/history/mode` | `ADVISOR_ADMIN_API_KEY` | اختيار وضع التحديث |
+| `POST /api/v1/admin/history/initialize` | `ADVISOR_ADMIN_API_KEY` | تهيئة baseline تراكمية معتمدة |
+| `POST /api/v1/admin/history/preview` | `ADVISOR_ADMIN_API_KEY` | معاينة Delta وإصدار preview token |
+| `POST /api/v1/admin/history/commit` | `ADVISOR_ADMIN_API_KEY` | نشر النسخة المكتملة بعد التأكيد |
+| `POST /api/v1/admin/history/activate` | `ADVISOR_ADMIN_API_KEY` | تفعيل نسخة أو rollback مؤكد |
+| `POST /api/v1/admin/history/finalization-events` | `ADVISOR_FINALIZATION_API_KEY` | حدث تثبيت الفصل من الجهة المؤتمنة |
+
+كل POST وPUT محمي يستخدم `X-API-Key`. صلاحيات المفاتيح الثلاثة مستقلة، ومسارات الإدارة وstartup تحتفظ بعقودها السابقة.
+
+تعرض واجهات التحقق `validation_status=valid|partial|invalid` و`validation_completed` و`checks` و`errors` و`unavailable_fields` و`summary`. `partial` قد يعود HTTP 200 مع `validation_completed=false`. لا يعيد التشخيص المدخلات الخام أو snapshot. `/health` لا يعني أن inference جاهز؛ افحص `recommendation_readiness.ready`.
+
+| HTTP | أمثلة على النتيجة |
+|---|---|
+| `200` | توصية، `no_feasible_plan`، أو تشخيص valid/partial |
+| `401 / 403` | مفتاح مفقود أو غير مخول |
+| `422` | schema أو هوية أو مصدر أو cutoff أو مدخل أكاديمي غير صالح |
+| `409` | تكرار أو Delta أو workflow متعارض |
+| `503` | مصادقة غير مضبوطة، تبعية أو تاريخ غير متاح، أو worker مشغول |
+| `500` | `INTERNAL_ERROR` برسالة عامة |
+
+`DecimalRequest` يحفظ decimals عند قراءة JSON، و`DecimalRoute` يطبق ذلك على المسارات. الساعات تبقى `Decimal` أثناء القيود والبحث، ثم تُحوّل في موضع inference الأصلي. `json_safe()` يحول Decimal إلى سلسلة عند الرد. NaN/Infinity ممنوعة، وأخطاء schema والاستثناءات لا تكشف مدخلات أو paths أو أسرارًا.
+
+## History Delta والإدارة
+
+تحقق Delta يستخدم `part_id/rows/finalization?`. `finalization` شهادة الجهة الجامعية؛ وجود مجاميع سليمة لا يثبت تثبيت الفصل. دون تاريخ محمل يمكن فحص schema والمجاميع والبصمة، وتبقى lineage/replay/order غير متاحة. endpoint التحقق لا يكتب ولا ينشر ولا يفعل التاريخ.
+
+المخزن التراكمي مستقل: تهيئة baseline معتمدة → preview → commit بتأكيد وtoken → activate بتأكيد وبصمة. `manual` هو الوضع الافتراضي، و`auto_on_finalization` يحتاج حدثًا موثوقًا بمفتاحه المنفصل. `commit` وحده لا يفعل النسخة. تبقى الحزم السابقة immutable، ولا تُصنع `points_sum` أو مجاميع تخصص غير متاحة.
+
+راجع [عقد الإعدادات والتاريخ التراكمي](../../docs/API_CONFIGURATION_AND_CUMULATIVE_HISTORY.md) للتسلسل والحقول والـrollback، و[تقرير التنفيذ السابق](../../reports/api_cumulative_history.md) للأدلة وحدودها.
+
+## التحقق من إعادة التنظيم
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest tests/test_api_adapters.py tests/test_api_http.py tests/test_api_integration.py tests/test_api_core_extensions.py -q
 .\.venv\Scripts\python.exe -m pytest -q
-graphify update .
 ```
 
-قيود تشغيل HTTP داخل sandbox موثقة في [تقرير المرحلة السابقة](../../reports/backend_api_integration.md). Fixtures داخل `tests/fixtures/` منقحة؛ النجاح يعتمد على مصادر وسياسات اصطناعية معلنة. نجاحها لا يثبت بيانات المثال الحقيقي أو أداء الإنتاج. راجع [تقرير الإعدادات والتاريخ التراكمي](../../reports/api_cumulative_history.md) لنتائج PASS/PARTIAL/BLOCKED النهائية وبصمات الأصول؛ فشل تسمية `capacity_63` السابق أُصلح قبل هذه المهمة.
+الاختبارات تستخدم سجلات اصطناعية وdependencies محقونة وتتحقق من الدقة والهوية والرفض قبل inference والـ33/47 والتاريخ والمصادقة. [REFACTOR_REPORT.md](REFACTOR_REPORT.md) يسجل المقارنة مع النسخة السابقة ونتائج التشغيل الفعلية؛ لا يُستنتج نجاح الإنتاج من أمثلة الاختبارات.

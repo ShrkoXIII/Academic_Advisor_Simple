@@ -14,7 +14,7 @@ from .schemas import StudentValidationRequest, CoursesValidationRequest, Recomme
 from .schemas import HistoryModeRequest, HistoryInitializeRequest, HistoryCommitRequest, HistoryActivationRequest
 from .service import ApiService
 from .settings import ApiSettings
-from .validation import ApiError, json_safe
+from .validators.common import ApiError, json_safe
 
 
 class DecimalRequest(Request):
@@ -40,7 +40,7 @@ class DecimalRoute(APIRoute):
                 # Convert at the route boundary so private tracebacks never leak.
                 raise ApiError("INTERNAL_ERROR", "Request could not be completed.", status_code=500) from None
         return preserve_credit_precision
-
+##DecimalRequest يحدد كيف نقرأ البيانات، وDecimalRoute يضمن استخدام هذه الطريقة عند معالجة المسارات
 
 def create_app(*, settings=None, service=None):
     """Create an app; injected services are already initialized for tests/tools."""
@@ -53,6 +53,8 @@ def create_app(*, settings=None, service=None):
     app = FastAPI(title="Academic Advisor Integration", version="1.0", lifespan=lifespan)
     app.router.route_class = DecimalRoute
     app.state.api_service = api
+##app: تطبيق FastAPI الذي يستقبل اتصالات الشبكة.
+##api: كائن ApiService الذي ينفذ عمليات المشروع.
 
     def authenticate(value, *, admin=False, finalization=False):
         expected = api.settings.finalization_key if finalization else api.settings.admin_key if admin else api.settings.service_key
@@ -102,6 +104,7 @@ def create_app(*, settings=None, service=None):
     async def validate_courses(body: CoursesValidationRequest):
         return diagnostic(await run_in_threadpool(api.validate_courses, body.model_dump()))
 
+    @app.post("/recommend", dependencies=[Depends(service_auth)])
     @app.post("/api/v1/recommendations", dependencies=[Depends(service_auth)])
     async def recommend(body: RecommendationRequest):
         result = await run_in_threadpool(api.recommend, body.model_dump())
