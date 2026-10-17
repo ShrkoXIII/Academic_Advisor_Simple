@@ -28,19 +28,105 @@ PUBLIC_METADATA = {"dataset_version", "feature_engineering_version", "input_fing
 
 
 class ApiService:
-    def __init__(self, *, settings=None, catalog=None, grade_scale=None, history_manager=None, engine=None, history_store=None):
+    def __init__(self, *, settings=None, catalog=None, grade_scale=None, history_manager=None, engine=None, history_store=None,
+                 request_store=None):
         self.settings = settings or ApiSettings()
         self.catalog, self.grade_scale = catalog, grade_scale
         self.history_manager = history_manager or (engine.history_manager if engine is not None else None)
         self.engine = engine
         self.artifacts = engine.artifacts if engine is not None else None
         self._inference_lock = Lock()
+        self._request_store = request_store
+        self._request_store_lock = Lock()
         if history_store is None:
             from src.recommendation.cumulative_history import CumulativeHistoryStore
             history_store = CumulativeHistoryStore(self.settings.incremental_history_root,
                 default_mode=self.settings.history_update_mode, compatibility_check=self._history_compatibility,
                 legacy_root=self.settings.history_baseline_source_root)
         self.history_store = history_store
+
+    def _get_request_store(self):
+        """Open request storage only for ingestion; diagnostics stay read-only."""
+        with self._request_store_lock:
+            if self._request_store is None:
+                from .request_store import RequestStore
+                self._request_store = RequestStore(
+                    self.settings.request_store_path,
+                    pending_ttl_seconds=self.settings.request_pending_ttl_seconds,
+                    processing_ttl_seconds=self.settings.request_processing_ttl_seconds,
+                    result_ttl_seconds=self.settings.request_result_ttl_seconds,
+                    max_requests=self.settings.request_max_count,
+                    max_payload_bytes=self.settings.request_max_payload_bytes)
+        return self._request_store
+
+    def submit_recommendation_input(self, component, request, *, owner):
+        """Validate one component, claim a complete pair, reuse recommend once."""
+        from pydantic import ValidationError
+        from .schemas import StudentInputRequest, CoursesInputRequest
+        schema = {"student": StudentInputRequest, "courses": CoursesInputRequest}.get(component)
+        if schema is None:
+            raise ApiError("INVALID_COMPONENT", "Unknown recommendation component.")
+        try:
+            request = schema.model_validate(request).model_dump()
+        except ValidationError:
+            raise ApiError("INVALID_REQUEST_SCHEMA", "Request does not satisfy the documented HTTP schema.") from None
+        store = self._get_request_store()
+        request_id = request["request_id"]
+        replay = store.replay(owner, request_id, component, request)
+        if replay is not None:
+            return replay
+        validate = self.validate_student if component == "student" else self.validate_courses
+        diagnostic = validate(request)
+        if diagnostic.errors:
+            raise ApiError("INVALID_INPUTS", "Recommendation input validation failed.",
+                           status_code=diagnostic.http_status, details={component: diagnostic.public()})
+        state = store.submit(owner, request_id, component, request)
+        if not state.get("claimed"):
+            return state
+        try:
+            combined = self._assemble_recommendation_request(state["components"])
+            result = self.recommend(combined)
+            return store.complete(owner, request_id, state["claim_token"], result)
+        except ApiError as error:
+            return store.fail(owner, request_id, state["claim_token"], error.issue, http_status=error.status_code)
+        except Exception:
+            error = ApiError("INTERNAL_ERROR", "Request could not be completed.", status_code=500)
+            return store.fail(owner, request_id, state["claim_token"], error.issue, http_status=500)
+
+    def lookup_recommendation_request(self, request_id, *, owner):
+        """Retrieve persisted status/result without launching inference."""
+        return self._get_request_store().lookup(owner, request_id)
+
+    @staticmethod
+    def _assemble_recommendation_request(components):
+        """Combine consistent evidence without treating the two responses alike."""
+        from pydantic import ValidationError
+        from .schemas import RecommendationRequest
+
+        def merge_evidence(left, right):
+            if left is None:
+                return right
+            if right is None:
+                return left
+            if isinstance(left, dict) and isinstance(right, dict):
+                merged = dict(left)
+                for key, value in right.items():
+                    merged[key] = merge_evidence(merged[key], value) if key in merged else value
+                return merged
+            if left != right:
+                raise ApiError("REQUEST_CONTEXT_CONFLICT", "Student and courses source evidence disagrees.", status_code=409)
+            return left
+
+        student, courses = components["student"], components["courses"]
+        combined = {key: student[key] for key in ("student_id", "degree_id", "part_id", "student_api_response")}
+        combined["courses_api_response"] = courses["courses_api_response"]
+        for key in ("source_contexts", "integration_context"):
+            combined[key] = merge_evidence(student[key], courses[key])
+        combined.update(student["recommendation"])
+        try:
+            return RecommendationRequest.model_validate(combined).model_dump()
+        except ValidationError:
+            raise ApiError("INVALID_REQUEST_SCHEMA", "Assembled recommendation does not satisfy the HTTP schema.") from None
 
     def _history_compatibility(self, state, metadata):
         """Loaded artifacts retain their original manifest and approval validation."""
@@ -289,7 +375,7 @@ class ApiService:
             engine_request.pop("allowed_withdrawn_repeat_credits")
         return engine_request
 
-    def _run_recommendation(self, student, candidates, engine_request, request, cutoff, mode):
+    def _run_recommendation(self, student, candidates, engine_request, request, cutoff, mode): ## send to engine
         """Protect the existing engine call with the serving-worker lock."""
         if not self._inference_lock.acquire(blocking=False):
             raise ApiError("INFERENCE_BUSY", "Recommendation worker is busy.", status_code=503)

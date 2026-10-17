@@ -23,3 +23,6 @@ json/
 .coverage.*
 /htmlcov/
 pytestdebug.log
+
+# Private, temporary PHP request payloads and SQLite journal files.
+/.api-state/

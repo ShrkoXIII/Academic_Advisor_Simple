@@ -61,9 +61,23 @@ class ApiSettings:
     incremental_history_root: Path = field(default_factory=lambda: paths.FROZEN_HISTORY_INCREMENTAL_DIR, repr=False)
     history_baseline_source_root: Path = field(default_factory=lambda: paths.FROZEN_HISTORY_DIR_V2, repr=False)
     history_update_mode: str = "manual"
+    service_keys: dict = field(default_factory=dict, repr=False)
+    request_store_path: Path = field(default_factory=lambda: paths.PROJECT_ROOT / ".api-state" / "requests.sqlite3", repr=False)
+    request_pending_ttl_seconds: int = 900
+    request_processing_ttl_seconds: int = 3600
+    request_result_ttl_seconds: int = 86400
+    request_max_count: int = 10000
+    request_max_payload_bytes: int = 2097152
 
     def __post_init__(self):
         keys = [key for key in (self.service_key, self.admin_key, self.finalization_key) if key]
+        if (not isinstance(self.service_keys, dict)
+                or any(not isinstance(owner, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}", owner)
+                       or owner == "legacy" or not isinstance(key, str) or not key
+                       or any(ord(char) < 32 or ord(char) == 127 for char in key)
+                       for owner, key in self.service_keys.items())):
+            raise ValueError("Service callers require distinct configured identifiers and credentials.")
+        keys.extend(self.service_keys.values())
         if len(keys) != len(set(keys)):
             raise ValueError("Service, administrative and finalization keys must be distinct.")
         if self.history_update_mode not in {"disabled", "manual", "auto_on_finalization"}:
@@ -87,6 +101,15 @@ class ApiSettings:
             raise ValueError("Performance test candidate limit must be a positive integer.")
         if self.performance_test_mode and value is None:
             raise ValueError("Performance test mode requires an explicit candidate limit.")
+        for name in ("request_pending_ttl_seconds", "request_processing_ttl_seconds", "request_result_ttl_seconds",
+                     "request_max_count", "request_max_payload_bytes"):
+            value = getattr(self, name)
+            if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+                raise ValueError("Request storage limits must be positive integers.")
+        request_path = Path(self.request_store_path).resolve()
+        for protected in (paths.DATA_DIR, paths.MODEL_DIR, self.incremental_history_root, self.history_baseline_source_root):
+            if request_path.is_relative_to(Path(protected).resolve()):
+                raise ValueError("Request storage must be separate from academic data, models and history.")
 
     @classmethod
     def from_env(cls):
@@ -97,6 +120,7 @@ class ApiSettings:
             return value == "true"
         limit = os.environ.get("ADVISOR_PERFORMANCE_TEST_MAX_CANDIDATES")
         return cls(service_key=os.environ.get("ADVISOR_API_KEY"), admin_key=os.environ.get("ADVISOR_ADMIN_API_KEY"),
+                   service_keys=json.loads(os.environ.get("ADVISOR_SERVICE_KEYS", "{}")),
                    finalization_key=os.environ.get("ADVISOR_FINALIZATION_API_KEY"),
                    direct_fetch_enabled=flag("ADVISOR_ENABLE_DIRECT_FETCH"),
                    student_api_url=os.environ.get("ADVISOR_STUDENT_API_URL"),
@@ -108,6 +132,12 @@ class ApiSettings:
                    incremental_history_root=Path(os.environ.get("ADVISOR_HISTORY_INCREMENTAL_ROOT", paths.FROZEN_HISTORY_INCREMENTAL_DIR)),
                    history_baseline_source_root=Path(os.environ.get("ADVISOR_HISTORY_BASELINE_SOURCE_ROOT", paths.FROZEN_HISTORY_DIR_V2)),
                    history_update_mode=os.environ.get("ADVISOR_HISTORY_UPDATE_MODE", "manual"),
+                   request_store_path=Path(os.environ.get("ADVISOR_REQUEST_STORE_PATH", paths.PROJECT_ROOT / ".api-state" / "requests.sqlite3")),
+                   request_pending_ttl_seconds=int(os.environ.get("ADVISOR_REQUEST_PENDING_TTL_SECONDS", "900")),
+                   request_processing_ttl_seconds=int(os.environ.get("ADVISOR_REQUEST_PROCESSING_TTL_SECONDS", "3600")),
+                   request_result_ttl_seconds=int(os.environ.get("ADVISOR_REQUEST_RESULT_TTL_SECONDS", "86400")),
+                   request_max_count=int(os.environ.get("ADVISOR_REQUEST_MAX_COUNT", "10000")),
+                   request_max_payload_bytes=int(os.environ.get("ADVISOR_REQUEST_MAX_PAYLOAD_BYTES", "2097152")),
                    enable_backtesting=flag("ADVISOR_ENABLE_BACKTESTING"),
                    performance_test_mode=flag("ADVISOR_PERFORMANCE_TEST_MODE"),
                    performance_test_max_candidates=int(limit) if limit else None,

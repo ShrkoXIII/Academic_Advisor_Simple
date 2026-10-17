@@ -488,3 +488,83 @@ def test_bad_lineage_is_not_selected_on_restart(tmp_path):
     manager = module.FrozenHistoryManager.load(root=tmp_path)
     assert manager.capture(target_part=20252).as_of_part == 20243
     assert len(manager.skipped_bundles) == 1
+
+
+def test_distinct_full_credit_grains_reuse_existing_rounded_history_groups():
+    module = api()
+    payload = delta()
+    row = dict(payload["aggregates"][0], count=1, fail_count=0, retake_count=0,
+               mark_sum=60, attempt_sum=1)
+    payload["aggregates"] = [
+        dict(row, course_credits=credits) for credits in ("2.4", "2.5", "3")
+    ] + [dict(row, course_credits="3", plan_requirement_type_id="S")]
+    normalized = module.normalize_history_delta(payload)
+    assert len(normalized.rows) == 4
+    updated = module.apply_history_delta(weighted_state(), payload)
+    # Full credits distinguish incoming grains; the established feature keys
+    # pool 2.4 and 2.5 through pandas rounding, while retaining requirement IDs.
+    assert updated.tables[1].loc["D||A", "raw_count"] == 6
+    assert updated.tables[2].loc["A", "raw_count"] == 6
+    for level, prefix in ((3, "D||"), (4, "F||"), (5, "")):
+        table = updated.tables[level]
+        assert table.loc[prefix + "R||2", "raw_count"] == 4
+        assert table.loc[prefix + "R||3", "raw_count"] == 1
+        assert table.loc[prefix + "S||3", "raw_count"] == 1
+    assert updated.global_sums["raw_count"] == 6
+
+
+def test_equivalent_credit_representations_are_duplicate_delta_grains():
+    payload = delta()
+    payload["aggregates"].append(dict(payload["aggregates"][0], course_credits="2.500"))
+    with pytest.raises(ValueError, match="Duplicate normalized aggregate grain"):
+        api().normalize_history_delta(payload)
+
+
+@pytest.mark.parametrize("statistic", ["count", "attempt_sum"])
+def test_integer_statistics_above_float64_exact_range_are_rejected(statistic):
+    payload = delta()
+    row = dict(payload["aggregates"][0], count=1, mark_sum=60,
+               fail_count=0, retake_count=1, attempt_sum=2)
+    if statistic == "count":
+        row.update(count=2**53 + 1, mark_sum=50 * (2**53 + 1),
+                   retake_count=0, attempt_sum=2**53 + 1)
+    else:
+        row["attempt_sum"] = 2**53 + 1
+    payload["aggregates"] = [row]
+    with pytest.raises(ValueError, match="exact"):
+        api().normalize_history_delta(payload)
+
+
+def test_float64_exact_integer_boundary_is_preserved_in_normalized_frame():
+    payload = delta()
+    payload["aggregates"] = [dict(payload["aggregates"][0], count=2**53,
+                                  mark_sum=50 * 2**53, fail_count=0,
+                                  retake_count=0, attempt_sum=2**53)]
+    normalized = api().normalize_history_delta(payload)
+    frame = normalized.to_frame()
+    assert normalized.rows[0][5] == str(2**53)
+    assert int(frame.iloc[0]["count"]) == int(frame.iloc[0]["attempt_sum"]) == 2**53
+
+
+def test_aggregate_addition_rejects_weight_loss_in_affected_table_group():
+    state = CourseHistoryState()
+    state.update(pd.DataFrame([
+        {"part_id": 20211, "degree_id": "D", "course_id": course, "faculty_id": "F",
+         "plan_requirement_type_id": "R", "course_credits": 3,
+         "attempt_number": 1, "final_mark": 80} for course in ("A", "B", "C", "D")
+    ]))
+    state.as_of_part = 20243
+    before = deepcopy(state)
+    payload = delta()
+    payload["aggregates"] = [dict(payload["aggregates"][0], course_credits=3,
+                                  count=2**51, mark_sum=50 * 2**51,
+                                  fail_count=0, retake_count=0, attempt_sum=2**51)]
+    # Global support is an exact integer; the affected course still has its
+    # quarter-weight prefix, which float64 would lose when adding this delta.
+    assert state.global_sums["effective_support"] == 1
+    assert state.tables[1].loc["D||A", "effective_support"] == .25
+    with pytest.raises(ValueError, match="exact"):
+        api().apply_history_delta(state, payload)
+    assert state.global_sums == before.global_sums
+    for level in state.tables:
+        assert_frame_equal(state.tables[level], before.tables[level])

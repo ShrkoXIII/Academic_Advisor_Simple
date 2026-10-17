@@ -70,8 +70,8 @@ class CoursesValidationRequest(Identity):
     integration_context: IntegrationContext = Field(default_factory=IntegrationContext)
 
 
-class RecommendationRequest(StudentValidationRequest):
-    courses_api_response: dict
+class RecommendationOptions(Envelope):
+    """Existing cutoff and credit choices, carried by the student submission."""
     history_as_of_part: StrictInt | StrictStr
     target_credits: Decimal | None = None
     min_credits: Decimal | None = None
@@ -87,6 +87,19 @@ class RecommendationRequest(StudentValidationRequest):
         elif self.min_credits is None or self.max_credits is None:
             raise ValueError("Supply exact credits or both bounds.")
         return self
+
+
+class RecommendationRequest(StudentValidationRequest, RecommendationOptions):
+    courses_api_response: dict
+
+
+class StudentInputRequest(StudentValidationRequest):
+    request_id: StrictStr = Field(min_length=1, max_length=128, pattern=r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
+    recommendation: RecommendationOptions
+
+
+class CoursesInputRequest(CoursesValidationRequest):
+    request_id: StrictStr = Field(min_length=1, max_length=128, pattern=r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
 
 
 class Finalization(Envelope):

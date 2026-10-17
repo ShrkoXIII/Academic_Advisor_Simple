@@ -1,0 +1,5 @@
+{
+  "focused": {"status": "PASS", "passed": 53, "skipped": 2, "skip_reason": "Windows symbolic link creation not permitted"},
+  "related": {"status": "PASS", "passed": 57, "subtests_passed": 6},
+  "full_suite": {"status": "INCOMPLETE", "reason": "Interrupted at existing tests/test_api_cumulative_integration.py:52; standalone faulthandler trace shows Windows asyncio proactor socketpair socket.accept waiting during TestClient.__enter__; no full-suite PASS claimed", "log": "scripts/experiments/attempt_sum_removal/full_tests.log", "diagnostic_log": "scripts/experiments/attempt_sum_removal/hang_check.log"}
+}

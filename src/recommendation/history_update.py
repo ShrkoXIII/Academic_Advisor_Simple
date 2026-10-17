@@ -11,6 +11,7 @@ from collections.abc import Mapping
 from copy import deepcopy
 from dataclasses import dataclass, field
 from decimal import Decimal, InvalidOperation
+from fractions import Fraction
 from hashlib import sha256
 import json
 import pickle
@@ -34,6 +35,9 @@ from src.features.temporal_features import (
 DELTA_ID_COLUMNS = ("degree_id", "course_id", "faculty_id", "plan_requirement_type_id")
 DELTA_NUMERIC_COLUMNS = ("course_credits", "count", "fail_count", "retake_count", "mark_sum", "attempt_sum")
 DELTA_COLUMNS = (*DELTA_ID_COLUMNS, *DELTA_NUMERIC_COLUMNS)
+_MAX_EXACT_INTEGER = 2**53
+_EXACT_SUM_SOURCES = {"effective_support": "count", "raw_count": "count", "fail_sum": "fail_count",
+                      "attempt_sum": "attempt_sum", "retake_sum": "retake_count"}
 
 
 def _number(value, name, *, integer=False):
@@ -46,6 +50,8 @@ def _number(value, name, *, integer=False):
     if (not result.is_finite() or result < 0 or not np.isfinite(float(result))
             or (integer and result != result.to_integral_value())):
         raise ValueError(f"Invalid finite nonnegative {name}.")
+    if integer and result > _MAX_EXACT_INTEGER:
+        raise ValueError(f"{name} exceeds the exact float64 integer range.")
     return result
 
 
@@ -163,11 +169,26 @@ def apply_history_delta(state, history_payload):
     return _apply_normalized_delta(state, normalize_history_delta(history_payload))
 
 
+def _validate_exact_addition(previous, addition, name):
+    """Reject count overflow or loss of an existing weighted fraction."""
+    if addition == 0:
+        return
+    exact = Fraction(float(previous)) + addition
+    if exact > _MAX_EXACT_INTEGER or Fraction(float(exact)) != exact:
+        raise ValueError(f"Cumulative {name} exceeds the exact float64 statistic range.")
+
+
 def _apply_normalized_delta(state, delta):
     # Keep the exact immutable rows whose identity was checked by the manager.
     validate_history_state(state)
     if delta.delta_part <= state.as_of_part:
         raise ValueError("History Delta is out-of-order relative to the saved cutoff.")
+    # Sum immutable integer strings before any float64 conversion can round
+    # large inputs. The existing mark and credit numeric policies are unchanged.
+    for column, source in _EXACT_SUM_SOURCES.items():
+        position = DELTA_COLUMNS.index(source)
+        addition = sum(int(row[position]) for row in delta.rows)
+        _validate_exact_addition(state.global_sums[column], addition, column)
     cloned = deepcopy(state)
     frame = delta.to_frame()
     if not frame.empty:
@@ -178,6 +199,11 @@ def _apply_normalized_delta(state, delta):
         })
         for level, key in build_history_keys(frame).items():
             grouped = additions.assign(key=key).groupby("key", sort=True)[HISTORY_SUM_COLUMNS].sum()
+            table = cloned.tables[level]
+            for group, values in grouped.iterrows():
+                for column in _EXACT_SUM_SOURCES:
+                    previous = table.at[group, column] if group in table.index else 0
+                    _validate_exact_addition(previous, int(values[column]), column)
             cloned.tables[level] = (pd.concat([cloned.tables[level], grouped])
                                     .groupby(level=0, sort=True)[HISTORY_SUM_COLUMNS].sum().astype("float64"))
         for column in HISTORY_SUM_COLUMNS:

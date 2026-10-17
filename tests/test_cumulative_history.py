@@ -6,6 +6,7 @@ import importlib.util
 from concurrent.futures import ThreadPoolExecutor
 import subprocess
 import sys
+from threading import Event
 
 import pandas as pd
 from pandas.testing import assert_frame_equal
@@ -498,4 +499,57 @@ def test_baseline_retry_rejects_conflicting_approval_or_source_without_overwrite
         store.initialize(**request)
     assert error.value.code == "HISTORY_CONFLICT"
     assert store.status()["active_as_of_part"] is None
+    assert before == {p.name: file_sha256(p) for p in (store.root / "as_of_20251").iterdir()}
+
+
+def test_cross_worker_capture_pins_history_during_atomic_activation(tmp_path, monkeypatch):
+    store, _, _ = initialize(tmp_path)
+    committed = commit(store, payload())
+    reader = module().CumulativeHistoryStore(store.root, compatibility_check=lambda state, metadata: True)
+    pinned = reader.capture(target_part=20252, history_as_of_part=20251, allow_older_history=False)
+    old_sums = deepcopy(pinned._state.global_sums)
+    bundles_before = {p.relative_to(store.root).as_posix(): file_sha256(p)
+                      for directory in store.root.glob("as_of_*") for p in directory.iterdir() if p.is_file()}
+    ready, resume = Event(), Event()
+    original_write = store._write
+
+    def paused_write(control):
+        ready.set()
+        assert resume.wait(10)
+        original_write(control)
+
+    monkeypatch.setattr(store, "_write", paused_write)
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        job = pool.submit(activate, store, committed)
+        try:
+            assert ready.wait(10)
+            during = reader.capture(target_part=20252, history_as_of_part=20251, allow_older_history=False)
+            assert during.as_of_part == during.metadata["as_of_part"] == 20251
+            assert during._state.global_sums == old_sums
+            assert reader.status()["active_as_of_part"] == 20251
+        finally:
+            resume.set()
+        assert job.result(timeout=10)["status"] == "activated"
+    after = reader.capture(target_part=20253, history_as_of_part=20252, allow_older_history=False)
+    assert after.as_of_part == after.metadata["as_of_part"] == 20252
+    assert after._state.global_sums["raw_count"] == old_sums["raw_count"] + 2
+    assert pinned.as_of_part == pinned.metadata["as_of_part"] == 20251
+    assert pinned._state.global_sums == old_sums
+    assert bundles_before == {p.relative_to(store.root).as_posix(): file_sha256(p)
+                              for directory in store.root.glob("as_of_*") for p in directory.iterdir() if p.is_file()}
+
+
+@pytest.mark.parametrize("count", [2**53 - 2, 2**51])
+def test_inexact_cumulative_statistics_reject_commit_without_publication(tmp_path, count):
+    store, baseline, _ = initialize(tmp_path)
+    data = payload()
+    data["aggregates"][0].update(count=count, mark_sum=50 * count,
+                                 fail_count=0, retake_count=0, attempt_sum=count)
+    before = {p.name: file_sha256(p) for p in (store.root / "as_of_20251").iterdir()}
+    with pytest.raises(ValueError, match="exact"):
+        commit(store, data)
+    snapshot = store.capture(target_part=20252, history_as_of_part=20251, allow_older_history=False)
+    assert snapshot._state.global_sums == baseline.global_sums
+    assert store.status()["active_as_of_part"] == 20251
+    assert not (store.root / "as_of_20252").exists()
     assert before == {p.name: file_sha256(p) for p in (store.root / "as_of_20251").iterdir()}

@@ -172,3 +172,20 @@ def test_read_only_delta_validation_rejects_skipped_semester_without_writing(tmp
         assert response.json()["validation_status"] == "invalid"
         assert before == control_path.read_bytes()
         assert not (service.settings.incremental_history_root / "as_of_20261").exists()
+
+
+def test_oversized_integer_delta_is_rejected_safely_without_publication(tmp_path):
+    service, _, _, digest = configured(tmp_path)
+    with TestClient(create_app(service=service)) as http:
+        initialize(http, digest)
+        body = delta(20252)
+        body["rows"][0].update(count=2**53 + 1, mark_sum=50 * (2**53 + 1),
+                               fail_count=0, retake_count=0, attempt_sum=2**53 + 1)
+        control_path = service.settings.incremental_history_root / "control.json"
+        before = control_path.read_bytes()
+        response = http.post("/api/v1/history/deltas/validate", headers=ADMIN, json=body)
+        assert response.status_code == 422
+        assert response.json()["errors"][0]["code"] == "INVALID_DELTA"
+        assert str(2**53 + 1) not in response.text
+        assert control_path.read_bytes() == before
+        assert not (service.settings.incremental_history_root / "as_of_20252").exists()

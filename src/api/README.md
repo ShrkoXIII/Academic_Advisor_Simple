@@ -14,7 +14,9 @@ service.engine.recommend_from_payloads(
 
 `snapshot` هو وضع الطالب عند بداية فصل الهدف، و`candidates` هي المواد المؤهلة بعد التحقق، و`engine_request` يحمل الهوية والساعات وقيود التسجيل. تبني طبقة API هذه المدخلات ثم تعيد نتيجة المحرك ببيانات وصفية عامة محددة في `PUBLIC_METADATA`.
 
-المسار الأساسي هو `PHP-push`: يجلب PHP رد الطالب ورد المواد ويرسلهما معًا. `BackendClient` أداة `Python-pull` اختيارية ومستقلة؛ تشغيل API لا يستدعيها تلقائيًا. إعادة التنظيم تحافظ على حسابات المحرك وميزات `33/47` واختيار `pareto v1 → pareto v1` وبوابة اعتماد `manifest`.
+المسار الأساسي هو `PHP-push`: يجلب PHP رد الطالب ورد المواد ويرسلهما معًا بالعقد السابق، أو في طلبين منفصلين مرتبطين بـ`request_id`. `BackendClient` أداة `Python-pull` اختيارية ومستقلة؛ تشغيل API لا يستدعيها تلقائيًا. طبقة الإدخال الجديدة تعيد استخدام حسابات المحرك وميزات `33/47` واختيار `pareto v1 → pareto v1` وبوابة اعتماد `manifest`.
+
+[عقد تسليم PHP الكامل](../../docs/PHP_BACKEND_INTEGRATION_CONTRACT.md) يبين JSON الطالب والمواد المنفصلين، الاسترجاع وretry، وتحديث Frozen History الإداري.
 
 ## Project Structure
 
@@ -25,6 +27,7 @@ src/api/
 ├── schemas.py               # شكل طلبات HTTP وأنواع حقولها
 ├── settings.py              # الإعدادات من البيئة والتحقق منها
 ├── backend_client.py        # جلب اختياري لردي الجامعة من Python
+├── request_store.py         # تجميع مكونات الطلب في SQLite محلية بمعاملات وTTL
 ├── adapters/
 │   ├── __init__.py
 │   ├── student.py           # تحويل بيانات الطالب إلى snapshot
@@ -278,6 +281,26 @@ Invoke-RestMethod -Method Get -Uri 'http://127.0.0.1:8000/health'
 
 `POST /recommend` alias للمسار السابق `POST /api/v1/recommendations`؛ لهما handler والمصادقة وschema والنتيجة نفسها. IDs الاصطناعية في المثال تحتاج dependencies اصطناعية مطابقة كما في الاختبارات؛ تشغيل الأمر على خدمة بكتالوج فعلي لا يثبت صلاحية تلك IDs.
 
+### إرسال الطالب والمواد في طلبين
+
+أرسل `POST /api/v1/recommendation-inputs/student` بعقد `StudentInputRequest`: عقد تحقق الطالب السابق مع `request_id` و`recommendation` الإلزامي، وفيه cutoff وخيارات الساعات و`top_k/mode`. أرسل `POST /api/v1/recommendation-inputs/courses` بعقد `CoursesInputRequest`: عقد تحقق المواد السابق مع `request_id` نفسه. لكل مكوّن سياق جلبه ومصادره الموثقة؛ الهوية والفصل والجهة المرسلة يجب أن تتطابق، وأي تعارض في السياقات المشتركة يُرفض.
+
+أي المكوّنين يمكن أن يصل أولًا. المكوّن الأول يرجع `202` مع `request_id/status:"pending"/received/missing`. عند اكتمال الزوج، يستحوذ worker واحد على العملية ويعيد استعمال المسار الحالي:
+
+```text
+app.student_input() أو app.courses_input()
+  → ApiService.submit_recommendation_input()
+  → RequestStore.replay()/submit() والاستحواذ بمعاملة
+  → ApiService._assemble_recommendation_request()
+  → ApiService.recommend()
+  → adapters/validators → engine.recommend_from_payloads()
+  → RequestStore.complete()/fail() → app.input_response()
+```
+
+POST المكتمل يعيد رد التوصية القديم مباشرةً مع `200`، وretry مطابق يعيد النتيجة المحفوظة دون inference جديد. أثناء التنفيذ يعود `202 processing`. للاسترجاع بعد انقطاع الاتصال، استخدم `GET /api/v1/recommendation-requests/{request_id}` بالمفتاح نفسه: المكتمل يرجع غلافًا فيه `status:"completed"` و`result`، والمنتظر `202`، والفاشل غلاف `status:"failed"` و`error` مع HTTP المخزن. يضاف `X-Request-ID` لاستجابات الحالة. lookup لا يشغّل inference، وواجهات التحقق السابقة لا تخزن أي طلب.
+
+مفتاح `ADVISOR_API_KEY` السابق يمثل caller باسم `legacy`. للجهات المستقلة يمكن ضبط `ADVISOR_SERVICE_KEYS` كـJSON يربط caller IDs بمفاتيح مختلفة؛ header يبقى `X-API-Key`. مصدر الملكية هو المصادقة، وليس حقلًا يرسله PHP. [الأمثلة الكاملة وقواعد الأخطاء والاحتفاظ](../../docs/PHP_BACKEND_INTEGRATION_CONTRACT.md).
+
 ### Python-pull: جلب اختياري مستقل
 
 لأداة جلب محلية فقط، اضبط URLs من إعداد الجامعة الفعلي:
@@ -321,8 +344,17 @@ URLs تتطلب HTTPS وعنوانًا عامًا. خيار `ADVISOR_ALLOW_LOCAL
 | `ADVISOR_HISTORY_INCREMENTAL_ROOT` | `src.paths.FROZEN_HISTORY_INCREMENTAL_DIR` |
 | `ADVISOR_HISTORY_BASELINE_SOURCE_ROOT` | `src.paths.FROZEN_HISTORY_DIR_V2` |
 | `ADVISOR_HISTORY_UPDATE_MODE` | `manual` عند bootstrap؛ الإعداد الدائم له الأولوية لاحقًا |
+| `ADVISOR_SERVICE_KEYS` | `{}` افتراضيًا؛ caller IDs ومفاتيح مستقلة، مع بقاء legacy key |
+| `ADVISOR_REQUEST_STORE_PATH` | `PROJECT_ROOT/.api-state/requests.sqlite3`؛ منفصل عن البيانات والمودلات والتاريخ |
+| `ADVISOR_REQUEST_PENDING_TTL_SECONDS` | `900` |
+| `ADVISOR_REQUEST_PROCESSING_TTL_SECONDS` | `3600` |
+| `ADVISOR_REQUEST_RESULT_TTL_SECONDS` | `86400` |
+| `ADVISOR_REQUEST_MAX_COUNT` | `10000`؛ يشمل tombstones لمنع إعادة ID بعد expiry |
+| `ADVISOR_REQUEST_MAX_PAYLOAD_BYTES` | `2097152` بايت |
 
 في وضع اختبار الأداء، تجاوز عدد المرشحين المحدد يرفض التوصية كاملة؛ لا يقص المواد ولا يختصر التحقق. خارج هذا الوضع لا يُطبق هذا cap. حدود الأداء الفعلية وSLA والتشغيل متعدد workers تبقى `UNRESOLVED`. يوجد قفل inference واحد لكل process؛ الطلب المتزامن يُرفض بـ`503 INFERENCE_BUSY`.
+
+تجميع الطلبات يدعم workers على المضيف نفسه باستخدام **قاعدة SQLite نفسها على قرص محلي**. لا يشمل تعدد المضيفين أو قواعد مستقلة لكل worker أو network filesystem. انتهاء TTL يزيل payload/النتائج ويبقي tombstones محدودة ضمن السعة؛ لا يُفتح ID قديم تلقائيًا لمحاولة جديدة. فشل worker أو انتهاء مهلة processing يعطي نتيجة غير محسومة محفوظة دون إعادة inference. تفعيل ID جديد قرار caller صريح. استخدم حساب خدمة خاصًا وACL مقيدة على Windows، ولا تسجل بيانات الطلب. استثناء `.api-state/` من Git يحمي المسار الافتراضي، وتبقى حماية أي path مخصص والنسخ الاحتياطية مسؤولية النشر.
 
 ## المواد والتوصية
 
@@ -353,6 +385,9 @@ URLs تتطلب HTTPS وعنوانًا عامًا. خيار `ADVISOR_ALLOW_LOCAL
 | `GET /health` | دون مفتاح | صحة HTTP وجاهزية المودلات والتاريخ والكتالوج وGradeScale والتوصية |
 | `POST /recommend` | `ADVISOR_API_KEY` | التوصية نفسها عبر alias |
 | `POST /api/v1/recommendations` | `ADVISOR_API_KEY` | مسار التوصية السابق |
+| `POST /api/v1/recommendation-inputs/student` | service key وصاحب العملية | تخزين الطالب وربطه بـrequest_id؛ يوصي إذا أكمل الزوج |
+| `POST /api/v1/recommendation-inputs/courses` | service key وصاحب العملية | تخزين المواد؛ الترتيب مستقل |
+| `GET /api/v1/recommendation-requests/{request_id}` | service key وصاحب العملية | استرجاع الحالة/النتيجة دون inference |
 | `POST /api/v1/inputs/student/validate` | `ADVISOR_API_KEY` | تشخيص الطالب دون inference |
 | `POST /api/v1/inputs/courses/validate` | `ADVISOR_API_KEY` | تشخيص المواد دون inference |
 | `POST /api/v1/history/deltas/validate` | `ADVISOR_ADMIN_API_KEY` | تحقق Delta للقراءة فقط |
@@ -386,6 +421,8 @@ URLs تتطلب HTTPS وعنوانًا عامًا. خيار `ADVISOR_ALLOW_LOCAL
 المخزن التراكمي مستقل: تهيئة baseline معتمدة → preview → commit بتأكيد وtoken → activate بتأكيد وبصمة. `manual` هو الوضع الافتراضي، و`auto_on_finalization` يحتاج حدثًا موثوقًا بمفتاحه المنفصل. `commit` وحده لا يفعل النسخة. تبقى الحزم السابقة immutable، ولا تُصنع `points_sum` أو مجاميع تخصص غير متاحة.
 
 راجع [عقد الإعدادات والتاريخ التراكمي](../../docs/API_CONFIGURATION_AND_CUMULATIVE_HISTORY.md) للتسلسل والحقول والـrollback، و[تقرير التنفيذ السابق](../../reports/api_cumulative_history.md) للأدلة وحدودها.
+
+في تكامل PHP الجديد، Delta `part_id=20261` يضيف **نتائج20261 فقط** إلى تاريخ نشط حتى20253؛ يحتاج وجود20252 و20253 بعد baseline20251، ولا يقفز مباشرة من20251. التفعيل المعتمد يجعل `history_as_of_part=20261` متاحًا لتوصية `part_id=20262`. هذه عملية مشتركة للفصل لا تتكرر لكل طالب. [payload الجامعة وتسلسل PHP اليدوي والتلقائي](../../docs/PHP_BACKEND_INTEGRATION_CONTRACT.md).
 
 ## التحقق من إعادة التنظيم
 
