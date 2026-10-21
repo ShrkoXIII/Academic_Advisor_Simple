@@ -241,7 +241,7 @@ class HttpClient:
         self.session.trust_env = False  # do not send credentials through ambient proxies
 
     def _call(self, method: str, url: str, *, params=None, data=None, upstream=False, admin=False,
-              public_health=False) -> tuple[int, dict, dict]:
+              public_health=False, include_raw=False) -> tuple:
         headers = {"Accept": "application/json"}
         if upstream:
             headers.update(self.config.upstream_headers)
@@ -279,7 +279,7 @@ class HttpClient:
                 parsed = parse_json(text)
                 status = response.status_code
                 safe_headers = {"X-Request-ID": response.headers.get("X-Request-ID", "")}
-                return status, parsed, safe_headers
+                return (status, parsed, safe_headers, b"".join(chunks)) if include_raw else (status, parsed, safe_headers)
         except requests.exceptions.Timeout as exc:
             raise ClientError("انتهت مهلة الاتصال بالـAPI؛ تحقق من تشغيل السيرفر والشبكة.") from exc
         except requests.exceptions.SSLError as exc:
@@ -354,3 +354,61 @@ class HttpClient:
             if not 200 <= code < 300:
                 break
         return results
+
+    def capture_student(self, student_id: str, part_id: int) -> tuple[dict, bytes]:
+        """Fetch and retain the exact original HTTP JSON body."""
+        if not self.config.student_url:
+            raise ClientError("Student API URL is missing.")
+        status, response, _, body = self._call(
+            "GET", self.config.student_url,
+            params=mapping_values(self.config.student_params, student_id=student_id, part_id=part_id),
+            upstream=True, include_raw=True,
+        )
+        if not 200 <= status < 300 or response.get("success") is False:
+            raise ClientError(f"Student API returned unsuccessful HTTP {status}.")
+        student_degree_id(response, student_id, part_id)
+        return response, body
+
+    def capture_courses(self, student_id: str, degree_id: str, part_id: int) -> tuple[dict, bytes]:
+        if not self.config.courses_url:
+            raise ClientError("Courses API URL is missing.")
+        status, response, _, body = self._call(
+            "GET", self.config.courses_url,
+            params=mapping_values(self.config.courses_params, student_id=student_id, degree_id=degree_id, part_id=part_id),
+            upstream=True, include_raw=True,
+        )
+        if not 200 <= status < 300 or response.get("success") is False:
+            raise ClientError(f"Courses API returned unsuccessful HTTP {status}.")
+        data = response.get('data')
+        if not isinstance(data, dict) or not isinstance(data.get('availableCourses'), list) or not isinstance(data.get('registserRule'), dict):
+            raise ClientError("Courses API did not return expected data.availableCourses/registserRule.")
+        return response, body
+
+    def capture_history(self, part_id: int) -> tuple[dict, bytes, int]:
+        """Raw archival fetch only: never commit, activate or normalize Frozen History."""
+        if not self.config.history_url:
+            raise ClientError("History API URL is missing.")
+        values = mapping_values(self.config.history_params, part_id=part_id)
+        if self.config.history_method == 'GET':
+            status, response, _, body = self._call(
+                'GET', self.config.history_url, params=values, upstream=True, include_raw=True)
+        else:
+            status, response, _, body = self._call(
+                'POST', self.config.history_url, data=values, upstream=True, include_raw=True)
+        if not 200 <= status < 300 or response.get('success') is False:
+            raise ClientError(f"History API returned unsuccessful HTTP {status}.")
+        data = response.get('data', response)
+        if not isinstance(data, dict):
+            raise ClientError('History API data must be an object.')
+        rows = data.get('rows', data.get('CoursesStatistsic'))
+        if not isinstance(rows, list):
+            raise ClientError('History API should contain rows or CoursesStatistsic array.')
+        if not rows:
+            raise ClientError(f'History API returned no rows for part {part_id}; manual review required.')
+        if any(not isinstance(row, dict) or str(row.get('PART_ID', row.get('part_id', part_id))) != str(part_id)
+               for row in rows):
+            raise ClientError('History API contains a different part_id or malformed rows.')
+        envelope_part = data.get('part_id', data.get('PART_ID'))
+        if envelope_part is not None and str(envelope_part) != str(part_id):
+            raise ClientError('History API envelope part_id mismatch.')
+        return response, body, len(rows)

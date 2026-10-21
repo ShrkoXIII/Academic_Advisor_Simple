@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Academic Advisor — Pilot 20251</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script defer src="/static/app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="الصفحة الرئيسية">
+        <span class="brand-icon" aria-hidden="true">A</span>
+        <span><span class="eyebrow" lang="en" dir="ltr">ACADEMIC ADVISOR</span><strong>مختبر مقارنة التوصيات</strong></span>
+      </a>
+      <div class="header-tags"><span class="pill">الفصل <bdi>20251</bdi></span><span class="pill local"><i aria-hidden="true"></i> تشغيل محلي</span></div>
+    </header>
+
+    <main>
+      <section class="intro">
+        <div><div class="eyebrow">تجربة مستقلة · بيانات محفوظة</div><h1>طالب واحد. ثلاث تجارب.</h1><p>اختر طالباً وقارن توقعات المواد ومعدل الفصل بين <bdi>A</bdi> و<bdi>B</bdi> و<bdi>C</bdi>.</p></div>
+        <div class="intro-note"><span class="note-icon" aria-hidden="true">i</span><p>التوقع الأعلى لا يثبت دقة أعلى. تظهر العوائق والنتائج غير المتحققة صراحة، ويُعرض التحسن التراكمي فقط عند إمكان حسابه بصورة صالحة.</p></div>
+      </section>
+
+      <div id="global-error" class="alert error" role="alert" hidden></div>
+      <div class="workspace">
+        <aside class="sidebar">
+          <section class="panel selection-panel" aria-labelledby="selection-title">
+            <div class="panel-heading"><h2 id="selection-title">إعداد المقارنة</h2><span class="section-number">01</span></div>
+            <form id="run-form">
+              <label class="field-label" for="student-search">اختر الطالب <span id="student-count" class="muted">…</span></label>
+              <input type="search" id="student-search" list="student-options" placeholder="ابحث بمعرّف الطالب أو العينة" autocomplete="off" dir="auto" aria-describedby="student-help">
+              <datalist id="student-options"></datalist>
+              <p id="student-help" class="help-text">اختر نتيجة من القائمة. يمكنك استعراض طلاب التشغيل المحفوظ من القائمة نفسها.</p>
+              <div id="selected-student-summary" class="selected-student-summary" aria-live="polite"><p class="empty-small">لم يُختر طالب بعد.</p></div>
+              <label class="field-label" for="target-credits">ساعات الخطة المطلوبة</label><input id="target-credits" type="number" min="0.01" max="36" step="any" value="18" required>
+              <details class="search-options"><summary>إعدادات البحث</summary><label class="field-label" for="max-plans">حد خطط البحث</label><input id="max-plans" type="number" min="1" max="2000" step="1" value="200" required><p class="help-text">تطابق الساعات تام. النتائج ضمن حد البحث المحدد ولا تثبت الأفضلية عبر كل الخطط الممكنة.</p></details>
+              <button type="submit" id="run-button" class="primary-button" disabled><span aria-hidden="true">▶</span> تشغيل المقارنة <span lang="en">Run Comparison</span></button>
+              <div id="run-progress" class="run-progress" role="status" aria-live="polite" hidden><div><span id="progress-label">جارٍ التحضير…</span><bdi id="progress-count">0 / 0</bdi></div><progress id="progress-bar" max="1" value="0"></progress></div>
+            </form>
+          </section>
+          <section class="panel saved-panel" aria-labelledby="saved-title"><div class="panel-heading"><h2 id="saved-title">التشغيلات المحفوظة</h2><button type="button" id="refresh-runs" class="text-button" aria-label="تحديث التشغيلات المحفوظة">تحديث</button></div><p class="help-text">استعرض الخطط المحفوظة مع توقعات جديدة لخطة الطالب الفعلية.</p><label class="sr-only" for="saved-runs">التشغيل المحفوظ</label><select id="saved-runs"><option value="">اختر تشغيلاً محفوظاً</option></select><button id="load-run" type="button" class="secondary-button" disabled>عرض النتيجة</button></section>
+          <details class="panel batch-panel"><summary>الاختبارات الجماعية</summary><p class="help-text">تشغيل المقارنة للطلاب الثلاثين بالساعات وإعدادات البحث الحالية. افتح النتيجة ثم اختر طالباً من القائمة لعرض بطاقاته.</p><button id="run-all" type="button" class="secondary-button" disabled>تشغيل لجميع الطلاب</button></details>
+        </aside>
+
+        <div class="results-area">
+          <section id="welcome" class="panel welcome"><div class="welcome-mark" aria-hidden="true">A <span>·</span> B <span>·</span> C</div><h2>اختر الطالب لبدء المقارنة</h2><p>شغّل تجربة جديدة أو استعرض نتيجة محفوظة. تُعرض التوقعات التحليلية مع حالة صلاحية التسجيل بصورة مستقلة.</p><div class="legend"><span><i class="legend-dot a"></i> A · النظام الأصلي</span><span><i class="legend-dot b"></i> B · تاريخ الجامعة</span><span><i class="legend-dot c"></i> C · النظام المحسّن</span></div></section>
+          <section id="results" hidden aria-labelledby="results-title">
+            <div class="results-heading"><div><div class="eyebrow">توقعات فعلية · صلاحية مستقلة</div><h2 id="results-title">مقارنة النماذج</h2></div></div>
+            <div id="run-summary" class="summary-strip"></div>
+            <div id="student-overview" class="student-overview"></div>
+            <section class="panel actual-forecast-panel" aria-labelledby="actual-forecast-title"><div class="panel-heading"><div><div class="eyebrow">سياق موحّد · خطة الطالب الفعلية كاملة</div><h2 id="actual-forecast-title">توقعات الأنظمة لمواد الطالب الفعلية</h2></div></div><div id="actual-plan-forecasts" aria-live="polite"></div></section>
+            <div id="experiment-grid" class="experiment-grid"></div>
+            <section class="panel detail-panel" aria-labelledby="plan-detail-title"><div class="panel-heading"><div><div class="eyebrow">تفاصيل الاختيار</div><h2 id="plan-detail-title">مواد الخطة</h2></div><span id="selected-plan-label" class="muted"></span></div><div id="plan-detail"><p class="empty-small">اختر خطة لعرض المواد والتوقعات التفصيلية.</p></div></section>
+            <section class="panel observed-panel" aria-labelledby="observed-title"><div class="panel-heading"><div><div class="eyebrow">الاختيار الفعلي · الفصل 20251</div><h2 id="observed-title">المقارنة مع خطة الطالب الفعلية</h2></div></div><div id="observed-comparison" aria-live="polite"></div></section>
+            <details class="panel analysis-panel"><summary>تفاصيل المقارنة</summary><div class="analysis-tabs" role="tablist" aria-label="أدوات المقارنة"><button type="button" role="tab" id="tab-courses" aria-selected="true" aria-controls="analysis-courses" data-analysis="courses">المادة نفسها</button><button type="button" role="tab" id="tab-plans" aria-selected="false" aria-controls="analysis-plans" data-analysis="plans">الخطط المتطابقة</button></div><div id="analysis-courses" role="tabpanel" aria-labelledby="tab-courses"></div><div id="analysis-plans" role="tabpanel" aria-labelledby="tab-plans" hidden></div></details>
+          </section>
+          <details class="panel technical-panel"><summary>التفاصيل التقنية</summary><div id="technical-error" class="alert error" hidden></div><h3>التحقق من المدخلات وصلاحية التسجيل</h3><div id="student-issues" class="issues"></div><h3>حالات التجارب</h3><div id="experiment-technical" class="metadata"></div><h3>التاريخ والدعم</h3><div id="analysis-support"></div><h3>حالة النماذج والبيانات</h3><div id="system-status" class="metadata"><p class="empty-small">جارٍ التحقق…</p></div><h3>مصادر توقع الخطة الفعلية</h3><div id="actual-prediction-source" class="metadata"></div><h3>مصادر الخطة الفعلية</h3><div id="observed-source" class="metadata"></div><h3>بيان التشغيل</h3><bdi id="run-id" class="run-id"></bdi><div id="run-metadata" class="metadata"></div><h3>تفاصيل الخطة المختارة</h3><div id="plan-technical" class="metadata"></div></details>
+        </div>
+      </div>
+    </main>
+    <footer><span>Academic Advisor · Pilot 20251</span><span>ملفات محلية · نماذج معزولة · نتائج قابلة للمراجعة</span></footer>
+  </div>
+</body>
+</html>

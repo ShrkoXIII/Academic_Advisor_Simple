@@ -5,6 +5,7 @@ Launch from the project root: streamlit run tools/academic_advisor_streamlit/str
 from __future__ import annotations
 
 from decimal import Decimal
+import json
 from pathlib import Path
 import sys
 from uuid import uuid4
@@ -14,6 +15,7 @@ import streamlit as st
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from ui_client import (ClientError, Config, HttpClient, encode_json, load_context, make_payloads,
                        previous_academic_part, student_degree_id)
+from pilot_collection_store import PilotCollectionStore, CollectionError, history_parts
 
 st.set_page_config(page_title="Academic Advisor · Test Console", page_icon="🎓", layout="wide")
 
@@ -112,7 +114,9 @@ with st.sidebar:
             st.error(str(exc))
     st.caption("تغيير .env يحتاج إعادة تشغيل Streamlit؛ ويمكن أيضاً مسح Cache عندما تتغير الإعدادات.")
 
-tab_recommend, tab_history = st.tabs(["👨‍🎓 تجربة توصية طالب", "🗂️ تحديث Frozen History"])
+tab_recommend, tab_history, tab_collection = st.tabs([
+    "👨‍🎓 تجربة توصية طالب", "🗂️ تحديث Frozen History", "📥 جمع وحفظ بيانات التجربة",
+])
 
 with tab_recommend:
     st.info("أدخل معرف الطالب والفصل. سنجلب Student API أولاً، نقرأ degree_id منه، ثم نجلب Courses API. جلب البيانات وحده لا يشغّل المودل.")
@@ -290,3 +294,122 @@ with tab_history:
             show_api_status(code, data, label="history status")
         except ClientError as exc:
             st.error(str(exc))
+
+
+# The collection tab deliberately does NOT interact with FastAPI recommendation
+# endpoints, or with history commit/activate. It saves exact upstream HTTP bodies.
+with tab_collection:
+    st.subheader("📥 جمع وحفظ استجابات API — Pilot 20251")
+    st.caption("هذه وظيفة أرشفة فقط: لا تدريب، لا توصية، لا تحديث Frozen History الرسمي.")
+    store = PilotCollectionStore(Path(__file__).resolve().parents[2])
+    st.code(str(store.root), language=None)
+    try:
+        cohort = store.load_students()
+    except CollectionError as exc:
+        st.error(str(exc))
+        cohort = []
+
+    def save_pilot_student(record):
+        sid = str(record['student_id']).strip()
+        degree = str(record['degree_id']).strip()
+        sample_id = str(record['sample_id']).strip()
+        term = int(record['part_id'])
+        student_path = store.student_file(sample_id, 'student')
+        courses_path = store.student_file(sample_id, 'courses')
+        if store.state(student_path) != 'saved':
+            student_json, raw = client.capture_student(sid, term)
+            returned_degree = student_degree_id(student_json, sid, term)
+            if returned_degree != degree:
+                raise CollectionError(f"{sample_id}: degree mismatch with students.csv; no save")
+            store.save(student_path, raw, kind='student',
+                       identity={'sample_id': sample_id, 'student_id': sid, 'degree_id': degree, 'part_id': term},
+                       source='university_student_api')
+        else:
+            # Verify identity even when resuming a previously saved student.
+            student_json = json.loads(student_path.read_bytes())
+            if student_degree_id(student_json, sid, term) != degree:
+                raise CollectionError(f'{sample_id}: saved student degree mismatch')
+        if store.state(courses_path) != 'saved':
+            courses_json, raw = client.capture_courses(sid, degree, term)
+            store.save(courses_path, raw, kind='courses',
+                       identity={'sample_id': sample_id, 'student_id': sid, 'degree_id': degree, 'part_id': term},
+                       source='university_courses_api')
+        return store.state(student_path) == 'saved' and store.state(courses_path) == 'saved'
+
+    def save_pilot_history(part):
+        dest = store.history_file(part)
+        if store.state(dest) == 'saved':
+            return True
+        _response, raw, count = client.capture_history(part)
+        store.save(dest, raw, kind='history',
+                   identity={'part_id': part, 'history_as_of_part': 20243, 'row_count': count},
+                   source='university_frozen_history_api')
+        return store.state(dest) == 'saved'
+
+    if cohort:
+        total_primary = sum(row['role'] == 'primary' for row in cohort)
+        total_reserve = sum(row['role'] == 'reserve' for row in cohort)
+        summary = store.overview(cohort)
+        m1, m2, m3 = st.columns(3)
+        m1.metric('طلاب أساسيون', total_primary)
+        m2.metric('ردود الطلاب المحفوظة', f"{summary['student_saved']}/{summary['student_total']}")
+        m3.metric('فصول التاريخ المحفوظة', f"{summary['history_saved']}/{summary['history_total']}")
+        if summary['warnings']:
+            st.warning(f"يوجد {summary['warnings']} ملف غير موثق أو تالف؛ لن يُستبدل تلقائيًا.")
+        st.caption(f'عدد الاحتياط: {total_reserve}. الحفظ يتجاوز الملفات المحفوظة والمتحقق منها.')
+
+        st.divider()
+        st.markdown('**1 · حفظ استجابات الطلاب والمواد**')
+        row_labels = {f"{r['sample_id']} | {r['role']}": r for r in cohort}
+        selected = st.selectbox('اختيار طالب من students.csv', options=list(row_labels))
+        c1, c2 = st.columns(2)
+        single = c1.button('حفظ الطالب المختار', key='pilot_one_student')
+        all_primary = c2.button('جمع الأساسيين الـ30 وحفظهم', key='pilot_all_students', type='primary')
+        student_jobs = ([row_labels[selected]] if single else
+                        [r for r in cohort if r['role'] == 'primary'] if all_primary else [])
+        if student_jobs:
+            bar = st.progress(0.0)
+            report = []
+            for i, row in enumerate(student_jobs, 1):
+                try:
+                    success = save_pilot_student(row)
+                    report.append({'sample_id': row['sample_id'], 'status': 'saved' if success else 'incomplete'})
+                except (ClientError, CollectionError, OSError, ValueError) as exc:
+                    report.append({'sample_id': row['sample_id'], 'status': 'failed', 'reason': str(exc)})
+                bar.progress(i / len(student_jobs))
+            st.dataframe(report, use_container_width=True, hide_index=True)
+            st.info('يمكنك إعادة التنفيذ؛ الاستجابات المحفوظة بصورة صحيحة لا تُستبدل.')
+
+        st.divider()
+        st.markdown('**2 · حفظ Frozen History التاريخي**')
+        st.caption('نحفظ كل فصل بصيغته الخام، من 20201 إلى 20243 فقط. لا commit ولا activate.')
+        selected_part = st.selectbox('الفصل التاريخي', options=history_parts(), key='pilot_history_part')
+        h1, h2 = st.columns(2)
+        one_part = h1.button('جلب وحفظ الفصل المختار', key='pilot_one_history')
+        all_parts = h2.button('جلب وحفظ الفصول الـ15', key='pilot_all_history')
+        history_jobs = [selected_part] if one_part else history_parts() if all_parts else []
+        if history_jobs:
+            bar = st.progress(0.0)
+            report = []
+            for i, part in enumerate(history_jobs, 1):
+                try:
+                    ok = save_pilot_history(part)
+                    report.append({'part_id': part, 'status': 'saved' if ok else 'incomplete'})
+                except (ClientError, CollectionError, OSError, ValueError) as exc:
+                    report.append({'part_id': part, 'status': 'failed', 'reason': str(exc)})
+                bar.progress(i / len(history_jobs))
+            st.dataframe(report, use_container_width=True, hide_index=True)
+
+        st.divider()
+        st.markdown('**3 · حالة ملفات التجربة**')
+        with st.expander('تفاصيل الحالات', expanded=False):
+            student_status = []
+            for row in cohort:
+                student_status.append({
+                    'sample_id': row['sample_id'], 'role': row['role'],
+                    'student': store.state(store.student_file(row['sample_id'], 'student')),
+                    'courses': store.state(store.student_file(row['sample_id'], 'courses')),
+                })
+            st.dataframe(student_status, use_container_width=True, hide_index=True)
+            st.dataframe([{'part_id': part, 'status': store.state(store.history_file(part))}
+                          for part in history_parts()], use_container_width=True, hide_index=True)
