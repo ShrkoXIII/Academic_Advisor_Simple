@@ -31,6 +31,7 @@ from .adapter import (
     HISTORY_AS_OF_PART, PILOT_ROOT, TARGET_PART, TIMING_LIMITATION,
     PilotInputError, load_student_inputs, numeric, validate_identity,
 )
+from .selection import normalize_models
 
 
 POLICY_ISSUES = [
@@ -314,10 +315,12 @@ def _candidates(inputs, catalog):
 class PilotEngine:
     """Lazy read-only baseline and catalog; writes belong to the pilot runner."""
 
-    def __init__(self, root=PILOT_ROOT, *, max_search_states=DEFAULT_MAX_SEARCH_STATES):
+    def __init__(self, root=PILOT_ROOT, *, max_search_states=DEFAULT_MAX_SEARCH_STATES, snapshot_id="after_backend_fix"):
         if isinstance(max_search_states, bool) or not isinstance(max_search_states, int) or max_search_states < 1:
             raise PilotInputError("INVALID_SEARCH_STATE_BUDGET")
+        from .snapshots import validate_snapshot
         self.root = Path(root)
+        self.snapshot_id = validate_snapshot(snapshot_id)
         self.max_search_states = max_search_states
         self._baseline = None
         self._catalog = None
@@ -372,24 +375,29 @@ class PilotEngine:
                     "policy": "original_Decimal_exact_first_N_sorted_course_ids"},
                 "issues": [], "input_fingerprints": {}, "timing_limitation": TIMING_LIMITATION}
 
-    def evaluate_student(self, student, target_credits=18, max_plans=200):
+    def evaluate_student(self, student, target_credits=18, max_plans=200, *, models=None, measure_stages=False):
         """Return genuine bounded baseline diagnostics and explicit strict blockers."""
+        model_names = normalize_models(models)
         target = numeric(target_credits, "target_credits")
         if target <= 0 or not math.isfinite(float(target)):
             raise PilotInputError("INVALID_TARGET_CREDITS")
         if isinstance(max_plans, bool) or not isinstance(max_plans, int) or not 1 <= max_plans <= 5000:
             raise PilotInputError("INVALID_MAX_PLANS")
         result = self._empty(student, target, max_plans)
+        result['experiments'] = {name: result['experiments'][name] for name in model_names}
+        result['selected_models'] = list(model_names)
+        result['executed_models'] = []
         result["search"].update(state_budget=self.max_search_states, search_budget_exhausted=False,
                                  visited_search_states=0, complete_plan_space_examined=False,
                                  total_plan_count=None)
         started = perf_counter()
+        result["latency"] = {"candidate_preparation_seconds": 0., "plan_generation_seconds": 0.}
         try:
             if not re.fullmatch(r"[A-Za-z0-9_-]+", str(student.get("sample_id", ""))):
                 raise PilotInputError("INVALID_SAMPLE_ID")
             if student.get("part_id") != TARGET_PART:
                 raise PilotInputError("PILOT_SEMESTER_MISMATCH")
-            inputs = load_student_inputs(student, root=self.root)
+            inputs = load_student_inputs(student, root=self.root, snapshot_id=self.snapshot_id)
             result["input_fingerprints"] = inputs["fingerprints"]
             snapshot, snapshot_issues = build_snapshot(inputs)
             result["student_summary"] = student_summary(snapshot, student)
@@ -397,9 +405,11 @@ class PilotEngine:
             if self._catalog is None:
                 self._catalog = pd.read_parquet(paths.CLEAN_DEGREE_COURSE_PATH_V2)
             catalog = self._catalog
-            assets = self.inspect_assets()
+            assets = self.inspect_assets() if 'A' in model_names else {'status': 'NOT_SELECTED'}
             baseline = self._baseline if assets["status"] == "READY" else None
-            candidates, rules, course_issues, rejected = _candidates(inputs, catalog)
+            candidate_started = perf_counter()
+            candidates, rules, course_issues, rejected = self._candidate_pool(student, inputs, catalog)
+            result["latency"]["candidate_preparation_seconds"] = perf_counter() - candidate_started
             result.update(candidate_count=len(candidates), candidate_rejections=rejected,
                           feature_readiness={key: "unavailable" if value is None else "ready"
                                              for key, value in snapshot.items() if key not in inputs["identity"]})
@@ -443,6 +453,7 @@ class PilotEngine:
             for key, value in snapshot.items():
                 base[key] = value
             base["part_semester"] = TARGET_PART % 10
+            generation_started = perf_counter()
             stats = _BudgetedSearchStats(self.max_search_states)
             found, budget_exhausted = [], False
             try:
@@ -456,6 +467,7 @@ class PilotEngine:
             truncated = budget_exhausted or len(found) > max_plans
             selected = found[:max_plans]
             course_tuples = [[str(base.iloc[index].course_id) for index in plan] for plan in selected]
+            result["latency"]["plan_generation_seconds"] = perf_counter() - generation_started
             result["search"].update(plan_count=len(selected), evaluated_plan_count=0,
                 scanned_exact_plan_count=len(found), visited_search_states=stats.get("visited_search_states", 0),
                 state_budget=self.max_search_states, search_budget_exhausted=budget_exhausted,
@@ -468,9 +480,21 @@ class PilotEngine:
                     return result
                 self._no_match(result, "NO_EXACT_CREDIT_SUBSET")
                 return result
+            context_started = perf_counter()
             raw_rows = build_plan_rows(base, selected)
-            experimental_assets = self.inspect_experiments()
-            for name in "ABC":
+            result['latency']['shared_plan_context_seconds'] = perf_counter() - context_started
+            experimental_assets = self.inspect_experiments() if any(n in model_names for n in 'BC') else {}
+            scoring_baseline, scoring_experiments = baseline, self._experimental
+            timings = {}
+            if measure_stages:
+                # Reuse the diagnostic's transparent timing delegates, never its candidate union.
+                from .actual_experiment import _TimedBaseline, _TimedExperiments, _timings
+                timings = {name: _timings() for name in model_names}
+                if baseline is not None:
+                    scoring_baseline = _TimedBaseline(baseline, timings['A'])
+                if scoring_experiments is not None:
+                    scoring_experiments = _TimedExperiments(scoring_experiments, timings)
+            for name in model_names:
                 experiment_started = perf_counter()
                 experiment = result["experiments"][name]
                 try:
@@ -481,17 +505,30 @@ class PilotEngine:
                             baseline.grade_scale.validate_versions([snapshot["grade_version_id"]])
                         except ValueError:
                             raise PilotInputError("UNSUPPORTED_GRADE_VERSION") from None
-                        prepared = baseline.prepare_candidates(snapshot, candidates, TARGET_PART)
+                        prepared = scoring_baseline.prepare_candidates(snapshot, candidates, TARGET_PART)
                         if prepared.course_id.tolist() != base.course_id.tolist():
                             raise PilotInputError("CANDIDATE_ORDER_CONFLICT")
-                        scored = baseline.score_rows(build_plan_rows(prepared, selected))
+                        result['executed_models'].append(name)
+                        scored = scoring_baseline.score_rows(build_plan_rows(prepared, selected))
                         experiment["assets"] = assets
                     else:
                         if experimental_assets[name]["status"] != "READY":
                             raise PilotInputError(experimental_assets[name].get("reason", "COMPATIBLE_EXPERIMENTAL_MODEL_UNAVAILABLE"))
-                        scored = self._experimental.predict_course_rows(raw_rows.copy(), name)
+                        result['executed_models'].append(name)
+                        scored = scoring_experiments.predict_course_rows(raw_rows.copy(), name)
                         experiment["assets"] = experimental_assets[name]
+                    ranking_started = perf_counter()
                     self._attach_scores(experiment, scored, name)
+                    experiment['evaluated_plan_count'] = len(selected)
+                    if measure_stages:
+                        timings[name]['ranking_seconds'] += perf_counter() - ranking_started
+                        instrumented = name == 'A' or hasattr(self._experimental, '_load')
+                        experiment['latency'] = {**timings[name],
+                            'provenance': 'transparent original scorer delegates; ranking includes aggregation and serialization',
+                            'additive_with_total': False}
+                        if not instrumented:
+                            experiment['latency'].update(feature_extraction_seconds=None, prediction_seconds=None,
+                                reason='SCORER_STAGE_TIMING_UNAVAILABLE')
                     experiment["elapsed_seconds"] = perf_counter() - experiment_started
                     experiment["plan_set_sha256"] = result["search"]["plan_set_sha256"]
                     experiment["shared_inputs_sha256"] = result["search"]["shared_inputs_sha256"]
@@ -499,6 +536,8 @@ class PilotEngine:
                     code = error.code if isinstance(error, PilotInputError) else "MODEL_INPUT_OR_ARTIFACT_INCOMPATIBLE"
                     experiment.update(reason=code, reason_ar=classify_issue(code)["reason_ar"])
                     result["issues"].append(code)
+                finally:
+                    experiment['elapsed_seconds'] = perf_counter() - experiment_started
             if any(e["prediction_status"] == "PREDICTION_AVAILABLE" for e in result["experiments"].values()):
                 result["status"] = result["prediction_status"] = "PREDICTION_AVAILABLE"
                 result["plan_status"] = "PROVISIONAL_PLAN"
@@ -509,9 +548,11 @@ class PilotEngine:
                 experiment["reason"] = error.code
         except (ValueError, OSError, KeyError, TypeError, OverflowError):
             result["issues"].append("BASELINE_INPUT_OR_ARTIFACT_INCOMPATIBLE")
-            result["experiments"]["A"]["reason"] = "BASELINE_INPUT_OR_ARTIFACT_INCOMPATIBLE"
+            for experiment in result['experiments'].values():
+                experiment['reason'] = 'BASELINE_INPUT_OR_ARTIFACT_INCOMPATIBLE'
         finally:
             result["elapsed_seconds"] = perf_counter() - started
+            result["latency"]["total_request_seconds"] = result["elapsed_seconds"]
             result["issues"] = list(dict.fromkeys(result["issues"]))
             result["technical_details"] = {"issues": [classify_issue(code) for code in result["issues"]],
                                            "policy_evidence": result.get("policy_evidence", {}),
@@ -520,6 +561,10 @@ class PilotEngine:
                 if experiment["prediction_status"] == "BLOCKED":
                     experiment["reason_ar"] = classify_issue(experiment["reason"])["reason_ar"]
         return result
+
+    def _candidate_pool(self, student, inputs, catalog):
+        """Default archived API pool; isolated experiments may supply a union."""
+        return _candidates(inputs, catalog)
 
     @staticmethod
     def _attach_scores(experiment, scored, name):

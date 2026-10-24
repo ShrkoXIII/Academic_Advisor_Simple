@@ -28,7 +28,7 @@ def row(part=20201, **changes):
 
 
 def write_source(root, part, rows, **metadata_changes):
-    folder = root / "api_data" / "frozen_history"
+    folder = root / "snapshots/after_backend_fix/api_data" / "frozen_history"
     folder.mkdir(parents=True, exist_ok=True)
     file = folder / f"{part}.json"
     raw = json.dumps({"success": True, "data": {"CoursesStatistsic": rows}}).encode()
@@ -49,7 +49,7 @@ def complete_sources(tmp_path):
 
 
 def test_valid_sources_build_separate_artifact_without_mutating_inputs(complete_sources, tmp_path):
-    folder = complete_sources / "api_data"
+    folder = complete_sources / "snapshots/after_backend_fix/api_data"
     before = {p: p.read_bytes() for p in folder.rglob("*.json")}
     output = tmp_path / "isolated"
     report = module().build_university_history(complete_sources, output_dir=output)
@@ -110,7 +110,7 @@ def test_bad_metadata_blocks_the_file(complete_sources, change, code):
 
 
 def test_missing_source_cannot_be_silently_omitted(complete_sources):
-    (complete_sources / "api_data/frozen_history/20201.json").unlink()
+    (complete_sources / "snapshots/after_backend_fix/api_data/frozen_history/20201.json").unlink()
     report = module().build_university_history(complete_sources)
     assert report["status"] == "BLOCKED"
     assert report["source_file_count"] == 14
@@ -163,7 +163,7 @@ def test_smoothing_uses_global_prior_and_effective_support():
 
 def test_output_cannot_be_written_into_original_api_directory(complete_sources):
     with pytest.raises(ValueError, match="original"):
-        module().build_university_history(complete_sources, output_dir=complete_sources / "api_data/frozen_history")
+        module().build_university_history(complete_sources, output_dir=complete_sources / "snapshots/after_backend_fix/api_data/frozen_history")
 
 
 def test_experimental_ratio_policy_retains_incomplete_partition_without_fabricating_outcomes(complete_sources, tmp_path):
@@ -221,7 +221,7 @@ def test_experimental_row_quarantine_never_relaxes_source_provenance(complete_so
     if mutation == "hash":
         write_source(complete_sources, 20201, [row()], sha256="0" * 64)
     else:
-        (complete_sources / "api_data/frozen_history/20201.json").unlink()
+        (complete_sources / "snapshots/after_backend_fix/api_data/frozen_history/20201.json").unlink()
     report = module().build_experimental_university_history(complete_sources)
     assert report["status"] == "BLOCKED" and report["usable_for_b_c"] is False
     assert report["rejected_file_count"] == 1
@@ -243,4 +243,4 @@ def test_experimental_history_explicit_partition_policy_preserves_strict_constru
 def test_experimental_output_cannot_mutate_original_archives(complete_sources):
     with pytest.raises(ValueError, match="original"):
         module().build_experimental_university_history(
-            complete_sources, output_dir=complete_sources / "api_data/frozen_history")
+            complete_sources, output_dir=complete_sources / "snapshots/after_backend_fix/api_data/frozen_history")

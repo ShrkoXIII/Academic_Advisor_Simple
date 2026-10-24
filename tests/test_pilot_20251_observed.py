@@ -114,7 +114,7 @@ def test_saved_run_enrichment_does_not_rewrite_results_or_forward_actual_outcome
         "sample_id,role,student_id,degree_id,part_id,previous_gpa,gpa_category\n"
         "sample-1,primary,s,d,20251,2,mid\n", encoding="utf-8")
     roster_path, outcome_path = sources(tmp_path)
-    store = RunStore(tmp_path / "experiments")
+    store = RunStore(tmp_path / "experiments/after_backend_fix/comparison", snapshot_id="after_backend_fix")
     result = {"sample_id": "sample-1", "student_id": "s", "experiments": {}}
     store.save("run_observed", {"part_id": 20251}, [result], {})
     path = store.root / "run_observed" / "student_results.json"

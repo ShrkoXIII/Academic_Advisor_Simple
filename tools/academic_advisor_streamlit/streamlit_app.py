@@ -13,6 +13,7 @@ from uuid import uuid4
 import streamlit as st
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from ui_client import (ClientError, Config, HttpClient, encode_json, load_context, make_payloads,
                        previous_academic_part, student_degree_id)
 from pilot_collection_store import PilotCollectionStore, CollectionError, history_parts
@@ -40,7 +41,24 @@ def config_from_file() -> Config:
 try:
     config = config_from_file()
 except ClientError as exc:
+    st.title("🎓 Academic Advisor — Test Console")
     st.error(str(exc))
+    tab_recommend, tab_history, tab_collection = st.tabs([
+        "👨‍🎓 تجربة توصية طالب", "🗂️ تحديث Frozen History", "📥 جمع وحفظ بيانات التجربة",
+    ])
+    with tab_recommend:
+        operating_mode = st.radio(
+            "وضع التشغيل", ["Production FastAPI", "Pilot 20251 — Model Comparison"],
+            horizontal=True, key="advisor_operating_mode")
+        if operating_mode == "Pilot 20251 — Model Comparison":
+            from pilot_ui import render_pilot
+            render_pilot()
+        else:
+            st.warning("إعدادات Production غير متاحة؛ صحّح إعدادات الاتصال لإتاحة جلب البيانات والتوصية.")
+    with tab_history:
+        st.warning("إعدادات الاتصال غير متاحة؛ تحديث Frozen History متوقف حتى تصحيحها.")
+    with tab_collection:
+        st.warning("إعدادات الاتصال غير متاحة؛ جمع بيانات API متوقف حتى تصحيحها.")
     st.stop()
 
 client = HttpClient(config)
@@ -119,105 +137,112 @@ tab_recommend, tab_history, tab_collection = st.tabs([
 ])
 
 with tab_recommend:
-    st.info("أدخل معرف الطالب والفصل. سنجلب Student API أولاً، نقرأ degree_id منه، ثم نجلب Courses API. جلب البيانات وحده لا يشغّل المودل.")
-    with st.form("student_form"):
-        a, b = st.columns(2)
-        with a:
-            student_id = st.text_input("Student ID", placeholder="27700.111")
-        with b:
-            term_text = st.text_input("الفصل المطلوب (part_id)", placeholder="20262")
-        with st.expander("خيارات التوصية (اختيارية)"):
-            exact_credits = st.text_input("ساعات الخطة المطلوبة", value="18")
-            top_k = st.number_input("عدد الخطط", min_value=1, max_value=50, value=3, step=1)
-            st.caption("سيُحسب history_as_of_part تلقائياً من الفصل السابق وفق التقويم الأكاديمي في مشروعك.")
-        fetch_only = st.form_submit_button("1 · جلب وعرض JSON فقط")
-        run_recommend = st.form_submit_button("2 · جلب + إرسال طلبَي FastAPI + توصية", type="primary")
+    operating_mode = st.radio(
+        "وضع التشغيل", ["Production FastAPI", "Pilot 20251 — Model Comparison"],
+        horizontal=True, key="advisor_operating_mode")
+    if operating_mode == "Pilot 20251 — Model Comparison":
+        from pilot_ui import render_pilot
+        render_pilot()
+    else:
+        st.info("أدخل معرف الطالب والفصل. سنجلب Student API أولاً، نقرأ degree_id منه، ثم نجلب Courses API. جلب البيانات وحده لا يشغّل المودل.")
+        with st.form("student_form"):
+            a, b = st.columns(2)
+            with a:
+                student_id = st.text_input("Student ID", placeholder="27700.111")
+            with b:
+                term_text = st.text_input("الفصل المطلوب (part_id)", placeholder="20262")
+            with st.expander("خيارات التوصية (اختيارية)"):
+                exact_credits = st.text_input("ساعات الخطة المطلوبة", value="18")
+                top_k = st.number_input("عدد الخطط", min_value=1, max_value=50, value=3, step=1)
+                st.caption("سيُحسب history_as_of_part تلقائياً من الفصل السابق وفق التقويم الأكاديمي في مشروعك.")
+            fetch_only = st.form_submit_button("1 · جلب وعرض JSON فقط")
+            run_recommend = st.form_submit_button("2 · جلب + إرسال طلبَي FastAPI + توصية", type="primary")
 
-    if fetch_only or run_recommend:
-        phase = "inputs"
-        try:
-            sid = student_id.strip()
-            if not sid:
-                raise ClientError("أدخل Student ID.")
-            term = int(term_text)
-            cutoff = previous_academic_part(term)
-            if not Decimal(exact_credits).is_finite() or Decimal(exact_credits) <= 0:
-                raise ClientError("ساعات الخطة يجب أن تكون رقماً موجباً.")
-            phase = "student"
-            with st.spinner("جلب بيانات الطالب من الجامعة..."):
-                student_json = client.student(sid, term)
-                degree_id = student_degree_id(student_json, sid, term)
-            record_connection("student", config.student_url, success=True, detail="رد صالح للطالب والفصل")
-            phase = "courses"
-            with st.spinner("جلب المواد المتاحة من الجامعة..."):
-                courses_json = client.courses(sid, degree_id, term)
-            record_connection("courses", config.courses_url, success=True, detail="رد صالح يحتوي المواد وقواعد التسجيل")
-            st.session_state["student_raw"] = student_json
-            st.session_state["courses_raw"] = courses_json
-            st.session_state["identity"] = {"student_id": sid, "degree_id": degree_id, "part_id": term, "history_as_of_part": cutoff}
-            st.success(f"تم الجلب. degree_id = {degree_id} | history_as_of_part = {cutoff}")
-            if run_recommend:
-                student_context, courses_context = load_context(config)
-                rid = uuid4().hex
-                student_req, courses_req = make_payloads(
-                    student_id=sid, degree_id=degree_id, part_id=term, cutoff=cutoff,
-                    student_response=student_json, courses_response=courses_json,
-                    student_context=student_context, courses_context=courses_context,
-                    target_credits=exact_credits, top_k=int(top_k), request_id=rid)
-                st.session_state["request_id"] = rid
-                phase = "fastapi"
-                with st.spinner("إرسال الطلبين إلى FastAPI ثم تشغيل التوصية..."):
-                    responses = client.submit_pair(student_req, courses_req)
-                if responses:
-                    label, code, response = responses[-1]
-                    ok = all(200 <= c < 300 for _, c, _ in responses)
-                    record_connection("fastapi", config.fastapi_base, success=ok,
-                                      detail="استقبل طلبَي الإدخال" if ok else f"استجاب مع خطأ HTTP {code} ({label})")
-                st.session_state["submit_responses"] = responses
-                st.session_state["student_sent"] = student_req
-                st.session_state["courses_sent"] = courses_req
-        except (ClientError, ValueError, ArithmeticError) as exc:
-            if phase in {"student", "courses", "fastapi"}:
-                urls = {"student": config.student_url, "courses": config.courses_url,
-                        "fastapi": config.fastapi_base}
-                record_connection(phase, urls[phase], success=False, detail=str(exc))
-            st.error(str(exc))
-
-    if "identity" in st.session_state:
-        with st.expander("هوية الطلب", expanded=False):
-            view_json(st.session_state["identity"])
-    x, y = st.columns(2)
-    with x:
-        if "student_raw" in st.session_state:
-            with st.expander("Student API — JSON الأصلي", expanded=True):
-                view_json(st.session_state["student_raw"])
-    with y:
-        if "courses_raw" in st.session_state:
-            with st.expander("Courses API — JSON الأصلي", expanded=True):
-                view_json(st.session_state["courses_raw"])
-
-    if "submit_responses" in st.session_state:
-        st.subheader("FastAPI responses")
-        st.code("request_id = " + st.session_state.get("request_id", ""))
-        for label, status, response in st.session_state["submit_responses"]:
-            show_api_status(status, response, label=label)
-        with st.expander("JSON المرسل إلى FastAPI (للتشخيص فقط)"):
-            st.warning("تحتوي هذه البيانات على معلومات طالب؛ استخدم الواجهة محلياً فقط.")
-            st.write("Student input")
-            view_json(st.session_state.get("student_sent", {}))
-            st.write("Courses input")
-            view_json(st.session_state.get("courses_sent", {}))
-
-    with st.expander("استعلام عن نتيجة طلب سابق"):
-        rid = st.text_input("request_id", value=st.session_state.get("request_id", ""), key="lookup_id")
-        if st.button("استعلام عن الحالة"):
+        if fetch_only or run_recommend:
+            phase = "inputs"
             try:
-                if not rid or not all(c.isalnum() or c in "_.-" for c in rid):
-                    raise ClientError("request_id غير صالح.")
-                code, data, _ = client.advisor("GET", "/api/v1/recommendation-requests/" + rid)
-                show_api_status(code, data, label="Request status")
-            except ClientError as exc:
+                sid = student_id.strip()
+                if not sid:
+                    raise ClientError("أدخل Student ID.")
+                term = int(term_text)
+                cutoff = previous_academic_part(term)
+                if not Decimal(exact_credits).is_finite() or Decimal(exact_credits) <= 0:
+                    raise ClientError("ساعات الخطة يجب أن تكون رقماً موجباً.")
+                phase = "student"
+                with st.spinner("جلب بيانات الطالب من الجامعة..."):
+                    student_json = client.student(sid, term)
+                    degree_id = student_degree_id(student_json, sid, term)
+                record_connection("student", config.student_url, success=True, detail="رد صالح للطالب والفصل")
+                phase = "courses"
+                with st.spinner("جلب المواد المتاحة من الجامعة..."):
+                    courses_json = client.courses(sid, degree_id, term)
+                record_connection("courses", config.courses_url, success=True, detail="رد صالح يحتوي المواد وقواعد التسجيل")
+                st.session_state["student_raw"] = student_json
+                st.session_state["courses_raw"] = courses_json
+                st.session_state["identity"] = {"student_id": sid, "degree_id": degree_id, "part_id": term, "history_as_of_part": cutoff}
+                st.success(f"تم الجلب. degree_id = {degree_id} | history_as_of_part = {cutoff}")
+                if run_recommend:
+                    student_context, courses_context = load_context(config)
+                    rid = uuid4().hex
+                    student_req, courses_req = make_payloads(
+                        student_id=sid, degree_id=degree_id, part_id=term, cutoff=cutoff,
+                        student_response=student_json, courses_response=courses_json,
+                        student_context=student_context, courses_context=courses_context,
+                        target_credits=exact_credits, top_k=int(top_k), request_id=rid)
+                    st.session_state["request_id"] = rid
+                    phase = "fastapi"
+                    with st.spinner("إرسال الطلبين إلى FastAPI ثم تشغيل التوصية..."):
+                        responses = client.submit_pair(student_req, courses_req)
+                    if responses:
+                        label, code, response = responses[-1]
+                        ok = all(200 <= c < 300 for _, c, _ in responses)
+                        record_connection("fastapi", config.fastapi_base, success=ok,
+                                          detail="استقبل طلبَي الإدخال" if ok else f"استجاب مع خطأ HTTP {code} ({label})")
+                    st.session_state["submit_responses"] = responses
+                    st.session_state["student_sent"] = student_req
+                    st.session_state["courses_sent"] = courses_req
+            except (ClientError, ValueError, ArithmeticError) as exc:
+                if phase in {"student", "courses", "fastapi"}:
+                    urls = {"student": config.student_url, "courses": config.courses_url,
+                            "fastapi": config.fastapi_base}
+                    record_connection(phase, urls[phase], success=False, detail=str(exc))
                 st.error(str(exc))
+
+        if "identity" in st.session_state:
+            with st.expander("هوية الطلب", expanded=False):
+                view_json(st.session_state["identity"])
+        x, y = st.columns(2)
+        with x:
+            if "student_raw" in st.session_state:
+                with st.expander("Student API — JSON الأصلي", expanded=True):
+                    view_json(st.session_state["student_raw"])
+        with y:
+            if "courses_raw" in st.session_state:
+                with st.expander("Courses API — JSON الأصلي", expanded=True):
+                    view_json(st.session_state["courses_raw"])
+
+        if "submit_responses" in st.session_state:
+            st.subheader("FastAPI responses")
+            st.code("request_id = " + st.session_state.get("request_id", ""))
+            for label, status, response in st.session_state["submit_responses"]:
+                show_api_status(status, response, label=label)
+            with st.expander("JSON المرسل إلى FastAPI (للتشخيص فقط)"):
+                st.warning("تحتوي هذه البيانات على معلومات طالب؛ استخدم الواجهة محلياً فقط.")
+                st.write("Student input")
+                view_json(st.session_state.get("student_sent", {}))
+                st.write("Courses input")
+                view_json(st.session_state.get("courses_sent", {}))
+
+        with st.expander("استعلام عن نتيجة طلب سابق"):
+            rid = st.text_input("request_id", value=st.session_state.get("request_id", ""), key="lookup_id")
+            if st.button("استعلام عن الحالة"):
+                try:
+                    if not rid or not all(c.isalnum() or c in "_.-" for c in rid):
+                        raise ClientError("request_id غير صالح.")
+                    code, data, _ = client.advisor("GET", "/api/v1/recommendation-requests/" + rid)
+                    show_api_status(code, data, label="Request status")
+                except ClientError as exc:
+                    st.error(str(exc))
 
 with tab_history:
     st.info("أدخل رقم الفصل المنتهي فقط لجلب Delta من PHP؛ الجلب والفحص والمعاينة لا يضيفان البيانات تلقائياً. الاعتماد والتفعيل يحتاجان صلاحيات وتأكيداً منفصلين.")
@@ -301,7 +326,10 @@ with tab_history:
 with tab_collection:
     st.subheader("📥 جمع وحفظ استجابات API — Pilot 20251")
     st.caption("هذه وظيفة أرشفة فقط: لا تدريب، لا توصية، لا تحديث Frozen History الرسمي.")
-    store = PilotCollectionStore(Path(__file__).resolve().parents[2])
+    snapshot_id = st.selectbox('نسخة البيانات', options=['after_backend_fix', 'before_backend_fix'], key='pilot_snapshot')
+    readonly_snapshot = snapshot_id == 'before_backend_fix'
+    store = PilotCollectionStore(Path(__file__).resolve().parents[2], snapshot_id=snapshot_id)
+    st.info('النسخة النشطة: ' + snapshot_id + (' — أرشيف للقراءة فقط' if readonly_snapshot else ' — حفظ استجابات Backend المصححة'))
     st.code(str(store.root), language=None)
     try:
         cohort = store.load_students()
@@ -310,50 +338,23 @@ with tab_collection:
         cohort = []
 
     def save_pilot_student(record):
-        sid = str(record['student_id']).strip()
-        degree = str(record['degree_id']).strip()
-        sample_id = str(record['sample_id']).strip()
-        term = int(record['part_id'])
-        student_path = store.student_file(sample_id, 'student')
-        courses_path = store.student_file(sample_id, 'courses')
-        if store.state(student_path) != 'saved':
-            student_json, raw = client.capture_student(sid, term)
-            returned_degree = student_degree_id(student_json, sid, term)
-            if returned_degree != degree:
-                raise CollectionError(f"{sample_id}: degree mismatch with students.csv; no save")
-            store.save(student_path, raw, kind='student',
-                       identity={'sample_id': sample_id, 'student_id': sid, 'degree_id': degree, 'part_id': term},
-                       source='university_student_api')
-        else:
-            # Verify identity even when resuming a previously saved student.
-            student_json = json.loads(student_path.read_bytes())
-            if student_degree_id(student_json, sid, term) != degree:
-                raise CollectionError(f'{sample_id}: saved student degree mismatch')
-        if store.state(courses_path) != 'saved':
-            courses_json, raw = client.capture_courses(sid, degree, term)
-            store.save(courses_path, raw, kind='courses',
-                       identity={'sample_id': sample_id, 'student_id': sid, 'degree_id': degree, 'part_id': term},
-                       source='university_courses_api')
-        return store.state(student_path) == 'saved' and store.state(courses_path) == 'saved'
+        return store.collect_student(record, client)
 
     def save_pilot_history(part):
         dest = store.history_file(part)
         if store.state(dest) == 'saved':
             return True
-        _response, raw, count = client.capture_history(part)
-        store.save(dest, raw, kind='history',
-                   identity={'part_id': part, 'history_as_of_part': 20243, 'row_count': count},
-                   source='university_frozen_history_api')
-        return store.state(dest) == 'saved'
+        raise CollectionError('Frozen History is reused from the verified original snapshot; fetching is disabled.')
 
     if cohort:
         total_primary = sum(row['role'] == 'primary' for row in cohort)
         total_reserve = sum(row['role'] == 'reserve' for row in cohort)
         summary = store.overview(cohort)
-        m1, m2, m3 = st.columns(3)
+        m1, m2, m3, m4 = st.columns(4)
         m1.metric('طلاب أساسيون', total_primary)
-        m2.metric('ردود الطلاب المحفوظة', f"{summary['student_saved']}/{summary['student_total']}")
-        m3.metric('فصول التاريخ المحفوظة', f"{summary['history_saved']}/{summary['history_total']}")
+        m2.metric('Student API', f"{summary['student_response_saved']}/{summary['primary_total']}")
+        m3.metric('Courses API', f"{summary['courses_response_saved']}/{summary['primary_total']}")
+        m4.metric('فصول التاريخ المحفوظة', f"{summary['history_saved']}/{summary['history_total']}")
         if summary['warnings']:
             st.warning(f"يوجد {summary['warnings']} ملف غير موثق أو تالف؛ لن يُستبدل تلقائيًا.")
         st.caption(f'عدد الاحتياط: {total_reserve}. الحفظ يتجاوز الملفات المحفوظة والمتحقق منها.')
@@ -363,8 +364,8 @@ with tab_collection:
         row_labels = {f"{r['sample_id']} | {r['role']}": r for r in cohort}
         selected = st.selectbox('اختيار طالب من students.csv', options=list(row_labels))
         c1, c2 = st.columns(2)
-        single = c1.button('حفظ الطالب المختار', key='pilot_one_student')
-        all_primary = c2.button('جمع الأساسيين الـ30 وحفظهم', key='pilot_all_students', type='primary')
+        single = c1.button('حفظ الطالب المختار', key='pilot_one_student', disabled=readonly_snapshot)
+        all_primary = c2.button('جمع الأساسيين الـ30 وحفظهم', key='pilot_all_students', type='primary', disabled=readonly_snapshot)
         student_jobs = ([row_labels[selected]] if single else
                         [r for r in cohort if r['role'] == 'primary'] if all_primary else [])
         if student_jobs:
@@ -382,11 +383,11 @@ with tab_collection:
 
         st.divider()
         st.markdown('**2 · حفظ Frozen History التاريخي**')
-        st.caption('نحفظ كل فصل بصيغته الخام، من 20201 إلى 20243 فقط. لا commit ولا activate.')
+        st.caption('التاريخ الأصلي المعاد استخدامه من 20201 إلى 20243. الجلب معطل للحفاظ على مقارنة ثابتة. لا commit ولا activate.')
         selected_part = st.selectbox('الفصل التاريخي', options=history_parts(), key='pilot_history_part')
         h1, h2 = st.columns(2)
-        one_part = h1.button('جلب وحفظ الفصل المختار', key='pilot_one_history')
-        all_parts = h2.button('جلب وحفظ الفصول الـ15', key='pilot_all_history')
+        one_part = h1.button('جلب وحفظ الفصل المختار', key='pilot_one_history', disabled=True)
+        all_parts = h2.button('جلب وحفظ الفصول الـ15', key='pilot_all_history', disabled=True)
         history_jobs = [selected_part] if one_part else history_parts() if all_parts else []
         if history_jobs:
             bar = st.progress(0.0)

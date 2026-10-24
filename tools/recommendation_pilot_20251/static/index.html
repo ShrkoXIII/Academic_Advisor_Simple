@@ -35,13 +35,19 @@
               <datalist id="student-options"></datalist>
               <p id="student-help" class="help-text">اختر نتيجة من القائمة. يمكنك استعراض طلاب التشغيل المحفوظ من القائمة نفسها.</p>
               <div id="selected-student-summary" class="selected-student-summary" aria-live="polite"><p class="empty-small">لم يُختر طالب بعد.</p></div>
-              <label class="field-label" for="target-credits">ساعات الخطة المطلوبة</label><input id="target-credits" type="number" min="0.01" max="36" step="any" value="18" required>
+              <label class="field-label" for="experiment-mode">Experiment Mode · مصدر المرشحات</label>
+              <select id="experiment-mode"><option value="original">Original API</option><option value="augmented">Actual-Course Augmented</option></select>
+              <label class="compare-toggle"><input id="compare-candidates" type="checkbox"> تجربة تشخيصية صريحة: مقارنة Original وAugmented</label>
+              <label class="field-label" for="credit-experiment">اختبار الساعات</label>
+              <select id="credit-experiment"><option value="fixed_18">Experiment A · Fixed 18 Credits</option><option value="actual_load">Experiment B · Actual Credit Load Diagnostic</option></select>
+              <label class="field-label" for="target-credits">هدف الساعات الثابت</label><input id="target-credits" type="number" value="18" readonly aria-describedby="credit-help">
+              <p id="credit-help" class="help-text">التشغيل العادي يستخدم Courses API المصحح فقط. التشخيص يتطلب تفعيل مربع المقارنة صراحة؛ القوائم تحدد عرض النتائج. اختبار الحمل الفعلي متاح في التشخيص فقط.</p>
               <details class="search-options"><summary>إعدادات البحث</summary><label class="field-label" for="max-plans">حد خطط البحث</label><input id="max-plans" type="number" min="1" max="2000" step="1" value="200" required><p class="help-text">تطابق الساعات تام. النتائج ضمن حد البحث المحدد ولا تثبت الأفضلية عبر كل الخطط الممكنة.</p></details>
               <button type="submit" id="run-button" class="primary-button" disabled><span aria-hidden="true">▶</span> تشغيل المقارنة <span lang="en">Run Comparison</span></button>
               <div id="run-progress" class="run-progress" role="status" aria-live="polite" hidden><div><span id="progress-label">جارٍ التحضير…</span><bdi id="progress-count">0 / 0</bdi></div><progress id="progress-bar" max="1" value="0"></progress></div>
             </form>
           </section>
-          <section class="panel saved-panel" aria-labelledby="saved-title"><div class="panel-heading"><h2 id="saved-title">التشغيلات المحفوظة</h2><button type="button" id="refresh-runs" class="text-button" aria-label="تحديث التشغيلات المحفوظة">تحديث</button></div><p class="help-text">استعرض الخطط المحفوظة مع توقعات جديدة لخطة الطالب الفعلية.</p><label class="sr-only" for="saved-runs">التشغيل المحفوظ</label><select id="saved-runs"><option value="">اختر تشغيلاً محفوظاً</option></select><button id="load-run" type="button" class="secondary-button" disabled>عرض النتيجة</button></section>
+          <section class="panel saved-panel" aria-labelledby="saved-title"><div class="panel-heading"><h2 id="saved-title">التشغيلات المحفوظة</h2><button type="button" id="refresh-runs" class="text-button" aria-label="تحديث التشغيلات المحفوظة">تحديث</button></div><p class="help-text">التشغيلات التشخيصية الجديدة تعرض توقعاتها المحفوظة دون إعادة التنبؤ. يُميّز الأرشيف السابق في القائمة.</p><label class="sr-only" for="saved-runs">التشغيل المحفوظ</label><select id="saved-runs"><option value="">اختر تشغيلاً محفوظاً</option></select><button id="load-run" type="button" class="secondary-button" disabled>عرض النتيجة</button></section>
           <details class="panel batch-panel"><summary>الاختبارات الجماعية</summary><p class="help-text">تشغيل المقارنة للطلاب الثلاثين بالساعات وإعدادات البحث الحالية. افتح النتيجة ثم اختر طالباً من القائمة لعرض بطاقاته.</p><button id="run-all" type="button" class="secondary-button" disabled>تشغيل لجميع الطلاب</button></details>
         </aside>
 
@@ -51,6 +57,7 @@
             <div class="results-heading"><div><div class="eyebrow">توقعات فعلية · صلاحية مستقلة</div><h2 id="results-title">مقارنة النماذج</h2></div></div>
             <div id="run-summary" class="summary-strip"></div>
             <div id="student-overview" class="student-overview"></div>
+            <section id="candidate-diagnostic-panel" class="panel candidate-diagnostic-panel" hidden aria-labelledby="candidate-diagnostic-title"><div class="panel-heading"><div><div class="eyebrow">Original API / Actual-Course Augmented</div><h2 id="candidate-diagnostic-title">تغطية المرشحات ومقارنة الوضعين</h2></div></div><div id="diagnostic-warning" class="alert diagnostic-warning" role="status" hidden><strong lang="en" dir="ltr">DIAGNOSTIC ONLY — ACTUAL COURSES WERE INJECTED</strong><bdi>DIAGNOSTIC_ACTUAL_COURSE_INJECTION</bdi><p>تجربة تستخدم اختيارات الطالب بعد حدوثها. لا تثبت أهلية التسجيل التاريخية ولا صلاحية Historical Backtest؛ زيادة التقاطع وحدها لا تثبت تحسّن التوصية.</p></div><div id="candidate-coverage"></div><div id="candidate-mode-comparison"></div></section>
             <section class="panel actual-forecast-panel" aria-labelledby="actual-forecast-title"><div class="panel-heading"><div><div class="eyebrow">سياق موحّد · خطة الطالب الفعلية كاملة</div><h2 id="actual-forecast-title">توقعات الأنظمة لمواد الطالب الفعلية</h2></div></div><div id="actual-plan-forecasts" aria-live="polite"></div></section>
             <div id="experiment-grid" class="experiment-grid"></div>
             <section class="panel detail-panel" aria-labelledby="plan-detail-title"><div class="panel-heading"><div><div class="eyebrow">تفاصيل الاختيار</div><h2 id="plan-detail-title">مواد الخطة</h2></div><span id="selected-plan-label" class="muted"></span></div><div id="plan-detail"><p class="empty-small">اختر خطة لعرض المواد والتوقعات التفصيلية.</p></div></section>

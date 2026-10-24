@@ -1,5 +1,37 @@
 # Academic Advisor — Pilot 20251
 
+## نسختا Before / After Backend Fix
+
+المصدر الافتراضي الآن `snapshots/after_backend_fix/api_data/` والنتائج الجديدة تحت `experiments/after_backend_fix/comparison/`.
+المرشحات في التشغيل العادي مأخوذة من Courses API فقط. لا يوجد fallback إلى Before عند غياب استجابة؛ تظهر `MISSING_SNAPSHOT_RESPONSE`.
+الحقن متاح فقط بتفعيل مربع التجربة التشخيصية صراحة أو الأمر التشخيصي المنفصل.
+الأرشيف السابق يُعرض بمعرّفاته الأصلية ومع وسم `before_backend_fix`، دون إعادة التنبؤ عند تصفحه.
+مسارات النماذج مستقلة عن snapshot؛ في هذه النسخة كانت الحزم منقولة سابقاً إلى `before_backend_fix/experiments/model_versions/` وتبقى هناك دون تغيير.
+خطوات الجمع والتشغيل والتحقق موثقة في [تقرير الترحيل](../../reports/pilot_20251_backend_snapshot_migration.md).
+
+## تجربة حقن المواد الفعلية المعزولة
+
+`DIAGNOSTIC_ACTUAL_COURSE_INJECTION` يستخدم اختيارات لاحقة للطالب. التحذير الدائم:
+**DIAGNOSTIC ONLY — ACTUAL COURSES WERE INJECTED**. هذه تجربة تشخيصية لا تثبت أهلية تاريخية أو تحسناً في توصيات بديلة.
+
+الواجهة الحالية تعرض `Original API` و`Actual-Course Augmented` في بطاقات A/B/C نفسها. يتيح مربع المقارنة تشغيل الوضعين للطالب نفسه، مع فصل `Fixed 18 Credits` عن `Actual Credit Load Diagnostic`. هدف الحمل الفعلي مأخوذ من التسجيل؛ حدود التسجيل تبقى نافذة. يُظهر العرض التغطية الخام وتغطية مساحة البحث منفصلتين، والمواد المحقونة ومصدرها، والتقاطع وإحصاءات البحث والتنبؤ والأزمنة. تحميل التشغيل التشخيصي المحفوظ لا يعيد التنبؤ.
+
+لتشغيل الطلاب الثلاثين في الوضعين واختباري الساعات، دون إعادة تدريب أو طلب جامعة:
+
+```powershell
+.\.venv\Scripts\python.exe -m tools.recommendation_pilot_20251.actual_experiment --max-plans 200
+```
+
+ولفحص طالب واحد بميزانية 2000 خطة:
+
+```powershell
+.\.venv\Scripts\python.exe -m tools.recommendation_pilot_20251.actual_experiment --sample-id P20251-01-P02 --max-plans 2000
+```
+
+الخياران `--candidate-mode original|augmented` و`--credit-experiment fixed_18|actual_load` يقصران التشغيل عند الحاجة. الفرع المعتمد لهذه التجربة `new_branch` بتأكيد المستخدم؛ لا يبدل المشغّل الفروع ولا ينشئ Commit. النتائج بأسماء فريدة تحت `data/evaluation/recommendation_pilot_20251/experiments/after_backend_fix/actual_candidate_injection/`، مع بصمات قبل/بعد للملفات المحمية وإعدادات إعادة التنفيذ. يحفظ كل تشغيل مجلد `portable_results/` للملخصات فقط. المرجع النهائي التاريخي: `reports/pilot_20251_actual_candidate_injection_results.md`؛ توليد تقرير جديد لا يستبدل ملفاً موجوداً.
+
+يبقى مسار الأرشيف السابق أدناه متاحاً؛ أوامر `--run-all --credits` تخص المقارنة السابقة ولا تشغّل الحقن.
+
 واجهة محلية لاختيار طالب واحد ومقارنة A وB وC. التطبيق الموجود عُدّل دون إعادة بناء نظام الإنتاج. توقع المواد ومعدل الفصل مستقل عن اعتماد التسجيل وحساب التراكمي.
 
 ## التشغيل

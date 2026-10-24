@@ -115,13 +115,13 @@ def read_verified_json(path, *, expected=None):
     return payload, {"sha256": digest, "metadata_verified": meta is not None, "metadata": meta}
 
 
-def read_students(root=PILOT_ROOT):
+def read_students(root=PILOT_ROOT, *, include_reserve=False):
     """Load primary CSV identities without leaking names or other personal fields."""
     with (Path(root) / "students.csv").open(encoding="utf-8-sig", newline="") as stream:
         rows = list(csv.DictReader(stream))
     selected, seen = [], set()
     for row in rows:
-        if row.get("role") != "primary":
+        if row.get('role') not in (('primary', 'reserve') if include_reserve else ('primary',)):
             continue
         sample = row.get("sample_id", "")
         if not re.fullmatch(r"[A-Za-z0-9_-]+", sample) or sample in seen:
@@ -132,7 +132,7 @@ def read_students(root=PILOT_ROOT):
         validate_identity(expected, expected, required=True)
         if expected["part_id"] != TARGET_PART or int(row.get("history_as_of_part", HISTORY_AS_OF_PART)) != HISTORY_AS_OF_PART:
             raise PilotInputError("PILOT_SEMESTER_MISMATCH")
-        selected.append({"sample_id": sample, "role": "primary", **expected,
+        selected.append({"sample_id": sample, "role": row['role'], **expected,
                          "previous_gpa": float(numeric(row["previous_gpa"], "previous_gpa")),
                          "gpa_category": row.get("gpa_category"), "grade_version_id": row.get("grade_version_id")})
     if not selected:
@@ -140,9 +140,13 @@ def read_students(root=PILOT_ROOT):
     return selected
 
 
-def load_student_inputs(student, root=PILOT_ROOT):
+def load_student_inputs(student, root=PILOT_ROOT, *, snapshot_id='after_backend_fix'):
+    from .snapshots import api_data_root
     expected = {key: student[key] for key in ("student_id", "degree_id", "part_id")}
-    base = Path(root) / "api_data" / "students" / student["sample_id"]
+    base = api_data_root(root, snapshot_id) / "students" / student["sample_id"]
+    for name in ('student_response.json', 'courses_response.json'):
+        if not (base / name).is_file():
+            raise PilotInputError('MISSING_SNAPSHOT_RESPONSE', snapshot_id + '/' + name)
     sp, sm = read_verified_json(base / "student_response.json", expected=expected)
     cp, cm = read_verified_json(base / "courses_response.json", expected=expected)
     info = sp["data"].get("studentDegreeInfo")
@@ -151,6 +155,7 @@ def load_student_inputs(student, root=PILOT_ROOT):
         # Courses responses have no student identity; require collector binding.
         validate_identity(cp["data"], expected, required=True)
     mapped = map_student_features(info)
-    return {"identity": expected, "student_api_response": sp, "courses_api_response": cp,
+    return {"identity": expected, "snapshot_id": snapshot_id, "api_snapshot_path": str(base.parent.parent),
+            "student_api_response": sp, "courses_api_response": cp,
             "mapped_features": mapped, "timing_limitation": TIMING_LIMITATION,
             "fingerprints": {"student_response.json": sm["sha256"], "courses_response.json": cm["sha256"]}}

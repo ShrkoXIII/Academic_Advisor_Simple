@@ -170,20 +170,21 @@ def _read_source(path, part, *, allow_incomplete_outcomes=False, retain_row_indi
     return rows, summary, issues
 
 
-def build_university_history(root=PILOT_ROOT, output_dir=None):
+def build_university_history(root=PILOT_ROOT, output_dir=None, *, snapshot_id="after_backend_fix"):
     """Audit all fifteen local parts; incomplete history cannot serve B/C.
 
     Rejected files have definite schema, provenance or numeric errors.
     Unresolved files have incomplete outcome partitions requiring clarification.
     Both are withheld entirely from the diagnostic validated artifact.
     """
+    from .snapshots import api_data_root
     root = Path(root)
     if output_dir is not None:
         output_dir = Path(output_dir).resolve()
-        for original in ((root / "api_data").resolve(), (PILOT_ROOT / "api_data").resolve()):
+        for original in ((root / "api_data").resolve(), (root / "snapshots").resolve(), (PILOT_ROOT / "api_data").resolve(), (PILOT_ROOT / "snapshots").resolve()):
             if output_dir == original or output_dir.is_relative_to(original):
                 raise ValueError("History output must be separate from original API data.")
-    directory = root / "api_data" / "frozen_history"
+    directory = api_data_root(root, snapshot_id) / "frozen_history"
     sources, issues, validated = [], [], []
     for part in EXPECTED_PARTS:
         rows, source, file_issues = _read_source(directory / f"{part}.json", part)
@@ -242,7 +243,7 @@ def build_university_history(root=PILOT_ROOT, output_dir=None):
     return report
 
 
-def build_experimental_university_history(root=PILOT_ROOT, output_dir=None):
+def build_experimental_university_history(root=PILOT_ROOT, output_dir=None, *, snapshot_id="after_backend_fix"):
     """Audit a separate, explicitly partial history for retrained B/C models.
 
     All expected files still require intact envelopes, hashes and metadata.
@@ -251,13 +252,14 @@ def build_experimental_university_history(root=PILOT_ROOT, output_dir=None):
     all-student ratios. Ambiguous cross-faculty cohorts are excluded entirely:
     neither their independence nor a deduplication rule is assumed.
     """
+    from .snapshots import api_data_root
     root = Path(root)
     if output_dir is not None:
         output_dir = Path(output_dir).resolve()
-        for original in ((root / "api_data").resolve(), (PILOT_ROOT / "api_data").resolve()):
+        for original in ((root / "api_data").resolve(), (root / "snapshots").resolve(), (PILOT_ROOT / "api_data").resolve(), (PILOT_ROOT / "snapshots").resolve()):
             if output_dir == original or output_dir.is_relative_to(original):
                 raise ValueError("History output must be separate from original API data.")
-    directory = root / "api_data" / "frozen_history"
+    directory = api_data_root(root, snapshot_id) / "frozen_history"
     sources, issues, candidates = [], [], []
     for part in EXPECTED_PARTS:
         rows, source, file_issues = _read_source(

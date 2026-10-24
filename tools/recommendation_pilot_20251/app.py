@@ -2,6 +2,7 @@
 from contextlib import asynccontextmanager
 from pathlib import Path
 from urllib.parse import urlsplit
+from typing import Literal
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse
@@ -12,6 +13,7 @@ from .adapter import PILOT_ROOT, PilotInputError, read_students, load_student_in
 from .runner import ComparisonRunner, json_value
 from .observed import ObservedPlanStore, unavailable
 from .observed_prediction import ObservedPlanPredictor, blocked_forecast
+from .snapshots import AFTER, BEFORE, api_data_root, validate_snapshot
 
 
 class RunRequest(BaseModel):
@@ -21,18 +23,37 @@ class RunRequest(BaseModel):
     max_plans: StrictInt = Field(default=200, ge=1, le=2000)
 
 
-def create_app(root=PILOT_ROOT, *, engine_factory=None, observed_store=None, observed_predictor=None):
-    runner = ComparisonRunner(root, engine_factory=engine_factory)
+class ActualCandidateRunRequest(BaseModel):
+    """Explicit experimental modes; never accepts an altered production payload."""
+    model_config = ConfigDict(extra="forbid")
+    sample_ids: list[StrictStr] = Field(min_length=1, max_length=30)
+    candidate_modes: list[Literal["original", "augmented"]] = Field(
+        default_factory=lambda: ["original", "augmented"], min_length=1, max_length=2)
+    credit_experiments: list[Literal["fixed_18", "actual_load"]] = Field(
+        default_factory=lambda: ["fixed_18", "actual_load"], min_length=1, max_length=2)
+    max_plans: StrictInt = Field(default=200, ge=1, le=2000)
+
+
+def create_app(root=PILOT_ROOT, *, engine_factory=None, observed_store=None, observed_predictor=None,
+               actual_candidate_runner=None, snapshot_id=AFTER):
+    snapshot_id = validate_snapshot(snapshot_id)
+    runner = ComparisonRunner(root, engine_factory=engine_factory, snapshot_id=snapshot_id)
     observed = observed_store if observed_store is not None else ObservedPlanStore()
-    actual_predictor = observed_predictor if observed_predictor is not None else ObservedPlanPredictor(root)
+    actual_predictor = observed_predictor if observed_predictor is not None else ObservedPlanPredictor(root, snapshot_id=snapshot_id)
+    if actual_candidate_runner is None:
+        from .actual_experiment import ActualCandidateRunner
+        actual_candidate_runner = ActualCandidateRunner(
+            root, engine_factory=engine_factory, observed_store=observed, snapshot_id=snapshot_id)
 
     @asynccontextmanager
     async def lifespan(app):
         yield
         runner.executor.shutdown(wait=True)
+        actual_candidate_runner.executor.shutdown(wait=True)
 
     app = FastAPI(title="Academic Advisor — Pilot 20251", lifespan=lifespan, docs_url=None, redoc_url=None)
     app.state.runner = runner
+    app.state.actual_candidate_runner = actual_candidate_runner
 
     @app.middleware("http")
     async def local_only(request: Request, call_next):
@@ -52,7 +73,7 @@ def create_app(root=PILOT_ROOT, *, engine_factory=None, observed_store=None, obs
         rows = read_students(root)
         for student in rows:
             try:
-                snapshot, _ = build_snapshot(load_student_inputs(student, root))
+                snapshot, _ = build_snapshot(load_student_inputs(student, root, snapshot_id=snapshot_id))
                 student["student_summary"] = student_summary(snapshot, student)
             except PilotInputError as error:
                 student["student_summary"] = {"status": "UNAVAILABLE", "reason": error.code}
@@ -87,6 +108,16 @@ def create_app(root=PILOT_ROOT, *, engine_factory=None, observed_store=None, obs
             saved = runner.store.load(run_id)
         except (ValueError, OSError):
             raise HTTPException(404, "Run not found.") from None
+        if saved.get('snapshot_id') == BEFORE or saved.get('snapshot_id') != snapshot_id:
+            # Historical bytes stay intact; never rescore with current models/inputs.
+            reason = ('HISTORICAL_RECOMPUTATION_DISABLED' if saved.get('snapshot_id') == BEFORE
+                      else 'SAVED_RUN_SNAPSHOT_MISMATCH')
+            for result in saved['student_results']:
+                result.setdefault('observed_plan_prediction', blocked_forecast(
+                    reason,
+                    'نتيجة تاريخية محفوظة؛ إعادة حساب توقع الخطة الفعلية معطلة لحماية المقارنة.'))
+            saved['historical_browsing'] = 'saved_values_only_no_recomputation'
+            return JSONResponse(json_value(saved))
         try:
             cohort = {student["sample_id"]: student for student in read_students(root)}
         except (ValueError, OSError):
@@ -127,6 +158,41 @@ def create_app(root=PILOT_ROOT, *, engine_factory=None, observed_store=None, obs
                 for result, _, _ in actual_cases:
                     result["observed_plan_prediction"] = blocked_forecast()
         return JSONResponse(json_value(saved))
+
+    @app.post("/api/actual-candidate-runs", status_code=202)
+    def actual_candidate_run(payload: ActualCandidateRunRequest):
+        try:
+            if (len(set(payload.sample_ids)) != len(payload.sample_ids) or
+                    len(set(payload.candidate_modes)) != len(payload.candidate_modes) or
+                    len(set(payload.credit_experiments)) != len(payload.credit_experiments)):
+                raise ValueError("Select distinct samples and experiment modes.")
+            run_id = actual_candidate_runner.start(
+                payload.sample_ids, candidate_modes=payload.candidate_modes,
+                credit_experiments=payload.credit_experiments, max_plans=payload.max_plans)
+        except ValueError as error:
+            raise HTTPException(422, str(error)) from None
+        return {"run_id": run_id}
+
+    @app.get("/api/actual-candidate-runs")
+    def list_actual_candidate_runs():
+        return {"runs": actual_candidate_runner.store.list_runs()}
+
+    @app.get("/api/actual-candidate-runs/{run_id}/progress")
+    def actual_candidate_progress(run_id: str):
+        try:
+            return actual_candidate_runner.progress(run_id)
+        except (ValueError, OSError):
+            raise HTTPException(404, "Run not found.") from None
+
+    @app.get("/api/actual-candidate-runs/{run_id}")
+    def saved_actual_candidate_run(run_id: str):
+        # A result is a frozen artifact. Viewing it must not invoke any predictor.
+        try:
+            store = actual_candidate_runner.store
+            saved = store.load_dashboard(run_id) if hasattr(store, "load_dashboard") else store.load(run_id)
+            return JSONResponse(json_value(saved))
+        except (ValueError, OSError):
+            raise HTTPException(404, "Run not found.") from None
 
     static = Path(__file__).parent / "static"
     static.mkdir(exist_ok=True)

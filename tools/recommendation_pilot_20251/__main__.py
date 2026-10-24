@@ -11,10 +11,11 @@ def main():
     parser.add_argument("--run-all", action="store_true", help="Run all saved primary students and exit")
     parser.add_argument("--credits", type=float, default=18)
     parser.add_argument("--max-plans", type=int, default=200)
+    parser.add_argument('--snapshot', choices=['after_backend_fix', 'before_backend_fix'], default='after_backend_fix')
     args = parser.parse_args()
     if args.run_all:
         from .runner import ComparisonRunner
-        runner = ComparisonRunner(PILOT_ROOT)
+        runner = ComparisonRunner(PILOT_ROOT, snapshot_id=args.snapshot)
         try:
             result = runner.run_sync([s["sample_id"] for s in read_students()], target_credits=args.credits, max_plans=args.max_plans)
             print(json.dumps(result))
@@ -25,7 +26,7 @@ def main():
     else:
         import uvicorn
         from .app import create_app
-        uvicorn.run(create_app(), host="127.0.0.1", port=args.port, access_log=False)
+        uvicorn.run(create_app(snapshot_id=args.snapshot), host="127.0.0.1", port=args.port, access_log=False)
 
 
 if __name__ == "__main__":

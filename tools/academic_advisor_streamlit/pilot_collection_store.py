@@ -41,11 +41,15 @@ def _atomic_exclusive(path: Path, content: bytes) -> None:
 
 
 class PilotCollectionStore:
-    def __init__(self, project_root: Path):
+    def __init__(self, project_root: Path, *, snapshot_id='after_backend_fix'):
+        from tools.recommendation_pilot_20251.snapshots import api_data_root, validate_snapshot
         self.pilot = Path(project_root).resolve() / PILOT_SUBPATH
-        self.root = self.pilot / 'api_data'
+        self.snapshot_id = validate_snapshot(snapshot_id)
+        self.root = api_data_root(self.pilot, snapshot_id)
 
     def initialize(self):
+        if self.snapshot_id == 'before_backend_fix':
+            raise CollectionError('The before_backend_fix snapshot is read-only.')
         self.root.mkdir(parents=True, exist_ok=True)
         # The raw student responses must NEVER be staged by git add .
         ignore = self.root / '.gitignore'
@@ -104,6 +108,9 @@ class PilotCollectionStore:
 
     def save(self, path: Path, body: bytes, *, kind: str, identity: dict, source: str) -> bool:
         """Return True if saved, False if an already verified copy exists."""
+        path = Path(path)
+        if not path.resolve().is_relative_to(self.root.resolve()):
+            raise CollectionError('Capture path is outside the selected snapshot.')
         self.initialize()
         state = self.state(path)
         if state == 'saved':
@@ -120,6 +127,7 @@ class PilotCollectionStore:
             raise CollectionError('Expected an API JSON object')
         path.parent.mkdir(parents=True, exist_ok=True)
         metadata = {
+            'snapshot_id': self.snapshot_id,
             'kind': kind,
             'identity': identity,
             'saved_at_utc': datetime.now(timezone.utc).isoformat(),
@@ -147,7 +155,40 @@ class PilotCollectionStore:
             'history_saved': history_states.count('saved'),
             'history_total': len(history_states),
             'warnings': len([s for s in student_states + history_states if s in ('unverified', 'corrupt')]),
+            'student_response_saved': sum(self.state(self.student_file(row['sample_id'], 'student')) == 'saved' for row in main),
+            'courses_response_saved': sum(self.state(self.student_file(row['sample_id'], 'courses')) == 'saved' for row in main),
+            'primary_total': len(main),
         }
+
+    def collect_student(self, record, client, *, courses_only=False) -> bool:
+        """Resume one capture in the selected snapshot; no recommendation/history calls."""
+        if self.snapshot_id == 'before_backend_fix':
+            raise CollectionError('The before_backend_fix snapshot is read-only.')
+        sid, degree = str(record['student_id']).strip(), str(record['degree_id']).strip()
+        term, sample = int(record['part_id']), str(record['sample_id']).strip()
+        identity = {'sample_id': sample, 'student_id': sid, 'degree_id': degree, 'part_id': term}
+        student_path = self.student_file(sample, 'student')
+        courses_path = self.student_file(sample, 'courses')
+        student_state = self.state(student_path)
+        if student_state != 'saved':
+            if courses_only or student_state != 'missing':
+                raise CollectionError(f'{sample}: a verified original Student response is required.')
+            student_json, raw = client.capture_student(sid, term)
+        else:
+            student_json, raw = json.loads(student_path.read_bytes()), None
+        info = student_json.get('data', {}).get('studentDegreeInfo', {})
+        for field, expected in (('STUDENT_ID', sid), ('DEGREE_ID', degree), ('STATUS_SEMESTER_ID', str(term))):
+            if str(info.get(field, '')).strip() != expected:
+                raise CollectionError(f'{sample}: Student identity mismatch: {field}; no save')
+        if raw is not None:
+            self.save(student_path, raw, kind='student', identity=identity, source='university_student_api')
+        courses_state = self.state(courses_path)
+        if courses_state == 'missing':
+            _response, raw = client.capture_courses(sid, degree, term)
+            self.save(courses_path, raw, kind='courses', identity=identity, source='university_courses_api')
+        elif courses_state != 'saved':
+            raise CollectionError(f'{sample}: existing Courses response needs manual review.')
+        return self.state(student_path) == 'saved' and self.state(courses_path) == 'saved'
 
 
 def history_parts() -> list[int]:

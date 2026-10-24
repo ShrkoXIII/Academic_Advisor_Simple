@@ -16,26 +16,33 @@ from src.recommendation.inputs import normalize_candidates
 from src.recommendation.plan_generation import build_plan_rows
 from .adapter import HISTORY_AS_OF_PART, PILOT_ROOT, TARGET_PART, PilotInputError, load_student_inputs, sha256
 from .engine import PilotEngine, _digest, build_snapshot
+from .selection import normalize_models
 
 
-def blocked_forecast(reason="ACTUAL_PLAN_INPUT_UNAVAILABLE", reason_ar="مدخلات خطة الطالب الفعلية غير كافية للتنبؤ الصحيح."):
+def blocked_forecast(reason="ACTUAL_PLAN_INPUT_UNAVAILABLE", reason_ar="مدخلات خطة الطالب الفعلية غير كافية للتنبؤ الصحيح.", *, models=None):
     return {"status": "BLOCKED", "context": "actual_registered_plan", "reason": reason,
             "experiments": {name: {"prediction_status": "BLOCKED", "reason": reason, "reason_ar": reason_ar,
-                                    "course_predictions": []} for name in "ABC"}}
+                                    "course_predictions": []} for name in normalize_models(models)}}
 
 
 class ObservedPlanPredictor:
     """Lazy read-only models and memoized predictions, separate from saved runs."""
 
-    def __init__(self, root=PILOT_ROOT, *, engine=None, course_history_path=None):
+    def __init__(self, root=PILOT_ROOT, *, engine=None, course_history_path=None, snapshot_id="after_backend_fix"):
+        from .snapshots import validate_snapshot
         self.root = Path(root)
-        self.engine = engine if engine is not None else PilotEngine(root)
+        self.snapshot_id = validate_snapshot(snapshot_id)
+        self.engine = engine if engine is not None else PilotEngine(root, snapshot_id=snapshot_id)
+        if getattr(self.engine, "snapshot_id", snapshot_id) != snapshot_id:
+            raise ValueError("Observed predictor and engine snapshots differ.")
         self.course_history_path = Path(course_history_path or paths.CLEAN_STUDENT_COURSE_PATH_V2)
         self._history = None
         self._source = {}
         self._cache = {}
         self._c_forecasts = {}
         self._lock = Lock()
+        self.last_cache_status = 'NOT_RUN'
+        self.max_cached_plans = 64
 
     def _load_sources(self):
         if self._history is None:
@@ -60,7 +67,7 @@ class ObservedPlanPredictor:
                                 for course in registrations])
         if courses.course_id.astype(str).str.strip().duplicated().any():
             raise ValueError("Ambiguous actual registration plan.")
-        inputs = load_student_inputs(student, self.root)
+        inputs = load_student_inputs(student, self.root, snapshot_id=self.snapshot_id)
         snapshot, issues = build_snapshot(inputs)
         catalog, history = self._load_sources()
         candidates, report = normalize_candidates(courses, catalog, history,
@@ -79,17 +86,18 @@ class ObservedPlanPredictor:
         base["part_semester"] = TARGET_PART % 10
         return build_plan_rows(base, [tuple(range(len(base)))])
 
-    def predict_many(self, cases):
+    def predict_many(self, cases, *, models=None):
         """Compute C's expensive earlier-peer reference once for all actual plans.
 
         Every plan has a distinct plan_id while history/context is rebuilt.
         Per-student scoring, model failures and memoization stay independent.
         """
+        model_names = normalize_models(models)
         with self._lock:
             prepared = []
             try:
-                assets = self.engine.inspect_experiments()
-                if assets.get("C", {}).get("status") == "READY":
+                assets = self.engine.inspect_experiments() if 'C' in model_names else {}
+                if 'C' in model_names and assets.get("C", {}).get("status") == "READY":
                     for student, registrations in cases:
                         try:
                             _, snapshot, _, candidates, _, key = self._prepare_inputs(student, registrations)
@@ -106,25 +114,35 @@ class ObservedPlanPredictor:
                             if len(selected) == len(rows) and set(selected.course_id) == set(rows.course_id):
                                 selected["plan_id"] = 0
                                 self._c_forecasts[key] = selected
+                                while len(self._c_forecasts) > self.max_cached_plans:
+                                    self._c_forecasts.pop(next(iter(self._c_forecasts)))
             except (LightGBMError, ValueError, OSError, KeyError, TypeError):
                 # Fall back to the isolated per-student path rather than hide A/B.
                 pass
-        return [self.predict(student, registrations) for student, registrations in cases]
+        return [self.predict(student, registrations, models=models) for student, registrations in cases]
 
-    def predict(self, student, registrations):
+    def predict(self, student, registrations, *, models=None):
         """Recompute one full-plan context, independently of eligibility/search."""
+        model_names = normalize_models(models)
         with self._lock:
+            self.last_cache_status = 'FRESH'
             try:
                 inputs, snapshot, issues, candidates, import_report, shared_hash = self._prepare_inputs(student, registrations)
-                assets = {"A": self.engine.inspect_assets(), **self.engine.inspect_experiments()}
+                assets = {}
+                if 'A' in model_names:
+                    assets['A'] = self.engine.inspect_assets()
+                if any(name in model_names for name in 'BC'):
+                    assets.update(self.engine.inspect_experiments())
                 model_keys = {name: {key: assets[name].get(key) for key in
                                     ("status", "reason", "artifact_sha256", "history_artifact_sha256", "manifest_sha256")}
-                              for name in "ABC"}
-                cache_key = _digest({"inputs": shared_hash, "models": model_keys, "local_sources": self._source})
+                              for name in model_names}
+                cache_key = _digest({"inputs": shared_hash, "models": model_keys,
+                                    'selected_models': model_names, "local_sources": self._source})
                 if cache_key in self._cache:
+                    self.last_cache_status = 'CACHED'
                     return deepcopy(self._cache[cache_key])
                 plan_hash = _digest([candidates.course_id.tolist()])
-                result = blocked_forecast()
+                result = blocked_forecast(models=model_names)
                 result.update(course_count=len(candidates), total_credits=float(candidates.course_credits.sum()),
                               shared_inputs_sha256=shared_hash, plan_set_sha256=plan_hash,
                               provenance={"target_outcomes_used": False, "history_as_of_part": HISTORY_AS_OF_PART,
@@ -137,7 +155,7 @@ class ObservedPlanPredictor:
                 base = candidates
                 selected = [tuple(range(len(base)))]
                 raw = self._raw_plan(candidates, snapshot)
-                for name in "ABC":
+                for name in model_names:
                     started = perf_counter()
                     try:
                         if assets[name]["status"] != "READY":
@@ -174,6 +192,8 @@ class ObservedPlanPredictor:
                     result.pop("reason", None)
                 if all(e["prediction_status"] == "PREDICTION_AVAILABLE" for e in result["experiments"].values()):
                     self._cache[cache_key] = deepcopy(result)
+                    while len(self._cache) > self.max_cached_plans:
+                        self._cache.pop(next(iter(self._cache)))
                 return result
             except (PilotInputError, LightGBMError, ValueError, OSError, KeyError, TypeError):
-                return blocked_forecast()
+                return blocked_forecast(models=model_names)

@@ -1,5 +1,21 @@
 # Academic Advisor — Pilot API Capture tab
 
+## Before / After Backend Fix snapshots
+
+The current default capture destination is `snapshots/after_backend_fix/api_data/` below the pilot root.
+The snapshot selector also exposes `before_backend_fix` as read-only. Student and Courses completeness are shown separately.
+Verified original Student responses and all 15 history captures are reused unchanged; history-fetch buttons are disabled.
+The 30-student button fetches missing corrected Courses responses and skips already verified responses.
+The original archive layout below documents the earlier collector; the current paths and verified migration are documented in `reports/pilot_20251_backend_snapshot_migration.md`.
+
+An explicit operator-only alternative, using the same store/client and existing authentication, is:
+
+```powershell
+.\.venv\Scripts\python.exe -m tools.academic_advisor_streamlit.collect_pilot --all-primary --snapshot after_backend_fix
+```
+
+This command only fetches Courses, requires verified Student captures, and never calls recommendation or history endpoints.
+
 This patch adds **📥 جمع وحفظ بيانات التجربة** as a third tab in your existing `tools/academic_advisor_streamlit/streamlit_app.py`. It does not change the existing Student/History interaction, model, FastAPI, history commit/activate, or `.env` settings.
 
 ## Installation

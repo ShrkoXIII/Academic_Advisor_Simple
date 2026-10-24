@@ -5,7 +5,17 @@ const $ = (id) => document.getElementById(id);
 const EXPERIMENTS = ["A", "B", "C"];
 const TITLES = {A: "النظام الأصلي", B: "تاريخ الجامعة", C: "النظام المحسّن"};
 const SUBTITLES = {A: "Original Baseline", B: "University History · ضابطة", C: "Enhanced Recommendation"};
-const state = {students: [], selectedSample: null, run: null, activeStudent: 0, chosenPlan: null, courseContext: null, busy: false, pollToken: 0, runningCount: 0};
+const state = {students: [], selectedSample: null, run: null, activeStudent: 0, chosenPlan: null, courseContext: null, busy: false, pollToken: 0, runningCount: 0, runFamily: "actual"};
+const ACTUAL_RUNS_API = "/api/actual-candidate-runs";
+const CANDIDATE_LABELS = {original: "Original API", augmented: "Actual-Course Augmented"};
+const CREDIT_LABELS = {fixed_18: "Experiment A · Fixed 18 Credits", actual_load: "Experiment B · Actual Credit Load Diagnostic"};
+
+function isCandidateRun() { return asArray(state.run?.student_results).some((row) => row.candidate_mode); }
+function viewMatches(row) {
+  return !row.candidate_mode || (row.candidate_mode === ($("experiment-mode").value || "original") &&
+    row.credit_experiment === ($("credit-experiment").value || "fixed_18"));
+}
+function activeResult() { return asArray(state.run?.student_results)[state.activeStudent]; }
 
 function el(tag, className, text) {
   const node = document.createElement(tag);
@@ -71,7 +81,7 @@ function updateSelection() {
   $("run-button").disabled = state.busy || !state.selectedSample;
   $("run-all").disabled = state.busy || !state.students.length;
   const student = selectedStudent();
-  const result = asArray(state.run?.student_results).find((entry) => String(entry.sample_id) === state.selectedSample);
+  const result = asArray(state.run?.student_results).find((entry) => String(entry.sample_id) === state.selectedSample && viewMatches(entry));
   const summary = {...(student?.student_summary || {}), ...(result?.student_summary || {})};
   if (!student) { replace($("selected-student-summary"), el("p", "empty-small", "لم يُختر طالب بعد.")); return; }
   const heading = el("strong", "", `الطالب ${student.student_id}`);
@@ -95,7 +105,7 @@ function chooseStudent() {
 
 function setBusy(busy) {
   state.busy = busy;
-  ["student-search", "target-credits", "max-plans", "load-run"].forEach((id) => { $(id).disabled = busy; });
+  ["student-search", "target-credits", "max-plans", "load-run", "experiment-mode", "credit-experiment", "compare-candidates"].forEach((id) => { $(id).disabled = busy; });
   if (!busy) $("load-run").disabled = !$("saved-runs").value;
   renderStudents();
 }
@@ -112,29 +122,30 @@ function renderProgress(progress) {
 
 async function refreshRuns() {
   const previous = $("saved-runs").value;
-  const payload = await api("/api/runs");
+  const [diagnostic, archived] = await Promise.all([api(ACTUAL_RUNS_API), api("/api/runs")]);
   const options = [new Option("اختر تشغيلاً محفوظاً", "")];
-  for (const run of asArray(payload.runs)) {
+  for (const [family, payload] of [["actual", diagnostic], ["legacy", archived]]) for (const run of asArray(payload.runs)) {
     const when = run.created_at ? new Date(run.created_at) : null;
     const timestamp = when && !Number.isNaN(when.valueOf()) ? when.toLocaleString("ar-SY") : simple(run.created_at);
-    const label = `${timestamp} · ${run.student_count ?? "؟"} طالب · ${run.target_credits ?? "؟"} ساعة · ${run.status || "محفوظ"}`;
-    options.push(new Option(label, String(run.run_id)));
+    const label = `${run.snapshot_id || "before_backend_fix"} · ${family === "actual" ? "تشخيص المرشحات" : "مقارنة A/B/C"} · ${timestamp} · ${run.student_count ?? "؟"} طالب · ${run.status || "محفوظ"}`;
+    options.push(new Option(label, `${family}:${run.run_id}`));
   }
   replace($("saved-runs"), ...options);
   if (options.some((option) => option.value === previous)) $("saved-runs").value = previous;
   $("load-run").disabled = state.busy || !$("saved-runs").value;
 }
 
-async function pollRun(runId, token) {
+async function pollRun(runId, token, family = "actual") {
+  const base = family === "actual" ? ACTUAL_RUNS_API : "/api/runs";
   while (token === state.pollToken) {
-    const progress = await api(`/api/runs/${encodeURIComponent(runId)}/progress`);
+    const progress = await api(`${base}/${encodeURIComponent(runId)}/progress`);
     if (token !== state.pollToken) return;
     renderProgress(progress);
     if (progress.status === "failed") throw new Error(`تعذّر التشغيل: ${simple(progress.error || progress.reason)}`);
     if (progress.status === "completed") {
-      await loadRun(runId);
+      await loadRun(`${family}:${runId}`);
       await refreshRuns();
-      $("saved-runs").value = runId;
+      $("saved-runs").value = `${family}:${runId}`;
       return;
     }
     await new Promise((resolve) => setTimeout(resolve, 800));
@@ -151,14 +162,20 @@ async function startRun(event) {
 async function executeRun(sampleIds) {
   if (state.busy || !sampleIds.length || !$("run-form").reportValidity()) return;
   showError("");
-  state.runningCount = sampleIds.length;
+  const candidateModes = $("compare-candidates").checked ? ["original", "augmented"] : [$("experiment-mode").value || "original"];
+  const diagnostic = $("compare-candidates").checked;
+  const family = diagnostic ? "actual" : "legacy";
+  state.runningCount = diagnostic ? sampleIds.length * candidateModes.length * 2 : sampleIds.length;
   setBusy(true);
-  renderProgress({completed: 0, total: sampleIds.length, status: "running"});
+  renderProgress({completed: 0, total: state.runningCount, status: "running"});
   const token = ++state.pollToken;
   try {
-    const created = await api("/api/runs", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({sample_ids: sampleIds, target_credits: Number($("target-credits").value), max_plans: Number($("max-plans").value)})});
+    const payload = diagnostic
+      ? {sample_ids: sampleIds, candidate_modes: candidateModes, credit_experiments: ["fixed_18", "actual_load"], max_plans: Number($("max-plans").value)}
+      : {sample_ids: sampleIds, target_credits: Number($("target-credits").value), max_plans: Number($("max-plans").value)};
+    const created = await api(diagnostic ? ACTUAL_RUNS_API : "/api/runs", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(payload)});
     if (!created.run_id) throw new Error("لم يُرجع الخادم معرف تشغيل.");
-    await pollRun(String(created.run_id), token);
+    await pollRun(String(created.run_id), token, family);
   } catch (error) {
     $("progress-label").textContent = "توقف التتبع بسبب خطأ؛ راجع التشغيلات المحفوظة";
     showError(errorText(error));
@@ -167,14 +184,21 @@ async function executeRun(sampleIds) {
 
 async function loadRun(runId) {
   $("load-run").disabled = true;
-  $("load-run").textContent = "جارٍ تحميل النتائج وتوقع الخطة الفعلية…";
+  $("load-run").textContent = "جارٍ تحميل النتائج…";
   try {
-  const result = await api(`/api/runs/${encodeURIComponent(runId)}`);
+  const [family, identifier] = String(runId).includes(":") ? String(runId).split(":", 2) : ["legacy", runId];
+  const base = family === "actual" ? ACTUAL_RUNS_API : "/api/runs";
+  const result = await api(`${base}/${encodeURIComponent(identifier)}`);
+  state.runFamily = family;
   state.run = result;
   const students = asArray(result.student_results);
-  const matched = students.find((student) => String(student.sample_id) === state.selectedSample);
+  const matched = students.find((student) => String(student.sample_id) === state.selectedSample && viewMatches(student));
   const active = matched || students[0];
   if (active) {
+    if (active.candidate_mode && !students.some((row) => String(row.sample_id) === String(active.sample_id) && viewMatches(row))) {
+      $("experiment-mode").value = active.candidate_mode;
+      $("credit-experiment").value = active.credit_experiment;
+    }
     state.selectedSample = String(active.sample_id);
     const student = selectedStudent() || active;
     $("student-search").value = studentChoiceLabel(student);
@@ -195,7 +219,7 @@ function renderRun() {
   const run = state.run;
   const manifest = run.run_manifest || {};
   const students = asArray(run.student_results);
-  state.activeStudent = students.findIndex((student) => String(student.sample_id) === state.selectedSample);
+  state.activeStudent = students.findIndex((student) => String(student.sample_id) === state.selectedSample && viewMatches(student));
   if (state.activeStudent < 0 && students.length) {
     $("welcome").hidden = false;
     $("results").hidden = true;
@@ -205,12 +229,16 @@ function renderRun() {
     renderPlanDetail();
     renderObservedComparison(null);
     renderActualPlanForecasts(null);
+    $("candidate-diagnostic-panel").hidden = true;
     return;
   }
   $("welcome").hidden = true;
   $("results").hidden = false;
-  $("run-id").textContent = manifest.run_id || run.run_id || "";
-  replace($("run-summary"), summaryItem("طلاب التشغيل المحفوظ", students.length), summaryItem("الساعات المطلوبة", manifest.target_credits ?? "—"));
+  $("run-id").textContent = `${run.snapshot_id || manifest.snapshot_id || "before_backend_fix"} · ${manifest.run_id || run.run_id || ""}`;
+  const studentCount = new Set(students.map((student) => student.sample_id)).size;
+  const current = students[state.activeStudent];
+  replace($("run-summary"), summaryItem("طلاب التشغيل المحفوظ", studentCount), summaryItem("الساعات المطلوبة", current?.target_credits ?? manifest.target_credits ?? "—"),
+    ...(current?.candidate_mode ? [summaryItem("مصدر المرشحات", CANDIDATE_LABELS[current.candidate_mode]), summaryItem("اختبار الساعات", CREDIT_LABELS[current.credit_experiment])] : []));
   renderMetadata($("run-metadata"), {run_manifest: manifest, diagnostics: run.diagnostics || {}});
   if (!students.length) {
     replace($("student-overview"), el("p", "empty-small", "لا يحتوي هذا التشغيل على نتائج طلاب. راجع التشخيص."));
@@ -238,15 +266,16 @@ function renderStudent(student) {
   const facts = el("div", "overview-facts");
   facts.append(el("span", "", `المواد المرشحة: ${simple(student.candidate_count)}`));
   replace($("student-overview"), label, facts);
-  const issues = asArray(student.issues);
+  const issues = [...asArray(student.issues), ...asArray(student.warnings)];
   const issueElements = [];
   if (issues.length) {
     const alert = el("div", "alert");
     alert.append(el("strong", "", "قيود المدخلات وصلاحية التسجيل"));
     const list = el("ul"); list.append(...issues.map(issueNode)); alert.append(list); issueElements.push(alert);
   }
-  if (student.search?.truncated) issueElements.push(el("div", "alert", "البحث محدود بعدد الخطط المعلن. النتائج لا تثبت أفضلية عالمية عبر جميع الخطط الممكنة."));
+  if (student.search?.truncated || student.search_truncated) issueElements.push(el("div", "alert", "البحث محدود بعدد الخطط المعلن. النتائج لا تثبت أفضلية عالمية عبر جميع الخطط الممكنة."));
   replace($("student-issues"), ...issueElements);
+  renderCandidateDiagnostic(student);
   renderMetadata($("experiment-technical"), {student_status: student.status, student_summary: student.student_summary, search: student.search, experiments: Object.fromEntries(EXPERIMENTS.map((id) => { const experiment = student.experiments?.[id] || {}; const {plans, diagnostic_plans, analytical_plans, course_predictions, ...technical} = experiment; return [id, technical]; }))});
   replace($("experiment-grid"), ...EXPERIMENTS.map((id) => renderExperiment(id, student.experiments?.[id] || {status: "NOT_AVAILABLE", reason: "لا توجد نتيجة لهذه التجربة في التشغيل المحفوظ."}, student.observed_plan_prediction?.experiments?.[id], student.observed_plan)));
   renderActualPlanForecasts(student);
@@ -262,6 +291,62 @@ function renderStudent(student) {
   renderCourseComparison(student);
   renderPlanComparison(student);
   renderSupport(student);
+}
+
+function renderCandidateDiagnostic(student) {
+  const panel = $("candidate-diagnostic-panel");
+  panel.hidden = !student?.candidate_mode;
+  if (panel.hidden) return;
+  const coverage = student.candidate_coverage || {};
+  const peers = asArray(state.run?.student_results).filter((row) => String(row.sample_id) === String(student.sample_id) &&
+    row.credit_experiment === student.credit_experiment);
+  $("diagnostic-warning").hidden = !peers.some((row) => row.candidate_mode === "augmented");
+  const counts = el("div", "summary-strip");
+  counts.append(summaryItem("المواد الفعلية", simple(coverage.actual_course_count)),
+    summaryItem("مرشحات API الخام الأصلية", simple(coverage.original_candidate_count)),
+    summaryItem("المرشحات الخام بعد الإضافة", simple(coverage.augmented_candidate_count)),
+    summaryItem("المواد المحقونة", simple(coverage.injected_course_count)),
+    summaryItem("الفعليات داخل API قبل / بعد", `${simple(coverage.actual_in_candidates_before)} / ${simple(coverage.actual_in_candidates_after)}`),
+    summaryItem("التغطية الخام قبل / بعد", `${pct(coverage.coverage_before)} / ${pct(coverage.coverage_after)}`));
+  const content = [counts];
+  content.push(el("p", "comparison-note", "تغطية API الخام منفصلة عن المواد المقبولة للبحث. تبقى مرشحات API الأصلية خاضعة لقواعدها؛ قد تُرفض مادة فعلية رغم وجودها في الرد الخام."));
+  const modelBefore = coverage.model_actual_in_candidates_before ?? coverage.actual_courses_in_original_model_candidates ??
+    (numeric(coverage.model_candidate_coverage_before) !== null && numeric(coverage.actual_course_count) !== null ? Math.round(coverage.model_candidate_coverage_before * coverage.actual_course_count) : undefined);
+  const modelAfter = coverage.model_actual_in_candidates_after ?? coverage.actual_courses_in_augmented_model_candidates ??
+    (numeric(coverage.model_candidate_coverage_after) !== null && numeric(coverage.actual_course_count) !== null ? Math.round(coverage.model_candidate_coverage_after * coverage.actual_course_count) : undefined);
+  if (modelBefore !== undefined || modelAfter !== undefined) content.push(el("p", "comparison-note",
+    `المواد الفعلية داخل مساحة البحث قبل / بعد: ${simple(modelBefore)} / ${simple(modelAfter)} · مرشحات البحث الحالية: ${simple(student.model_candidate_count ?? coverage.model_candidate_count ?? student.candidate_count)}`));
+  if (student.credit_experiment === "actual_load") content.push(el("div", "alert", `Actual Credit Load Diagnostic — الهدف ${simple(student.target_credits ?? student.observed_plan?.total_credits)} ساعة مأخوذ من تسجيل الطالب الفعلي، وليس قرار توصية مستقل. حدود التسجيل لا تُتجاوز تلقائياً.`));
+  else if (numeric(student.observed_plan?.total_credits) !== null && numeric(student.observed_plan.total_credits) !== 18) content.push(el("p", "comparison-note", `الحمل الفعلي ${simple(student.observed_plan.total_credits)} ساعة؛ لا يُنتظر تطابق كامل مع هدف 18 ساعة.`));
+  const injected = asArray(coverage.injected_courses);
+  content.push(el("h3", "candidate-section-title", "تفاصيل المواد المحقونة"));
+  content.push(injected.length ? makeTable(["معرّف المادة", "اسم المادة", "المصدر", "الأهلية التاريخية"], injected.map((course) =>
+    [course.course_id, course.course_name || "الاسم غير متوفر", "ACTUAL_INJECTED", "UNVERIFIED · غير مثبتة"])) : el("p", "empty-small", "لم تُحقن مواد في هذا الوضع."));
+  const rejected = asArray(coverage.rejected_injections);
+  if (rejected.length) { content.push(el("h3", "candidate-section-title", "إضافات مرفوضة"), makeTable(["المادة", "سبب الرفض"], rejected.map((course) => [course.course_id, course.reason || course.code || simple(course)]))); }
+  const warnings = asArray(student.warnings);
+  if (warnings.length) { const list = el("ul", "candidate-warnings"); list.append(...warnings.map(issueNode)); content.push(list); }
+  replace($("candidate-coverage"), ...content);
+  const rows = [];
+  for (const row of peers) for (const id of EXPERIMENTS) {
+    const model = row.experiments?.[id] || {};
+    const metrics = model.recommendation_metrics || row.recommendation_metrics?.[id] || {};
+    const search = row.search || {};
+    rows.push([CANDIDATE_LABELS[row.candidate_mode], id, num(row.target_credits ?? row.observed_plan?.total_credits, 2),
+      simple(metrics.top1_actual_overlap), simple(metrics.top3_union_actual_overlap), num(availablePlans(model)[0]?.expected_plan_gpa, 3),
+      simple(search.evaluated_plan_count ?? search.evaluated_plans ?? search.plan_count ?? search.generated_plans ?? row.evaluated_plan_count),
+      simple(search.visited_search_states ?? search.visited_states ?? search.states_visited ?? row.search_states),
+      search.truncated === undefined && row.search_truncated === undefined ? "غير معلوم" : (search.truncated ?? row.search_truncated) ? "توقف عند الميزانية" :
+        search.complete_plan_space_examined === false && (search.visited_search_states ?? 0) === 0 ? "لم يبدأ بسبب المدخلات أو القيود" : "اكتمل البحث",
+      metrics.actual_plan_examined === null || metrics.actual_plan_examined === undefined ? "غير متاح / غير ممكن" : metrics.actual_plan_examined ? "نعم" : "لا"]);
+  }
+  const comparison = [el("h3", "candidate-section-title", `${CREDIT_LABELS[student.credit_experiment]} · الطالب نفسه`),
+    el("p", "comparison-note", "تُقارن الوضعيات عند هدف الساعات والميزانية نفسيهما. زيادة التقاطع وصف لتغطية المرشحات؛ لا تثبت جودة توصية بديلة."),
+    makeTable(["وضع المرشحات", "النظام", "الهدف", "Top-1 تقاطع", "Top-3 اتحاد", "GPA أعلى خطة", "خطط مفحوصة", "حالات البحث", "حالة البحث", "الخطة الفعلية مفحوصة"], rows)];
+  if (peers.length < 2) comparison.push(el("p", "empty-small", "لا توجد نتيجة محفوظة للوضع الآخر في اختبار الساعات هذا. فعّل مقارنة Original وAugmented ثم شغّل الطالب."));
+  const timing = student.latency || student.timing;
+  if (timing) { const details = el("details", "latency-details"); details.append(el("summary", "", "الأزمنة وإحصاءات التنبؤ المحفوظة")); const metadata = el("div", "metadata"); renderMetadata(metadata, {latency: timing, prediction_metrics: student.prediction_metrics || student.observed_plan_prediction?.metrics || {}}); details.append(metadata); comparison.push(details); }
+  replace($("candidate-mode-comparison"), ...comparison);
 }
 
 function renderExperiment(id, experiment, actualForecast = null, observed = null) {
@@ -322,6 +407,19 @@ function cumulativeSupported(experiment, plan) {
 
 function metric(label, value) { const node = el("div"); node.append(el("span", "", label), el("strong", "", value)); return node; }
 function courseLabel(course) { return course.course_name || `مادة ${simple(course.course_id)}`; }
+function canonicalCourseId(value) {
+  const text = String(value ?? "").trim(), match = text.match(/^([+-]?)(\d+)(?:\.(\d+))?$/);
+  if (!match) return text;
+  const integer = match[2].replace(/^0+(?=\d)/, ""), fraction = (match[3] || "").replace(/0+$/, "");
+  return `${match[1] === "-" && (integer !== "0" || fraction) ? "-" : ""}${integer}${fraction ? `.${fraction}` : ""}`;
+}
+function candidateSource(course) {
+  if (course.candidate_source) return course.candidate_source;
+  const provenance = activeResult()?.candidate_coverage?.candidate_provenance || {};
+  const key = canonicalCourseId(course.course_id);
+  const record = provenance[key] || Object.entries(provenance).find(([id]) => canonicalCourseId(id) === key)?.[1];
+  return (typeof record === "string" ? record : record?.candidate_source) || "غير موثّق";
+}
 function planKey(plan) { return asArray(plan.courses).map((course) => String(course.course_id)).sort().join("|"); }
 function validityLabel(plan) {
   return plan.plan_status === "VALIDATED_PLAN" ? "تم التحقق من التسجيل" : "تحليلية · صلاحية التسجيل غير مؤكدة";
@@ -373,10 +471,11 @@ function renderPlanDetail() {
   if (!chosen) { replace($("plan-detail"), el("p", "empty-small", "اختر خطة متاحة لعرض المواد والتوقعات التفصيلية.")); replace($("plan-technical")); return; }
   const courses = asArray(chosen.plan.courses);
   const showPeers = chosen.experimentId === "C" && courses.some((course) => Object.hasOwn(course, "peer_expected_points") || Object.hasOwn(course, "similar_peer_support"));
-  const rows = courses.map((course) => [courseLabel(course), course.course_credits, num(course.predicted_mark, 2), num(course.expected_points, 3), pct(course.fail_probability), ...(showPeers ? [num(course.peer_expected_points, 3), peerSupportCell(course)] : [])]);
+  const showSource = Boolean(activeResult()?.candidate_mode);
+  const rows = courses.map((course) => [courseLabel(course), ...(showSource ? [candidateSource(course)] : []), course.course_credits, num(course.predicted_mark, 2), num(course.expected_points, 3), pct(course.fail_probability), ...(showPeers ? [num(course.peer_expected_points, 3), peerSupportCell(course)] : [])]);
   const content = [];
   if (chosen.diagnostic) content.push(el("div", "alert", "خطة تشخيصية: راجع القيود وحالة الصلاحية قبل تفسير التوقعات. اختيارها هنا لا يحوّلها إلى توصية صالحة."));
-  content.push(makeTable(["المادة", "الساعات", "العلامة المتوقعة /100", "النقاط المتوقعة", "احتمال الرسوب", ...(showPeers ? ["نقاط الأقران التاريخية", "دعم الأقران المتشابهين"] : [])], rows));
+  content.push(makeTable(["المادة", ...(showSource ? ["مصدر المرشح"] : []), "الساعات", "العلامة المتوقعة /100", "النقاط المتوقعة", "احتمال الرسوب", ...(showPeers ? ["نقاط الأقران التاريخية", "دعم الأقران المتشابهين"] : [])], rows));
   if (showPeers) content.push(el("p", "help-text", "نقاط الأقران مؤشر من التاريخ المتاح وليست توقع النموذج. تُميّز المواد ذات الدعم الضعيف، وتبقى القيم غير المتوفرة فارغة."));
   renderMetadata($("plan-technical"), chosen.plan);
   replace($("plan-detail"), ...content);
@@ -393,7 +492,7 @@ function renderActualPlanForecasts(student) {
     replace(container, el("p", "empty-small", observed?.reason_ar || "التسجيل الفعلي غير متوفر؛ لا يمكن عرض توقعات موثوقة لمواده."));
     return;
   }
-  const content = [el("p", "comparison-note", "توقعات معاد حسابها لكل نظام على مواد الطالب الفعلية كاملة، بساعاتها الفعلية. لا تُنقل من خطة مرشحة أخرى، ولا تتغير عند اختيار خطة مرشحة. العلامات الفعلية للمقارنة فقط ولا تدخل في حساب التوقع.")];
+  const content = [el("p", "comparison-note", `${student?.candidate_mode ? "توقعات محفوظة وقت التشغيل" : "توقعات معاد حسابها"} لكل نظام على مواد الطالب الفعلية كاملة، بساعاتها الفعلية. لا تُنقل من خطة مرشحة أخرى، ولا تتغير عند اختيار خطة مرشحة. العلامات الفعلية للمقارنة فقط ولا تدخل في حساب التوقع.`)];
   const summaries = el("div", "actual-model-summaries");
   for (const id of EXPERIMENTS) {
     const experiment = forecast?.context === "actual_registered_plan" ? forecast.experiments?.[id] : null;
@@ -406,6 +505,15 @@ function renderActualPlanForecasts(student) {
   }
   content.push(summaries);
   content.push(actualPlanForecastTable(student));
+  if (student.prediction_metrics) {
+    content.push(el("h3", "candidate-section-title", "تقييم توقع العلامات على الخطة الفعلية"),
+      el("p", "comparison-note", "أخطاء وصفية على المواد الفعلية ذات النتائج المتاحة. اختلاف Student Snapshot يحول دون اعتمادها كدقة تاريخية مثبتة؛ لا تقيس جودة الخطط الجديدة."),
+      makeTable(["النظام", "عدد النتائج", "MAE", "RMSE", "Bias", "Fail Brier", "Fail Log Loss", "Fail ROC AUC"], EXPERIMENTS.map((id) => {
+        const metrics = student.prediction_metrics[id] || {};
+        return [id, simple(metrics.course_count ?? metrics.count ?? metrics.n), num(metrics.mae, 3), num(metrics.rmse, 3), signed(metrics.bias, 3),
+          num(metrics.fail_brier, 4), num(metrics.fail_log_loss, 4), num(metrics.fail_roc_auc, 4)];
+      })));
+  }
   replace(container, ...content);
 }
 
@@ -426,8 +534,10 @@ function compareObservedPlan(plan, observed) {
   const shared = [...candidate.keys()].filter((id) => actual.has(id));
   const candidateOnly = [...candidate.keys()].filter((id) => !actual.has(id));
   const actualOnly = [...actual.keys()].filter((id) => !candidate.has(id));
+  const creditCompatible = numeric(plan?.total_credits) === null || numeric(observed.total_credits) === null ||
+    Math.abs(Number(plan.total_credits) - Number(observed.total_credits)) < 0.000001;
   return {candidate, actual, shared, candidateOnly, actualOnly, sharedCount: shared.length, candidateCount: candidate.size,
-    actualCount: actual.size, exactMatch: !candidateOnly.length && !actualOnly.length};
+    actualCount: actual.size, creditCompatible, exactMatch: !candidateOnly.length && !actualOnly.length && creditCompatible};
 }
 
 function actualResultLabel(course) {
@@ -629,6 +739,14 @@ function renderMetadata(container, data) {
 
 $("student-search").addEventListener("input", chooseStudent);
 $("student-search").addEventListener("change", chooseStudent);
+function switchCandidateView() {
+  state.chosenPlan = null;
+  state.courseContext = null;
+  updateSelection();
+  if (state.run) renderRun();
+}
+$("experiment-mode").addEventListener("change", switchCandidateView);
+$("credit-experiment").addEventListener("change", switchCandidateView);
 $("run-form").addEventListener("submit", startRun);
 $("run-all").addEventListener("click", () => executeRun(state.students.map((student) => String(student.sample_id))));
 $("refresh-runs").addEventListener("click", () => refreshRuns().catch((error) => showError(errorText(error))));

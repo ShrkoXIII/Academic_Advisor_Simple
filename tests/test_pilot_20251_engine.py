@@ -48,7 +48,7 @@ def payloads(count=4):
 def bridge(tmp_path):
     module = engine_module()
     student = {"sample_id": "sample", "student_id": "S", "degree_id": "D", "part_id": 20251}
-    folder = tmp_path / "api_data" / "students" / "sample"
+    folder = tmp_path / "snapshots/after_backend_fix/api_data" / "students" / "sample"
     folder.mkdir(parents=True)
     sp, cp = payloads()
 

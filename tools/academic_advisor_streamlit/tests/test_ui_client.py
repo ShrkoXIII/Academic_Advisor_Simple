@@ -98,7 +98,7 @@ def test_builds_two_separate_requests_and_no_fabricated_evidence():
 def test_student_and_courses_get_use_proper_endpoints_auth_and_params(config):
     fake = FakeSession([
         FakeResponse(200, {"success": True, "data": {"studentDegreeInfo": {"STUDENT_ID": "S", "DEGREE_ID": "D", "STATUS_SEMESTER_ID": "20262"}}}),
-        FakeResponse(200, {"success": True, "data": {"availableCourses": []}})
+        FakeResponse(200, {"success": True, "data": {"availableCourses": [], "registserRule": {}}})
     ])
     client = HttpClient(config, fake)
     assert client.student("S", 20262)["success"]

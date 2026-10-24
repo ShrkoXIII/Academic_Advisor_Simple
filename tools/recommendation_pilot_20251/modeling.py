@@ -373,7 +373,8 @@ def load_model_bundle(path=None, *, root=PILOT_ROOT):
     """Verify schema, cutoffs and every private artifact before using a model."""
     import lightgbm as lgb
     if path is None:
-        model_root = Path(root) / "experiments" / "model_versions"
+        from .snapshots import model_versions_root
+        model_root = model_versions_root(root)
         pointer = json.loads((model_root / "latest.json").read_text(encoding="utf-8"))
         if pointer.get("status") == "RETRACTED":
             raise ValueError("Private experimental model bundle has been retracted.")
