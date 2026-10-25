@@ -3288,9 +3288,9 @@
     "semantic_hash": ""
   },
   "tools/academic_advisor_streamlit/streamlit_app.py": {
-    "mtime": 1792844772.7229848,
-    "seen": 1792847012.9405577,
-    "ast_hash": "b9bdb9d97bf61f5c79a45d3b4cef1062",
+    "mtime": 1792916230.3742578,
+    "seen": 1792916642.567311,
+    "ast_hash": "62cb1957f9b7f81ef45cbdf20e752527",
     "semantic_hash": ""
   },
   "tools/academic_advisor_streamlit/tests/test_ui_client.py": {
@@ -3930,21 +3930,87 @@
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-10-24-search-benchmark.md": {
-    "mtime": 1792841240.5795586,
-    "seen": 1792842427.6112459,
-    "ast_hash": "2030f79cbd54fd12fc8ad9a43db4e77c",
+    "mtime": 1792913617.042979,
+    "seen": 1792913704.6017597,
+    "ast_hash": "9d9a6ebed332b92df4d924cd65fe6013",
     "semantic_hash": ""
   },
   "scripts/experiments/pilot_search_benchmark_report.py": {
-    "mtime": 1792854118.6645575,
-    "seen": 1792913602.165696,
-    "ast_hash": "1a8998c5eb0ad98be828535f43c5b465",
+    "mtime": 1792913645.5566006,
+    "seen": 1792913704.2518687,
+    "ast_hash": "a13ff8369852fb48c0a64e19efa16755",
     "semantic_hash": ""
   },
   "reports/pilot_20251_search_benchmark_design_and_results.md": {
-    "mtime": 1792913572.3814702,
-    "seen": 1792913602.3318276,
-    "ast_hash": "f62a0ae99c368570d755944c53ec53bd",
+    "mtime": 1792913675.4782763,
+    "seen": 1792913704.6733046,
+    "ast_hash": "50cfc51f1a7fb4ceae7376eb59e779d4",
+    "semantic_hash": ""
+  },
+  "scripts/experiments/university_validation_smoke.py": {
+    "mtime": 1792916300.764038,
+    "seen": 1792916642.2903185,
+    "ast_hash": "a1e73e7615e2ea9519dc4dc4837f911f",
+    "semantic_hash": ""
+  },
+  "tests/test_university_cross_model.py": {
+    "mtime": 1792915743.6104624,
+    "seen": 1792916642.567311,
+    "ast_hash": "f3079946db55d416a17d69db85445598",
+    "semantic_hash": ""
+  },
+  "tests/test_university_validation_service.py": {
+    "mtime": 1792916100.8710837,
+    "seen": 1792916642.567311,
+    "ast_hash": "39abbc25ddc1ab8f8a71a9418225154b",
+    "semantic_hash": ""
+  },
+  "tests/test_university_validation_views.py": {
+    "mtime": 1792915575.2309458,
+    "seen": 1792916642.567311,
+    "ast_hash": "0c653f15d635e65c36e6eeff79375f78",
+    "semantic_hash": ""
+  },
+  "tools/academic_advisor_streamlit/cross_model_service.py": {
+    "mtime": 1792915833.9529984,
+    "seen": 1792916642.567311,
+    "ast_hash": "b9f8be48a1abd15108e6a34682a7c488",
+    "semantic_hash": ""
+  },
+  "tools/academic_advisor_streamlit/tests/test_university_validation_ui.py": {
+    "mtime": 1792916632.8530712,
+    "seen": 1792916642.567311,
+    "ast_hash": "0f74c5081bf1c29add2739138b637128",
+    "semantic_hash": ""
+  },
+  "tools/academic_advisor_streamlit/university_validation_ui.py": {
+    "mtime": 1792916451.666995,
+    "seen": 1792916642.5828676,
+    "ast_hash": "e66ae79e3f3594a28f98c5642522e0ab",
+    "semantic_hash": ""
+  },
+  "tools/academic_advisor_streamlit/validation_service.py": {
+    "mtime": 1792916452.4035957,
+    "seen": 1792916642.5828676,
+    "ast_hash": "69d88bf44d3e3a4ff6ea7462e496df93",
+    "semantic_hash": ""
+  },
+  "tools/academic_advisor_streamlit/validation_views.py": {
+    "mtime": 1792916452.0085168,
+    "seen": 1792916642.5828676,
+    "ast_hash": "7534fd126e017e08fab6f186243e27de",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-10-25-university-validation.md": {
+    "mtime": 1792915411.876418,
+    "seen": 1792916642.713864,
+    "ast_hash": "8f66db2ad87e620164035dca7bab25e6",
+    "semantic_hash": ""
+  },
+  "reports/unified_streamlit_university_validation.md": {
+    "mtime": 1792916595.8423874,
+    "seen": 1792916642.8217244,
+    "ast_hash": "51ff74eccdd8b3477d582bd4fa5cb7e2",
     "semantic_hash": ""
   }
 }

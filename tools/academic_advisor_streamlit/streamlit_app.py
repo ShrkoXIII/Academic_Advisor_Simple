@@ -48,7 +48,7 @@ except ClientError as exc:
     ])
     with tab_recommend:
         operating_mode = st.radio(
-            "وضع التشغيل", ["Production FastAPI", "Pilot 20251 — Model Comparison", "🔎 Search Benchmark"],
+            "وضع التشغيل", ["Production FastAPI", "Pilot 20251 — Model Comparison", "🔎 Search Benchmark", "🏛️ University Validation"],
             horizontal=True, key="advisor_operating_mode")
         if operating_mode == "Pilot 20251 — Model Comparison":
             from pilot_ui import render_pilot
@@ -56,6 +56,9 @@ except ClientError as exc:
         elif operating_mode == "🔎 Search Benchmark":
             from search_benchmark_ui import render_search_benchmark
             render_search_benchmark()
+        elif operating_mode == "🏛️ University Validation":
+            from university_validation_ui import render_validation
+            render_validation()
         else:
             st.warning("إعدادات Production غير متاحة؛ صحّح إعدادات الاتصال لإتاحة جلب البيانات والتوصية.")
     with tab_history:
@@ -141,7 +144,7 @@ tab_recommend, tab_history, tab_collection = st.tabs([
 
 with tab_recommend:
     operating_mode = st.radio(
-        "وضع التشغيل", ["Production FastAPI", "Pilot 20251 — Model Comparison", "🔎 Search Benchmark"],
+        "وضع التشغيل", ["Production FastAPI", "Pilot 20251 — Model Comparison", "🔎 Search Benchmark", "🏛️ University Validation"],
         horizontal=True, key="advisor_operating_mode")
     if operating_mode == "Pilot 20251 — Model Comparison":
         from pilot_ui import render_pilot
@@ -149,6 +152,12 @@ with tab_recommend:
     elif operating_mode == "🔎 Search Benchmark":
         from search_benchmark_ui import render_search_benchmark
         render_search_benchmark()
+    elif operating_mode == "🏛️ University Validation":
+        from university_validation_ui import render_validation
+        render_validation()
+        # A demonstration never renders the maintenance tabs' personal API
+        # identifiers. Selecting another operating mode restores those tools.
+        st.stop()
     else:
         st.info("أدخل معرف الطالب والفصل. سنجلب Student API أولاً، نقرأ degree_id منه، ثم نجلب Courses API. جلب البيانات وحده لا يشغّل المودل.")
         with st.form("student_form"):
