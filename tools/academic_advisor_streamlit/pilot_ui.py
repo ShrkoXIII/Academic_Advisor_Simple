@@ -140,6 +140,7 @@ def _render_saved(service, run_id, family):
     rows = []
     for result in results:
         row = {"sample_id": result.get("sample_id"), "candidate_mode": result.get("candidate_mode"),
+               "target_credits": result.get("target_credits"), "target_credits_source": result.get("target_credits_source"),
                "credit_experiment": result.get("credit_experiment"), "status": result.get("status", "N/A"),
                "reason": result.get("reason")}
         for model, experiment in (result.get("experiments") or {}).items():
@@ -200,10 +201,12 @@ def render_pilot():
             st.error("العينة المحفوظة غير متاحة.")
             return
         selected = st.selectbox("طالب من العينة الأساسية الـ30", students, key="pilot_compare_student")
+        resolution = {}
         if not readonly:
             with st.expander("معاينة الطالب المحفوظة قبل التشغيل"):
                 try:
                     preview = service.preview(selected, snapshot_id=snapshot)
+                    resolution = preview.get('credit_target_resolution') or {}
                     _student_summary(preview.get("student_summary", preview))
                     if preview.get("reason"):
                         st.caption(str(preview["reason"]))
@@ -212,29 +215,52 @@ def render_pilot():
         models = st.multiselect("النماذج", ["A", "B", "C"], default=["B", "C"],
                                format_func=lambda model: MODEL_LABELS[model], key="pilot_compare_models")
         c1, c2 = st.columns(2)
-        credits = c1.number_input("ساعات الخطة المطلوبة — exact credits", min_value=0.0, max_value=36.0, value=18.0,
-                                   step=0.5, key="pilot_compare_credits")
-        valid_credits = math.isfinite(credits) and 0 < credits <= 36
-        if not valid_credits:
-            st.warning("اختر ساعات موجبة حتى 36؛ يبقى الهدف دقيقاً ولا تخفض الساعات تلقائياً.")
+        minimum, maximum = resolution.get('minimum_credits'), resolution.get('maximum_credits')
+        automatic = resolution.get('target_credits')
+        st.caption(f"API | الحد الأدنى: {_number(minimum)} | الحد الأقصى: {_number(maximum)} | الهدف الدقيق: {_number(automatic)}")
+        manual = c1.checkbox('تفعيل هدف يدوي تشخيصي لهذا الطالب', value=False,
+            key=f'pilot_compare_manual_enabled_{snapshot}_{selected}', disabled=readonly)
+        credits = None
+        valid_credits = resolution.get('status') == 'RESOLVED'
+        if manual:
+            st.warning('MANUAL_DIAGNOSTIC — تجربة يدوية مستقلة؛ لا تتجاوز حدود API المعروفة. التشغيل لطالب واحد فقط.')
+            if minimum is not None and maximum is not None and minimum > maximum:
+                valid_credits = False
+                st.error('CONFLICTING_CREDIT_LIMITS')
+            else:
+                lower = max(float(minimum or 0), 0.5)
+                upper = float(maximum) if maximum is not None else max(36., lower)
+                if upper < lower:
+                    valid_credits = False
+                else:
+                    initial = max(lower, min(float(automatic or maximum or lower), upper))
+                    credits = c1.number_input('الهدف اليدوي الدقيق — MANUAL_DIAGNOSTIC',
+                        min_value=lower, max_value=upper, value=initial, step=0.5,
+                        key=f'pilot_compare_credits_{snapshot}_{selected}')
+                    valid_credits = math.isfinite(credits) and 0 < credits <= 36
+        elif not valid_credits and not readonly:
+            st.error('تعذر تحديد الهدف تلقائياً: ' + str(resolution.get('reason') or 'CREDIT_TARGET_UNRESOLVED'))
         max_plans = c2.selectbox("الحد الأقصى للخطط", [200, 1000, 2000], key="pilot_compare_max_plans")
         active_id = st.session_state.get("pilot_compare_active_run_id")
         progress = service.progress(active_id) if active_id else None
         busy = bool(progress and progress.get("status") in {"pending", "queued", "running"})
         disabled = readonly or not models or busy or not valid_credits
         one, batch = st.columns(2)
+        manual_ready = manual and any(r.get('sample_id') == selected and r.get('field') == 'credit_target'
+                                     for r in complete.get('records', []))
         run_one = one.button("تشغيل مقارنة النماذج", key="pilot_compare_one", type="primary",
-                             disabled=disabled or selected not in ready)
+                             disabled=disabled or not (selected in ready or manual_ready))
         run_batch = batch.button("تشغيل مقارنة كامل العينة الأساسية (30)", key="pilot_compare_batch",
-                                  disabled=disabled or len(primary) != 30 or not set(primary).issubset(ready))
+                                  disabled=disabled or manual or len(primary) != 30 or not set(primary).issubset(ready))
         subset = [sample for sample in primary if sample in ready]
         run_subset = False
         if 0 < len(subset) < len(primary):
-            run_subset = st.button(f"تشغيل المجموعة الصالحة فقط ({len(subset)}/{len(primary)})", key="pilot_compare_subset", disabled=disabled)
+            run_subset = st.button(f"تشغيل المجموعة الصالحة فقط ({len(subset)}/{len(primary)})", key="pilot_compare_subset", disabled=disabled or manual)
         if run_one or run_batch or run_subset:
             ids = [selected] if run_one else primary if run_batch else subset
+            manual_args = {'diagnostic_override': True} if manual else {}
             active_id = service.start(ids, models=models, snapshot_id=snapshot,
-                target_credits=credits, max_plans=max_plans, include_reserve=include_reserve)
+                target_credits=credits, max_plans=max_plans, include_reserve=include_reserve, **manual_args)
             st.session_state["pilot_compare_active_run_id"] = active_id
             st.session_state.pop("pilot_compare_loaded_run_id", None)
             st.session_state["pilot_compare_loaded_family"] = "comparison"

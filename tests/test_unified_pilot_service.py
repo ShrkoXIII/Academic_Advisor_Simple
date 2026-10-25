@@ -159,6 +159,7 @@ def test_valid_subset_uses_one_reused_direct_runner_and_explicit_models(tmp_path
     complete = service.completeness()
     assert complete['ready_sample_ids'] == ['valid']
     assert service.preview('valid')['student_summary']['start_agpa_points'] == 2.5
+    assert service.preview('valid')['credit_target_resolution']['target_credits'] == 18
     with pytest.raises(PilotPreflightError):
         service.start(['valid', 'missing'])
     assert runners == []
@@ -167,7 +168,7 @@ def test_valid_subset_uses_one_reused_direct_runner_and_explicit_models(tmp_path
     assert len(runners) == 1
     assert runners[0].kwargs['reuse_engine'] is True
     assert calls[0][1]['models'] == ('C',)
-    assert calls[0][1]['target_credits'] == 18
+    assert calls[0][1]['target_credits'] is None  # runner resolves separately per student
     # Existing experimental policy quarantines invalid rows rather than
     # incorrectly rejecting intact files with a retained valid population.
     write_source(store.pilot, PARTS[0], [row(PARTS[0]), row(PARTS[0], COURSE_ID='bad', SUM_MARKS=None)])

@@ -17,6 +17,7 @@ from tools.recommendation_pilot_20251.actual_metrics import (
     attach_prediction_metrics, attach_recommendation_metrics,
 )
 from tools.recommendation_pilot_20251.engine import PilotEngine, build_snapshot, student_summary
+from tools.recommendation_pilot_20251.credit_target import resolve_credit_target
 from tools.recommendation_pilot_20251.history import EXPECTED_PARTS, build_experimental_university_history
 from tools.recommendation_pilot_20251.observed import ObservedPlanStore
 from tools.recommendation_pilot_20251.observed_prediction import ObservedPlanPredictor
@@ -167,7 +168,10 @@ def present_saved_result(saved, sample_id, *, scenario=None):
             count = len(experiment.get('diagnostic_plans') or []) or None
         if not available:
             count = None
-        summary_rows.append({'model': name, 'candidate_count': result.get('candidate_count'),
+        summary_rows.append({'model': name, 'target_credits': result.get('target_credits'),
+            'target_credits_source': result.get('target_credits_source'),
+            'minimum_credits': result.get('minimum_credits'), 'maximum_credits': result.get('maximum_credits'),
+            'candidate_count': result.get('candidate_count'),
             'candidate_count_reason': 'CANDIDATES_NOT_PREPARED_OR_NOT_SAVED',
             'evaluated_plans': count, 'evaluated_plans_reason': None if count is not None else
                 'MODEL_SCORED_PLAN_COUNT_UNAVAILABLE',
@@ -257,7 +261,10 @@ class PilotService:
             raise ValueError('Unknown saved sample.')
         inputs = load_student_inputs(students[sample_id], self.root, snapshot_id=snapshot_id)
         snapshot, issues = build_snapshot(inputs)
-        return {'sample_id': sample_id, 'snapshot_id': snapshot_id, 'status': 'READY', 'reason': None,
+        resolution = resolve_credit_target(inputs)
+        return {'sample_id': sample_id, 'snapshot_id': snapshot_id,
+                'status': 'READY' if resolution['status'] == 'RESOLVED' else 'BLOCKED', 'reason': resolution['reason'],
+                'credit_target_resolution': resolution,
                 'student_summary': student_summary(snapshot, students[sample_id]), 'issues': issues}
 
     def completeness(self, snapshot_id=AFTER, include_reserve=False):
@@ -279,9 +286,14 @@ class PilotService:
                     if row['reason'] is None:
                         row.update(reason=error.code, field=error.field)
             try:
-                build_snapshot(load_student_inputs(student, self.root, snapshot_id=snapshot_id))
+                inputs = load_student_inputs(student, self.root, snapshot_id=snapshot_id)
+                build_snapshot(inputs)
+                resolution = resolve_credit_target(inputs)
+                row['credit_target_resolution'] = resolution
                 if not history['usable_for_b_c']:
                     row.update(reason='INCOMPLETE_OR_INVALID_FROZEN_HISTORY', field='frozen_history')
+                elif resolution['status'] != 'RESOLVED':
+                    row.update(reason=resolution['reason'], field='credit_target')
                 else:
                     row['ready'] = True
             except (PilotInputError, ValueError, KeyError) as error:
@@ -323,10 +335,13 @@ class PilotService:
         attach_recommendation_metrics(result, models=selected_models)
         return attach_prediction_metrics(result, models=selected_models)
 
-    def start(self, sample_ids, models=('B', 'C'), snapshot_id=AFTER, target_credits=18, max_plans=200, include_reserve=False):
+    def start(self, sample_ids, models=('B', 'C'), snapshot_id=AFTER, target_credits=None, max_plans=200,
+              include_reserve=False, *, diagnostic_override=False):
         snapshot_id = validate_snapshot(snapshot_id)
         if snapshot_id != AFTER:
             raise ValueError('The before_backend_fix snapshot is read-only.')
+        if target_credits is not None and not diagnostic_override:
+            raise ValueError('A manual target requires the separate diagnostic override.')
         from tools.recommendation_pilot_20251.selection import normalize_models
         selected = normalize_models(models)
         if not isinstance(sample_ids, list) or not sample_ids or len(set(sample_ids)) != len(sample_ids):
@@ -335,7 +350,16 @@ class PilotService:
         known = {r['sample_id'] for r in complete['records']}
         if any(sample not in known for sample in sample_ids):
             raise ValueError('Unknown saved sample.')
-        blocked = [r for r in complete['blocked'] if r['sample_id'] in sample_ids]
+        blocked = [r for r in complete['blocked'] if r['sample_id'] in sample_ids and
+                   not (diagnostic_override and target_credits is not None and r.get('field') == 'credit_target')]
+        if blocked:
+            raise PilotPreflightError(blocked)
+        students = {s['sample_id']: s for s in self.cohort(include_reserve=include_reserve)}
+        for sample in sample_ids:
+            inputs = load_student_inputs(students[sample], self.root, snapshot_id=snapshot_id)
+            resolution = resolve_credit_target(inputs, target_credits, diagnostic_override=diagnostic_override)
+            if resolution['status'] != 'RESOLVED':
+                blocked.append({'sample_id': sample, 'reason': resolution['reason'], 'field': 'credit_target'})
         if blocked:
             raise PilotPreflightError(blocked)
         return self._runner(snapshot_id).start(sample_ids, models=selected, target_credits=target_credits,

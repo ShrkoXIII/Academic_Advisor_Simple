@@ -1,21 +1,21 @@
-# Graph Report - Academic_Advisor_Simple  (2026-10-24)
+# Graph Report - Academic_Advisor_Simple  (2026-10-25)
 
 ## Corpus Check
-- 597 files · ~4,072,794 words
+- 608 files · ~4,091,040 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 102 file(s) not represented in the graph (top: .csv 40, .log 35, .parquet 8)
 
 ## Summary
-- 7044 nodes · 16191 edges · 362 communities (308 shown, 54 thin omitted)
-- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 988 edges (avg confidence: 0.93)
+- 7277 nodes · 16791 edges · 380 communities (331 shown, 49 thin omitted)
+- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 1019 edges (avg confidence: 0.92)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
 - 00_START_HERE.md
-- pandas
-- analyze_model_errors.py
-- file_sha256
-- ui_client.py
+- verify_cleaning_policy_v2.py
+- test_pilot_search_benchmark.py
+- test_cumulative_history.py
+- streamlit_app.py
 - test_two_stage_artifacts.py
 - xml_two_stage_run.py
 - فهرس الاختبارات إلى الشفرة
@@ -24,39 +24,39 @@
 - architecture/README.md
 - test_api_academic_semantics.py
 - test_two_stage_engine.py
-- attempt_number_experiment.py
-- prepare_model_matrix
+- attempt_number_removal_recheck.py
+- train_models.py
 - Storyboard — Recommendation V2 — Student 29485.111
 - clean_student_course
-- test_xml_package.py
+- TwoStagePlanRecommender
 - مسار مشروع Academic Advisor كاملًا
 - What You Must Do When Invoked
-- PilotService
+- test_pilot_20251_snapshot_paths.py
 - parameters
 - ApiError
-- actual_candidates.py
-- enumerate_feasible_plan_indices
+- PilotEngine
+- evaluation/evaluate_xml_recommendations.py
 - manifest.json
 - fail
 - Academic Advisor — ترشيح الخطة الفصلية عبر توقع العلامة ومخاطر الرسوب
 - تحليل أخطاء مودل العلامة والخطة حسب السنة والاختصاص
 - adapters/student.py
-- CourseHistoryState
-- PilotInputError
+- PilotService
+- inputs.py
 - تقرير أخطاء أفضل مودل Expected Points
 - test_history_update.py
-- CumulativeHistoryStore
+- cumulative_history.py
 - test_two_stage_evaluation.py
 - fail
 - metadata
-- create_app
-- test_pilot_20251_history.py
+- recommendation_pilot_20251/engine.py
+- test_pilot_search_space.py
 - grade
 - متابعة بناء Academic Advisor
 - merge
 - Recommendation Trace — Student 29485.111
 - app.js
-- طبقة API في Academic Advisor
+- ExactPlanSpace
 - input_sha256_at_promotion
 - تدقيق مسار البيانات والمودلات والتوصية — 2026-09-14
 - pilot_service.py
@@ -67,7 +67,7 @@
 - Project State — Productization Baseline
 - جرد الأدوات خارج المصدر
 - fail_risk_classifier
-- inputs.py
+- recommendation/__init__.py
 - input_sha256
 - COURSE-ONLY 33-FEATURE EXPERIMENT
 - Experiment Winner Decision Audit V2
@@ -75,21 +75,21 @@
 - key_level
 - تجربة الاختصاص وتوقع النقاط المباشر
 - ApiSettings
-- ObservedPlanStore
+- create_app
 - actual_report.py
 - student_status_course_comparison_metrics.json
 - student_level
-- Pilot 20251 — فصل Before / After Backend Fix
+- تقرير تنفيذ Pilot 20251 — 2026-10-19
 - Corrected Phase 6 Result
 - Repository Guidelines
 - graphify reference: extra exports and benchmark
 - course_history
 - grade_regressor
-- frozen_history.py
+- load_frozen_history
 - تحليل تشخيصي لأعمدة طلب التوصية
 - توثيق Baseline قبل تنفيذ Recommendation Two-stage
 - test_corrected_phase6_rerun.py
-- RankingStrategy
+- test_search_benchmark_ui.py
 - xml_two_stage_reports.py
 - Academic Advisor — Streamlit local test console
 - test_api_history_admin.py
@@ -99,7 +99,7 @@
 - summary.md
 - ابدأ من هنا — Academic Advisor
 - actual_experiment.py
-- clean_student_status
+- test_clean_outliers.py
 - Isolated attempt-number experiment plan
 - test_unified_pilot_ui.py
 - ApiService
@@ -112,93 +112,93 @@
 - تحليل وتجربة `attempt_number` المعزولة
 - Phase 7 Result
 - create_app
-- evaluate_two_stage_ranking.py
+- RankingStrategy
 - Pilot 20251 — Zero Overlap Root Cause Audit
 - test_api_course_history_refactor.py
 - graphify reference: add a URL and watch a folder
 - graphify reference: commit hook and native CLAUDE.md integration
 - graphify reference: incremental update and cluster-only
-- 1. ملفات التشغيل الأساسية
-- copy
+- run_corrected_benchmarks
+- test_api_integration.py
 - graphify reference: GitHub clone and cross-repo merge
 - graphify reference: transcribe video and audio
-- add_specialty_history_features
+- test_api_ingestion.py
 - extraction-spec.md
 - 2026-09-27-course-only-recommendation.md
 - student_status_course_comparison.md
-- test_evaluation_v2_io.py
-- `Phase 6 — Corrected Benchmark & Independent Strategy Evidence`
+- test_two_stage_activation.py
+- augment_candidates
 - analyze_repeat_withdrawal_balance.py
-- test_api_ingestion.py
+- test_api_http.py
 - verification.md
 - academic-advisor-simple
-- test_two_stage_benchmark.py
-- snapshot
+- synthetic_artifacts
+- attempt_sum_removal/runner.py
 - evidence
 - PHASE_07_MANIFEST_POLICIES_REVALIDATION.md
-- verify_cleaning_policy_v2.py
+- analyze_model_errors.py
 - test_api_request_store.py
 - fixture
 - test_pilot_20251_engine.py
-- experiment_io.py
+- test_pilot_20251_actual_experiment.py
 - RequestStore
 - تجربة إزالة اعتماد `attempt_sum`
-- previous_course_status_inference.py
+- course_only_evaluation.py
 - Q: اريد ان اعرف ما هي اهمية attempt number للمودل جرب ازالتها في تجربة منفصلة اعطني مستوى السوء المؤدي اذا ازلناها
 - test_pilot_20251_enhanced.py
 - test_ui_client.py
 - Phase 6 — Synthetic two-stage benchmark
-- test_history.py
+- history_update.py
 - selected_candidate
-- two_stage_engine.py
-- train_all_variants
+- previous_status_for_targets
+- previous_course_status_training.py
 - رحلة طلب توصية واحد
-- previous_course_status_experiment.py
+- ui_client.py
 - Phase 6 — Synthetic two-stage benchmark
-- test_two_stage_payloads.py
+- test_pilot_20251_history.py
 - Phase 5 — Two-stage candidate comparison
-- data_analysis.py
+- test_corrected_phase6_evaluation.py
 - إنشاء تطبيق الواجهات والمصادقة
-- prepare_recommendation_payloads
+- enumerate_feasible_plan_indices
 - `Phase 7 — Approved Manifest Policies & Revalidation`
 - snapshot_migration.py
-- benchmark_two_stage.py
+- evaluate_corrected_phase6.py
 - pilot_ui.py
 - service.py
-- attempt_sum_removal/runner.py
-- isolated_io
+- Data to Features Pipeline: Input and Output Audit
+- test_evaluation_v2_io.py
 - عقود أجسام الطلبات
 - GradeScale
 - test_xml_two_stage_search.py
 - تنسيق التحقق والتوصية والإدارة
 - ClientError
 - `Phase 1 — Artifacts & Contracts`
-- evaluate_corrected_phase6.py
+- test_pilot_credit_target.py
 - degree_points.py
 - هندسة الميزات الزمنية المشتركة
 - الإدارة الدائمة للتاريخ التراكمي
-- `Phase 4 — Balance Metrics & Independent Ranking Strategies`
-- test_train_models.py
-- test_api_integration.py
-- workflow.py
-- Academic Advisor — Pilot 20251
+- Pilot 20251 — Actual-Course Candidate Injection Results
+- is_regular_semester
+- payloads
+- file_sha256
+- Pilot 20251 — فصل Before / After Backend Fix
 - مجاميع الدفعات ومدير اللقطة
-- test_two_stage_matrix.py
+- prepare_model_matrix
 - المحرك المعتمد ذو المرحلتين
 - DecimalRequest
-- test_pilot_20251_snapshot_paths.py
+- ComparisonRunner
 - Frozen History Fallback Coverage Audit
 - جلسات التعلم بحسب التبعيات
 - Pre-Modeling Data V2 and Features V2 Audit
 - الجلب المباشر الاختياري للاختبار
-- test_clean_utils.py
+- two_stage_engine.py
 - FakePilotService
-- 11. Non-blocking Review Items
-- إصلاح تسمية مرشح `capacity_63`
+- test_api_cumulative_integration.py
+- test_two_stage_shortlist.py
 - تطبيع المواد والأهلية والقيود
-- `Phase 3 — History Delta, Immutable Save & Atomic Swap`
-- collect_pilot.py
-- test_pilot_20251_adapter.py
+- FrozenHistoryManager
+- CandidateImportError
+- test_pilot_20251_states.py
 - الإعدادات ومصادرها البيئية
 - تحويل الطالب إلى لقطة بداية الفصل
 - test_pilot_20251_modeling.py
@@ -288,57 +288,76 @@
 - قائمة الخطط المختصرة للمرحلة الأولى
 - تحميل أصول المرحلتين والتحقق من مصدرها
 - واجهة اسم قديم لتحويل التصدير
-- التاريخ الثابت والتراكمي: من البادئة إلى المؤشر النشط
-- J. Candidate & Requirement Policy Contract
-- test_pilot_20251_feature_validation.py
-- Data and features V2 structural migration
-- test_pilot_20251_selection.py
-- specialty_history.py
-- isolated_io
-- ScenarioRunStore
-- test_course_only_recommendation.py
-- levels
-- attempt_sum_removal/report.py
+- load_or_train_holdout
+- filter_common_students
+- search_benchmark_ui.py
+- pandas
+- 5. Search Limitations
+- experiments/modeling.py
 - SyntheticModel
-- عقد تكامل PHP مع Academic Advisor
+- add_specialty_history_features
+- Run `run_20261021T114914_4f2dcd430e` — 200 plans
+- levels
+- isolated_io
+- تقرير تنفيذ Backend API
+- importlib
 - xml_two_stage_implementation.md
-- .convert
+- `Phase 4 — Balance Metrics & Independent Ranking Strategies`
 - test_pilot_20251_actual_candidates.py
-- FrozenHistoryManager
-- التحقق من التوصية بالتراكمي المتوقع والتاريخ المجمد
-- project_status.py
+- 1. ملفات التشغيل الأساسية
+- .as_of_part
+- course_only_report.py
 - Attempt-Sum Removal Implementation Plan
 - Unified Streamlit Pilot Implementation Plan
 - Academic Advisor — Pilot API Capture tab
-- pytest
+- attempt_sum_removal/test_safeguards.py
 - CaptureTests
-- F. Precomputed Serving State
+- ExperimentalModels
 - pilot_20251_implementation_plan.md
 - test_downstream.py
-- test_invalid_production_config_keeps_offline_pilot_available
-- I. Semester Update Lifecycle
+- Search benchmark implementation ledger
+- specialty_history.py
 - ranking_policy
-- valid_course_row
+- clean_student_status
 - Phase 6 — Synthetic two-stage benchmark
-- experiments/modeling.py
-- ImportTests
-- Academic Advisor — Architecture Map
-- 18. Top 3 Output
-- _weighted_history_source
-- تجربة مستقلة لحذف `attempt_number` — 2026-10-08
+- test_pilot_20251_feature_validation.py
+- test_previous_course_status_inference.py
+- Production Contract — PHP ↔ Python Recommendation Service
+- J. Candidate & Requirement Policy Contract
+- عقد تكامل PHP مع Academic Advisor
+- Pilot 20251 — API credit targets and search benchmark
+- طبقة API في Academic Advisor
 - balance_policy
-- read.md
+- test_model_artifact_isolation.py
 - Pilot Backend Snapshots Implementation Plan
-- 5. Which Frozen History Was Selected and Why
-- load_or_train_holdout
+- official_artifacts
+- FakeBooster
 - prediction_contract
-- analyze_course_plan_changes.py
+- ما الذي يعتمد عليه كل نظام؟
 - human_approval
-- _SearchBudgetExceeded
-- 21. Risks / Edge Cases
+- تدقيق دلالات المدخلات الأكاديمية
+- Academic Advisor — Pilot 20251
 - final_ranking_strategy
-- test_missing_courses_preview_keeps_blocked_controls_and_saved_browser
-- .directory
+- pytest
+- attempt_sum_removal/report.py
+- Model Artifact Isolation Audit Implementation Plan
+- تشغيل توصيات الخطط محلياً
+- تحقق النسخة النهائية
+- I. Semester Update Lifecycle
+- Data and features V2 structural migration
+- SyntheticXmlEngine
+- temporal_features.py
+- Academic Advisor — Architecture Map
+- H. Frozen History Analysis
+- D. Raw Data Sources
+- 5. Which Frozen History Was Selected and Why
+- test_withdrawn_counts_as_attempt_before_removal
+- test_full_v2_chain_uses_only_new_intermediates_and_preserves_v1
+- valid_course_row
+- benchmark_two_stage.py
+- read.md
+- إصلاح تسمية مرشح `capacity_63`
+- analyze_course_plan_changes.py
 - PLAN.md
 
 ## God Nodes (most connected - your core abstractions)
@@ -351,48 +370,48 @@
 7. `create_app()` - 55 edges
 8. `load_frozen_history()` - 49 edges
 9. `CourseHistoryState` - 45 edges
-10. `AcademicPlanRecommender` - 44 edges
+10. `enumerate_plan_indices()` - 45 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `Step 2 - Detect files` --references--> `code()`  [INFERRED]
+  .codex/skills/graphify/SKILL.md → debugging/render_recommendation_explanation.py
 - `1. Place files in the repository` --references--> `BackendClient`  [INFERRED]
   tools/academic_advisor_streamlit/README.md → src/api/backend_client.py
+- ``clean_outliers.py`` --references--> `build_outlier_audit()`  [INFERRED]
+  reports/data_to_features_pipeline_audit.md → src/data/clean_outliers.py
 - `attempt_number: القرار المدعوم بالأدلة` --references--> `clean_student_course()`  [INFERRED]
   reports/..md → src/data/clean_student_course.py
 - `Exact semantics and provenance` --references--> `to_integer()`  [INFERRED]
   scripts/experiments/student_progress_20261010/lineage_audit.md → src/data/cleaning_utils.py
-- `الأدلة التاريخية وبصمات المصدر` --references--> `experiment_signature()`  [INFERRED]
-  reports/capacity_63_name_fix.md → src/experiments/experiment_io.py
-- `2. قبل → بعد` --references--> `prepare_model_matrix()`  [INFERRED]
-  plan_explanation/PHASE_02_PAYLOAD_ADAPTERS_MATRIX_CLASSIFICATION_CONSTRAINTS.md → src/features/feature_contract.py
 
 ## Import Cycles
 - None detected.
 
-## Communities (362 total, 54 thin omitted)
+## Communities (380 total, 49 thin omitted)
 
 ### Community 0 - "00_START_HERE.md"
 Cohesion: 0.06
-Nodes (35): الاختبارات, المحاولات والحالة السابقة, تدقيق دلالات المدخلات الأكاديمية, مقام المعدل وحدود الزمن, الخطة المعتمدة لدمج Backend API, النطاق والقرارات الملزمة, مراحل التنفيذ والقبول, الخريطة الفعلية للبناء (+27 more)
+Nodes (34): الخريطة الفعلية للبناء, من التصدير التاريخي إلى أصول التوقع, ١. استيراد المصدر وتنظيفه, ٢. الربط والدبلوم والاستبعاد, ٣. التقسيم الزمني الحالي, ٤. هندسة الميزات, ٥. ملاءمة الزوج الرسمي ذي سبع وأربعين ميزة, ٦. الأصول الموجودة والاختيار المعتمد (+26 more)
 
-### Community 1 - "pandas"
-Cohesion: 0.04
-Nodes (23): save_json(), compare(), digest(), main(), cohort_counts(), main(), versioned_path(), isolation_violations() (+15 more)
+### Community 1 - "verify_cleaning_policy_v2.py"
+Cohesion: 0.15
+Nodes (7): compare_tables(), main(), compare(), describe(), main(), original_cleaner(), signature()
 
-### Community 2 - "analyze_model_errors.py"
-Cohesion: 0.12
-Nodes (29): attach_analysis_columns(), build_course_segments(), build_degree_analysis(), build_plan_frame(), build_plan_segments(), build_shap_importance(), build_year_analysis(), build_year_degree_analysis() (+21 more)
+### Community 2 - "test_pilot_search_benchmark.py"
+Cohesion: 0.05
+Nodes (41): code(), main(), verify_and_summarize(), verify_prediction_parity(), verify_protected(), write_delivery_manifest(), write_results_report(), synthetic_service() (+33 more)
 
-### Community 3 - "file_sha256"
-Cohesion: 0.16
-Nodes (36): file_sha256(), activate(), commit(), initialize(), module(), payload(), source(), test_activation_hash_and_rollback_confirmation_are_checked() (+28 more)
+### Community 3 - "test_cumulative_history.py"
+Cohesion: 0.15
+Nodes (35): activate(), commit(), initialize(), module(), payload(), source(), test_activation_hash_and_rollback_confirmation_are_checked(), test_approved_initialization_preserves_full_weighted_history_and_source() (+27 more)
 
-### Community 4 - "ui_client.py"
-Cohesion: 0.13
-Nodes (16): connection_label(), record_connection(), save_pilot_history(), show_api_status(), view_json(), test_context_missing_is_empty_and_existing_does_not_forge(), test_decimal_precision_and_nonfinite_rejection(), test_degree_resolution_validates_student_and_term() (+8 more)
+### Community 4 - "streamlit_app.py"
+Cohesion: 0.22
+Nodes (7): connection_label(), record_connection(), save_pilot_history(), show_api_status(), view_json(), test_term_cutoff(), previous_academic_part()
 
 ### Community 5 - "test_two_stage_artifacts.py"
-Cohesion: 0.10
-Nodes (41): `tests/test_two_stage_artifacts.py`, test_approval_does_not_bypass_existing_feature_or_model_hash_checks(), test_incomplete_or_inconsistent_approval_still_refuses_assets(), mutate(), test_verified_artifact_loader_accepts_complete_human_approval(), artifact_root(), digest(), expected_contract() (+33 more)
+Cohesion: 0.13
+Nodes (38): `tests/test_two_stage_artifacts.py`, test_approval_does_not_bypass_existing_feature_or_model_hash_checks(), test_verified_artifact_loader_accepts_complete_human_approval(), artifact_root(), digest(), expected_contract(), load(), mutate_manifest() (+30 more)
 
 ### Community 6 - "xml_two_stage_run.py"
 Cohesion: 0.06
@@ -403,7 +422,7 @@ Cohesion: 0.02
 Nodes (82): آخر دليل تشغيل متاح, اختبارات يجب قراءتها أولًا, تمرين تدقيق دون تنفيذ, فهرس الاختبارات إلى الشفرة, كيف تقرأ علاقة الاختبار؟, ما الذي أحصي؟, ملف الاختبار 1, ملف الاختبار 10 (+74 more)
 
 ### Community 8 - "api/app.py"
-Cohesion: 0.12
+Cohesion: 0.10
 Nodes (21): المسارات والاعتماد, إرسال الطالب والمواد في طلبين, CoursesInputRequest, CoursesValidationRequest, Envelope, Finalization, HistoryActivationRequest, HistoryCommitRequest (+13 more)
 
 ### Community 11 - "test_main_runner.py"
@@ -411,64 +430,64 @@ Cohesion: 0.14
 Nodes (17): _list_steps(), main(), _run_steps(), _select_steps(), _show_version_boundary(), Step, _record_processes(), test_all_dry_run_shows_v2_commands_without_execution() (+9 more)
 
 ### Community 12 - "architecture/README.md"
-Cohesion: 0.09
-Nodes (17): 01 — System Context, الأنظمة الخارجية الحقيقية وحدودها, Experiment boundary, Model Artifact Policy, Preserved history and migration status, 1. قائمة المواد, 2. التشغيل من مجلد المشروع, 3. المودل والنتائج (+9 more)
+Cohesion: 0.17
+Nodes (5): 01 — System Context, الأنظمة الخارجية الحقيقية وحدودها, Experiment boundary, Model Artifact Policy, Preserved history and migration status
 
 ### Community 13 - "test_api_academic_semantics.py"
 Cohesion: 0.18
 Nodes (27): course_request(), course_result(), student_request(), student_result(), test_derived_gpa_count_cannot_exceed_registered_or_cumulative_count(), test_legacy_credit_snapshot_cannot_be_stale_for_target(), test_legacy_sourced_override_keeps_separate_model_feature_provenance(), test_matching_official_and_supplemental_status_preserves_canonical_mapping() (+19 more)
 
 ### Community 14 - "test_two_stage_engine.py"
-Cohesion: 0.15
-Nodes (40): engine_api(), recommend(), test_credit_range_uses_upper_exact_target_without_lower_fallback(), test_cross_stage_strategy_choices_remain_independent_in_result_metadata(), test_current_or_future_history_is_rejected(), test_current_or_future_training_cutoff_is_rejected_on_each_request(), test_decimal_tenths_at_maximum_grade_points_are_feasible_and_scoreable(), test_evaluation_factory_loads_assets_and_history_once_for_reused_requests() (+32 more)
+Cohesion: 0.16
+Nodes (39): engine_api(), recommend(), test_credit_range_uses_upper_exact_target_without_lower_fallback(), test_cross_stage_strategy_choices_remain_independent_in_result_metadata(), test_current_or_future_history_is_rejected(), test_current_or_future_training_cutoff_is_rejected_on_each_request(), test_decimal_tenths_at_maximum_grade_points_are_feasible_and_scoreable(), test_evaluation_factory_loads_assets_and_history_once_for_reused_requests() (+31 more)
 
-### Community 15 - "attempt_number_experiment.py"
-Cohesion: 0.11
-Nodes (21): main(), save_provenance(), source_signature(), descriptive_analysis(), distribution(), evaluate_predictions(), save_table(), subsets() (+13 more)
+### Community 15 - "attempt_number_removal_recheck.py"
+Cohesion: 0.08
+Nodes (27): main(), save_provenance(), source_signature(), evaluate(), families(), run(), descriptive_analysis(), distribution() (+19 more)
 
-### Community 17 - "prepare_model_matrix"
-Cohesion: 0.07
-Nodes (45): دورة التدريب الأساسية — 9 عقد, `src/experiments/course_only_core.py` و`src/recommendation/__init__.py`, 8. Feature Contract, evaluate(), families(), run(), fit_historical_grade_model(), load_frames() (+37 more)
+### Community 17 - "train_models.py"
+Cohesion: 0.06
+Nodes (43): دورة التدريب الأساسية — 9 عقد, 8. Feature Contract, fit_historical_grade_model(), model_metrics(), capture_protected_files(), verify_protected_files(), main(), load_experiment() (+35 more)
 
 ### Community 19 - "Storyboard — Recommendation V2 — Student 29485.111"
 Cohesion: 0.07
 Nodes (26): Delivery and continuity checks, Editable layer inventory, Evidence lock for the edit, Production preparation for Higgsfield / native compositor, Reusable animated motifs, Scene 10 — من قائمة إلى خطط, Scene 11 — سياق الخطة والمواد الأخرى, Scene 12 — 47 خاصية ومصفوفة مشتركة (+18 more)
 
 ### Community 20 - "clean_student_course"
-Cohesion: 0.18
-Nodes (24): clean_student_course(), main(), _course_row(), test_all_course_id_columns_use_safe_id_normalization(), test_any_exclusion_flag_n_removes_the_course(), test_attempts_are_numbered_per_student_and_course_after_chronological_sort(), test_both_critical_keys_missing_on_same_row_yields_empty_clean_frame(), test_clean_student_course_basic_contract_and_input_immutability() (+16 more)
+Cohesion: 0.19
+Nodes (23): clean_student_course(), main(), _course_row(), test_all_course_id_columns_use_safe_id_normalization(), test_any_exclusion_flag_n_removes_the_course(), test_attempts_are_numbered_per_student_and_course_after_chronological_sort(), test_both_critical_keys_missing_on_same_row_yields_empty_clean_frame(), test_clean_student_course_basic_contract_and_input_immutability() (+15 more)
 
-### Community 21 - "test_xml_package.py"
-Cohesion: 0.14
-Nodes (6): clean_xml(), get_value(), load_xml(), convert_xml_to_json(), main(), test_xml_converter_and_evaluator_keep_parsing_behavior()
+### Community 21 - "TwoStagePlanRecommender"
+Cohesion: 0.06
+Nodes (33): Implementation Progress, Phase 1 — Artifacts & Contracts, Phase 5 — Two-stage Integration, Parity, Oracles & Policy Comparison, Phase 6 — Synthetic Benchmark & Independent Strategy Review Evidence, Phase 7 — Approved Policy Manifest, Revalidation & Documentation, 11. التسليم لبقية النظام — Handoff, 1. الفكرة العامة — Overview, 2. قبل → بعد (+25 more)
 
 ### Community 22 - "مسار مشروع Academic Advisor كاملًا"
 Cohesion: 0.08
 Nodes (26): 0. تعريف المسارات المركزي, 10. هندسة الخصائص الزمنية, 11. عقد الخصائص الرسمي, 12. التدريب الرسمي, 13. تقييم GPA للخطة الفعلية, 14. تحليل الأخطاء, 15. تجربة الاختصاص وExpected Points, 16. محرك ترشيح الخطط الحالي (+18 more)
 
 ### Community 23 - "What You Must Do When Invoked"
-Cohesion: 0.07
-Nodes (25): For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+17 more)
+Cohesion: 0.08
+Nodes (24): For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+16 more)
 
-### Community 24 - "PilotService"
-Cohesion: 0.09
-Nodes (19): observed(), saved_result(), test_actual_matching_rejects_ambiguous_ids_and_mismatched_credits(), test_before_start_is_read_only_and_after_preflight_identifies_affected_sample(), test_blocked_forecasts_do_not_display_saved_error_derivatives(), test_legacy_browsing_never_loads_engine_observations_or_scores(), test_measured_run_and_student_totals_have_separate_scope_and_cache_labels(), test_metrics_selection_does_not_invent_unselected_experiments() (+11 more)
+### Community 24 - "test_pilot_20251_snapshot_paths.py"
+Cohesion: 0.05
+Nodes (27): cohort(), SyntheticEngine, test_api_csv_selection_validation_storage_and_loopback(), test_batch_continues_and_saved_result_is_immutable(), test_retired_experimental_model_cannot_reappear_as_available_saved_predictions(), test_store_rejects_path_traversal(), predictor(), Experiments (+19 more)
 
 ### Community 25 - "parameters"
 Cohesion: 0.30
 Nodes (23): parameters, parameters, parameters, parameters, bagging_fraction, bagging_freq, bagging_seed, data_random_seed (+15 more)
 
 ### Community 26 - "ApiError"
-Cohesion: 0.10
-Nodes (33): adapt_courses(), _course(), group_identity(), مصدر ساعات GPA, Verification, ApiError, binding(), check_record_identity() (+25 more)
+Cohesion: 0.14
+Nodes (14): adapt_courses(), _course(), group_identity(), Verification, ApiError, check_candidate_duplicate(), _check_source_duplicates(), _rules() (+6 more)
 
-### Community 27 - "actual_candidates.py"
-Cohesion: 0.06
-Nodes (18): Academic Advisor — واجهة Streamlit الموحدة لتجربة 20251, الأدلة والاختبارات, الأزمنة وحدود البحث, الحدود المتبقية, الملفات التي عُدلت أو أُضيفت لهذا الدمج, النتيجة وطريقة التشغيل, سلامة Snapshot ومسارات الحفظ الفعلية, فصل التوقعات والمقاييس (+10 more)
+### Community 27 - "PilotEngine"
+Cohesion: 0.05
+Nodes (20): Academic Advisor — واجهة Streamlit الموحدة لتجربة 20251, الأدلة والاختبارات, الأزمنة وحدود البحث, الحدود المتبقية, الربط مع Pilot القائم, الملفات التي عُدلت أو أُضيفت لهذا الدمج, النتيجة وطريقة التشغيل, سلامة Snapshot ومسارات الحفظ الفعلية (+12 more)
 
-### Community 28 - "enumerate_feasible_plan_indices"
-Cohesion: 0.12
-Nodes (31): `src/recommendation/constraints.py`, _credit_value(), enumerate_feasible_plan_indices(), normalize_requirement_policies(), PlanConstraints, _requirement_id(), test_max_new_courses_is_an_optional_plan_constraint(), test_requirement_groups_do_not_merge_by_model_category() (+23 more)
+### Community 28 - "evaluation/evaluate_xml_recommendations.py"
+Cohesion: 0.05
+Nodes (35): save_json(), دليل العلاقات, clean_id(), clean_xml(), get_value(), load_xml(), convert_xml_to_json(), main() (+27 more)
 
 ### Community 30 - "manifest.json"
 Cohesion: 0.17
@@ -487,32 +506,32 @@ Cohesion: 0.10
 Nodes (19): 1. التحليل حسب السنة الدراسية, 2. التحليل حسب الاختصاص, 3. الخصائص الأكثر تأثيرًا, 4. لماذا خطأ توقع العلامة مرتفع نسبيًا؟, 5. إجراءات التحسين المقترحة بالترتيب, أهم الخصائص المفردة, أولوية 1 — تقييم مرشح Expected Points على خطط بديلة, أولوية 2 — مودلات Quantile وعدم اليقين (+11 more)
 
 ### Community 34 - "adapters/student.py"
-Cohesion: 0.10
-Nodes (24): adapt_student(), add_history_features(), add_snapshot_features(), add_sourced_student_values(), build_student_snapshot(), map_student_fields(), Student API Data Flow, Student Feature Mapping (+16 more)
+Cohesion: 0.11
+Nodes (29): adapt_student(), add_history_features(), add_snapshot_features(), add_sourced_student_values(), build_student_snapshot(), map_student_fields(), One Request Example, Student API Data Flow (+21 more)
 
-### Community 35 - "CourseHistoryState"
-Cohesion: 0.06
-Nodes (26): اتساق التدريب والميزات, مقام GPA وتوقيته, 03 — Data + Features Pipeline, B. فرع Roster — تسجيلات السياق وليست Targets, C. Feature Engineering — 9 عقد, حدود جودة البيانات والزمن, لقطة الوسائط المحلية, مصادر البيانات الفعلية (+18 more)
+### Community 35 - "PilotService"
+Cohesion: 0.11
+Nodes (18): observed(), saved_result(), test_actual_matching_rejects_ambiguous_ids_and_mismatched_credits(), test_before_start_is_read_only_and_after_preflight_identifies_affected_sample(), test_blocked_forecasts_do_not_display_saved_error_derivatives(), test_legacy_browsing_never_loads_engine_observations_or_scores(), test_measured_run_and_student_totals_have_separate_scope_and_cache_labels(), test_metrics_selection_does_not_invent_unselected_experiments() (+10 more)
 
-### Community 36 - "PilotInputError"
-Cohesion: 0.07
-Nodes (19): 1. What Changed, الربط مع Pilot القائم, actual_metrics(), test_issue_classification_separates_projection_from_registration(), numeric(), PilotInputError, validate_identity(), _BudgetedSearchStats (+11 more)
+### Community 36 - "inputs.py"
+Cohesion: 0.12
+Nodes (20): 06 — API Sequence, B. Planned Integration — 7 أطراف, Flows لا يمكن إثباتها من الكود, دليل الموجود مقابل المخطط, فصل التحديث عن الطلب, `src/recommendation/course_status.py`, `src/recommendation/inputs.py`, normalize_requirement_policies() (+12 more)
 
 ### Community 37 - "تقرير أخطاء أفضل مودل Expected Points"
 Cohesion: 0.11
 Nodes (18): 1. تعريف الأخطاء, 2. الخطأ العام على تسجيلات المواد, 3. النتائج حسب فصل 2025, 4. الخطأ حسب Course, 5. الخطأ حسب Degree, 6. خطأ الخطط, 7. الاستنتاج, 8. مصادر الأرقام (+10 more)
 
 ### Community 38 - "test_history_update.py"
-Cohesion: 0.13
+Cohesion: 0.14
 Nodes (35): api(), delta(), hashes(), save_initial(), targets(), test_aggregate_addition_preserves_weighted_prefix_and_matches_raw_oracle(), test_aggregate_addition_rejects_weight_loss_in_affected_table_group(), test_bad_lineage_is_not_selected_on_restart() (+27 more)
 
-### Community 40 - "CumulativeHistoryStore"
-Cohesion: 0.15
-Nodes (8): _approval(), _confirmation(), CumulativeHistoryStore, _digest(), HistoryUpdateError, _now(), _overlap(), _ServingHistoryManager
+### Community 40 - "cumulative_history.py"
+Cohesion: 0.13
+Nodes (11): _approval(), _confirmation(), CumulativeHistoryStore, _digest(), HistoryUpdateError, _now(), _overlap(), _ServingHistoryManager (+3 more)
 
 ### Community 43 - "test_two_stage_evaluation.py"
-Cohesion: 0.09
-Nodes (17): inference(), test_augmented_scoring_clips_predictions_before_grade_conversion(), test_augmented_scoring_rejects_nonfinite_predictions(), test_course_comparison_joins_by_course_identity_and_keeps_status(), test_course_comparison_rejects_mismatched_candidate_rows(), test_plan_comparison_uses_same_memberships_and_reports_rank_changes(), test_unresolved_prior_attempt_is_unknown_in_serving_rows(), evaluator() (+9 more)
+Cohesion: 0.16
+Nodes (10): evaluator(), independent_order(), independent_plans(), synthetic_result(), test_aggregate_report_preserves_denominators_and_does_not_claim_historical_eligibility(), test_all_four_cross_stage_results_match_independent_final_oracle(), test_mixed_scope_report_preserves_outside_academic_slots_for_all_candidates(), test_real_shortlist_matches_independent_complete_subset_and_ranking_oracle() (+2 more)
 
 ### Community 44 - "fail"
 Cohesion: 0.12
@@ -522,13 +541,13 @@ Nodes (17): brier, calibration_error_10_bins, log_loss, pr_auc, roc_auc, experim
 Cohesion: 0.06
 Nodes (31): category_levels.json, fail_risk_classifier.txt, grade_regressor.txt, category_levels, fail_model, grade_model, model_metadata, artifact_sha256 (+23 more)
 
-### Community 46 - "create_app"
-Cohesion: 0.07
-Nodes (15): ActualCandidateRunner, git_provenance(), main(), read_students(), ActualCandidateRunRequest, create_app(), saved_actual_candidate_run(), saved_run() (+7 more)
+### Community 46 - "recommendation_pilot_20251/engine.py"
+Cohesion: 0.08
+Nodes (22): test_missing_after_courses_never_reads_legacy_or_before_inputs(), load_student_inputs(), numeric(), PilotInputError, read_students(), read_verified_json(), validate_identity(), ActualCandidateRunRequest (+14 more)
 
-### Community 49 - "test_pilot_20251_history.py"
-Cohesion: 0.12
-Nodes (25): RecordingModel, complete_sources(), module(), row(), test_bad_metadata_blocks_the_file(), test_experimental_history_explicit_partition_policy_preserves_strict_constructor(), test_experimental_history_never_sums_ambiguous_cross_faculty_cohorts(), test_experimental_history_quarantines_missing_mark_row_and_keeps_valid_same_file() (+17 more)
+### Community 49 - "test_pilot_search_space.py"
+Cohesion: 0.22
+Nodes (20): _candidates(), _module(), test_canonical_id_is_stable_across_candidate_order(), test_count_state_guard_raises_explicit_limit(), test_credit_counting_is_independent_of_ambient_decimal_precision(), test_diverse_samples_feasible_global_ranks_beyond_dfs_prefix(), test_duplicate_candidate_ids_cannot_form_distinct_course_combinations(), test_empty_smart_scope_needs_no_utility_evidence() (+12 more)
 
 ### Community 50 - "grade"
 Cohesion: 0.13
@@ -543,16 +562,16 @@ Cohesion: 0.13
 Nodes (15): merge, course_coverage_pct, course_rows_after, course_rows_before, course_rows_matched, course_rows_unmatched, course_students_after, course_students_before (+7 more)
 
 ### Community 53 - "Recommendation Trace — Student 29485.111"
-Cohesion: 0.11
-Nodes (18): 10. Course History Feature Injection, 11. Model Matrix and Feature Contract, 12. Grade Prediction, 14. Fail Prediction, 15. Plan Generation, 16. Plan Scoring, 17. Plan Ranking, 19. Important Intermediate Tables (+10 more)
+Cohesion: 0.08
+Nodes (24): 11. Model Matrix and Feature Contract, 12. Grade Prediction, 14. Fail Prediction, 15. Plan Generation, 16. Plan Scoring, 17. Plan Ranking, 18. Top 3 Output, 19. Important Intermediate Tables (+16 more)
 
 ### Community 55 - "app.js"
 Cohesion: 0.12
 Nodes (69): activeResult(), actualPlanForecastTable(), actualResultLabel(), allPlans(), api(), arabicReason(), asArray(), availablePlans() (+61 more)
 
-### Community 56 - "طبقة API في Academic Advisor"
-Cohesion: 0.17
-Nodes (10): History Delta والإدارة, How to Run, One Request Example, PHP-push: المسار الأساسي, Project Structure, Python-pull: جلب اختياري مستقل, الإعدادات الأخرى, التحقق من إعادة التنظيم (+2 more)
+### Community 56 - "ExactPlanSpace"
+Cohesion: 0.15
+Nodes (6): _decimal(), ExactPlanSpace, bound(), tick(), _integer(), SearchSpaceLimit
 
 ### Community 57 - "input_sha256_at_promotion"
 Cohesion: 0.09
@@ -564,7 +583,7 @@ Nodes (13): 1. ماذا حدث للطلاب الأربعة؟, 2. النتائج 
 
 ### Community 59 - "pilot_service.py"
 Cohesion: 0.11
-Nodes (33): plan(), result(), test_fractional_credit_load_uses_decimal_sum_and_independent_status_labels(), test_latency_summary_reports_component_mean_p95_and_measurement_count(), test_macro_and_micro_prediction_metrics_use_correct_denominators(), test_observed_prediction_misalignment_is_rejected(), test_overlap_is_normalized_and_examined_actual_plan_has_rank_and_frequency(), test_paired_summary_uses_only_same_student_available_in_both_modes() (+25 more)
+Nodes (34): plan(), result(), test_fractional_credit_load_uses_decimal_sum_and_independent_status_labels(), test_latency_summary_reports_component_mean_p95_and_measurement_count(), test_macro_and_micro_prediction_metrics_use_correct_denominators(), test_observed_prediction_misalignment_is_rejected(), test_overlap_is_normalized_and_examined_actual_plan_has_rank_and_frequency(), test_paired_summary_uses_only_same_student_available_in_both_modes() (+26 more)
 
 ### Community 60 - "Student progress: empirical data audit"
 Cohesion: 0.05
@@ -575,8 +594,8 @@ Cohesion: 0.18
 Nodes (19): aggregate_points(), configuration_signature(), evaluate(), feature_subset(), fit_model(), gain_rows(), group_metrics(), inner_selection() (+11 more)
 
 ### Community 62 - "Academic Advisor — Architecture Audit before PHP/Backend integration"
-Cohesion: 0.09
-Nodes (20): A. Executive Summary, Academic Advisor — Architecture Audit before PHP/Backend integration, B. Current Data Flow, D. Raw Data Sources, E. Backend-Provided Fields, G. Runtime Features, H. Frozen History Analysis, K. Train/Serve Skew Risks (+12 more)
+Cohesion: 0.11
+Nodes (17): A. Executive Summary, Academic Advisor — Architecture Audit before PHP/Backend integration, attempt_number: القرار المدعوم بالأدلة, B. Current Data Flow, E. Backend-Provided Fields, F. Precomputed Serving State, G. Runtime Features, GPA history: المتشابهات ليست مترادفات (+9 more)
 
 ### Community 63 - "PREVIOUS_COURSE_STATUS EXPERIMENT"
 Cohesion: 0.15
@@ -594,9 +613,9 @@ Nodes (38): الأداة 1, الأداة 10, الأداة 11, الأداة 12, �
 Cohesion: 0.17
 Nodes (12): all_candidates, final_boost_rounds, test_2025_calibration, test_2025_metrics, top_feature_importance, uses_class_weights, fail_risk_classifier, brier (+4 more)
 
-### Community 67 - "inputs.py"
+### Community 67 - "recommendation/__init__.py"
 Cohesion: 0.04
-Nodes (89): context_math(), fmt(), formula(), group_name(), main(), p(), sections(), table() (+81 more)
+Nodes (70): check(), collect_term(), capture(), course_math(), main(), read_export(), records(), save() (+62 more)
 
 ### Community 68 - "input_sha256"
 Cohesion: 0.17
@@ -612,7 +631,7 @@ Nodes (19): 10. Specialty-History Support Analysis, 11. Course-Level Accuracy, 1
 
 ### Community 71 - "test_pilot_20251_dashboard.py"
 Cohesion: 0.06
-Nodes (21): DashboardHTML, read_dashboard(), run_dashboard_scenario(), test_actual_course_table_preserves_plan_context_missing_grades_and_actual_zero(), test_actual_overlap_counts_use_unique_course_ids_and_do_not_count_unavailable_as_zero(), test_actual_plan_forecasts_use_dedicated_full_plan_scores_in_every_system(), test_arabic_rtl_dashboard_has_unique_resolvable_controls(), test_c_course_details_distinguish_weak_peer_support_from_sufficient_support() (+13 more)
+Nodes (22): DashboardHTML, read_dashboard(), run_dashboard_scenario(), test_actual_course_table_preserves_plan_context_missing_grades_and_actual_zero(), test_actual_overlap_counts_use_unique_course_ids_and_do_not_count_unavailable_as_zero(), test_actual_plan_forecasts_use_dedicated_full_plan_scores_in_every_system(), test_arabic_rtl_dashboard_has_unique_resolvable_controls(), test_c_course_details_distinguish_weak_peer_support_from_sufficient_support() (+14 more)
 
 ### Community 72 - "key_level"
 Cohesion: 0.22
@@ -624,11 +643,11 @@ Nodes (11): اعتماد المودل على تاريخ الاختصاص, الس
 
 ### Community 74 - "ApiSettings"
 Cohesion: 0.06
-Nodes (24): API Configuration and Cumulative Frozen History — تقرير التنفيذ, Before / After, اختبارات القبول, الملفات الدقيقة لهذه المهمة, النتيجة وحدود الاعتماد, عقود التشغيل, نتائج التحقق النهائية, BackendClient (+16 more)
+Nodes (25): API Configuration and Cumulative Frozen History — تقرير التنفيذ, Before / After, اختبارات القبول, الملفات الدقيقة لهذه المهمة, النتيجة وحدود الاعتماد, عقود التشغيل, نتائج التحقق النهائية, BackendClient (+17 more)
 
-### Community 75 - "ObservedPlanStore"
-Cohesion: 0.16
-Nodes (11): sources(), test_duplicate_course_registration_is_explicitly_unavailable(), test_duplicate_outcomes_are_not_arbitrarily_selected(), test_exact_identity_and_registration_attempt_join_preserves_real_zero(), test_mismatched_or_invalid_outcome_does_not_become_an_actual_grade(), test_missing_sources_do_not_block_registration_display_or_fake_an_empty_plan(), test_saved_run_enrichment_does_not_rewrite_results_or_forward_actual_outcomes(), test_ungraded_registration_remains_in_actual_plan_without_zero_imputation() (+3 more)
+### Community 75 - "create_app"
+Cohesion: 0.08
+Nodes (18): sources(), test_duplicate_course_registration_is_explicitly_unavailable(), test_duplicate_outcomes_are_not_arbitrarily_selected(), test_exact_identity_and_registration_attempt_join_preserves_real_zero(), test_mismatched_or_invalid_outcome_does_not_become_an_actual_grade(), test_missing_sources_do_not_block_registration_display_or_fake_an_empty_plan(), test_saved_run_enrichment_does_not_rewrite_results_or_forward_actual_outcomes(), test_ungraded_registration_remains_in_actual_plan_without_zero_imputation() (+10 more)
 
 ### Community 76 - "actual_report.py"
 Cohesion: 0.16
@@ -642,9 +661,9 @@ Nodes (9): classification, course, status, dependencies, legacy_script_has_v2_im
 Cohesion: 0.20
 Nodes (10): after_common_student_policy, rows, student_level, course, status, both, course, course_only (+2 more)
 
-### Community 80 - "Pilot 20251 — فصل Before / After Backend Fix"
-Cohesion: 0.07
-Nodes (24): المدخلات والحساب, النتائج والتحقق, شرح الأنظمة وتوقع الخطة الفعلية — 2026-10-20, Pilot 20251 — فصل Before / After Backend Fix, أوامر المشغّل — لم تُنفذ عمليات الجمع أو الدفعة التالية, إجراءات الترحيل وسلامة الملفات, البنية النهائية, الحدود (+16 more)
+### Community 80 - "تقرير تنفيذ Pilot 20251 — 2026-10-19"
+Cohesion: 0.13
+Nodes (13): أسباب التعذر الحقيقية, التحقق النهائي, التدريب والتحقق الزمني, الحالات والواجهة, الحماية, تبسيط Pilot 20251 وفصل حالات التنبؤ — 2026-10-19, التحقق, الحماية وما يلزم لإكمال المقارنة (+5 more)
 
 ### Community 81 - "Corrected Phase 6 Result"
 Cohesion: 0.12
@@ -666,9 +685,9 @@ Nodes (9): initial_history_cutoff, smoothing_k, test_history_cutoffs, test_proto
 Cohesion: 0.22
 Nodes (9): all_candidates, final_boost_rounds, test_2025_metrics, top_feature_importance, grade_regressor, mae, rmse, within_10 (+1 more)
 
-### Community 86 - "frozen_history.py"
-Cohesion: 0.06
-Nodes (45): مخزن التاريخ التراكمي, التثبيت التلقائي الموثوق, 3. الملفات المنتجة أو المعدلة — Files, 4. أهم الدوال والكلاسات — Important Functions, Final output shape: Frozen History, 18. Production Complexity, 9. Tests, لماذا frozen، وكيف يمنع التسرب؟ (+37 more)
+### Community 86 - "load_frozen_history"
+Cohesion: 0.09
+Nodes (28): مخزن التاريخ التراكمي, 9. Tests, main(), build_frozen_history(), load_frozen_history(), save_frozen_history(), save_frozen_history_atomic(), course_history_state_path() (+20 more)
 
 ### Community 87 - "تحليل تشخيصي لأعمدة طلب التوصية"
 Cohesion: 0.11
@@ -682,9 +701,9 @@ Nodes (7): Full pytest, الفشل القديم capacity_63, توثيق Baseline
 Cohesion: 0.16
 Nodes (16): For /graphify explain, For /graphify path, graphify reference: query, path, explain, Step 0 — Constrained query expansion (REQUIRED before traversal), Step 1 — Traversal, corrected(), module(), old_report() (+8 more)
 
-### Community 90 - "RankingStrategy"
-Cohesion: 0.12
-Nodes (17): 9. حدود المسؤولية, RankingStrategy, test_independent_startup_load_failures_and_import_without_http_dependencies(), engine_module(), approve_manifest(), approved_policy(), production_engine(), recommend() (+9 more)
+### Community 90 - "test_search_benchmark_ui.py"
+Cohesion: 0.08
+Nodes (4): FakeSearchService, search_ui(), test_comparison_runtime_includes_saved_context_preparation(), test_search_mode_is_available_with_or_without_production_config()
 
 ### Community 91 - "xml_two_stage_reports.py"
 Cohesion: 0.11
@@ -703,8 +722,8 @@ Cohesion: 0.25
 Nodes (8): inner_merge, course_rows_after, course_rows_before, dropped_percentage, dropped_rows, students_after, students_before, students_completely_lost
 
 ### Community 95 - "Model Artifact Isolation Audit"
-Cohesion: 0.20
-Nodes (10): Auxiliary state, excluded from trained-model classification, Concise diff, Experiment results and cache, Final status, Inventory, Model Artifact Isolation Audit, Official baseline and provenance limitations, Recommendation report only (+2 more)
+Cohesion: 0.25
+Nodes (8): Auxiliary state, excluded from trained-model classification, Concise diff, Experiment results and cache, Final status, Inventory, Model Artifact Isolation Audit, Official baseline and provenance limitations, Verification
 
 ### Community 96 - "test_ranking_strategies.py"
 Cohesion: 0.14
@@ -719,20 +738,24 @@ Cohesion: 0.12
 Nodes (15): Artifact hashes and preservation, Files changed and concise diff, New immutable histories, Official Recommendation V2 migration — 2026-09-27, Official serving contract, V2 local inputs and temporal integrity, Validation, أين أجد نتيجة كل نسخة من التجربة؟ (+7 more)
 
 ### Community 99 - "actual_experiment.py"
-Cohesion: 0.09
-Nodes (21): test_runner_persistence_failure_cannot_be_listed_as_success(), fail_after_manifest(), test_snapshot_paths_keep_models_independent_and_reject_unknown_snapshot(), portable_exports(), protected_fingerprints(), sha256(), feature_readiness(), build_experimental_university_history() (+13 more)
+Cohesion: 0.10
+Nodes (14): test_batch_resolves_each_student_and_persists_their_own_bounds(), ActualCandidateRunner, git_provenance(), main(), protected_fingerprints(), sha256(), feature_readiness(), blocked_forecast() (+6 more)
 
-### Community 100 - "clean_student_status"
-Cohesion: 0.05
-Nodes (58): A. التنظيف والإثراء — 10 عقد, Appendix: 62-column outlier-filtered output inventory, `build_registration_roster.py`, `build_student_course_enriched.py`, `build_temporal_features.py`, `build_temporal_split.py`, `clean_degree_course.py`, `clean_outliers.py` (+50 more)
+### Community 100 - "test_clean_outliers.py"
+Cohesion: 0.18
+Nodes (19): A. التنظيف والإثراء — 10 عقد, build_outlier_audit(), main(), remove_outlier_students(), _summarize_rule(), _validate_columns(), make_valid_outlier_row(), test_build_outlier_audit_accepts_valid_24_credit_course() (+11 more)
 
 ### Community 101 - "Isolated attempt-number experiment plan"
 Cohesion: 0.33
 Nodes (5): Constraints and decisions fixed before fitting, Execution rulings, Isolated attempt-number experiment plan, Review focus, Tasks
 
+### Community 102 - "test_unified_pilot_ui.py"
+Cohesion: 0.07
+Nodes (7): offline_config(), test_diagnostic_scenarios_have_unique_students_and_explicit_context(), test_existing_console_keeps_production_form_history_and_collection(), forbidden(), test_invalid_production_config_keeps_offline_pilot_available(), test_missing_courses_preview_keeps_blocked_controls_and_saved_browser(), test_pilot_mode_inside_existing_tab_has_no_http_requests()
+
 ### Community 103 - "ApiService"
-Cohesion: 0.08
-Nodes (3): Execution Flow, ApiService, merge_evidence()
+Cohesion: 0.07
+Nodes (11): API refactor — تقرير التنفيذ والتحقق, Before / After, Compatibility, Execution Flow, New Structure, خط الأساس, ApiService, merge_evidence() (+3 more)
 
 ### Community 104 - "student_level"
 Cohesion: 0.33
@@ -751,28 +774,28 @@ Cohesion: 0.11
 Nodes (18): 1. القرارات الثابتة والواجهات, 2. المدخلات والتاريخ والقيود, 3. تنفيذ التوقعات وBalance والترتيب, 4. التحقق وبوابتا اعتماد الاستراتيجيات, 5. ترتيب العمل وBenchmark والتسليم, 6. توثيق Baseline لهذه اللقطة, Balance components, Benchmark المعتمد (+10 more)
 
 ### Community 108 - "test_recommendation_v2.py"
-Cohesion: 0.19
-Nodes (16): synthetic_candidates(), synthetic_engine(), synthetic_snapshot(), test_complete_comparison_preserves_same_request_scores_and_official_rescoring(), test_benchmark_adapter_uses_v2_inputs_with_a_tiny_synthetic_request(), test_default_top_three_returns_every_available_plan_when_fewer_exist(), test_exact_upper_bound_no_fallback_result_metadata(), test_importing_public_api_does_not_load_models() (+8 more)
+Cohesion: 0.07
+Nodes (46): ملفات الاختبار الثلاثة, RecordingModel, synthetic_candidates(), synthetic_course_history(), synthetic_engine(), synthetic_snapshot(), experiment(), scores() (+38 more)
 
 ### Community 109 - "PilotCollectionStore"
-Cohesion: 0.15
+Cohesion: 0.16
 Nodes (7): test_collector_defaults_to_after_and_before_is_read_only(), _atomic_exclusive(), CollectionError, history_parts(), PilotCollectionStore, _safe(), PilotCollectionTests
 
 ### Community 110 - "تحليل وتجربة `attempt_number` المعزولة"
-Cohesion: 0.10
-Nodes (21): A. Current semantics, B. Distribution, C. Outcome relationship, D. Experiment setup, Distribution shift, E. Overall model results, F. Repeat-only results, Fail calibration (+13 more)
+Cohesion: 0.11
+Nodes (18): B. Distribution, C. Outcome relationship, D. Experiment setup, Distribution shift, E. Overall model results, F. Repeat-only results, Fail calibration, Feature importance كدليل مساعد (+10 more)
 
 ### Community 111 - "Phase 7 Result"
 Cohesion: 0.17
 Nodes (12): 10. Risks / Remaining Issues, 11. Git Status, 12. Suggested Commit, 13. Next Phase, 1. Phase Status, 2. What Changed — Conceptually, 3. Data Flow After This Phase, 5. File Change Map (+4 more)
 
 ### Community 112 - "create_app"
-Cohesion: 0.11
-Nodes (33): create_app(), activate_history(), admin_auth(), api_error(), authenticate(), commit_history(), courses_input(), diagnostic() (+25 more)
+Cohesion: 0.12
+Nodes (23): create_app(), activate_history(), admin_auth(), api_error(), authenticate(), commit_history(), courses_input(), diagnostic() (+15 more)
 
-### Community 113 - "evaluate_two_stage_ranking.py"
-Cohesion: 0.09
-Nodes (28): 11. التسليم لبقية النظام — Handoff, 4. أهم الدوال والكلاسات — Important Functions, سياسة التوازن الحالية, كيف يكتمل الترتيب؟, build_evaluation_report(), _change(), _diagnostic_stage2(), evaluate_historical_policy() (+20 more)
+### Community 113 - "RankingStrategy"
+Cohesion: 0.08
+Nodes (31): Phase 4 — Balance Metrics & Independent Strategy Candidates, 11. التسليم لبقية النظام — Handoff, 4. أهم الدوال والكلاسات — Important Functions, سياسة التوازن الحالية, كيف يكتمل الترتيب؟, build_evaluation_report(), _change(), _diagnostic_stage2() (+23 more)
 
 ### Community 114 - "Pilot 20251 — Zero Overlap Root Cause Audit"
 Cohesion: 0.07
@@ -794,177 +817,177 @@ Nodes (3): For git commit hook, For native CLAUDE.md integration, graphify refer
 Cohesion: 0.50
 Nodes (3): For --cluster-only, For --update (incremental re-extraction), graphify reference: incremental update and cluster-only
 
-### Community 119 - "1. ملفات التشغيل الأساسية"
-Cohesion: 0.08
-Nodes (34): 1. ملفات التشغيل الأساسية, 2. الأصول المثبتة والتاريخ, 3. الاختبارات, 4. أدوات النشر والتقييم خارج Serving, 6. التقارير والتوثيق, خريطة ملفات `Two-Stage Recommendation`, 2. قبل → بعد, 4. أهم الملفات بالتفصيل المختصر (+26 more)
-
-### Community 120 - "copy"
+### Community 119 - "run_corrected_benchmarks"
 Cohesion: 0.09
-Nodes (28): synthetic_components(), synthetic_grade_scale(), test_delta_preview_never_publishes_or_claims_finalization(), test_exact_history_selection_and_explicit_backtesting(), test_loaded_artifact_factory_enforces_approval_without_reloading(), test_partial_summary_reuses_original_gpa_shift_and_nonregistered_semesters(), test_delta_aggregates_equal_individual_outcomes_without_estimated_points(), test_delta_replay_conflict_and_validation_never_changes_bundle() (+20 more)
+Nodes (18): benchmark_jobs(), build_report(), censored_result(), main(), checkpoint(), checkpoint_state(), run_worker(), save_report() (+10 more)
 
-### Community 123 - "add_specialty_history_features"
-Cohesion: 0.19
-Nodes (9): add_specialty_history_features(), SpecialtyHistoryTests, rows(), test_20251_excludes_current_and_future_and_20252_includes_finalized_20251(), test_empty_test_keeps_output_schema(), test_generalized_parts_restore_unsorted_rows_with_duplicate_indices(), test_new_degree_enters_both_hierarchy_levels_only_in_later_parts(), test_test_parts_must_all_follow_training() (+1 more)
+### Community 120 - "test_api_integration.py"
+Cohesion: 0.21
+Nodes (12): catalog(), grade_scale(), test_delta_preview_never_publishes_or_claims_finalization(), test_empty_candidates_return_no_feasible_plan_with_actual_core(), api_engine(), test_api_calls_actual_core_with_33_and_47_features_and_group_caps(), test_contract_nullable_history_remains_unknown_and_response_is_explicit(), test_delta_aggregates_equal_individual_outcomes_without_estimated_points() (+4 more)
 
-### Community 127 - "test_evaluation_v2_io.py"
+### Community 123 - "test_api_ingestion.py"
+Cohesion: 0.18
+Nodes (20): setup(), split(), test_actual_two_stage_recommendation_output_and_features_match_combined(), test_authenticated_caller_cannot_access_or_complete_another_callers_request(), test_conflicting_retry_does_not_overwrite_pending(), test_consistent_overlapping_context_and_combined_path_have_identical_engine_inputs(), test_different_request_ids_never_join(), test_duplicates_and_lookup_during_inference_do_not_start_another_call() (+12 more)
+
+### Community 127 - "test_two_stage_activation.py"
+Cohesion: 0.16
+Nodes (14): test_independent_startup_load_failures_and_import_without_http_dependencies(), approve_manifest(), approved_policy(), production_engine(), recommend(), test_approved_production_preserves_pareto_results_and_labels_actual_usage(), test_incomplete_or_inconsistent_approval_still_refuses_assets(), mutate() (+6 more)
+
+### Community 128 - "augment_candidates"
 Cohesion: 0.13
-Nodes (16): main(), parse_args(), assert_preserved(), test_direct_import_resolves_v2_and_intentionally_shared_scale(), test_error_analysis_uses_v2_in_historical_holdout_and_shap_paths(), test_missing_v2_input_fails_without_v1_fallback_or_output(), test_plan_evaluation_reads_and_writes_v2_with_shared_grade_scale(), test_local_loader_reads_only_cleaned_v2_and_preserves_history() (+8 more)
-
-### Community 128 - "`Phase 6 — Corrected Benchmark & Independent Strategy Evidence`"
-Cohesion: 0.17
-Nodes (12): 11. التسليم لبقية النظام — Handoff, 1. الفكرة العامة — Overview, 2. قبل → بعد, 3. الملفات المنتجة أو المستخدمة — Files, 5. مخطط سير البيانات — Data Flow, 6. `Input → Processing → Output`, 7. التحقق والاختبارات — Validation & Tests, 8. أهم ما أثبتته المرحلة (+4 more)
+Nodes (7): ActualCandidateSources, _attempt(), augment_candidates(), _history_for_student(), normalize_course_id(), _number(), ScenarioRunStore
 
 ### Community 129 - "analyze_repeat_withdrawal_balance.py"
 Cohesion: 0.06
 Nodes (42): finish_status_inventory(), grade_range_disagreements(), graph_navigation(), main(), nonstandard_history_sensitivity(), protected_manifest(), run(), sha256() (+34 more)
 
-### Community 130 - "test_api_ingestion.py"
-Cohesion: 0.10
-Nodes (41): client(), course_request(), Engine, post(), student_request(), test_admin_delta_validation_is_partial_without_history_and_never_publishes(), test_auth_keys_errors_and_sensitive_inputs_never_echoed(), test_config_limit_applies_only_in_test_mode() (+33 more)
+### Community 130 - "test_api_http.py"
+Cohesion: 0.18
+Nodes (21): client(), course_request(), Engine, post(), student_request(), test_admin_delta_validation_is_partial_without_history_and_never_publishes(), test_auth_keys_errors_and_sensitive_inputs_never_echoed(), test_config_limit_applies_only_in_test_mode() (+13 more)
 
-### Community 136 - "test_two_stage_benchmark.py"
-Cohesion: 0.15
-Nodes (21): benchmark_module(), test_atomic_checkpoint_has_complete_json_and_no_leftover(), test_corrected_report_does_not_embed_fabricated_phase5_quality_snapshot(), test_dense_upper_target_search_has_the_complete_choose_six_count(), test_fast_search_is_not_blamed_for_full_or_ranking_timeouts(), test_feasible_counter_keeps_zero_options_and_filters_complete_plans(), test_final_comparison_uses_identical_fixed_shortlist_for_both_strategies(), test_inference_fixture_rejects_a_scale_without_supported_versions() (+13 more)
+### Community 136 - "synthetic_artifacts"
+Cohesion: 0.13
+Nodes (23): test_loaded_artifact_factory_enforces_approval_without_reloading(), benchmark_module(), test_atomic_checkpoint_has_complete_json_and_no_leftover(), test_corrected_report_does_not_embed_fabricated_phase5_quality_snapshot(), test_dense_upper_target_search_has_the_complete_choose_six_count(), test_fast_search_is_not_blamed_for_full_or_ranking_timeouts(), test_final_comparison_uses_identical_fixed_shortlist_for_both_strategies(), test_inference_fixture_rejects_a_scale_without_supported_versions() (+15 more)
 
-### Community 137 - "snapshot"
-Cohesion: 0.23
-Nodes (7): _allowed(), assert_unchanged(), create_output_dirs(), _reject_link(), _root(), snapshot(), verify()
+### Community 137 - "attempt_sum_removal/runner.py"
+Cohesion: 0.12
+Nodes (22): finalize(), _clean(), decision(), family_configuration(), fingerprint(), _fit(), folds(), _history_counts() (+14 more)
 
 ### Community 138 - "evidence"
 Cohesion: 0.15
 Nodes (13): path, sha256, path, sha256, corrected_benchmark, corrected_result, primary_grade_version_2_111, sensitivity_grade_version_3_111 (+5 more)
 
-### Community 140 - "verify_cleaning_policy_v2.py"
-Cohesion: 0.15
-Nodes (7): compare_tables(), main(), compare(), describe(), main(), original_cleaner(), signature()
+### Community 140 - "analyze_model_errors.py"
+Cohesion: 0.08
+Nodes (45): 04 — Model Training Lifecycle, Artifacts: من ينتجها ومن يستهلكها؟, Evaluation ليست مسارًا واحدًا, Version / release debt, GPA للخطط المسجلة الفعلية, attach_analysis_columns(), build_course_segments(), build_degree_analysis() (+37 more)
 
 ### Community 141 - "test_api_request_store.py"
-Cohesion: 0.06
-Nodes (57): 200 / 2000 reproducibility, 2. Data Integrity, 3. Before vs After, 4. A/B/C Comparison, 5. Search Limitations, 6. Real-Time Performance, 7. Historical Validity, 8. Next Steps (+49 more)
+Cohesion: 0.19
+Nodes (24): assert_error(), Clock, payload(), store(), test_canonical_retry_and_conflict_are_typed_and_durable(), test_capacity_counts_expired_tombstones_and_does_not_lose_pending_rows(), test_completion_and_failure_are_retrievable_without_retrying_claim(), test_corrupt_database_errors_never_expose_sql_or_paths() (+16 more)
 
 ### Community 142 - "fixture"
-Cohesion: 0.18
-Nodes (18): _cohort_masks(), evaluate(), _failure_metrics(), _keys(), _macro(), _metrics(), _pair(), paired_intervals() (+10 more)
+Cohesion: 0.14
+Nodes (23): _cohort_masks(), evaluate(), _failure_metrics(), _keys(), _macro(), _metrics(), _pair(), paired_intervals() (+15 more)
 
 ### Community 143 - "test_pilot_20251_engine.py"
-Cohesion: 0.05
-Nodes (31): diagnostic(), experiment_module(), Sources, test_200_and_2000_are_deterministic_prefixes(), test_branch_guard_rejects_unapproved_non_main_branch(), test_dashboard_projection_keeps_top3_and_full_search_counts(), test_evaluation_never_writes_models_archived_inputs_or_trains(), test_request_rejects_duplicate_modes_and_unknown_credit_experiment() (+23 more)
+Cohesion: 0.13
+Nodes (19): bridge(), save(), engine_module(), payloads(), test_conflicting_sources_block_before_predictions(), test_course_source_failure_retains_student_history_diagnostics(), test_denied_and_unauthorized_exception_courses_are_excluded(), test_explicit_credit_limit_does_not_silently_lower_target() (+11 more)
 
-### Community 144 - "experiment_io.py"
-Cohesion: 0.18
-Nodes (10): build_metadata(), _json_default(), load_cached_validation(), save_results(), feature_columns(), test_metadata_retains_protocol_and_artifact_contract(), test_save_results_preserves_parquet_and_json_outputs(), test_signature_hashes_current_dependencies_deterministically() (+2 more)
+### Community 144 - "test_pilot_20251_actual_experiment.py"
+Cohesion: 0.13
+Nodes (10): diagnostic(), experiment_module(), Sources, test_200_and_2000_are_deterministic_prefixes(), test_branch_guard_rejects_unapproved_non_main_branch(), test_dashboard_projection_keeps_top3_and_full_search_counts(), test_evaluation_never_writes_models_archived_inputs_or_trains(), test_request_rejects_duplicate_modes_and_unknown_credit_experiment() (+2 more)
 
 ### Community 145 - "RequestStore"
 Cohesion: 0.21
 Nodes (6): _decode(), _digest(), _encode(), RequestStore, _serialized(), validate_request_id()
 
 ### Community 146 - "تجربة إزالة اعتماد `attempt_sum`"
-Cohesion: 0.10
-Nodes (20): A. الهدف, B. تدقيق الاعتماد, C. العزل, D. إعداد التدريب وإعادة الإنتاج, F. المقارنة العددية, Full 47 → 44, G. الطلبة ذوو المعدل السابق المنخفض, H. توافق المرحلتين (+12 more)
+Cohesion: 0.09
+Nodes (21): A. الهدف, B. تدقيق الاعتماد, C. العزل, D. إعداد التدريب وإعادة الإنتاج, E. توافق Frozen History, F. المقارنة العددية, Full 47 → 44, G. الطلبة ذوو المعدل السابق المنخفض (+13 more)
 
-### Community 147 - "previous_course_status_inference.py"
-Cohesion: 0.05
-Nodes (29): compare_course_sets(), distribution(), optimize_exact_credits(), plan_context_sensitivity(), prepare_course_rows(), score_courses_once(), capture_protected_files(), compare_case() (+21 more)
+### Community 147 - "course_only_evaluation.py"
+Cohesion: 0.11
+Nodes (14): compare_course_sets(), distribution(), optimize_exact_credits(), plan_context_sensitivity(), prepare_course_rows(), score_courses_once(), compare_case(), experimental_run() (+6 more)
 
 ### Community 148 - "Q: اريد ان اعرف ما هي اهمية attempt number للمودل جرب ازالتها في تجربة منفصلة اعطني مستوى السوء المؤدي اذا ازلناها"
 Cohesion: 0.40
 Nodes (4): Answer, Outcome, Q: اريد ان اعرف ما هي اهمية attempt number للمودل جرب ازالتها في تجربة منفصلة اعطني مستوى السوء المؤدي اذا ازلناها, Source Nodes
 
 ### Community 149 - "test_pilot_20251_enhanced.py"
-Cohesion: 0.19
-Nodes (14): historical(), target(), test_difficulty_uses_marks_without_fabricating_grade_points(), test_no_unproven_improvements_are_selected_or_list_padded(), test_nullable_query_and_missing_trend_preserve_available_distances(), test_peer_degree_course_and_grade_version_are_not_mixed(), test_peer_prefix_changes_with_historical_target(), test_peer_support_is_distinct_students_and_weak_support_is_visible() (+6 more)
+Cohesion: 0.18
+Nodes (15): الميزات الجديدة, historical(), target(), test_difficulty_uses_marks_without_fabricating_grade_points(), test_no_unproven_improvements_are_selected_or_list_padded(), test_nullable_query_and_missing_trend_preserve_available_distances(), test_peer_degree_course_and_grade_version_are_not_mixed(), test_peer_prefix_changes_with_historical_target() (+7 more)
 
 ### Community 150 - "test_ui_client.py"
-Cohesion: 0.17
-Nodes (15): مقارنة الخطط المرشحة بالتسجيل الفعلي — 2026-10-20, FakeResponse, FakeSession, test_builds_two_separate_requests_and_no_fabricated_evidence(), test_custom_university_headers_are_not_sent_to_fastapi(), test_explicit_authorization_conflicts_with_bearer_setting(), test_frozen_history_requires_rows(), test_history_can_use_post_but_must_match_part() (+7 more)
+Cohesion: 0.19
+Nodes (16): مقارنة الخطط المرشحة بالتسجيل الفعلي — 2026-10-20, FakeResponse, FakeSession, test_builds_two_separate_requests_and_no_fabricated_evidence(), test_custom_university_headers_are_not_sent_to_fastapi(), test_explicit_authorization_conflicts_with_bearer_setting(), test_frozen_history_requires_rows(), test_history_can_use_post_but_must_match_part() (+8 more)
 
 ### Community 151 - "Phase 6 — Synthetic two-stage benchmark"
 Cohesion: 0.33
 Nodes (5): Cross-stage combinations — actual warm engine, Final on fixed shortlist tradeoffs, Limits and decisions still required, Phase 6 — Synthetic two-stage benchmark, Stage 1 tradeoffs
 
-### Community 152 - "test_history.py"
-Cohesion: 0.05
-Nodes (57): check(), collect_term(), capture(), course_math(), main(), read_export(), records(), save() (+49 more)
+### Community 152 - "history_update.py"
+Cohesion: 0.08
+Nodes (34): _aggregate_delta(), _compare(), _compare_states(), replay(), apply_delta(), build_history_prefix(), compute_plan_context(), _merge() (+26 more)
 
 ### Community 153 - "selected_candidate"
 Cohesion: 0.57
 Nodes (8): selected_candidate, selected_candidate, selected_candidate, selected_candidate, candidate, folds, mean_best_iteration, mean_primary_metric
 
-### Community 154 - "two_stage_engine.py"
-Cohesion: 0.13
-Nodes (11): 4. أهم الدوال والكلاسات — Important Functions, تحميل المحرك والطلب الرئيسي, Function/Class Change Map, _collect(), BalancePolicy, _course_records(), score_course_rows(), build_stage1_shortlist() (+3 more)
+### Community 154 - "previous_status_for_targets"
+Cohesion: 0.23
+Nodes (13): _keys(), previous_status_for_targets(), _attach_status(), row(), test_first_attempt_ignores_current_and_future_outcomes(), test_latest_prior_attempt_wins_even_when_history_is_unsorted(), test_latest_unresolved_attempt_is_unknown_not_first_or_older_fail(), test_mark_boundaries_use_previous_attempt_only() (+5 more)
 
-### Community 155 - "train_all_variants"
-Cohesion: 0.15
-Nodes (12): _input_sha256(), learn_augmented_levels(), _load_tables(), load_variant(), prepare_augmented_folds(), prepare_augmented_matrix(), train_all_variants(), train_augmented_one() (+4 more)
+### Community 155 - "previous_course_status_training.py"
+Cohesion: 0.07
+Nodes (28): write_json(), augment_feature_frame(), build_experimental_datasets(), build_status_history(), _distribution(), _check_saved_baseline(), evaluate_holdout(), _paired_metrics() (+20 more)
 
 ### Community 156 - "رحلة طلب توصية واحد"
 Cohesion: 0.12
 Nodes (16): أين يختلف المسار المحلي؟, الرسم العام, المادة قبل التحويل وبعده, حساب مفهوم النتيجة, رحلة طلب توصية واحد, غلاف الطلب ومصدر الطالب, مثال تتبع منقح, ١. الخلفية الجامعية تجلب وتصرح (+8 more)
 
-### Community 157 - "previous_course_status_experiment.py"
-Cohesion: 0.11
-Nodes (20): augment_feature_frame(), build_experimental_datasets(), build_status_history(), _distribution(), _keys(), previous_status_for_targets(), main(), _protected_paths() (+12 more)
+### Community 157 - "ui_client.py"
+Cohesion: 0.14
+Nodes (8): main(), config_from_file(), test_custom_headers_can_be_loaded_from_env(), Config, _env_headers(), _env_map(), _reject_constant(), _valid_url()
 
 ### Community 158 - "Phase 6 — Synthetic two-stage benchmark"
 Cohesion: 0.33
 Nodes (5): Cross-stage combinations — actual warm engine, Final on fixed shortlist tradeoffs, Limits and decisions still required, Phase 6 — Synthetic two-stage benchmark, Stage 1 tradeoffs
 
-### Community 159 - "test_two_stage_payloads.py"
-Cohesion: 0.25
-Nodes (18): ملفات الاختبار الثلاثة, payloads(), prepare(), test_candidate_order_and_untrusted_features_do_not_change_prepared_rows(), test_conflicting_full_status_meanings_are_rejected(), test_cross_identity_or_invalid_part_is_rejected(), test_decimal_to_float_overflow_is_rejected(), test_duplicate_course_identity_after_normalization_is_rejected() (+10 more)
+### Community 159 - "test_pilot_20251_history.py"
+Cohesion: 0.26
+Nodes (19): complete_sources(), module(), row(), test_bad_metadata_blocks_the_file(), test_experimental_history_explicit_partition_policy_preserves_strict_constructor(), test_experimental_history_never_sums_ambiguous_cross_faculty_cohorts(), test_experimental_history_quarantines_missing_mark_row_and_keeps_valid_same_file(), test_experimental_output_cannot_mutate_original_archives() (+11 more)
 
 ### Community 160 - "Phase 5 — Two-stage candidate comparison"
 Cohesion: 0.29
 Nodes (7): All four cross-stage combinations, Boundary and scope sensitivity, Correctness, cost and limits, Final candidates on the same fixed shortlist, Phase 5 — Two-stage candidate comparison, Saved aggregate-policy evidence, Synthetic complete-set evidence
 
-### Community 161 - "data_analysis.py"
-Cohesion: 0.28
-Nodes (10): corr(), identity(), main(), mapping(), numeric(), pair_stats(), save(), stats() (+2 more)
+### Community 161 - "test_corrected_phase6_evaluation.py"
+Cohesion: 0.20
+Nodes (16): evaluation_module(), test_disabled_balance_distances_remain_missing_in_distributions(), test_evaluator_never_silently_accepts_unsupported_grade_version(), test_exact_objective_ties_are_additional_sensitivity_not_identity_recall(), test_explicit_grade_version_must_be_finite_supported_and_nonboolean(), test_explicit_supported_grade_version_is_recorded_with_category_coverage(), test_fixed_final_pool_and_all_four_pairs_use_identical_scored_metrics(), test_no_solution_fixture_skips_stage2_and_does_not_invent_comparisons() (+8 more)
 
 ### Community 162 - "إنشاء تطبيق الواجهات والمصادقة"
 Cohesion: 0.12
 Nodes (16): إنشاء تطبيق الواجهات والمصادقة, المعالجات الداخلية ومساراتها, تسلسل المنطق وأسباب الخطوات, طرق الأصناف الموجودة, ١. لماذا يوجد هذا الملف؟, ١٠. الاختبارات, ١١. القيود المعروفة, ١٢. مراجعة سريعة (+8 more)
 
-### Community 163 - "prepare_recommendation_payloads"
-Cohesion: 0.06
-Nodes (39): API configuration and cumulative Frozen History, اتصال الجامعة, المحاولات والحالة السابقة, حدود الإثبات, عقد الإدارة مع PHP, أين توضع المكونات الجديدة؟ — موجودة ولم تدمج, 06 — API Sequence, B. Planned Integration — 7 أطراف (+31 more)
+### Community 163 - "enumerate_feasible_plan_indices"
+Cohesion: 0.08
+Nodes (43): 02 — End-to-End Pipeline, Orchestration وحدود التشغيل, V1 وV2 مساران منفصلان, الفجوات المثبتة / حدود الإثبات, المسار الجزئي للـTwo-Stage, counted_search(), corr(), identity() (+35 more)
 
 ### Community 164 - "`Phase 7 — Approved Manifest Policies & Revalidation`"
-Cohesion: 0.20
-Nodes (10): 11. التسليم — Handoff, 1. الفكرة العامة — Overview, 2. قبل → بعد, 3. الملفات الجديدة والمعدلة — Files, 5. مخطط سير البيانات — Data Flow, 6. `Input → Processing → Output`, 7. التحقق والاختبارات — Validation & Tests, 8. أهم ما أثبتته المرحلة (+2 more)
+Cohesion: 0.12
+Nodes (14): 10. المشاكل والقيود المعروفة — Known Limitations, 10. المشاكل والقيود المعروفة — Known Limitations, 10. المشاكل والقيود المعروفة — Known Limitations, 11. التسليم — Handoff, 1. الفكرة العامة — Overview, 2. قبل → بعد, 3. الملفات الجديدة والمعدلة — Files, 5. مخطط سير البيانات — Data Flow (+6 more)
 
 ### Community 165 - "snapshot_migration.py"
 Cohesion: 0.27
 Nodes (11): legacy(), test_copy_migration_preserves_sources_and_never_seeds_old_courses(), test_migration_never_overwrites_destination(), test_migration_refuses_corrupt_source_before_copy(), digest(), _files(), _json(), main() (+3 more)
 
-### Community 166 - "benchmark_two_stage.py"
-Cohesion: 0.08
-Nodes (25): benchmark_jobs(), build_report(), censored_result(), _comparison(), main(), checkpoint(), _means(), measure_case() (+17 more)
+### Community 166 - "evaluate_corrected_phase6.py"
+Cohesion: 0.09
+Nodes (25): 4. أهم الدوال — Important Functions, Function/Class Change Map, _comparison(), _final_metrics(), _means(), measure_case(), supported_synthetic_grade_version(), synthetic_case() (+17 more)
 
 ### Community 167 - "pilot_ui.py"
-Cohesion: 0.27
+Cohesion: 0.32
 Nodes (7): get_pilot_service(), _number(), render_pilot(), _render_presentation(), _render_saved(), _student_summary(), _table()
 
 ### Community 168 - "service.py"
-Cohesion: 0.13
-Nodes (12): adapt_history_delta(), API refactor — تقرير التنفيذ والتحقق, Before / After, Compatibility, Moved Logic / Remaining Complexity, New Structure, خط الأساس, ValidationResult (+4 more)
+Cohesion: 0.15
+Nodes (14): adapt_history_delta(), binding(), check_record_identity(), identifier(), identity(), part(), response_data(), sourced() (+6 more)
 
-### Community 169 - "attempt_sum_removal/runner.py"
-Cohesion: 0.20
-Nodes (15): finalize(), _clean(), decision(), family_configuration(), fingerprint(), _fit(), folds(), _history_counts() (+7 more)
+### Community 169 - "Data to Features Pipeline: Input and Output Audit"
+Cohesion: 0.11
+Nodes (17): Appendix: 62-column outlier-filtered output inventory, `build_registration_roster.py`, `build_student_course_enriched.py`, `build_temporal_features.py`, `build_temporal_split.py`, `clean_degree_course.py`, `clean_outliers.py`, `clean_student_course.py` (+9 more)
 
-### Community 170 - "isolated_io"
-Cohesion: 0.20
-Nodes (5): feature_rows(), isolated_io(), load_model(), synthetic_fit(), SyntheticGradeModel
+### Community 170 - "test_evaluation_v2_io.py"
+Cohesion: 0.11
+Nodes (12): test_build_shap_importance_uses_absolute_contributions_and_family_sums(), assert_preserved(), feature_rows(), isolated_io(), load_model(), synthetic_fit(), SyntheticGradeModel, test_direct_import_resolves_v2_and_intentionally_shared_scale() (+4 more)
 
 ### Community 171 - "عقود أجسام الطلبات"
 Cohesion: 0.12
 Nodes (16): تسلسل المنطق وأسباب الخطوات, طرق الأصناف الموجودة, عقود أجسام الطلبات, نوع التحقق وحدوده, ١. لماذا يوجد هذا الملف؟, ١٠. الاختبارات, ١١. القيود المعروفة, ١٢. مراجعة سريعة (+8 more)
 
 ### Community 172 - "GradeScale"
-Cohesion: 0.07
-Nodes (28): 04 — Model Training Lifecycle, Artifacts: من ينتجها ومن يستهلكها؟, Evaluation ليست مسارًا واحدًا, Version / release debt, Constraints and review focus, Official Recommendation V2 Implementation Plan, Tasks, GPA للخطط المسجلة الفعلية (+20 more)
+Cohesion: 0.05
+Nodes (34): 11. التسليم لبقية النظام — Handoff, 1. الفكرة العامة — Overview, 2. قبل → بعد, 3. الملفات المنتجة أو المستخدمة — Files, 5. مخطط سير البيانات — Data Flow, 6. `Input → Processing → Output`, 7. التحقق والاختبارات — Validation & Tests, 8. أهم ما أثبتته المرحلة (+26 more)
 
 ### Community 173 - "test_xml_two_stage_search.py"
 Cohesion: 0.21
@@ -975,20 +998,20 @@ Cohesion: 0.12
 Nodes (16): الحدود قبل أول توقع, تسلسل المنطق وأسباب الخطوات, تنسيق التحقق والتوصية والإدارة, طرق الأصناف الموجودة, ١. لماذا يوجد هذا الملف؟, ١٠. الاختبارات, ١١. القيود المعروفة, ١٢. مراجعة سريعة (+8 more)
 
 ### Community 188 - "ClientError"
-Cohesion: 0.24
-Nodes (4): test_parameter_mapping(), ClientError, HttpClient, mapping_values()
+Cohesion: 0.14
+Nodes (11): test_context_missing_is_empty_and_existing_does_not_forge(), test_decimal_precision_and_nonfinite_rejection(), test_degree_resolution_validates_student_and_term(), test_parameter_mapping(), ClientError, encode_json(), load_context(), mapping_values() (+3 more)
 
 ### Community 189 - "`Phase 1 — Artifacts & Contracts`"
-Cohesion: 0.15
-Nodes (13): 10. المشاكل أو القيود المعروفة, 11. التسليم لبقية النظام — Handoff, 1. الفكرة العامة, 3. الملفات المنتجة أو المعدلة, 5. مخطط سير البيانات, 6. `Input → Processing → Output`, 7. كيف تم اختبار المرحلة؟, 8. أهم ما أثبتته المرحلة (+5 more)
+Cohesion: 0.10
+Nodes (21): 2. الأصول المثبتة والتاريخ, 3. الاختبارات, 4. أدوات النشر والتقييم خارج Serving, 6. التقارير والتوثيق, خريطة ملفات `Two-Stage Recommendation`, 10. المشاكل أو القيود المعروفة, 11. التسليم لبقية النظام — Handoff, 1. الفكرة العامة (+13 more)
 
-### Community 190 - "evaluate_corrected_phase6.py"
-Cohesion: 0.13
-Nodes (17): 4. أهم الدوال — Important Functions, _final_metrics(), supported_synthetic_grade_version(), synthetic_case(), build_report(), compare_fixed_final(), corrected_fixture(), distributions() (+9 more)
+### Community 190 - "test_pilot_credit_target.py"
+Cohesion: 0.27
+Nodes (8): resolve(), source(), test_explicit_scoped_policy_intersects_corresponding_profile(), test_manual_override_is_separate_diagnostic_and_never_crosses_known_limit(), test_missing_conflicting_or_wrong_unit_bounds_block_automatic_target(), test_normal_target_is_api_maximum_not_course_count_or_candidate_sum(), test_service_preview_exposes_api_target_and_blocks_unenabled_manual_override(), test_unknown_profile_is_not_inferred_and_scoped_policy_drift_blocks()
 
 ### Community 191 - "degree_points.py"
-Cohesion: 0.18
-Nodes (13): compare_holdout_by_degree(), load_feature_frames(), main(), run_validation(), selected_round_count(), experiment_signature(), print_summary(), degree_metrics() (+5 more)
+Cohesion: 0.14
+Nodes (18): compare_holdout_by_degree(), load_feature_frames(), main(), run_validation(), selected_round_count(), build_metadata(), experiment_signature(), load_cached_validation() (+10 more)
 
 ### Community 192 - "هندسة الميزات الزمنية المشتركة"
 Cohesion: 0.12
@@ -998,33 +1021,33 @@ Nodes (16): تسلسل المنطق وأسباب الخطوات, طرق الأص
 Cohesion: 0.12
 Nodes (16): الإدارة الدائمة للتاريخ التراكمي, تسلسل المنطق وأسباب الخطوات, ثلاث حدود مختلفة, طرق الأصناف الموجودة, ١. لماذا يوجد هذا الملف؟, ١٠. الاختبارات, ١١. القيود المعروفة, ١٢. مراجعة سريعة (+8 more)
 
-### Community 194 - "`Phase 4 — Balance Metrics & Independent Ranking Strategies`"
-Cohesion: 0.25
-Nodes (8): 10. المشاكل والقيود المعروفة — Known Limitations, 1. الفكرة العامة — Overview, 2. قبل → بعد, 5. مخطط سير البيانات — Data Flow, 6. `Input → Processing → Output`, 7. التحقق والاختبارات — Validation & Tests, 8. أهم ما أثبتته المرحلة, `Phase 4 — Balance Metrics & Independent Ranking Strategies`
+### Community 194 - "Pilot 20251 — Actual-Course Candidate Injection Results"
+Cohesion: 0.17
+Nodes (11): 1. What Changed, 2. Data Integrity, 4. A/B/C Comparison, 6. Real-Time Performance, 8. Next Steps, 9. Branch Exit Instructions, Latency — `run_20261021T114914_4f2dcd430e`, Latency — `run_20261021T115456_6af0d2c1ad` (+3 more)
 
-### Community 195 - "test_train_models.py"
-Cohesion: 0.14
-Nodes (12): feature_importance(), FakeImportanceModel, temporal_frame(), test_calibration_table_returns_only_populated_bins_with_correct_aggregates(), test_classification_metrics_clips_endpoint_probabilities(), test_classification_metrics_known_ranking_and_probabilities(), test_feature_importance_returns_top_25_without_renormalizing(), test_feature_importance_sorts_descending_and_normalizes_gain() (+4 more)
+### Community 195 - "is_regular_semester"
+Cohesion: 0.29
+Nodes (7): count_regular_semesters_between(), is_regular_semester(), add_enrollment_features(), test_count_regular_semesters_between_rejects_invalid_part_id(), test_is_regular_semester(), test_is_regular_semester_rejects_invalid_part_id(), test_regular_semesters_between()
 
-### Community 196 - "test_api_integration.py"
-Cohesion: 0.13
-Nodes (31): catalog(), grade_scale(), payloads(), service(), test_actual_sanitized_student_reports_missing_diploma_and_denominator(), test_all_17_courses_and_attempt_conversion_preserve_group_identity(), test_complete_schema_rejects_invalid_previous_gpa_and_fractional_counter(), test_complete_student_uses_previous_gpa_and_explicit_denominator() (+23 more)
+### Community 196 - "payloads"
+Cohesion: 0.24
+Nodes (19): payloads(), service(), test_actual_sanitized_student_reports_missing_diploma_and_denominator(), test_all_17_courses_and_attempt_conversion_preserve_group_identity(), test_complete_schema_rejects_invalid_previous_gpa_and_fractional_counter(), test_complete_student_uses_previous_gpa_and_explicit_denominator(), test_conflicting_historical_semester_aliases_rejected(), test_count_outside_model_float_range_is_input_error() (+11 more)
 
-### Community 197 - "workflow.py"
-Cohesion: 0.07
-Nodes (46): run(), run(), validated_model(), build(), deltas(), table(), authenticate_record(), authenticate_selection() (+38 more)
+### Community 197 - "file_sha256"
+Cohesion: 0.08
+Nodes (45): run(), validated_model(), build(), deltas(), table(), authenticate_record(), authenticate_selection(), publish_completion() (+37 more)
 
-### Community 198 - "Academic Advisor — Pilot 20251"
-Cohesion: 0.12
-Nodes (16): A — النظام الأصلي, Academic Advisor — Pilot 20251, B — تاريخ الجامعة, C — النظام المحسّن, التشغيل, الحالات المستقلة, المدخلات المشتركة ومعنى «سياق الخطة», المدخلات والسياسات (+8 more)
+### Community 198 - "Pilot 20251 — فصل Before / After Backend Fix"
+Cohesion: 0.15
+Nodes (12): 7. Historical Validity, Saved warnings, Validation evidence, Pilot 20251 — فصل Before / After Backend Fix, أوامر المشغّل — لم تُنفذ عمليات الجمع أو الدفعة التالية, إجراءات الترحيل وسلامة الملفات, البنية النهائية, التحقق والاختبارات (+4 more)
 
 ### Community 199 - "مجاميع الدفعات ومدير اللقطة"
 Cohesion: 0.12
 Nodes (16): المجاميع التي يسمح بها العقد, تسلسل المنطق وأسباب الخطوات, طرق الأصناف الموجودة, مجاميع الدفعات ومدير اللقطة, ١. لماذا يوجد هذا الملف؟, ١٠. الاختبارات, ١١. القيود المعروفة, ١٢. مراجعة سريعة (+8 more)
 
-### Community 201 - "test_two_stage_matrix.py"
-Cohesion: 0.33
-Nodes (8): _legacy_47_matrix(), _matrix_inputs(), test_default_matrix_matches_legacy_47_exactly_without_mutating_inputs(), test_explicit_feature_order_coerces_only_the_requested_columns(), test_explicit_features_reject_duplicate_model_columns(), test_explicit_features_reject_names_outside_the_model_contract(), test_legacy_course_matrix_api_retains_33_feature_coercion_and_missing_validation(), test_stage1_matches_legacy_slice_without_requiring_plan_context()
+### Community 201 - "prepare_model_matrix"
+Cohesion: 0.08
+Nodes (32): Phase 2 — Payload Adapters, Matrix Helper, Classification & Constraints, Constraints and review focus, Official Recommendation V2 Implementation Plan, Tasks, 10. المشاكل أو القيود المعروفة, 11. ماذا تستلم المرحلة التالية؟, 1. الفكرة العامة, 2. قبل → بعد (+24 more)
 
 ### Community 202 - "المحرك المعتمد ذو المرحلتين"
 Cohesion: 0.12
@@ -1034,9 +1057,9 @@ Nodes (16): المحرك المعتمد ذو المرحلتين, تسلسل ال
 Cohesion: 0.25
 Nodes (4): DecimalRequest, DecimalRoute, preserve_credit_precision(), المسارات والتشخيص
 
-### Community 204 - "test_pilot_20251_snapshot_paths.py"
-Cohesion: 0.10
-Nodes (14): cohort(), SyntheticEngine, test_api_csv_selection_validation_storage_and_loopback(), test_batch_continues_and_saved_result_is_immutable(), test_retired_experimental_model_cannot_reappear_as_available_saved_predictions(), test_store_rejects_path_traversal(), test_before_snapshot_cannot_start_new_runs(), test_before_view_cannot_rescore_an_after_run_with_before_inputs() (+6 more)
+### Community 204 - "ComparisonRunner"
+Cohesion: 0.13
+Nodes (9): test_capture_to_snapshot_to_recommendation_smoke(), build_experimental_university_history(), build_university_history(), _issue(), _read_source(), _validate_rows(), الهدف الدقيق للساعات من API, ComparisonRunner (+1 more)
 
 ### Community 205 - "Frozen History Fallback Coverage Audit"
 Cohesion: 0.12
@@ -1047,40 +1070,40 @@ Cohesion: 0.13
 Nodes (15): ابدأ هنا: فهم المرشد الأكاديمي, التدريب مختلف عن الاستدلال, الجلسة الأولى: اقرأ طلبًا من أوله إلى نهايته, الجلسة الثالثة: افهم مصدر كل ميزة, الجلسة الثامنة: راجع الأدلة وحدود الفهم, الجلسة الثانية: أثبت لقطة الطالب والمرشحين, الجلسة الخامسة: ميز النسخة المنشورة من النشطة, الجلسة الرابعة: تابع الخطة الممكنة إلى ترتيبها (+7 more)
 
 ### Community 207 - "Pre-Modeling Data V2 and Features V2 Audit"
-Cohesion: 0.12
-Nodes (13): 10. Blockers, 12. Final Decision, 1. Executive Result, 2. Pipeline Map, 3. Artifact Inventory, 4. V1/V2 Isolation, 5. Temporal Integrity, 6. Leakage Audit (+5 more)
+Cohesion: 0.11
+Nodes (18): 10. Blockers, 11. Non-blocking Review Items, 12. Final Decision, 1. Executive Result, 2. Pipeline Map, 3. Artifact Inventory, 5. Temporal Integrity, 6. Leakage Audit (+10 more)
 
 ### Community 208 - "الجلب المباشر الاختياري للاختبار"
 Cohesion: 0.13
 Nodes (15): الجلب المباشر الاختياري للاختبار, تسلسل المنطق وأسباب الخطوات, طرق الأصناف الموجودة, ١. لماذا يوجد هذا الملف؟, ١٠. الاختبارات, ١١. القيود المعروفة, ١٢. مراجعة سريعة, ٢. أين يقع في النظام؟ (+7 more)
 
-### Community 209 - "test_clean_utils.py"
-Cohesion: 0.06
-Nodes (43): C. 47 Feature Audit, Data / Features V2 migration report — 2026-09-21, build_registration_roster(), main(), main(), build_temporal_split(), main(), summarize_split() (+35 more)
+### Community 209 - "two_stage_engine.py"
+Cohesion: 0.05
+Nodes (46): C. 47 Feature Audit, Data / Features V2 migration report — 2026-09-21, count(), main(), audit_policy(), verify_policy_only(), build_registration_roster(), main() (+38 more)
 
-### Community 211 - "11. Non-blocking Review Items"
-Cohesion: 0.22
-Nodes (9): 11. Non-blocking Review Items, REVIEW ITEM: Diploma preprocessing uses the full export, REVIEW ITEM: Future-dependent population selection, REVIEW ITEM: Missing history, catalog/diploma coverage, and zero credits, REVIEW ITEM: Modeling route and frozen history are separate, REVIEW ITEM: Observed joins are valid but some guards/reporting are absent, REVIEW ITEM: Official fail versus modeled fail, REVIEW ITEM: RAW temporal provenance and cumulative counters (+1 more)
+### Community 211 - "test_api_cumulative_integration.py"
+Cohesion: 0.45
+Nodes (10): configured(), delta(), initialize(), test_corrupt_active_pointer_preserves_independent_diagnostics(), test_http_migration_manual_auto_rollback_and_existing_pareto_contract(), test_missing_artifacts_block_migration_but_http_validation_remains_available(), test_oversized_integer_delta_is_rejected_safely_without_publication(), test_read_only_delta_validation_rejects_skipped_semester_without_writing() (+2 more)
 
-### Community 212 - "إصلاح تسمية مرشح `capacity_63`"
-Cohesion: 0.50
-Nodes (4): إصلاح تسمية مرشح `capacity_63`, الأدلة التاريخية وبصمات المصدر, التحقق, السبب والتغيير
+### Community 212 - "test_two_stage_shortlist.py"
+Cohesion: 0.29
+Nodes (8): synthetic_components(), candidates(), shortlist_api(), test_complete_feasibility_before_shortlist_fractional_and_optional_zero(), test_exact_long_decimal_cost_cannot_round_below_a_hard_cap(), test_no_lower_credit_fallback_and_no_prefiltering_of_failed_availability(), test_remaining_policy_arithmetic_preserves_every_supplied_decimal_digit(), test_shared_scoring_rejects_nonfinite_or_wrong_shape_before_clip()
 
 ### Community 213 - "تطبيع المواد والأهلية والقيود"
 Cohesion: 0.13
 Nodes (15): انتقال الحالة إلى المرشح, تسلسل المنطق وأسباب الخطوات, تطبيع المواد والأهلية والقيود, ١. لماذا يوجد هذا الملف؟, ١٠. الاختبارات, ١١. القيود المعروفة, ١٢. مراجعة سريعة, ٢. أين يقع في النظام؟ (+7 more)
 
-### Community 214 - "`Phase 3 — History Delta, Immutable Save & Atomic Swap`"
-Cohesion: 0.22
-Nodes (9): 10. المشاكل والقيود المعروفة — Known Limitations, 11. التسليم لبقية النظام — Handoff, 1. الفكرة العامة — Overview, 5. مخطط سير البيانات — Data Flow, 6. `Input → Processing → Output`, 7. التحقق والاختبارات — Validation & Tests, 8. أهم ما أثبتته المرحلة, 9. حدود المسؤولية (+1 more)
+### Community 214 - "FrozenHistoryManager"
+Cohesion: 0.06
+Nodes (25): **Frozen History**, Phase 3 — History Delta, Immutable Publication & Atomic State Swap, C. تحديث Frozen History بعد تثبيت فصل, التثبيت التلقائي الموثوق, المسار الإداري اليدوي, 10. المشاكل والقيود المعروفة — Known Limitations, 11. التسليم لبقية النظام — Handoff, 1. الفكرة العامة — Overview (+17 more)
 
-### Community 215 - "collect_pilot.py"
-Cohesion: 0.16
-Nodes (8): main(), config_from_file(), config(), test_custom_headers_can_be_loaded_from_env(), Config, _env_headers(), _env_map(), _valid_url()
+### Community 215 - "CandidateImportError"
+Cohesion: 0.27
+Nodes (3): 6. Error contract, CandidateImportError, ImportTests
 
-### Community 216 - "test_pilot_20251_adapter.py"
-Cohesion: 0.24
-Nodes (10): info(), test_count_must_be_integral(), test_five_values_are_direct_numeric_conversions(), test_identity_matches_all_three_fields(), test_local_response_hash_and_metadata_identity(), test_metadata_mismatch_rejected_even_with_valid_hash(), test_missing_value_is_not_derived(), test_reject_invalid_source_counter() (+2 more)
+### Community 216 - "test_pilot_20251_states.py"
+Cohesion: 0.09
+Nodes (12): info(), test_count_must_be_integral(), test_five_values_are_direct_numeric_conversions(), test_identity_matches_all_three_fields(), test_local_response_hash_and_metadata_identity(), test_metadata_mismatch_rejected_even_with_valid_hash(), test_missing_value_is_not_derived(), test_reject_invalid_source_counter() (+4 more)
 
 ### Community 217 - "الإعدادات ومصادرها البيئية"
 Cohesion: 0.13
@@ -1091,8 +1114,8 @@ Cohesion: 0.13
 Nodes (15): تحويل الطالب إلى لقطة بداية الفصل, تسلسل المنطق وأسباب الخطوات, خريطة المقام والمصادر, ١. لماذا يوجد هذا الملف؟, ١٠. الاختبارات, ١١. القيود المعروفة, ١٢. مراجعة سريعة, ٢. أين يقع في النظام؟ (+7 more)
 
 ### Community 219 - "test_pilot_20251_modeling.py"
-Cohesion: 0.07
-Nodes (28): peer_row(), test_actual_reduced_boosters_score_real_serving_history_without_attempt_averages(), test_difficulty_gap_uses_only_actual_prior_student_marks_and_credit_weights(), test_feature_matrix_rejects_original_attempt_contract_and_preserves_missingness(), test_inspection_cli_reports_absent_models_without_training_or_writing(), test_inspection_sanitizes_native_booster_error_and_preserves_independent_model(), test_loading_rejects_model_bundle_with_47_feature_serving_contract(), test_peer_estimate_is_missing_when_support_is_weak_without_inventing_points() (+20 more)
+Cohesion: 0.09
+Nodes (23): peer_row(), test_actual_reduced_boosters_score_real_serving_history_without_attempt_averages(), test_difficulty_gap_uses_only_actual_prior_student_marks_and_credit_weights(), test_feature_matrix_rejects_original_attempt_contract_and_preserves_missingness(), test_inspection_cli_reports_absent_models_without_training_or_writing(), test_peer_estimate_is_missing_when_support_is_weak_without_inventing_points(), test_peers_exclude_target_future_same_student_and_keep_latest_prior_attempt(), test_serving_research_features_reuse_identical_course_context_across_plans() (+15 more)
 
 ### Community 221 - "أدوات الهوية والأرقام والتشخيص الآمن"
 Cohesion: 0.13
@@ -1434,73 +1457,77 @@ Nodes (14): تحميل أصول المرحلتين والتحقق من مصدر�
 Cohesion: 0.14
 Nodes (14): تسلسل المنطق وأسباب الخطوات, واجهة اسم قديم لتحويل التصدير, ١. لماذا يوجد هذا الملف؟, ١٠. الاختبارات, ١١. القيود المعروفة, ١٢. مراجعة سريعة, ٢. أين يقع في النظام؟, ٣. المدخلات (+6 more)
 
-### Community 306 - "التاريخ الثابت والتراكمي: من البادئة إلى المؤشر النشط"
-Cohesion: 0.15
-Nodes (13): التاريخ الثابت والتراكمي: من البادئة إلى المؤشر النشط, ١. ثلاثة أشياء لا يجب خلطها, ١٠. تسلسل الآلي عند تثبيت نهائي, ١١. قطع الخدمة والاختبار التاريخي والرجوع, ١٢. ما ثبت وما بقي خارجيًا؟, ٢. بناء اللقطات الأولية, ٣. الوضع المحلي المفحوص, ٤. أساس تراكمي حتى نهاية الفصل الأول من سنة ألفين وخمس وعشرين (+5 more)
+### Community 306 - "load_or_train_holdout"
+Cohesion: 0.22
+Nodes (8): Task 2: Regression tests, Recommendation report only, Static dependency and writer audit, load_or_train_holdout(), _json_default(), save_results(), test_save_results_preserves_parquet_and_json_outputs(), test_experiment_saves_preserve_official_v2_and_legacy_hashes()
 
-### Community 307 - "J. Candidate & Requirement Policy Contract"
-Cohesion: 0.25
-Nodes (8): Catalog ownership, Current / Projected GPA, J. Candidate & Requirement Policy Contract, Requested credit hours والمواد ذات الساعات الصفرية, الحد الأدنى للمرشحين, الخطة الكاملة والمواد المسجلة مسبقًا, المتطلبات والساعات الاختيارية, جرد السياسات
-
-### Community 308 - "test_pilot_20251_feature_validation.py"
-Cohesion: 0.35
-Nodes (12): module(), records(), test_deterministic_sample_is_independent_of_source_row_order(), test_future_points_cannot_change_feature_metrics(), test_missing_historical_source_field_is_explicit(), test_no_target_rows_produces_explicit_blocked_diagnostic(), test_nullable_missing_trend_remains_missing_without_breaking_knn_query(), test_peer_and_baseline_exclude_self_target_and_future_outcomes() (+4 more)
-
-### Community 309 - "Data and features V2 structural migration"
+### Community 307 - "filter_common_students"
 Cohesion: 0.33
-Nodes (5): Completion evidence, Data and features V2 structural migration, Evidence and rulings, Review focus, Tasks
+Nodes (6): filter_common_students(), main(), test_does_not_modify_inputs_in_place(), test_keeps_all_rows_for_common_student_despite_different_parts_and_degrees(), test_keeps_only_students_present_in_both_tables(), test_stage_reads_pre_common_and_writes_filtered_v2()
 
-### Community 310 - "test_pilot_20251_selection.py"
-Cohesion: 0.07
-Nodes (10): predictor(), test_invalid_or_ambiguous_actual_plan_never_gets_fabricated_predictions(), Experiments, test_actual_plan_selected_models_preserve_context_and_never_run_unselected(), test_bc_selection_does_not_initialize_or_inspect_baseline(), forbidden(), test_invalid_selection_is_rejected_before_scoring(), test_runner_selection_reuses_engine_enriches_after_scoring_and_saves_compact() (+2 more)
+### Community 308 - "search_benchmark_ui.py"
+Cohesion: 0.26
+Nodes (7): _finite(), get_search_service(), _progress(), _render_saved(), render_search_benchmark(), _table(), _value()
 
-### Community 311 - "specialty_history.py"
-Cohesion: 0.33
-Nodes (6): 19. Risks and Limitations, _finish_specialty_history(), FrozenSpecialtyHistory, _merge_training_history(), _prior_aggregates(), _safe_average()
+### Community 309 - "pandas"
+Cohesion: 0.04
+Nodes (30): compare(), digest(), main(), main(), previous_academic_part(), validate_history_selection(), verify_legacy_course_history(), academic_part() (+22 more)
 
-### Community 312 - "isolated_io"
-Cohesion: 0.25
-Nodes (4): feature_rows(), isolated_io(), synthetic_train(), SyntheticModel
+### Community 310 - "5. Search Limitations"
+Cohesion: 0.22
+Nodes (9): 200 / 2000 reproducibility, 5. Search Limitations, Experiment A — Fixed 18 Credits — exposure and full-plan rank, Experiment A — Fixed 18 Credits — exposure and full-plan rank, Experiment B — Actual Credit Load Diagnostic — exposure and full-plan rank, Experiment B — Actual Credit Load Diagnostic — exposure and full-plan rank, Search — `run_20261021T114914_4f2dcd430e`, Search — `run_20261021T115456_6af0d2c1ad` (+1 more)
 
-### Community 314 - "test_course_only_recommendation.py"
-Cohesion: 0.17
-Nodes (11): synthetic_course_history(), experiment(), scores(), test_course_matrix_does_not_need_plan_context_and_retains_unknown_categories(), test_course_rows_reject_target_or_future_training_history_and_stale_history(), test_exact_search_uses_every_candidate_and_risk_then_course_order_for_ties(), test_fractional_credit_search_and_zero_credit_optional_courses(), test_optimizer_rejects_invalid_scores() (+3 more)
+### Community 311 - "experiments/modeling.py"
+Cohesion: 0.37
+Nodes (11): اليوم الثالث: آخر تعديلين والترشيح — حوالي 4.5 ساعات, aggregate_plans(), course_predictions(), evaluate_selected_holdout(), evaluate_variant(), feature_columns(), fit_experiment_model(), fit_weights() (+3 more)
+
+### Community 312 - "SyntheticModel"
+Cohesion: 0.22
+Nodes (3): SyntheticModel, test_main_reads_v2_and_writes_only_v2_with_correct_metadata(), synthetic_fit()
+
+### Community 313 - "add_specialty_history_features"
+Cohesion: 0.19
+Nodes (9): add_specialty_history_features(), SpecialtyHistoryTests, rows(), test_20251_excludes_current_and_future_and_20252_includes_finalized_20251(), test_empty_test_keeps_output_schema(), test_generalized_parts_restore_unsorted_rows_with_duplicate_indices(), test_new_degree_enters_both_hierarchy_levels_only_in_later_parts(), test_test_parts_must_all_follow_training() (+1 more)
+
+### Community 314 - "Run `run_20261021T114914_4f2dcd430e` — 200 plans"
+Cohesion: 0.22
+Nodes (9): 3. Before vs After, Experiment A — Fixed 18 Credits, Experiment A — Fixed 18 Credits, Experiment B — Actual Credit Load Diagnostic, Experiment B — Actual Credit Load Diagnostic, Paired recommendation summary, Paired recommendation summary, Run `run_20261021T114914_4f2dcd430e` — 200 plans (+1 more)
 
 ### Community 317 - "levels"
 Cohesion: 0.24
 Nodes (10): levels, path, sha256, diploma_type_id, grade_version_id, part_semester, plan_course_type_id, plan_requirement_type_id (+2 more)
 
-### Community 318 - "attempt_sum_removal/report.py"
-Cohesion: 0.39
-Nodes (4): _json(), render(), _table(), _value()
+### Community 318 - "isolated_io"
+Cohesion: 0.25
+Nodes (4): feature_rows(), isolated_io(), synthetic_train(), SyntheticModel
 
-### Community 319 - "SyntheticModel"
-Cohesion: 0.22
-Nodes (3): SyntheticModel, test_main_reads_v2_and_writes_only_v2_with_correct_metadata(), synthetic_fit()
+### Community 319 - "تقرير تنفيذ Backend API"
+Cohesion: 0.17
+Nodes (10): الخطة المعتمدة لدمج Backend API, النطاق والقرارات الملزمة, مراحل التنفيذ والقبول, Before / After ومسار البيانات, الاختبارات والأدلة, القيود المتبقية, المراجعة والحماية وGit, الملفات والواجهات المشتركة (+2 more)
 
-### Community 320 - "عقد تكامل PHP مع Academic Advisor"
-Cohesion: 0.29
-Nodes (7): A. إرسال معلومات الطالب, B. إرسال المواد, إعادة الإرسال واسترجاع النتيجة, الأخطاء والاحتفاظ والتشغيل, تطابق المكوّنين, عقد تكامل PHP مع Academic Advisor, مثال PHP مختصر
+### Community 320 - "importlib"
+Cohesion: 0.15
+Nodes (5): test_legacy_adapters_reexport_the_canonical_function(), test_validation_compatibility_retains_class_and_function_identity(), _import_targets(), test_production_packages_do_not_import_project_runner(), test_upstream_packages_do_not_import_recommendation()
 
-### Community 322 - ".convert"
-Cohesion: 0.29
-Nodes (4): 10. المشاكل والقيود المعروفة — Known Limitations, 10. المشاكل والقيود المعروفة — Known Limitations, 10. المشاكل والقيود المعروفة — Known Limitations, 13. GradeScale Conversion
+### Community 322 - "`Phase 4 — Balance Metrics & Independent Ranking Strategies`"
+Cohesion: 0.20
+Nodes (9): 10. المشاكل والقيود المعروفة — Known Limitations, 1. الفكرة العامة — Overview, 2. قبل → بعد, 5. مخطط سير البيانات — Data Flow, 6. `Input → Processing → Output`, 7. التحقق والاختبارات — Validation & Tests, 8. أهم ما أثبتته المرحلة, 9. حدود المسؤولية (+1 more)
 
 ### Community 323 - "test_pilot_20251_actual_candidates.py"
-Cohesion: 0.12
-Nodes (16): augment(), inputs(), test_conflicting_duplicate_actual_credits_are_rejected_without_overriding_catalog(), test_fractional_target_and_unknown_history_course_cannot_be_silently_accepted(), test_injected_courses_have_stable_normalized_id_order_without_resorting_api(), test_missing_actual_is_added_once_and_existing_numeric_id_is_not_duplicated(), test_missing_history_source_does_not_fabricate_first_attempt(), test_nonfinite_float_conversion_cannot_reach_predictor() (+8 more)
+Cohesion: 0.22
+Nodes (12): augment(), test_conflicting_duplicate_actual_credits_are_rejected_without_overriding_catalog(), test_fractional_target_and_unknown_history_course_cannot_be_silently_accepted(), test_injected_courses_have_stable_normalized_id_order_without_resorting_api(), test_missing_actual_is_added_once_and_existing_numeric_id_is_not_duplicated(), test_missing_history_source_does_not_fabricate_first_attempt(), test_nonfinite_float_conversion_cannot_reach_predictor(), test_original_prefix_and_all_inputs_are_unchanged_and_provenance_is_sidecar() (+4 more)
 
-### Community 324 - "FrozenHistoryManager"
-Cohesion: 0.05
-Nodes (35): 02 — End-to-End Pipeline, Orchestration وحدود التشغيل, V1 وV2 مساران منفصلان, الفجوات المثبتة / حدود الإثبات, المسار الجزئي للـTwo-Stage, Current Architecture Status, Implementation Progress, Phase 1 — Artifacts & Contracts (+27 more)
+### Community 324 - "1. ملفات التشغيل الأساسية"
+Cohesion: 0.09
+Nodes (26): 1. ملفات التشغيل الأساسية, 4. أهم الملفات بالتفصيل المختصر, `scripts/promote_shortlist_artifacts.py`, `src/paths.py` و`.gitattributes`, `src/recommendation/two_stage_artifacts.py`, 4. أهم الدوال والكلاسات — Important Functions, 4. Code Changes, 6. Function/Class Change Map (+18 more)
 
-### Community 325 - "التحقق من التوصية بالتراكمي المتوقع والتاريخ المجمد"
-Cohesion: 0.25
-Nodes (7): إعادة التشغيل على القوائم المحفوظة, التحقق الفعلي من النسختين, التحقق من التوصية بالتراكمي المتوقع والتاريخ المجمد, المعادلة والترتيب, الملفات والسبب المعماري, حدود الحساب وإعادة الإنتاج, نتائج الاختبارات
+### Community 325 - ".as_of_part"
+Cohesion: 0.11
+Nodes (16): API configuration and cumulative Frozen History, اتصال الجامعة, المحاولات والحالة السابقة, حدود الإثبات, عقد الإدارة مع PHP, مقام GPA وتوقيته, 5. Provenance contract, 6. نسخ Frozen Historical State (+8 more)
 
-### Community 326 - "project_status.py"
-Cohesion: 0.24
-Nodes (6): أكبر Technical Debt, main(), print_model_metrics(), ProjectStage, relative(), test_stage_paths_order_and_version_boundary()
+### Community 326 - "course_only_report.py"
+Cohesion: 0.33
+Nodes (4): build_report(), plan_table(), read_json(), table()
 
 ### Community 327 - "Attempt-Sum Removal Implementation Plan"
 Cohesion: 0.29
@@ -1514,113 +1541,197 @@ Nodes (5): Contracts, Ledger, Review focus and rulings, Task ownership, Unified 
 Cohesion: 0.29
 Nodes (6): Academic Advisor — Pilot API Capture tab, Archive layout, Before / After Backend Fix snapshots, Important limitations, Installation, Local tests
 
-### Community 330 - "pytest"
-Cohesion: 0.07
-Nodes (20): guards(), put(), symlink_or_skip(), test_assert_unchanged_accepts_only_allowed_new_outputs(), test_existing_output_is_never_overwritten_or_partially_created(), test_output_creation_rejects_parent_link_escape(), test_snapshot_excludes_only_runtime_and_allowed_outputs(), test_snapshot_hashes_protected_graph_data_and_sources() (+12 more)
+### Community 330 - "attempt_sum_removal/test_safeguards.py"
+Cohesion: 0.26
+Nodes (9): put(), symlink_or_skip(), test_assert_unchanged_accepts_only_allowed_new_outputs(), test_existing_output_is_never_overwritten_or_partially_created(), test_output_creation_rejects_parent_link_escape(), test_snapshot_excludes_only_runtime_and_allowed_outputs(), test_snapshot_hashes_protected_graph_data_and_sources(), test_snapshot_rejects_symlink_without_reading_external_data() (+1 more)
 
-### Community 332 - "F. Precomputed Serving State"
-Cohesion: 0.40
-Nodes (5): attempt_number: القرار المدعوم بالأدلة, F. Precomputed Serving State, GPA history: المتشابهات ليست مترادفات, observed_gap_semesters, Student totals و Leakage
+### Community 332 - "ExperimentalModels"
+Cohesion: 0.18
+Nodes (5): test_inspection_sanitizes_native_booster_error_and_preserves_independent_model(), test_loading_rejects_model_bundle_with_47_feature_serving_contract(), UniversityHistory, ExperimentalModels, load_model_bundle()
 
 ### Community 335 - "test_downstream.py"
 Cohesion: 0.48
 Nodes (4): candidate_rows(), pool(), test_candidate_choice_and_context_are_outcome_independent(), test_exact_candidates_recompute_plan_and_peer_context()
 
-### Community 336 - "test_invalid_production_config_keeps_offline_pilot_available"
+### Community 336 - "Search benchmark implementation ledger"
 Cohesion: 0.29
-Nodes (4): test_existing_console_keeps_production_form_history_and_collection(), forbidden(), test_invalid_production_config_keeps_offline_pilot_available(), test_pilot_mode_inside_existing_tab_has_no_http_requests()
+Nodes (6): Design, Execution rulings, Final evidence, Review focus, Search benchmark implementation ledger, Tasks and verification
 
-### Community 337 - "I. Semester Update Lifecycle"
-Cohesion: 0.40
-Nodes (5): Gaps يجب حلها قبل تغليف التدريب الحالي, I. Semester Update Lifecycle, التوصية أثناء 20261 غير المكتمل, بعد إغلاق الفصل أو وصول تصحيح, صلاحيات الأدمن والـ Jobs المقترحة
+### Community 337 - "specialty_history.py"
+Cohesion: 0.24
+Nodes (10): 19. Risks and Limitations, _finish_specialty_history(), FrozenSpecialtyHistory, _merge_frozen_test_history(), _merge_sequential_test_history(), _merge_training_history(), _prior_aggregates(), _safe_average() (+2 more)
 
 ### Community 338 - "ranking_policy"
 Cohesion: 0.22
 Nodes (11): stage1_shortlist_strategy, backend_max_candidate_count, memory_budget_per_request, recommendation_latency_sla, ranking_policy, approved_combination, operational_contracts, schema_version (+3 more)
 
+### Community 339 - "clean_student_status"
+Cohesion: 0.31
+Nodes (16): clean_student_status(), main(), make_status_row(), test_add_enrollment_features_tracks_only_observed_history(), test_business_filters_remove_only_the_matching_row(), test_clean_student_status_preserves_columns_and_normalizes_ids_and_text(), test_enrolled_optional_semester_updates_last_enrolled_gpa(), test_every_excluded_permanent_status_id_is_filtered() (+8 more)
+
 ### Community 340 - "Phase 6 — Synthetic two-stage benchmark"
 Cohesion: 0.33
 Nodes (5): Cross-stage combinations — actual warm engine, Final on fixed shortlist tradeoffs, Limits and decisions still required, Phase 6 — Synthetic two-stage benchmark, Stage 1 tradeoffs
 
-### Community 341 - "experiments/modeling.py"
-Cohesion: 0.39
-Nodes (10): اليوم الثالث: آخر تعديلين والترشيح — حوالي 4.5 ساعات, aggregate_plans(), course_predictions(), evaluate_selected_holdout(), evaluate_variant(), fit_experiment_model(), fit_weights(), learn_levels() (+2 more)
+### Community 341 - "test_pilot_20251_feature_validation.py"
+Cohesion: 0.35
+Nodes (12): module(), records(), test_deterministic_sample_is_independent_of_source_row_order(), test_future_points_cannot_change_feature_metrics(), test_missing_historical_source_field_is_explicit(), test_no_target_rows_produces_explicit_blocked_diagnostic(), test_nullable_missing_trend_remains_missing_without_breaking_knn_query(), test_peer_and_baseline_exclude_self_target_and_future_outcomes() (+4 more)
 
-### Community 344 - "Academic Advisor — Architecture Map"
-Cohesion: 0.40
-Nodes (5): Academic Advisor — Architecture Map, Architecture Map, Flows غير مثبتة, Important Boundaries, نطاق الفحص وحدود التحقق
+### Community 342 - "test_previous_course_status_inference.py"
+Cohesion: 0.21
+Nodes (7): inference(), test_augmented_scoring_clips_predictions_before_grade_conversion(), test_augmented_scoring_rejects_nonfinite_predictions(), test_course_comparison_joins_by_course_identity_and_keeps_status(), test_course_comparison_rejects_mismatched_candidate_rows(), test_plan_comparison_uses_same_memberships_and_reports_rank_changes(), test_unresolved_prior_attempt_is_unknown_in_serving_rows()
 
-### Community 345 - "18. Top 3 Output"
-Cohesion: 0.40
-Nodes (5): 18. Top 3 Output, Rank 1 — plan 797, Rank 2 — plan 2173, Rank 3 — plan 1080, Schema الفعلي
+### Community 343 - "Production Contract — PHP ↔ Python Recommendation Service"
+Cohesion: 0.20
+Nodes (10): 10. Proposed production structure (not created), 1. Baseline and deployment direction, 2. Recommendation request contract, 3. Candidate source contract, 4. Recommendation response contract, 7. Production Invariants, 9. Offline Build Pipeline vs Online Serving Pipeline, Production Contract — PHP ↔ Python Recommendation Service (+2 more)
 
-### Community 346 - "_weighted_history_source"
-Cohesion: 0.50
-Nodes (4): _merge_frozen_test_history(), _merge_sequential_test_history(), _total_aggregates(), _weighted_history_source()
+### Community 344 - "J. Candidate & Requirement Policy Contract"
+Cohesion: 0.25
+Nodes (8): Catalog ownership, Current / Projected GPA, J. Candidate & Requirement Policy Contract, Requested credit hours والمواد ذات الساعات الصفرية, الحد الأدنى للمرشحين, الخطة الكاملة والمواد المسجلة مسبقًا, المتطلبات والساعات الاختيارية, جرد السياسات
 
-### Community 347 - "تجربة مستقلة لحذف `attempt_number` — 2026-10-08"
-Cohesion: 0.14
-Nodes (13): أهمية الميزة داخل الأشجار, الأثر على التوصيات, التحقق من السكربت والمشروع, العزل والملفات, المقاييس على Holdout, النتيجة, تجربة مستقلة لحذف `attempt_number` — 2026-10-08, عدم اليقين (+5 more)
+### Community 345 - "عقد تكامل PHP مع Academic Advisor"
+Cohesion: 0.29
+Nodes (7): A. إرسال معلومات الطالب, B. إرسال المواد, إعادة الإرسال واسترجاع النتيجة, الأخطاء والاحتفاظ والتشغيل, تطابق المكوّنين, عقد تكامل PHP مع Academic Advisor, مثال PHP مختصر
+
+### Community 346 - "Pilot 20251 — API credit targets and search benchmark"
+Cohesion: 0.09
+Nodes (21): 10. النتائج المقاسة والقرار, 11. التحقق والحماية, 12. الملفات والمخرجات, 13. معايير القبول, 1. حل هدف الساعات من API, 2. فضاء البحث والاستراتيجيات, 3. تجربة الـ2000-pool, 4. تجربة الفضاء الكامل (+13 more)
+
+### Community 347 - "طبقة API في Academic Advisor"
+Cohesion: 0.25
+Nodes (8): History Delta والإدارة, How to Run, PHP-push: المسار الأساسي, Project Structure, الإعدادات الأخرى, التحقق من إعادة التنظيم, المواد والتوصية, طبقة API في Academic Advisor
 
 ### Community 348 - "balance_policy"
 Cohesion: 0.18
 Nodes (11): failed_band, max_credits, min_credits, other_previous_selected, scope_rule, semesters, total_previous_band, unavailable_component (+3 more)
 
-### Community 349 - "read.md"
-Cohesion: 0.50
-Nodes (3): الأولوية الحالية, اليوم الثاني: التدريب والتقييم — حوالي 4 ساعات, ملفات لا تعطيها وقتًا كبيرًا الآن
+### Community 349 - "test_model_artifact_isolation.py"
+Cohesion: 0.33
+Nodes (6): isolation_violations(), test_artifact_namespaces(), test_dependency_checker_allows_official_and_local_imports(), test_dependency_checker_detects_forbidden_imports_and_paths(), test_official_packages_do_not_depend_on_experiments(), test_xml_recommendation_exception_does_not_allow_direct_experiment_imports()
 
 ### Community 350 - "Pilot Backend Snapshots Implementation Plan"
 Cohesion: 0.40
 Nodes (4): Decisions and evidence, Pilot Backend Snapshots Implementation Plan, Tasks, Verification ledger
 
-### Community 351 - "5. Which Frozen History Was Selected and Why"
-Cohesion: 0.50
-Nodes (4): 5. Which Frozen History Was Selected and Why, الـ bundle الفعلي المستخدم, المعنى والمواعيد الأربعة, من أين بُني؟
-
-### Community 352 - "load_or_train_holdout"
-Cohesion: 0.22
-Nodes (8): Execution notes, Global Constraints, Model Artifact Isolation Audit Implementation Plan, Review Focus, Task 1: Inventory and protections, Task 2: Regression tests, Task 3: Policy and audit report, load_or_train_holdout()
+### Community 351 - "official_artifacts"
+Cohesion: 0.29
+Nodes (4): 4. V1/V2 Isolation, traced(), official_artifacts(), read_parquet()
 
 ### Community 353 - "prediction_contract"
 Cohesion: 0.25
 Nodes (8): clip, clip, expected_points_method, prediction_contract, fail, grade, reject_non_finite, reject_wrong_shape
 
-### Community 354 - "analyze_course_plan_changes.py"
-Cohesion: 0.83
-Nodes (3): main(), normalize_name(), print_table()
+### Community 354 - "ما الذي يعتمد عليه كل نظام؟"
+Cohesion: 0.25
+Nodes (8): A — النظام الأصلي, B — تاريخ الجامعة, C — النظام المحسّن, المدخلات المشتركة ومعنى «سياق الخطة», تدريب B/C والتحقق منهما, كيف تُحسب توقعات المواد التي اختارها الطالب فعلياً؟, ما الذي يعتمد عليه كل نظام؟, ملفات التنفيذ الأساسية
 
 ### Community 355 - "human_approval"
 Cohesion: 0.29
 Nodes (7): authority, basis, date, limitations, rationale, source, human_approval
 
+### Community 356 - "تدقيق دلالات المدخلات الأكاديمية"
+Cohesion: 0.33
+Nodes (5): اتساق التدريب والميزات, الاختبارات, المحاولات والحالة السابقة, تدقيق دلالات المدخلات الأكاديمية, مقام المعدل وحدود الزمن
+
+### Community 357 - "Academic Advisor — Pilot 20251"
+Cohesion: 0.14
+Nodes (11): المدخلات والحساب, النتائج والتحقق, شرح الأنظمة وتوقع الخطة الفعلية — 2026-10-20, Academic Advisor — Pilot 20251, التشغيل, الحالات المستقلة, المدخلات والسياسات, النتائج والاختبارات (+3 more)
+
 ### Community 358 - "final_ranking_strategy"
 Cohesion: 0.67
 Nodes (4): final_ranking_strategy, name, version, final_ranking_strategy
 
-### Community 367 - ".directory"
+### Community 359 - "pytest"
 Cohesion: 0.12
-Nodes (5): ExperimentCacheTests, FeaturePipelineTests, build(), SyntheticIntegrationTests, PlanPreservationTests
+Nodes (5): synthetic_grade_scale(), test_invalid_or_ambiguous_actual_plan_never_gets_fabricated_predictions(), _hashes(), test_real_experimental_feature_pipeline_is_identical_with_stage_timers(), test_saved_synthetic_student_runs_directly_and_cold_browsing_never_scores()
+
+### Community 360 - "attempt_sum_removal/report.py"
+Cohesion: 0.39
+Nodes (4): _json(), render(), _table(), _value()
+
+### Community 361 - "Model Artifact Isolation Audit Implementation Plan"
+Cohesion: 0.29
+Nodes (6): Execution notes, Global Constraints, Model Artifact Isolation Audit Implementation Plan, Review Focus, Task 1: Inventory and protections, Task 3: Policy and audit report
+
+### Community 362 - "تشغيل توصيات الخطط محلياً"
+Cohesion: 0.29
+Nodes (7): 1. قائمة المواد, 2. التشغيل من مجلد المشروع, 3. المودل والنتائج, 4. الاختبارات وقياس الأداء, 5. معادلة الترتيب وحدود الإعادات, 7. إعادة تشغيل المثال المحلي السابق, تشغيل توصيات الخطط محلياً
+
+### Community 363 - "تحقق النسخة النهائية"
+Cohesion: 0.33
+Nodes (5): إعادة التحقق, تحقق النسخة النهائية, تحقق الوظائف, تحقق مسار توصيات الخطط المحلي — 2026-09-12, قياس الأداء السابق
+
+### Community 364 - "I. Semester Update Lifecycle"
+Cohesion: 0.40
+Nodes (5): Gaps يجب حلها قبل تغليف التدريب الحالي, I. Semester Update Lifecycle, التوصية أثناء 20261 غير المكتمل, بعد إغلاق الفصل أو وصول تصحيح, صلاحيات الأدمن والـ Jobs المقترحة
+
+### Community 365 - "Data and features V2 structural migration"
+Cohesion: 0.33
+Nodes (5): Completion evidence, Data and features V2 structural migration, Evidence and rulings, Review focus, Tasks
+
+### Community 366 - "SyntheticXmlEngine"
+Cohesion: 0.22
+Nodes (4): inputs(), SyntheticXmlEngine, v2_inputs(), xml_v2_run()
+
+### Community 367 - "temporal_features.py"
+Cohesion: 0.05
+Nodes (32): 03 — Data + Features Pipeline, B. فرع Roster — تسجيلات السياق وليست Targets, C. Feature Engineering — 9 عقد, حدود جودة البيانات والزمن, لقطة الوسائط المحلية, مصادر البيانات الفعلية, اليوم الأول: كيف تُبنى الخصائص — حوالي 4.5 ساعات, 10. Course History Feature Injection (+24 more)
+
+### Community 368 - "Academic Advisor — Architecture Map"
+Cohesion: 0.22
+Nodes (8): Academic Advisor — Architecture Map, Architecture Map, Current Architecture Status, Flows غير مثبتة, Important Boundaries, أكبر Technical Debt, نطاق الفحص وحدود التحقق, ProjectStage
+
+### Community 369 - "H. Frozen History Analysis"
+Cohesion: 0.40
+Nodes (4): H. Frozen History Analysis, التحقق، اكتمال المصدر والتصحيحات, المدخلات والمجاميع المخزنة, الملفات الموجودة فعليًا وحدودها
+
+### Community 370 - "D. Raw Data Sources"
+Cohesion: 0.50
+Nodes (4): D. Raw Data Sources, Schemas الفعلية كاملة, أمثلة Provenance من Raw إلى Model, ما أثبتته القيم الفعلية
+
+### Community 371 - "5. Which Frozen History Was Selected and Why"
+Cohesion: 0.50
+Nodes (4): 5. Which Frozen History Was Selected and Why, الـ bundle الفعلي المستخدم, المعنى والمواعيد الأربعة, لماذا frozen، وكيف يمنع التسرب؟
+
+### Community 372 - "test_withdrawn_counts_as_attempt_before_removal"
+Cohesion: 0.67
+Nodes (3): A. Current semantics, الفرق الحالي مع Serving, test_withdrawn_counts_as_attempt_before_removal()
+
+### Community 375 - "benchmark_two_stage.py"
+Cohesion: 0.06
+Nodes (6): cohort_counts(), main(), benchmark(), main(), peak_memory_mib(), write_json()
+
+### Community 376 - "read.md"
+Cohesion: 0.50
+Nodes (3): الأولوية الحالية, اليوم الثاني: التدريب والتقييم — حوالي 4 ساعات, ملفات لا تعطيها وقتًا كبيرًا الآن
+
+### Community 377 - "إصلاح تسمية مرشح `capacity_63`"
+Cohesion: 0.50
+Nodes (4): إصلاح تسمية مرشح `capacity_63`, الأدلة التاريخية وبصمات المصدر, التحقق, السبب والتغيير
+
+### Community 379 - "analyze_course_plan_changes.py"
+Cohesion: 0.83
+Nodes (3): main(), normalize_name(), print_table()
 
 ## Knowledge Gaps
-- **2289 isolated node(s):** `dataset_version`, `feature_engineering_version`, `grade_scale_sha256`, `grade_scale_version`, `path` (+2284 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 3356 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **54 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **2309 isolated node(s):** `dataset_version`, `feature_engineering_version`, `grade_scale_sha256`, `grade_scale_version`, `path` (+2304 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 3446 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **49 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `GradeScale` connect `GradeScale` to ``Phase 6 — Corrected Benchmark & Independent Strategy Evidence``, `pandas`, `analyze_model_errors.py`, `architecture/README.md`, `fixture`, `attempt_number_experiment.py`, `experiment_io.py`, `prepare_model_matrix`, `two_stage_engine.py`, `prepare_recommendation_payloads`, ``Phase 7 — Approved Manifest Policies & Revalidation``, `service.py`, `test_xml_two_stage_search.py`, `executed_workflow.py`, ``Phase 1 — Artifacts & Contracts``, `evaluate_corrected_phase6.py`, `degree_points.py`, ``Phase 4 — Balance Metrics & Independent Ranking Strategies``, `inputs.py`, `FrozenHistoryManager`, `workflow.py`, `.convert`, `test_api_integration.py`, `Academic Advisor — Pilot 20251`, `Pilot 20251 — فصل Before / After Backend Fix`, `تجربة مستقلة لحذف `attempt_number` — 2026-10-08`, `test_pilot_20251_modeling.py`, `ابدأ من هنا — Academic Advisor`, `ApiService`, `1. ملفات التشغيل الأساسية`, `copy`?**
-  _High betweenness centrality (0.085) - this node is a cross-community bridge._
-- **Why does ``Phase 3 — History Delta, Immutable Save & Atomic Swap`` connect ``Phase 3 — History Delta, Immutable Save & Atomic Swap`` to `test_history.py`, `PHASE_07_MANIFEST_POLICIES_REVALIDATION.md`, `frozen_history.py`?**
-  _High betweenness centrality (0.073) - this node is a cross-community bridge._
-- **Why does ``Phase 7 — Approved Manifest Policies & Revalidation`` connect ``Phase 7 — Approved Manifest Policies & Revalidation`` to `.convert`, `PHASE_07_MANIFEST_POLICIES_REVALIDATION.md`, `1. ملفات التشغيل الأساسية`?**
-  _High betweenness centrality (0.066) - this node is a cross-community bridge._
+- **Why does `GradeScale` connect `GradeScale` to `analyze_model_errors.py`, `fixture`, `attempt_number_removal_recheck.py`, `TwoStagePlanRecommender`, ``Phase 7 — Approved Manifest Policies & Revalidation``, `evaluate_corrected_phase6.py`, `service.py`, `test_xml_two_stage_search.py`, `load_or_train_holdout`, `pandas`, `executed_workflow.py`, ``Phase 1 — Artifacts & Contracts``, `degree_points.py`, ``Phase 4 — Balance Metrics & Independent Ranking Strategies``, `recommendation/__init__.py`, `1. ملفات التشغيل الأساسية`, `file_sha256`, `prepare_model_matrix`, `ExperimentalModels`, `تقرير تنفيذ Pilot 20251 — 2026-10-19`, `test_model_artifact_isolation.py`, `ابدأ من هنا — Academic Advisor`, `ما الذي يعتمد عليه كل نظام؟`, `ApiService`, `pytest`, `تشغيل توصيات الخطط محلياً`, `temporal_features.py`, `test_api_integration.py`?**
+  _High betweenness centrality (0.084) - this node is a cross-community bridge._
+- **Why does ``Phase 3 — History Delta, Immutable Save & Atomic Swap`` connect `FrozenHistoryManager` to `PHASE_07_MANIFEST_POLICIES_REVALIDATION.md`?**
+  _High betweenness centrality (0.075) - this node is a cross-community bridge._
+- **Why does ``Phase 7 — Approved Manifest Policies & Revalidation`` connect ``Phase 7 — Approved Manifest Policies & Revalidation`` to `PHASE_07_MANIFEST_POLICIES_REVALIDATION.md`, `1. ملفات التشغيل الأساسية`?**
+  _High betweenness centrality (0.059) - this node is a cross-community bridge._
 - **Are the 15 inferred relationships involving `ApiError` (e.g. with `adapt_courses()` and `adapt_history_delta()`) actually correct?**
   _`ApiError` has 15 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `dataset_version`, `feature_engineering_version`, `grade_scale_sha256` to the rest of the system?**
-  _2289 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _2309 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `00_START_HERE.md` be split into smaller, more focused modules?**
-  _Cohesion score 0.05847897968823807 - nodes in this community are weakly interconnected._
-- **Should `pandas` be split into smaller, more focused modules?**
-  _Cohesion score 0.03784798248357835 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.061332534212366396 - nodes in this community are weakly interconnected._
+- **Should `verify_cleaning_policy_v2.py` be split into smaller, more focused modules?**
+  _Cohesion score 0.14624505928853754 - nodes in this community are weakly interconnected._

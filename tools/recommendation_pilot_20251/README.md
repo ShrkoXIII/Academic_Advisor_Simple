@@ -223,3 +223,13 @@ MAX_NEW_COURSES مصدرهCourses API.data.registserRule؛ وجوده لا يث�
 راجع [تقرير حل العوائق والتحقق](../../reports/pilot_20251_dashboard_resolution.md) للأرقام الفعلية. لا طلبات جامعة أو كتابة للأرشيف أو استبدال نماذج أصلية أوHistory Commit أوActivate.
 
 راجع أيضاً [تقرير توقعات الخطة الفعلية والتحقق](../../reports/pilot_20251_actual_plan_forecasts.md):142 اختبارPilot ناجحاً، وتوقعات فعلية لكل166 مادة للطلاب30 في كل نظام، مع مطابقة الحساب الجماعي والفردي.
+
+## الهدف الدقيق للساعات من API
+
+في واجهة Streamlit و`PilotEngine` و`ComparisonRunner` أصبح الافتراضي `target_credits=None`، ويُحل لكل طالب مستقلاً إلى `MAX_CREDITS` من `Courses API.data.registserRule` بشرط `LOAD_TYPE=CREDIT` وصحة `MIN_CREDITS..MAX_CREDITS`. مثال: مجال 9–12 ينتج هدفاً دقيقاً 12، ومجال 12–16 ينتج 16. لا تُشتق الحدود من `MAX_NEW_COURSES` أو مجموع ساعات المرشحين أو حدود مجموعات المتطلبات.
+
+إذا توفر `integration_context.registration_policy` بمصدر صريح و`part_id` مطابق، يُطبق تقاطع المجال العام مع `MIN_STUDY_CREDITS..MAX_STUDY_CREDITS` عند `load_profile=study`، أو `GRAD_MIN_LIMIT..GRAD_MAX_LOAD` عند `load_profile=graduation`، كما في عقد `_rules`. لا يُستنتج الملف من معدل الطالب أو اقترابه من التخرج. أرشيف Student/Courses الحالي لا يوفر سياسة تكامل مؤكدة؛ تبقى حقول الملفات الأخرى دليلاً غير مُطبق.
+
+الحدود الناقصة أو المتعارضة تنتج `UNRESOLVED` وسبب حظر واضح، دون افتراض 18. إن لم توجد مجموعة تساوي الهدف تماماً، تكون النتيجة `NO_MATCHING_PLAN` ولا يُخفض الهدف. يعرض Streamlit الحدين والمصدر `API`، ويعيد الحل عند تغيير الطالب. تشغيل الدفعة يحفظ `credit_targets_by_student` في البيان مع الحدود والهدف ومصدرهما لكل طالب.
+
+التجاوز اليدوي يحتاج تفعيل خيار مستقل خاص بالطالب والنسخة، ويظهر باسم `MANUAL_DIAGNOSTIC`. لا يتجاوز أي حد API معروف، ولا ينتقل إدخال طالب إلى غيره؛ التشغيل اليدوي في الواجهة لطالب واحد فقط. تبقى الاستدعاءات البرمجية القديمة ذات `target_credits` صريح متوافقة كتجارب يدوية موسومة بهذا المصدر. الاستخدام الاعتيادي يترك الوسيط `None`.

@@ -18,7 +18,7 @@ from ui_client import (ClientError, Config, HttpClient, encode_json, load_contex
                        previous_academic_part, student_degree_id)
 from pilot_collection_store import PilotCollectionStore, CollectionError, history_parts
 
-st.set_page_config(page_title="Academic Advisor · Test Console", page_icon="🎓", layout="wide")
+st.set_page_config(page_title="Academic Advisor · Test Console", page_icon="😝😝", layout="wide")
 
 
 def view_json(value):
@@ -48,11 +48,14 @@ except ClientError as exc:
     ])
     with tab_recommend:
         operating_mode = st.radio(
-            "وضع التشغيل", ["Production FastAPI", "Pilot 20251 — Model Comparison"],
+            "وضع التشغيل", ["Production FastAPI", "Pilot 20251 — Model Comparison", "🔎 Search Benchmark"],
             horizontal=True, key="advisor_operating_mode")
         if operating_mode == "Pilot 20251 — Model Comparison":
             from pilot_ui import render_pilot
             render_pilot()
+        elif operating_mode == "🔎 Search Benchmark":
+            from search_benchmark_ui import render_search_benchmark
+            render_search_benchmark()
         else:
             st.warning("إعدادات Production غير متاحة؛ صحّح إعدادات الاتصال لإتاحة جلب البيانات والتوصية.")
     with tab_history:
@@ -138,11 +141,14 @@ tab_recommend, tab_history, tab_collection = st.tabs([
 
 with tab_recommend:
     operating_mode = st.radio(
-        "وضع التشغيل", ["Production FastAPI", "Pilot 20251 — Model Comparison"],
+        "وضع التشغيل", ["Production FastAPI", "Pilot 20251 — Model Comparison", "🔎 Search Benchmark"],
         horizontal=True, key="advisor_operating_mode")
     if operating_mode == "Pilot 20251 — Model Comparison":
         from pilot_ui import render_pilot
         render_pilot()
+    elif operating_mode == "🔎 Search Benchmark":
+        from search_benchmark_ui import render_search_benchmark
+        render_search_benchmark()
     else:
         st.info("أدخل معرف الطالب والفصل. سنجلب Student API أولاً، نقرأ degree_id منه، ثم نجلب Courses API. جلب البيانات وحده لا يشغّل المودل.")
         with st.form("student_form"):

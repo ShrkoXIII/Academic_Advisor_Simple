@@ -169,6 +169,9 @@ class RunStore:
         for student in results:
             for label, experiment in student.get("experiments", {}).items():
                 common = {"sample_id": student["sample_id"], "experiment": label, "status": experiment["status"],
+                          "target_credits": student.get('target_credits'),
+                          "target_credits_source": student.get('target_credits_source'),
+                          "minimum_credits": student.get('minimum_credits'), "maximum_credits": student.get('maximum_credits'),
                           "prediction_status": experiment.get("prediction_status", experiment["status"]),
                           "plan_status": experiment.get("plan_status", "UNAVAILABLE"),
                           "cumulative_gpa_status": experiment.get("cumulative_gpa_status", "UNAVAILABLE")}
@@ -223,14 +226,14 @@ class ComparisonRunner:
         students = {s["sample_id"]: s for s in read_students(self.root, include_reserve=include_reserve)}
         if any(s not in students for s in sample_ids):
             raise ValueError("Unknown primary sample.")
-        if (isinstance(target_credits, bool) or not isinstance(target_credits, (int, float))
+        if target_credits is not None and (isinstance(target_credits, bool) or not isinstance(target_credits, (int, float))
                 or not math.isfinite(target_credits) or not 0 < target_credits <= 36):
             raise ValueError("Target credits must be finite in (0,36].")
         if isinstance(max_plans, bool) or not isinstance(max_plans, int) or not 1 <= max_plans <= 2000:
             raise ValueError("Plan budget must be between 1 and 2000.")
         return [students[s] for s in sample_ids]
 
-    def start(self, sample_ids, *, target_credits=18, max_plans=200, models=None, include_reserve=False):
+    def start(self, sample_ids, *, target_credits=None, max_plans=200, models=None, include_reserve=False):
         if self.snapshot_id != AFTER:
             raise ValueError('The before_backend_fix snapshot is read-only.')
         normalize_models(models)
@@ -245,7 +248,7 @@ class ComparisonRunner:
             self._prune_jobs(run_id)
         return run_id
 
-    def run_sync(self, sample_ids, *, target_credits=18, max_plans=200, models=None, include_reserve=False):
+    def run_sync(self, sample_ids, *, target_credits=None, max_plans=200, models=None, include_reserve=False):
         run_id = self.start(sample_ids, target_credits=target_credits, max_plans=max_plans,
                             models=models, include_reserve=include_reserve)
         self.wait_for_run(run_id)
@@ -372,6 +375,12 @@ class ComparisonRunner:
                         "run_id": run_id, "created_at": created, "status": "completed", "student_count": len(students),
                         'selected_models': list(model_names), 'sample_statuses': self.jobs[run_id]['sample_statuses'],
                         "selected_students": [s["sample_id"] for s in students], "target_credits": target_credits,
+                        "target_credits_source": "API" if target_credits is None else "MANUAL_DIAGNOSTIC",
+                        "credit_targets_by_student": {r['sample_id']: r.get('credit_target_resolution', {
+                            'status': 'UNRESOLVED', 'reason': 'STUDENT_INPUT_OR_EVALUATION_UNAVAILABLE',
+                            'target_credits': r.get('target_credits'),
+                            'target_credits_source': 'API' if target_credits is None else 'MANUAL_DIAGNOSTIC'})
+                            for r in results},
                         "part_id": 20251, "history_as_of_part": 20243,
                         "training_cutoff": {k: 20243 if k == 'A' or experimental.get(k, {}).get('status') == 'READY' else None for k in model_names},
                         "model_versions": {k: 'original_official_v2_47_features' if k == 'A' else experimental.get(k, {}).get('model_version') for k in model_names},
@@ -380,6 +389,8 @@ class ComparisonRunner:
                         "frozen_history": history, "student_inputs": {r["sample_id"]: r.get("input_fingerprints", {}) for r in results},
                         "students_csv_sha256": sha256(self.root / "students.csv"),
                         "generation_settings": {"target_credits": target_credits, "max_plans": max_plans, "seed": 42,
+                                                "target_credits_source": "API" if target_credits is None else "MANUAL_DIAGNOSTIC",
+                                                "target_resolution": "per_student_API_maximum" if target_credits is None else "explicit_manual_diagnostic",
                                                 "max_search_states": getattr(engine, "max_search_states", None),
                                                 "search": "deterministic bounded exact-credit diagnostic enumeration; no global-optimum claim"},
                         "pilot_code_sha256": {p.relative_to(Path(__file__).parent).as_posix(): sha256(p)

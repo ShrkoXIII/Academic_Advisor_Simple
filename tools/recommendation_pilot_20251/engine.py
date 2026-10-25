@@ -32,6 +32,7 @@ from .adapter import (
     PilotInputError, load_student_inputs, numeric, validate_identity,
 )
 from .selection import normalize_models
+from .credit_target import resolve_credit_target
 
 
 POLICY_ISSUES = [
@@ -364,7 +365,7 @@ class PilotEngine:
     @staticmethod
     def _empty(student, target, maximum):
         return {"sample_id": student.get("sample_id"), "student_id": student.get("student_id"),
-                "status": "BLOCKED", "target_credits": float(target), "candidate_count": 0,
+                "status": "BLOCKED", "target_credits": float(target) if target is not None else None, "candidate_count": 0,
                 "experiments": {name: {"status": "BLOCKED", "prediction_status": "BLOCKED",
                     "plan_status": "UNAVAILABLE", "cumulative_gpa_status": "UNAVAILABLE",
                     "reason": "PREDICTION_NOT_COMPLETED", "reason_ar": "لم تكتمل مدخلات التنبؤ بعد.",
@@ -375,11 +376,11 @@ class PilotEngine:
                     "policy": "original_Decimal_exact_first_N_sorted_course_ids"},
                 "issues": [], "input_fingerprints": {}, "timing_limitation": TIMING_LIMITATION}
 
-    def evaluate_student(self, student, target_credits=18, max_plans=200, *, models=None, measure_stages=False):
+    def evaluate_student(self, student, target_credits=None, max_plans=200, *, models=None, measure_stages=False):
         """Return genuine bounded baseline diagnostics and explicit strict blockers."""
         model_names = normalize_models(models)
-        target = numeric(target_credits, "target_credits")
-        if target <= 0 or not math.isfinite(float(target)):
+        target = numeric(target_credits, "target_credits") if target_credits is not None else None
+        if target is not None and (target <= 0 or not math.isfinite(float(target))):
             raise PilotInputError("INVALID_TARGET_CREDITS")
         if isinstance(max_plans, bool) or not isinstance(max_plans, int) or not 1 <= max_plans <= 5000:
             raise PilotInputError("INVALID_MAX_PLANS")
@@ -399,6 +400,22 @@ class PilotEngine:
                 raise PilotInputError("PILOT_SEMESTER_MISMATCH")
             inputs = load_student_inputs(student, root=self.root, snapshot_id=self.snapshot_id)
             result["input_fingerprints"] = inputs["fingerprints"]
+            # Legacy explicit callers are manual experiments; the normal path
+            # passes None and resolves independently for every saved student.
+            resolution = resolve_credit_target(inputs, target_credits,
+                                                diagnostic_override=target_credits is not None)
+            result['credit_target_resolution'] = resolution
+            result.update({key: resolution[key] for key in (
+                'target_credits', 'target_credits_source', 'minimum_credits', 'maximum_credits')})
+            if resolution['status'] != 'RESOLVED':
+                if resolution['reason'] == 'REQUESTED_CREDITS_OUTSIDE_EXPLICIT_LIMITS':
+                    self._no_match(result, resolution['reason'])
+                else:
+                    result['issues'].append(resolution['reason'])
+                    for experiment in result['experiments'].values():
+                        experiment['reason'] = resolution['reason']
+                return result
+            target = numeric(resolution['target_credits'], 'target_credits')
             snapshot, snapshot_issues = build_snapshot(inputs)
             result["student_summary"] = student_summary(snapshot, student)
             result["issues"] = [*POLICY_ISSUES, *snapshot_issues]
@@ -424,16 +441,7 @@ class PilotEngine:
                 "max_new_courses_source": "Courses API.data.registserRule.MAX_NEW_COURSES",
                 "max_new_courses_raw_value": rules.get("MAX_NEW_COURSES"),
                 "requirement_type_optional_mapping": "UNCONFIRMED"}
-            if rules.get("LOAD_TYPE") != "CREDIT":
-                result["issues"].append("LOAD_PROFILE_UNCONFIRMED")
-            minimum = maximum = None
-            try:
-                minimum, maximum = numeric(rules.get("MIN_CREDITS"), "MIN_CREDITS"), numeric(rules.get("MAX_CREDITS"), "MAX_CREDITS")
-                if minimum > maximum:
-                    minimum = maximum = None
-                    result["issues"].append("CREDIT_LIMITS_UNCONFIRMED")
-            except PilotInputError:
-                result["issues"].append("CREDIT_LIMITS_UNCONFIRMED")
+            result['policy_evidence']['credit_target'] = resolution['policy_evidence']
             # Study/graduation profile is unknown; these fields remain evidence.
             for key in ("MIN_STUDY_CREDITS", "MAX_STUDY_CREDITS", "GRAD_MIN_LIMIT", "GRAD_MAX_LOAD", "MAX_NEW_COURSES"):
                 if rules.get(key) is not None:
@@ -446,9 +454,6 @@ class PilotEngine:
             result["search"]["shared_inputs_sha256"] = _digest({
                 "snapshot": snapshot, "candidates": candidates.to_dict("records"), "target_credits": target,
                 "rules": rules, "input_fingerprints": inputs["fingerprints"]})
-            if minimum is not None and maximum is not None and not minimum <= target <= maximum:
-                self._no_match(result, "REQUESTED_CREDITS_OUTSIDE_EXPLICIT_LIMITS")
-                return result
             base = candidates.copy()
             for key, value in snapshot.items():
                 base[key] = value

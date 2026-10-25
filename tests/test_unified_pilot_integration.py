@@ -63,7 +63,8 @@ def test_saved_synthetic_student_runs_directly_and_cold_browsing_never_scores(pr
     service = PilotService(tmp_path, engine_factory=lambda **kwargs: engine,
                            predictor_factory=lambda **kwargs: observed_predictor,
                            observed_store=SavedObservations())
-    run_id = service.start(['sample'], models=('B', 'C'), target_credits=6, max_plans=6)
+    run_id = service.start(['sample'], models=('B', 'C'), target_credits=6, max_plans=6,
+                           diagnostic_override=True)
     runner = service._runners['after_backend_fix']
     try:
         runner.wait_for_run(run_id, timeout=20)

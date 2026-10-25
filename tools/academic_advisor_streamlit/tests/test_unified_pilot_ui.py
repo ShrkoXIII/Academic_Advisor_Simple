@@ -32,7 +32,11 @@ class FakePilotService:
                     records=[])
 
     def preview(self, sample_id, snapshot_id="after_backend_fix"):
-        return {"sample_id": sample_id, "previous_gpa": 2.1, "available_course_count": 8}
+        maximum = 12 if sample_id == 'S01' else 16
+        return {"sample_id": sample_id, "previous_gpa": 2.1, "available_course_count": 8,
+                'credit_target_resolution': {'status': 'RESOLVED', 'reason': None,
+                    'target_credits': maximum, 'minimum_credits': 9, 'maximum_credits': maximum,
+                    'target_credits_source': 'API'}}
 
     def start(self, sample_ids, **kwargs):
         self.starts.append((list(sample_ids), kwargs))
@@ -123,7 +127,7 @@ def test_single_run_passes_selected_models_and_exact_controls(ui):
     app.button(key="pilot_compare_one").click().run()
     assert not app.exception
     assert fake.starts == [(["S01"], {"models": ["C"], "snapshot_id": "after_backend_fix",
-        "target_credits": 18, "max_plans": 1000, "include_reserve": False})]
+        "target_credits": None, "max_plans": 1000, "include_reserve": False})]
     app.run()
     assert len(fake.starts) == 1
 
@@ -247,6 +251,31 @@ def test_completed_job_does_not_replace_saved_browsing_on_rerender(ui):
     assert len(fake.starts) == 1
 
 
+def test_manual_credit_is_explicit_and_does_not_carry_to_another_student(ui):
+    app, fake = ui
+    app.run()
+    assert any('12' in value.value and 'API' in value.value for value in app.caption)
+    assert not app.number_input
+    app.checkbox(key='pilot_compare_manual_enabled_after_backend_fix_S01').check().run()
+    app.number_input(key='pilot_compare_credits_after_backend_fix_S01').set_value(9).run()
+    app.selectbox(key='pilot_compare_student').select('S02').run()
+    assert not app.checkbox(key='pilot_compare_manual_enabled_after_backend_fix_S02').value
+    assert not app.number_input
+    app.button(key='pilot_compare_one').click().run()
+    assert fake.starts[-1][1]['target_credits'] is None
+
+
+def test_manual_credit_run_is_labelled_and_passes_diagnostic_activation(ui):
+    app, fake = ui
+    app.run().checkbox(key='pilot_compare_manual_enabled_after_backend_fix_S01').check().run()
+    app.number_input(key='pilot_compare_credits_after_backend_fix_S01').set_value(9)
+    app.button(key='pilot_compare_one').click().run()
+    assert not app.exception
+    assert fake.starts[-1][1]['target_credits'] == 9
+    assert fake.starts[-1][1]['diagnostic_override'] is True
+    assert app.button(key='pilot_compare_batch').disabled
+
+
 def test_reserve_is_opt_in_and_empty_models_disable_new_runs(ui):
     app, fake = ui
     app.run().checkbox(key="pilot_compare_reserve").check().run()
@@ -272,7 +301,11 @@ def test_missing_courses_preview_keeps_blocked_controls_and_saved_browser(ui):
 
 def test_fractional_exact_credit_target_is_selectable_and_preserved(ui):
     app, fake = ui
-    app.run().number_input(key="pilot_compare_credits").set_value(19.5)
+    preview = fake.preview('S01')
+    preview['credit_target_resolution'].update(maximum_credits=21, target_credits=21)
+    fake.preview = lambda *args, **kwargs: preview
+    app.run().checkbox(key='pilot_compare_manual_enabled_after_backend_fix_S01').check().run()
+    app.number_input(key='pilot_compare_credits_after_backend_fix_S01').set_value(19.5)
     app.button(key="pilot_compare_one").click().run()
     assert not app.exception
     assert fake.starts[0][1]["target_credits"] == 19.5
@@ -304,7 +337,12 @@ def test_partial_job_preserves_student_failures_without_loading_missing_run(ui):
 
 def test_zero_credits_blocks_new_runs(ui):
     app, fake = ui
-    app.run().number_input(key="pilot_compare_credits").set_value(0.0).run()
+    preview = fake.preview('S01')
+    preview['credit_target_resolution'].update(status='UNRESOLVED', target_credits=None,
+                                             minimum_credits=0, maximum_credits=0,
+                                             reason='INVALID_TARGET_CREDITS')
+    fake.preview = lambda *args, **kwargs: preview
+    app.run()
     assert not app.exception
     assert app.button(key="pilot_compare_one").disabled
     assert app.button(key="pilot_compare_batch").disabled
